@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="00.System">
+      <UniqueIdentifier>{8d3e0da9-2962-42ce-80b2-180816c40a6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utillity">
+      <UniqueIdentifier>{f208c402-8911-4585-8a0b-9da29ce7162f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Headers">
+      <UniqueIdentifier>{957b26a6-0e97-45f4-8e0c-79e7dc49cdd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\00.Device_Manager">
+      <UniqueIdentifier>{101207a5-04e4-43a9-bfd2-59f2b4f92cad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\01.Time_Manager">
+      <UniqueIdentifier>{d01fb501-3648-4e13-9dd7-63fe1bdb26c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\01.Time_Manager\00.Timer">
+      <UniqueIdentifier>{196fa7c3-630b-487d-9acc-f6f737f3a91b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\01.Time_Manager\99.Manager">
+      <UniqueIdentifier>{1cfeda8a-1b0f-41b5-98ff-fbfa3ea3d87a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\00.Device_Manager\99.Manager">
+      <UniqueIdentifier>{d0dde142-4e26-46e1-ae05-841f93b11cd6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Headers\Device_Manager.h">
+      <Filter>00.System\00.Device_Manager\99.Manager</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Codes\Device_Manager.cpp">
+      <Filter>00.System\00.Device_Manager\99.Manager</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
