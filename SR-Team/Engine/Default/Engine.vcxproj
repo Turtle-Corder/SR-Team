@@ -93,7 +93,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;__ENGINE_EXPORTS__</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;__ENGINE_EXPORTS__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../Headers;../Codes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -130,7 +130,7 @@ xcopy		/y		..\Headers\*.h			              ..\..\Reference\Headers\</Command>
       <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>false</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;__ENGINE_EXPORTS__</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;__ENGINE_EXPORTS__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../Headers;../Codes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WholeProgramOptimization>false</WholeProgramOptimization>
@@ -167,10 +167,25 @@ xcopy		/y		..\Headers\*.h			              ..\..\Reference\Headers\</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Headers\Base.h" />
     <ClInclude Include="..\Headers\Device_Manager.h" />
+    <ClInclude Include="..\Headers\Engine_Define.h" />
+    <ClInclude Include="..\Headers\Engine_Function.h" />
+    <ClInclude Include="..\Headers\Engine_Include.h" />
+    <ClInclude Include="..\Headers\Engine_Struct.h" />
+    <ClInclude Include="..\Headers\Engine_Typedef.h" />
+    <ClInclude Include="..\Headers\Management.h" />
+    <ClInclude Include="..\Headers\Scene.h" />
+    <ClInclude Include="..\Headers\Scene_Manager.h" />
+    <ClInclude Include="..\Headers\Timer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Codes\Base.cpp" />
     <ClCompile Include="..\Codes\Device_Manager.cpp" />
+    <ClCompile Include="..\Codes\Management.cpp" />
+    <ClCompile Include="..\Codes\Scene.cpp" />
+    <ClCompile Include="..\Codes\Scene_Manager.cpp" />
+    <ClCompile Include="..\Codes\Timer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
