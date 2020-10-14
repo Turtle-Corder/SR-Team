@@ -15,6 +15,7 @@ CManagement::CManagement()
 
 void CManagement::Free()
 {
+	Safe_Release(m_pRenderer);
 	Safe_Release(m_pScene_Manager);
 	Safe_Release(m_pTimer_Manager);
 	Safe_Release(m_pDevice_Manager);
@@ -33,9 +34,9 @@ HRESULT CManagement::Setup_Engine(HWND _hWnd, _uint _iWinCX, _uint _iWinCY, CDev
 	if (FAILED(m_pTimer_Manager->Setup_TimerManager()))
 		return E_FAIL;
 
-	m_strAppTimerTag = _strAppTimerTag;
 	if (FAILED(m_pTimer_Manager->Add_Timer(_strAppTimerTag, true)))
 		return E_FAIL;
+	m_strAppTimerTag = _strAppTimerTag;
 
 	m_pRenderer = CRenderer::Create(m_pDevice_Manager->Get_Device());
 	if (nullptr == m_pRenderer)
