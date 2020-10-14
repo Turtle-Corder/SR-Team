@@ -1,0 +1,18 @@
+#pragma once
+#ifndef __CLIENT_ENUM_H__
+#define __CLIENT_ENUM_H__
+
+enum eSCENE_ID
+{
+	SCENE_STATIC,
+	SCENE_LOGO,
+	SCENE_STAGE0,
+	SCENE_STAGE1,
+	SCENE_STAGE2,
+	SCENE_STAGE3,
+	SCENE_STAGE4,
+	SCENE_STAGE5,
+	SCENE_END,
+};
+
+#endif

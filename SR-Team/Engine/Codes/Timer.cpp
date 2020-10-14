@@ -12,7 +12,9 @@ void CTimer::Free()
 
 CTimer * CTimer::Create()
 {
-	CTimer* pInstance = new CTimer;
+	CTimer* pInstance = nullptr;
+	
+	pInstance = new CTimer;
 	if (FAILED(pInstance->Setup_Timer()))
 	{
 		PRINT_LOG(L"Setup_Timer is Failed!", LOG::ENGINE);

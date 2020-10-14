@@ -16,19 +16,64 @@
     <Filter Include="98.Default">
       <UniqueIdentifier>{590c2eb6-b5a6-461c-90be-19443bc0f66e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Scene\00.Scene_Logo">
+      <UniqueIdentifier>{f1896763-2235-4803-b325-228fe81e8c59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\99.PreLoader">
+      <UniqueIdentifier>{572fc3b8-5f43-4a20-b162-f212e0c81994}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\06.Scene_Stage5">
+      <UniqueIdentifier>{60fbce97-ae77-446a-a86e-098f9246c8fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\01.Scene_Stage0">
+      <UniqueIdentifier>{f35f7334-3924-40e9-bdf0-78628c9e44c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\02.Scene_Stage1">
+      <UniqueIdentifier>{b2f2832c-e576-4509-92b6-830441d24407}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\03.Scene_Stage2">
+      <UniqueIdentifier>{ad62fa16-de07-4b33-a53a-b20ec81f9562}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\04.Scene_Stage3">
+      <UniqueIdentifier>{c2e98aba-ee11-42ae-b3b5-373b0b03ec9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\05.Scene_Stage4">
+      <UniqueIdentifier>{e051c352-e510-4e63-83cb-dfb944743683}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
       <Filter>99.Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>99.Headers</Filter>
-    </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>99.Headers</Filter>
     </ClInclude>
+    <ClInclude Include="..\Headers\MainApp.h">
+      <Filter>00.MainApp</Filter>
+    </ClInclude>
     <ClInclude Include="targetver.h">
+      <Filter>98.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>98.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Client_Define.h">
       <Filter>99.Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Client_Enum.h">
+      <Filter>99.Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Client_Struct.h">
+      <Filter>99.Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Scene_Logo.h">
+      <Filter>01.Scene\00.Scene_Logo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\PreLoader.h">
+      <Filter>01.Scene\99.PreLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Scene_Stage0.h">
+      <Filter>01.Scene\01.Scene_Stage0</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -37,6 +82,18 @@
     </ClCompile>
     <ClCompile Include="Client.cpp">
       <Filter>98.Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\MainApp.cpp">
+      <Filter>00.MainApp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Scene_Logo.cpp">
+      <Filter>01.Scene\00.Scene_Logo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\PreLoader.cpp">
+      <Filter>01.Scene\99.PreLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Scene_Stage0.cpp">
+      <Filter>01.Scene\01.Scene_Stage0</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
