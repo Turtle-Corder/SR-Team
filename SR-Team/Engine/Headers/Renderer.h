@@ -21,7 +21,7 @@ public:
 	};
 
 private:
-	explicit CRenderer(LPDIRECT3DDEVICE9 _pDevice);
+	explicit CRenderer(LPDIRECT3DDEVICE9 _pDevice, LPD3DXSPRITE _pSprite, LPD3DXFONT _pFont);
 	virtual ~CRenderer() = default;
 
 public:
@@ -37,7 +37,7 @@ private:
 	HRESULT Render_UI();
 
 public:
-	static CRenderer* Create(LPDIRECT3DDEVICE9 _pDevice);
+	static CRenderer* Create(LPDIRECT3DDEVICE9 _pDevice, LPD3DXSPRITE _pSprite, LPD3DXFONT _pFont);
 	virtual void Free() override;
 
 
@@ -46,7 +46,9 @@ private:
 	typedef list<CGameObject*> GAMEOBJECTS;
 	GAMEOBJECTS m_GameObjects[RENDER_END];
 
-	LPDIRECT3DDEVICE9 m_pDevice = NULL;
+	LPDIRECT3DDEVICE9	m_pDevice	= NULL;
+	LPD3DXSPRITE		m_pSprite	= NULL;
+	LPD3DXFONT			m_pFont		= NULL;
 };
 
 END

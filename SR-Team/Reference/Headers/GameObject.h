@@ -17,7 +17,7 @@ protected:
 protected:
 	HRESULT Add_Component(_int _iSceneID, const wstring& _strPrototypeTag, const wstring& _strComponentTag, CComponent** _ppComponent = nullptr, void* _pArg = nullptr);
 public:
-	CComponent* Get_Compnent(const wstring& _strComponentTag);
+	CComponent* Get_Component(const wstring& _strComponentTag);
 
 public:
 	virtual HRESULT Setup_GameObject_Prototype() = 0;
@@ -38,8 +38,9 @@ public:
 
 
 protected:
-//	typedef unordered_map<wstring, CComponent*> COMPONENTS;
-//	COMPONENTS			m_Components;
+	typedef unordered_map<wstring, CComponent*> COMPONENTS;
+	COMPONENTS			m_Components;
+
 	LPDIRECT3DDEVICE9	m_pDevice;
 
 };

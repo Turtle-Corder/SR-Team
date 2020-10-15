@@ -12,6 +12,16 @@ LPDIRECT3DDEVICE9 CDevice_Manager::Get_Device() const
 	return m_pDevice;
 }
 
+LPD3DXFONT CDevice_Manager::Get_Font() const
+{
+	return m_pFont;
+}
+
+LPD3DXSPRITE CDevice_Manager::Get_Sprite() const
+{
+	return m_pSprite;
+}
+
 HRESULT CDevice_Manager::Setup_GraphicDevice(HWND _hWnd, _uint _iWinCX, _uint _iWinCY, DISPLAY_MODE _eDisplayMode)
 {
 	if (nullptr == _hWnd)
@@ -56,9 +66,39 @@ HRESULT CDevice_Manager::Setup_GraphicDevice(HWND _hWnd, _uint _iWinCX, _uint _i
 	d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
 	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
 
+
+	//--------------------------------------------------
+	// SDK
+	//--------------------------------------------------
 	if (FAILED(m_pSDK->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, _hWnd, vp, &d3dpp, &m_pDevice)))
 	{
 		PRINT_LOG(L"Failed To Create Device", LOG::SYSTEM);
+		return E_FAIL;
+	}
+
+	//--------------------------------------------------
+	// SPRITE
+	//--------------------------------------------------
+	if (FAILED(D3DXCreateSprite(m_pDevice, &m_pSprite)))
+	{
+		PRINT_LOG(L"Failed To Create Sprite", LOG::SYSTEM);
+		return E_FAIL;
+	}
+
+
+	//--------------------------------------------------
+	// FONT
+	//--------------------------------------------------	
+	D3DXFONT_DESC tFontInfo;
+	ZeroMemory(&tFontInfo, sizeof(D3DXFONT_DESC));
+	tFontInfo.Height = 8;
+	tFontInfo.Width = 8;
+	tFontInfo.Weight = FW_HEAVY;
+	tFontInfo.CharSet = HANGEUL_CHARSET;
+	lstrcpy(tFontInfo.FaceName, L"±Ã¼­");
+	if (FAILED(D3DXCreateFontIndirect(m_pDevice, &tFontInfo, &m_pFont)))
+	{
+		PRINT_LOG(L"Failed To Create Font", LOG::SYSTEM);
 		return E_FAIL;
 	}
 
@@ -67,6 +107,12 @@ HRESULT CDevice_Manager::Setup_GraphicDevice(HWND _hWnd, _uint _iWinCX, _uint _i
 
 void CDevice_Manager::Free()
 {
+	if (Safe_Release(m_pFont))
+		PRINT_LOG(L"Failed To Release Font", LOG::SYSTEM);
+
+	if(Safe_Release(m_pSprite))
+		PRINT_LOG(L"Failed To Release Sprite", LOG::SYSTEM);
+
 	if (Safe_Release(m_pDevice))
 		PRINT_LOG(L"Failed To Release Device", LOG::SYSTEM);
 	

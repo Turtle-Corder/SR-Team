@@ -7,15 +7,21 @@ CManagement::CManagement()
 	: m_pDevice_Manager(CDevice_Manager::Get_Instance())
 	, m_pTimer_Manager(CTimer_Manager::Get_Instance())
 	, m_pScene_Manager(CScene_Manager::Get_Instance())
+	, m_pComponent_Manager(CComponent_Manager::Get_Instance())
+	, m_pObject_Manager(CObject_Manager::Get_Instance())
 {
 	Safe_AddRef(m_pDevice_Manager);
 	Safe_AddRef(m_pTimer_Manager);
 	Safe_AddRef(m_pScene_Manager);
+	Safe_AddRef(m_pComponent_Manager);
+	Safe_AddRef(m_pObject_Manager);
 }
 
 void CManagement::Free()
 {
 	Safe_Release(m_pRenderer);
+	Safe_Release(m_pComponent_Manager);
+	Safe_Release(m_pObject_Manager);
 	Safe_Release(m_pScene_Manager);
 	Safe_Release(m_pTimer_Manager);
 	Safe_Release(m_pDevice_Manager);
@@ -23,9 +29,11 @@ void CManagement::Free()
 
 HRESULT CManagement::Setup_Engine(HWND _hWnd, _uint _iWinCX, _uint _iWinCY, CDevice_Manager::DISPLAY_MODE _eDisplayMode, _uint _iSceneCnt, const wstring & _strAppTimerTag)
 {
-	if (nullptr == m_pDevice_Manager ||
-		nullptr == m_pScene_Manager ||
-		nullptr == m_pTimer_Manager)
+	if (nullptr == m_pDevice_Manager	||
+		nullptr == m_pScene_Manager		||
+		nullptr == m_pTimer_Manager		||
+		nullptr == m_pComponent_Manager ||
+		nullptr == m_pObject_Manager)
 		return E_FAIL;
 
 	if (FAILED(m_pDevice_Manager->Setup_GraphicDevice(_hWnd, _iWinCX, _iWinCY, _eDisplayMode)))
@@ -38,8 +46,14 @@ HRESULT CManagement::Setup_Engine(HWND _hWnd, _uint _iWinCX, _uint _iWinCY, CDev
 		return E_FAIL;
 	m_strAppTimerTag = _strAppTimerTag;
 
-	m_pRenderer = CRenderer::Create(m_pDevice_Manager->Get_Device());
+	m_pRenderer = CRenderer::Create(m_pDevice_Manager->Get_Device(), m_pDevice_Manager->Get_Sprite(), m_pDevice_Manager->Get_Font());
 	if (nullptr == m_pRenderer)
+		return E_FAIL;
+
+	if (FAILED(m_pComponent_Manager->Setup_Component_Manager(_iSceneCnt)))
+		return E_FAIL;
+
+	if (FAILED(m_pObject_Manager->Setup_Object_Manager(_iSceneCnt)))
 		return E_FAIL;
 
 	return S_OK;
@@ -47,8 +61,9 @@ HRESULT CManagement::Setup_Engine(HWND _hWnd, _uint _iWinCX, _uint _iWinCY, CDev
 
 _int CManagement::Update_Engine(void)
 {
-	if (nullptr == m_pDevice_Manager ||
-		nullptr == m_pScene_Manager)
+	if (nullptr == m_pTimer_Manager ||
+		nullptr == m_pScene_Manager ||
+		nullptr == m_pObject_Manager)
 		return -1;
 
 
@@ -69,6 +84,9 @@ _int CManagement::Update_Engine(void)
 	if (m_iUpdate_Result = m_pScene_Manager->Update_Scene_Manager(fDeltaTime))
 		return 0;
 
+	if (m_iUpdate_Result = m_pObject_Manager->Update_Object_Manger(fDeltaTime))
+		return 0;
+
 
 	//--------------------------------------------------
 	// LateUpdate
@@ -76,6 +94,8 @@ _int CManagement::Update_Engine(void)
 	if (m_iUpdate_Result = m_pScene_Manager->LateUpdate_Scene_Manager(fDeltaTime))
 		return 0;
 
+	if (m_iUpdate_Result = m_pObject_Manager->LateUpdate_Object_Manager(fDeltaTime))
+		return 0;
 
 	return 0;
 }
@@ -110,8 +130,18 @@ _uint CManagement::Release_Engine()
 	}
 
 	// obj
+	if (iRefCnt = CObject_Manager::Get_Instance()->Destroy_Instance())
+	{
+		PRINT_LOG(L"Failed To Destroy CObject_Manager", LOG::ENGINE);
+		return iRefCnt;
+	}
 
 	// component
+	if (iRefCnt = CComponent_Manager::Get_Instance()->Destroy_Instance())
+	{
+		PRINT_LOG(L"Failed To Destroy CComponent_Manager", LOG::ENGINE);
+		return iRefCnt;
+	}
 
 	// scene
 	if (iRefCnt = CScene_Manager::Get_Instance()->Destroy_Instance())
@@ -139,6 +169,15 @@ _uint CManagement::Release_Engine()
 
 HRESULT CManagement::Clear_ForScene(_uint _iSceneID)
 {
+	if (nullptr == m_pComponent_Manager || nullptr == m_pObject_Manager)
+		return E_FAIL;
+
+	if (FAILED(m_pComponent_Manager->Clear_ForScene(_iSceneID)))
+		return E_FAIL;
+
+	if (FAILED(m_pObject_Manager->Clear_ForScene(_iSceneID)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -196,4 +235,20 @@ HRESULT CManagement::Change_CurrentScene(_uint _iSceneID, CScene * pCurrentScene
 		return E_FAIL;
 
 	return m_pScene_Manager->Change_CurrentScene(_iSceneID, pCurrentScene);
+}
+
+HRESULT CManagement::Add_Component_Prototype(_int _iSceneID, const wstring & _strPrototypeTag, CComponent * _pPrototype)
+{
+	if (nullptr == m_pComponent_Manager)
+		return E_FAIL;
+
+	return m_pComponent_Manager->Add_Component_Prototype(_iSceneID, _strPrototypeTag, _pPrototype);
+}
+
+CComponent * CManagement::Clone_Component(_int _iSceneID, const wstring& _strPrototypeTag, void* _pArg)
+{
+	if (nullptr == m_pComponent_Manager)
+		return nullptr;
+
+	return m_pComponent_Manager->Clone_Component(_iSceneID, _strPrototypeTag, _pArg);
 }

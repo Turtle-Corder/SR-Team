@@ -1,0 +1,38 @@
+#pragma once
+#ifndef __LAYER_H__
+#define __LAYER_H__
+
+#include "Base.h"
+
+BEGIN(Engine)
+
+class CGameObject;
+class CComponent;
+
+class CLayer final : public CBase
+{
+private:
+	CLayer();
+	virtual ~CLayer() = default;
+
+public:
+	CGameObject*	Get_GameObject(_uint _iIndex = 0);
+	CComponent*		Get_Component(const wstring& _strComponentTag, _uint _iIndex = 0);
+
+public:
+	HRESULT Add_GameObject_InLayer(CGameObject* _pObject);
+	_int	Update_Layer(_float _fDeltaTime);
+	_int	LateUpdate_Layer(_float _fDeltaTime);
+
+public:
+	static CLayer* Create();
+	virtual void Free() override;
+
+private:
+	typedef list<CGameObject*> GAMEOBJECTS;
+	GAMEOBJECTS	m_GameObjects;
+};
+
+END
+
+#endif

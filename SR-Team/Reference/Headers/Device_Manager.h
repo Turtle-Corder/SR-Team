@@ -25,7 +25,11 @@ public:
 	};
 
 public:
-	LPDIRECT3DDEVICE9 Get_Device() const;
+	LPDIRECT3DDEVICE9	Get_Device()	const;
+	LPD3DXFONT			Get_Font()		const;
+	LPD3DXSPRITE		Get_Sprite()	const;
+
+
 	HRESULT Setup_GraphicDevice(HWND _hWnd, _uint _iWinCX, _uint _iWinCY, DISPLAY_MODE _eDisplayMode);
 
 	virtual void Free() override;
@@ -36,8 +40,11 @@ public:
 	// º¯¼ö
 	//----------------------------------------------------------------------------------------------------
 private:
-	LPDIRECT3D9			m_pSDK = nullptr;
-	LPDIRECT3DDEVICE9	m_pDevice = nullptr;
+	LPDIRECT3D9			m_pSDK		= nullptr;
+	LPDIRECT3DDEVICE9	m_pDevice	= nullptr;
+
+	LPD3DXSPRITE		m_pSprite	= nullptr;
+	LPD3DXFONT			m_pFont		= nullptr;
 };
 
 END

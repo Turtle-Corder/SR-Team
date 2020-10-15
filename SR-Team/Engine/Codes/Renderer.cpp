@@ -3,11 +3,31 @@
 
 USING(Engine)
 
-CRenderer::CRenderer(LPDIRECT3DDEVICE9 _pDevice)
+CRenderer::CRenderer(LPDIRECT3DDEVICE9 _pDevice, LPD3DXSPRITE _pSprite, LPD3DXFONT _pFont)
 	: m_pDevice(_pDevice)
+	, m_pSprite(_pSprite)
+	, m_pFont(_pFont)
 {
+	Safe_AddRef(_pFont);
+	Safe_AddRef(_pSprite);
 	Safe_AddRef(_pDevice);
 }
+
+void CRenderer::Free()
+{
+	for (_int iCnt = 0; iCnt < RENDER_END; ++iCnt)
+	{
+		for (auto& pObject : m_GameObjects[iCnt])
+			Safe_Release(pObject);
+
+		m_GameObjects[iCnt].clear();
+	}
+
+	Safe_Release(m_pFont);
+	Safe_Release(m_pSprite);
+	Safe_Release(m_pDevice);
+}
+
 
 HRESULT CRenderer::Setup_Renderer()
 {
@@ -124,6 +144,8 @@ HRESULT CRenderer::Render_OnlyAlpha()
 
 HRESULT CRenderer::Render_UI()
 {
+	m_pSprite->Begin(D3DXSPRITE_ALPHABLEND);
+
 	for (auto& pObject : m_GameObjects[RENDER_UI])
 	{
 		pObject->Render_UI();
@@ -132,15 +154,17 @@ HRESULT CRenderer::Render_UI()
 
 	m_GameObjects[RENDER_UI].clear();
 
+	m_pSprite->End();
+
 	return S_OK;
 }
 
-CRenderer * CRenderer::Create(LPDIRECT3DDEVICE9 _pDevice)
+CRenderer * CRenderer::Create(LPDIRECT3DDEVICE9 _pDevice, LPD3DXSPRITE _pSprite, LPD3DXFONT _pFont)
 {
 	if (nullptr == _pDevice)
 		return nullptr;
 
-	CRenderer* pInstance = new CRenderer(_pDevice);
+	CRenderer* pInstance = new CRenderer(_pDevice, _pSprite, _pFont);
 	if (FAILED(pInstance->Setup_Renderer()))
 	{
 		PRINT_LOG(L"Failed To Create CRenderer", LOG::ENGINE);
@@ -148,17 +172,4 @@ CRenderer * CRenderer::Create(LPDIRECT3DDEVICE9 _pDevice)
 	}
 
 	return pInstance;
-}
-
-void CRenderer::Free()
-{
-	for (_int iCnt = 0; iCnt < RENDER_END; ++iCnt)
-	{
-		for (auto& pObject : m_GameObjects[iCnt])
-			Safe_Release(pObject);
-
-		m_GameObjects[iCnt].clear();
-	}
-
-	Safe_Release(m_pDevice);
 }

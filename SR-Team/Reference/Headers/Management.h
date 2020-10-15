@@ -5,6 +5,8 @@
 #include "Device_Manager.h"
 #include "Scene_Manager.h"
 #include "Timer_Manager.h"
+#include "Component_Manager.h"
+#include "Object_Manager.h"
 #include "Renderer.h"
 
 BEGIN(Engine)
@@ -65,7 +67,7 @@ public:
 	//--------------------------------------------------
 	// 콜라이더
 	//--------------------------------------------------
-//	HRESULT Add_ColliderList();
+//	HRESULT Add_CollisionList(CGameObject* _pObject);
 
 
 	//--------------------------------------------------
@@ -77,13 +79,17 @@ public:
 	//--------------------------------------------------
 	// 오브젝트
 	//--------------------------------------------------
-//	CGameObject*
+	CGameObject* Get_GameObject(_int _iSceneID, const wstring& _strLayerTag, _uint _iIndex = 0);
+	CComponent* Get_Component(_int _iSceneID, const wstring& _strLayerTag, const wstring& _strComponentTag, _uint _iIndex = 0);
+	HRESULT Add_GameObject_Prototype(_int _iSceneID, const wstring& _strPrototypeTag, CGameObject* _pPrototype);
+	HRESULT Add_GameObject_InLayer(_int _iFromSceneID, const wstring& _strPrototypeTag, _int _iToSceneID, const wstring& _strLayerTag, void* _pArg = nullptr);
 
 
 	//--------------------------------------------------
 	// 컴포넌트
 	//--------------------------------------------------
-
+	HRESULT Add_Component_Prototype(_int _iSceneID, const wstring& _strPrototypeTag, CComponent* _pPrototype);
+	CComponent* Clone_Component(_int _iSceneID, const wstring& _strPrototypeTag, void* _pArg = nullptr);
 
 
 public:
@@ -95,11 +101,13 @@ public:
 	// 변수
 	//----------------------------------------------------------------------------------------------------
 private:
-	CDevice_Manager*	m_pDevice_Manager	= nullptr;
-	CTimer_Manager*		m_pTimer_Manager	= nullptr;
-	CScene_Manager*		m_pScene_Manager	= nullptr;
+	CDevice_Manager*	m_pDevice_Manager		= nullptr;
+	CTimer_Manager*		m_pTimer_Manager		= nullptr;
+	CScene_Manager*		m_pScene_Manager		= nullptr;
+	CComponent_Manager*	m_pComponent_Manager	= nullptr;
+	CObject_Manager*	m_pObject_Manager		= nullptr;
 
-	CRenderer*			m_pRenderer			= nullptr;
+	CRenderer*			m_pRenderer				= nullptr;
 
 	_int				m_iUpdate_Result = 0;
 	wstring				m_strAppTimerTag;
