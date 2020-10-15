@@ -19,7 +19,7 @@ typedef struct tagVertexColor
 	_uint	iColor;
 } VTX_COLOR;
 
-const _uint VTX_CLOLOR_FXF = D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX0;
+const _uint VTX_CLOLOR_FVF = D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX0;
 
 
 //--------------------------------------------------
@@ -31,7 +31,7 @@ typedef struct tagVertexTexture
 	_vec2	vUV;
 } VTX_TEXTURE;
 
-const _uint VTX_TEXTURE_FXF = D3DFVF_XYZ | D3DFVF_TEX1;
+const _uint VTX_TEXTURE_FVF = D3DFVF_XYZ | D3DFVF_TEX1;
 
 
 //--------------------------------------------------
@@ -43,7 +43,7 @@ typedef struct tagVertexCubeTexture
 	_vec3	vUV;
 } VTX_CUBETEXTURE;
 
-const _uint VTX_CUBETEXTURE_FXF = D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_TEXCOORDSIZE3(0);
+const _uint VTX_CUBETEXTURE_FVF = D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_TEXCOORDSIZE3(0);
 
 
 

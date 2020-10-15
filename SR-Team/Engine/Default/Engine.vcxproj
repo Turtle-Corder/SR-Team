@@ -188,7 +188,10 @@ xcopy		/y		..\Headers\*.h			              ..\..\Reference\Headers\</Command>
     <ClInclude Include="..\Headers\Timer.h" />
     <ClInclude Include="..\Headers\Timer_Manager.h" />
     <ClInclude Include="..\Headers\Transform.h" />
-    <ClInclude Include="..\Headers\VIBuffe.h" />
+    <ClInclude Include="..\Headers\VIBuffer.h" />
+    <ClInclude Include="..\Headers\VIBuffer_CubeTexture.h" />
+    <ClInclude Include="..\Headers\VIBuffer_RectTexture.h" />
+    <ClInclude Include="..\Headers\VIBuffer_TerrainTexture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Codes\Base.cpp" />
@@ -207,7 +210,10 @@ xcopy		/y		..\Headers\*.h			              ..\..\Reference\Headers\</Command>
     <ClCompile Include="..\Codes\Timer.cpp" />
     <ClCompile Include="..\Codes\Timer_Manager.cpp" />
     <ClCompile Include="..\Codes\Transform.cpp" />
-    <ClCompile Include="..\Codes\VIBuffe.cpp" />
+    <ClCompile Include="..\Codes\VIBuffer.cpp" />
+    <ClCompile Include="..\Codes\VIBuffer_CubeTexture.cpp" />
+    <ClCompile Include="..\Codes\VIBuffer_RectTexture.cpp" />
+    <ClCompile Include="..\Codes\VIBuffer_TerrainTexture.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
