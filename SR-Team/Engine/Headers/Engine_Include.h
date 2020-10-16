@@ -7,6 +7,8 @@
 #include <vector>
 #include <list>
 #include <unordered_map>
+#include <fstream>
+#include <strsafe.h>
 
 using namespace std;
 

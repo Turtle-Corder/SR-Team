@@ -79,13 +79,22 @@
     <Filter Include="01.Utillity\05.Component\01.VIBuffer\00.VIBuffer_Base">
       <UniqueIdentifier>{50a6795f-8d84-4b40-ad06-7d8b969f3ee2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utillity\05.Component\01.VIBuffer\01.VIBuffer_RectTexture">
+    <Filter Include="01.Utillity\05.Component\01.VIBuffer\01.VIBuffer_TriColor">
+      <UniqueIdentifier>{c2fa69ee-f987-4229-ac2d-aaac7931ff08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utillity\05.Component\01.VIBuffer\02.VIBuffer_RectColor">
+      <UniqueIdentifier>{ae3faae1-0afc-4b14-a7a4-76ed42f7e2e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utillity\05.Component\01.VIBuffer\03.VIBuffer_CubeColor">
+      <UniqueIdentifier>{940252af-5563-4a89-8944-dd240e92e9de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utillity\05.Component\01.VIBuffer\04.VIBuffer_RectTexture">
       <UniqueIdentifier>{68374c91-594d-4c8d-8362-25ab9f761d7d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utillity\05.Component\01.VIBuffer\02.VIBuffer_TerrainTexture">
+    <Filter Include="01.Utillity\05.Component\01.VIBuffer\05.VIBuffer_TerrainTexture">
       <UniqueIdentifier>{39c49f5a-32e4-47f7-9510-04bfeb6facc8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utillity\05.Component\01.VIBuffer\03.VIBuffer_CubeTexture">
+    <Filter Include="01.Utillity\05.Component\01.VIBuffer\06.VIBuffer_CubeTexture">
       <UniqueIdentifier>{8270eef1-f8be-4374-9cd1-3507b1673920}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -157,13 +166,22 @@
       <Filter>01.Utillity\05.Component\01.VIBuffer\00.VIBuffer_Base</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\VIBuffer_RectTexture.h">
-      <Filter>01.Utillity\05.Component\01.VIBuffer\01.VIBuffer_RectTexture</Filter>
+      <Filter>01.Utillity\05.Component\01.VIBuffer\04.VIBuffer_RectTexture</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\VIBuffer_TerrainTexture.h">
-      <Filter>01.Utillity\05.Component\01.VIBuffer\02.VIBuffer_TerrainTexture</Filter>
+      <Filter>01.Utillity\05.Component\01.VIBuffer\05.VIBuffer_TerrainTexture</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\VIBuffer_CubeTexture.h">
-      <Filter>01.Utillity\05.Component\01.VIBuffer\03.VIBuffer_CubeTexture</Filter>
+      <Filter>01.Utillity\05.Component\01.VIBuffer\06.VIBuffer_CubeTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\VIBuffer_TriColor.h">
+      <Filter>01.Utillity\05.Component\01.VIBuffer\01.VIBuffer_TriColor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\VIBuffer_RectColor.h">
+      <Filter>01.Utillity\05.Component\01.VIBuffer\02.VIBuffer_RectColor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\VIBuffer_CubeColor.h">
+      <Filter>01.Utillity\05.Component\01.VIBuffer\03.VIBuffer_CubeColor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -219,13 +237,22 @@
       <Filter>01.Utillity\05.Component\01.VIBuffer\00.VIBuffer_Base</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\VIBuffer_RectTexture.cpp">
-      <Filter>01.Utillity\05.Component\01.VIBuffer\01.VIBuffer_RectTexture</Filter>
+      <Filter>01.Utillity\05.Component\01.VIBuffer\04.VIBuffer_RectTexture</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\VIBuffer_TerrainTexture.cpp">
-      <Filter>01.Utillity\05.Component\01.VIBuffer\02.VIBuffer_TerrainTexture</Filter>
+      <Filter>01.Utillity\05.Component\01.VIBuffer\05.VIBuffer_TerrainTexture</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\VIBuffer_CubeTexture.cpp">
-      <Filter>01.Utillity\05.Component\01.VIBuffer\03.VIBuffer_CubeTexture</Filter>
+      <Filter>01.Utillity\05.Component\01.VIBuffer\06.VIBuffer_CubeTexture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\VIBuffer_TriColor.cpp">
+      <Filter>01.Utillity\05.Component\01.VIBuffer\01.VIBuffer_TriColor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\VIBuffer_RectColor.cpp">
+      <Filter>01.Utillity\05.Component\01.VIBuffer\02.VIBuffer_RectColor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\VIBuffer_CubeColor.cpp">
+      <Filter>01.Utillity\05.Component\01.VIBuffer\03.VIBuffer_CubeColor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

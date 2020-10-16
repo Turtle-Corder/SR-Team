@@ -105,8 +105,11 @@ HRESULT CVIBuffer_RectTexture::Set_Transform(const _matrix * _pMatWorld, const _
 
 HRESULT CVIBuffer_RectTexture::Set_Transform(const _matrix * _pMatWorld, const CCamera * _pCamera)
 {
-	_matrix matView = _pCamera->Get_ViewMatrix();
-	_matrix matProj = _pCamera->Get_ProjectionMatrix();
+	_matrix matView;
+	_matrix matProj;
+
+	matView = _pCamera->Get_ViewMatrix();
+	matProj = _pCamera->Get_ProjectionMatrix();
 
 	for (_uint iCnt = 0; iCnt < m_iVertexCount; ++iCnt)
 	{

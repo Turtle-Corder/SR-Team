@@ -99,13 +99,34 @@ HRESULT CVIBuffer_TerrainTexture::Setup_Component_Prototype()
 HRESULT CVIBuffer_TerrainTexture::Setup_Component_Prototype(const wstring & _strFilePath)
 {
 	// TODO : 데이터 저장되는 형식에 맞춰서 파싱해서 작업
+	m_iVertexSize = sizeof(VTX_TEXTURE);
+	m_iIndexSize = sizeof(INDEX16);
+	m_IndexFmt = D3DFMT_INDEX16;
+	m_iFVF = VTX_TEXTURE_FVF;
 
-	// .. 파싱 ..
+	TILEINFO* pTileInfos = Load_TerrainData_FromFile(_strFilePath);
+	if (!pTileInfos)
+		return E_FAIL;
 
+	m_iTriCount = (m_iVertexCountX - 1) * (m_iVertexCountZ - 1) * 2;
 	if (FAILED(CVIBuffer::Setup_Component_Prototype()))
 		return E_FAIL;
 
-	// .. 셋팅 ..
+	_uint iIndex = 0;
+
+	VTX_TEXTURE*	pVertex = nullptr;
+	m_pVB->Lock(0, 0, (void**)&pVertex, 0);
+
+	// UNDONE : 어떤 차순으로 깔렸는지..?
+	//for (_uint iCntZ = 0; iCntZ < m_iVertexCountZ; ++iCntZ)
+	//{
+	//	pVertex[iCnt].vPosition = { (float)pTileInfos[iCnt].iX, 0.f, (float)pTileInfos[iCnt].iZ };
+	//	pVertex[iCnt].vUV = {  };
+	//}
+
+	m_pVB->Unlock();
+
+	Safe_Delete_Array(pTileInfos);
 
 	return E_NOTIMPL;
 }
@@ -212,14 +233,108 @@ _bool CVIBuffer_TerrainTexture::IsOnTerrain(_vec3 * _pInOutPos)
 	if (fRatioX > fRatioZ)		// 위
 	{
 		D3DXPlaneFromPoints(&Plane,
-			);
+			&m_pVTXOrigin[iIndex + m_iVertexCountX].vPosition,
+			&m_pVTXOrigin[iIndex + m_iVertexCountX + 1].vPosition,
+			&m_pVTXOrigin[iIndex + 1].vPosition);
 	}
 	else 						//아래
 	{
 		D3DXPlaneFromPoints(&Plane,
-			);
+			&m_pVTXOrigin[iIndex + m_iVertexCountX].vPosition,
+			&m_pVTXOrigin[iIndex + 1].vPosition,
+			&m_pVTXOrigin[iIndex].vPosition);
 	}
 
+}
+
+TILEINFO * CVIBuffer_TerrainTexture::Load_TerrainData_FromFile(const wstring & _strFIlePath)
+{
+	// UNDONE : 구조체로 바꾸기
+	TILEINFO* pTileInfos = nullptr;
+	wifstream fin;
+
+	do 
+	{
+		fin.open(_strFIlePath.c_str());
+		if (fin.fail())
+			break;
+
+
+		//--------------------------------------------------
+		// Width, Height
+		//--------------------------------------------------
+		WCHAR szWidth[MIN_STR] = L"";
+		WCHAR szHeight[MIN_STR] = L"";
+
+		fin.getline(szWidth, MIN_STR, L'|');
+		fin.getline(szHeight, MIN_STR);
+
+		m_iVertexCountX = _wtoi(szWidth);
+		m_iVertexCountZ = _wtoi(szHeight);
+		m_iVertexCount = m_iVertexCountX * m_iVertexCountZ;
+
+
+		//--------------------------------------------------
+		// Floor, X, Z, Option
+		//--------------------------------------------------
+		pTileInfos = new TILEINFO[m_iVertexCount];
+		for (_uint iCnt = 0; iCnt < m_iVertexCount; ++iCnt)
+		{
+			WCHAR szPosX[MIN_STR] = L"";
+			WCHAR szPosZ[MIN_STR] = L"";
+			WCHAR szOption[MIN_STR] = L"";
+
+			fin.getline(szPosX, MIN_STR, L'|');
+			fin.getline(szPosZ, MIN_STR, L'|');
+			fin.getline(szOption, MIN_STR);
+
+			pTileInfos[iCnt].iX		= _wtoi(szPosX);
+			pTileInfos[iCnt].iZ		= _wtoi(szPosZ);
+			pTileInfos[iCnt].iOpt	= _wtoi(szOption);
+		}	
+
+	} while (0);
+
+	fin.close();
+
+	return pTileInfos;
+}
+
+_pixel * CVIBuffer_TerrainTexture::Load_HeightMap_FromFile(const wstring & _strFilePath)
+{
+	_pixel* pPixels = nullptr;
+
+	HANDLE hFile = CreateFile(_strFilePath.c_str(), GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+	if (INVALID_HANDLE_VALUE == hFile)
+		return pPixels;
+
+	BITMAPFILEHEADER tBitmapFileHeader;
+	BITMAPINFOHEADER tBitmapInfoHeader;
+	DWORD dwBytes = 0;
+
+	do 
+	{
+		if (!ReadFile(hFile, &tBitmapFileHeader, sizeof(BITMAPFILEHEADER), &dwBytes, nullptr))
+			break;
+
+		if (!ReadFile(hFile, &tBitmapInfoHeader, sizeof(BITMAPINFOHEADER), &dwBytes, nullptr))
+			break;
+
+		_uint iPixelWidth = tBitmapInfoHeader.biWidth;
+		_uint iPixelHeight = tBitmapInfoHeader.biHeight;
+
+		pPixels = new _pixel[iPixelWidth * iPixelHeight];
+		
+		if (!ReadFile(hFile, pPixels, sizeof(_uint) * iPixelWidth * iPixelHeight, &dwBytes, nullptr))
+		{
+			Safe_Delete_Array(pPixels);
+			break;
+		}
+
+	} while (0);
+
+	CloseHandle(hFile);
+	return pPixels;
 }
 
 CVIBuffer_TerrainTexture * CVIBuffer_TerrainTexture::Create(LPDIRECT3DDEVICE9 _pDevice, _uint _iVertexCountX, _uint _iVertexCountZ, _float _fVertexInterval)
@@ -269,4 +384,28 @@ CVIBuffer_TerrainTexture * CVIBuffer_TerrainTexture::Create(LPDIRECT3DDEVICE9 _p
 	}
 
 	return pInstance;
+}
+
+CComponent * CVIBuffer_TerrainTexture::Clone_Component(void * _pArg)
+{
+	CVIBuffer_TerrainTexture* pInstance = new CVIBuffer_TerrainTexture(*this);
+	if (FAILED(pInstance->Setup_Component(_pArg)))
+	{
+		PRINT_LOG(L"Failed To Clone CVIBuffer_TerrainTexture", LOG::ENGINE);
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+void CVIBuffer_TerrainTexture::Free()
+{
+	if (!m_bIsClone)
+	{
+		Safe_Delete_Array(m_pVTXConvert);
+		Safe_Delete_Array(m_pVTXOrigin);
+		Safe_Delete_Array(m_pIndices);
+	}
+
+	CVIBuffer::Free();
 }

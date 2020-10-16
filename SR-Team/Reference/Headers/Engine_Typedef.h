@@ -17,6 +17,8 @@ typedef	unsigned	int		_uint;
 typedef				long	_long;
 typedef	unsigned	long	_ulong;
 
+typedef unsigned	int		_pixel;
+
 typedef				float	_float;
 
 typedef	D3DXVECTOR2			_vec2;

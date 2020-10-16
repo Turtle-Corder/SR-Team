@@ -36,9 +36,9 @@ private:
 	typedef vector<IDirect3DBaseTexture9*> TEXTURES;
 	TEXTURES m_Textures;
 
-	TEXTURE_TYPE	m_eTextureType	= TEXTURE_NORMAL;
-	wstring			m_strFilePath	= L"";
-	_uint			m_iCount		= 0;
+	TEXTURE_TYPE	m_eTextureType = TEXTURE_NORMAL;
+	wstring			m_strFilePath = L"";
+	_uint			m_iCount = 0;
 };
 
 END
