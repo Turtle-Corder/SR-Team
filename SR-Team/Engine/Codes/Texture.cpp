@@ -12,6 +12,7 @@ CTexture::CTexture(LPDIRECT3DDEVICE9 _pDevice, TEXTURE_TYPE _eTextureType, const
 
 CTexture::CTexture(const CTexture & _rOther)
 	: CComponent(_rOther)
+	, m_Textures(_rOther.m_Textures)
 	, m_eTextureType(_rOther.m_eTextureType)
 	, m_strFilePath(_rOther.m_strFilePath)
 	, m_iCount(_rOther.m_iCount)
@@ -90,6 +91,14 @@ HRESULT CTexture::SetTexture(_uint _iIndex)
 		return E_FAIL;
 
 	return m_pDevice->SetTexture(0, m_Textures[_iIndex]);
+}
+
+const IDirect3DBaseTexture9 * CTexture::GetTexture(_uint _iIndex) const
+{
+	if (m_iCount <= _iIndex)
+		return nullptr;
+
+	return m_Textures[_iIndex];
 }
 
 CTexture * CTexture::Create(LPDIRECT3DDEVICE9 _pDevice, TEXTURE_TYPE _eTextureType, const wstring & _strFilePath, _uint _iCount)

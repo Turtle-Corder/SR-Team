@@ -168,6 +168,7 @@ xcopy		/y		..\Headers\*.h			              ..\..\Reference\Headers\</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Headers\Base.h" />
+    <ClInclude Include="..\Headers\Camera.h" />
     <ClInclude Include="..\Headers\Component.h" />
     <ClInclude Include="..\Headers\Component_Manager.h" />
     <ClInclude Include="..\Headers\Device_Manager.h" />
@@ -179,6 +180,7 @@ xcopy		/y		..\Headers\*.h			              ..\..\Reference\Headers\</Command>
     <ClInclude Include="..\Headers\GameObject.h" />
     <ClInclude Include="..\Headers\Layer.h" />
     <ClInclude Include="..\Headers\Management.h" />
+    <ClInclude Include="..\Headers\Raycast.h" />
     <ClInclude Include="..\Headers\Object_Manager.h" />
     <ClInclude Include="..\Headers\Pipeline.h" />
     <ClInclude Include="..\Headers\Renderer.h" />
@@ -198,12 +200,14 @@ xcopy		/y		..\Headers\*.h			              ..\..\Reference\Headers\</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Codes\Base.cpp" />
+    <ClCompile Include="..\Codes\Camera.cpp" />
     <ClCompile Include="..\Codes\Component.cpp" />
     <ClCompile Include="..\Codes\Component_Manager.cpp" />
     <ClCompile Include="..\Codes\Device_Manager.cpp" />
     <ClCompile Include="..\Codes\GameObject.cpp" />
     <ClCompile Include="..\Codes\Layer.cpp" />
     <ClCompile Include="..\Codes\Management.cpp" />
+    <ClCompile Include="..\Codes\Raycast.cpp" />
     <ClCompile Include="..\Codes\Object_Manager.cpp" />
     <ClCompile Include="..\Codes\Pipeline.cpp" />
     <ClCompile Include="..\Codes\Renderer.cpp" />

@@ -14,7 +14,7 @@ CGameObject * CLayer::Get_GameObject(_uint _iIndex)
 
 	GAMEOBJECTS::iterator iter_begin = m_GameObjects.begin();
 
-	for (_uint i = 0; i < _iIndex; ++i)
+	for (_uint iCnt = 0; iCnt < _iIndex; ++iCnt)
 		++iter_begin;
 
 	return (*iter_begin);
@@ -56,8 +56,8 @@ _int CLayer::Update_Layer(_float _fDeltaTime)
 
 	for (;iter != iter_end;)
 	{
-		iBehaviour = (*iter)->Update_GameObject(_fDeltaTime);
-		switch (iBehaviour)
+		_int iResult = (*iter)->Update_GameObject(_fDeltaTime);
+		switch (iResult)
 		{
 		case GAMEOBJECT::NOEVENT:
 			++iter;
@@ -68,9 +68,18 @@ _int CLayer::Update_Layer(_float _fDeltaTime)
 				iter = m_GameObjects.erase(iter);
 			break;
 
+		// 老窜 default肺 贸府..
+
+		//case GAMEOBJECT::WARN:
+		//	break;
+
+		//case GAMEOBJECT::ERR:
+		//	break;
+
 		default:
 		{
 			// UNDONE : 老窜 crash
+			iBehaviour = -1;
 			int* ptr = nullptr;
 			*ptr = 0;
 		}

@@ -171,6 +171,8 @@ namespace GAMEOBJECT
 	{
 		NOEVENT,
 		DEAD,
+		WARN,
+		ERR
 	};
 }
 

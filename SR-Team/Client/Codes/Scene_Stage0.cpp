@@ -13,17 +13,17 @@ HRESULT CScene_Stage0::Setup_Scene()
 {
 	SetWindowText(g_hWnd, L"CScene_Stage0");
 
-	//if (FAILED(Setup_Layer_Skybox()))
+	//if (FAILED(Setup_Layer_Skybox(L"Layer_Skybox")))
 	//	return E_FAIL;
 
-	//if (FAILED(Setup_Layer_Terrain()))
-	//	return E_FAIL;
+	if (FAILED(Setup_Layer_Terrain(L"Layer_Terrain")))
+		return E_FAIL;
 
-	//if (FAILED(Setup_Layer_Camera()))
-	//	return E_FAIL;
+	if (FAILED(Setup_Layer_Camera(L"Layer_Camera")))
+		return E_FAIL;
 
-	//if (FAILED(Setup_Layer_Player()))
-	//	return E_FAIL;
+	if (FAILED(Setup_Layer_Player(L"Layer_Player")))
+		return E_FAIL;
 
 	//if (FAILED(Setup_Layer_Monster()))
 	//	return E_FAIL;
@@ -31,12 +31,12 @@ HRESULT CScene_Stage0::Setup_Scene()
 	//if (FAILED(Setup_Layer_Environment()))
 	//	return E_FAIL;
 
-	m_pPreLoader = CPreLoader::Create(m_pDevice, SCENE_STAGE1);
-	if (nullptr == m_pPreLoader)
-	{
-		PRINT_LOG(L"Failed To PreLoader Create in CScene_Stage0", LOG::CLIENT);
-		return E_FAIL;
-	}
+	//m_pPreLoader = CPreLoader::Create(m_pDevice, SCENE_STAGE1);
+	//if (nullptr == m_pPreLoader)
+	//{
+	//	PRINT_LOG(L"Failed To PreLoader Create in CScene_Stage0", LOG::CLIENT);
+	//	return E_FAIL;
+	//}
 
 	return S_OK;
 }
@@ -75,22 +75,61 @@ void CScene_Stage0::Free()
 
 HRESULT CScene_Stage0::Setup_Layer_Skybox(const wstring & LayerTag)
 {
-	return E_NOTIMPL;
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Skybox", SCENE_STAGE0, LayerTag)))
+		return E_FAIL;
+
+	return S_OK;
 }
 
 HRESULT CScene_Stage0::Setup_Layer_Terrain(const wstring & LayerTag)
 {
-	return E_NOTIMPL;
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Terrain", SCENE_STAGE0, LayerTag)))
+		return E_FAIL;
+
+	return S_OK;
 }
 
 HRESULT CScene_Stage0::Setup_Layer_Camera(const wstring & LayerTag)
 {
-	return E_NOTIMPL;
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	CCamera::CAMERA_DESC tCameraDesc;
+	ZeroMemory(&tCameraDesc, sizeof(CCamera::CAMERA_DESC));
+	D3DXMatrixIdentity(&tCameraDesc.matView);
+	tCameraDesc.vUp = _vec3(0.f, 1.f, 0.f);
+
+	D3DXMatrixIdentity(&tCameraDesc.matProj);
+	tCameraDesc.fFovY = D3DXToRadian(60.f);
+	tCameraDesc.fAspect = (float)WINCX / WINCY;
+	tCameraDesc.fNear = 1.f;
+	tCameraDesc.fFar = 500.f;
+
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_MainCamera", SCENE_STAGE0, LayerTag, &tCameraDesc)))
+		return E_FAIL;
+
+	return S_OK;
 }
 
 HRESULT CScene_Stage0::Setup_Layer_Player(const wstring & LayerTag)
 {
-	return E_NOTIMPL;
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_Player", SCENE_STAGE0, LayerTag)))
+		return E_FAIL;
+
+	return S_OK;
 }
 
 HRESULT CScene_Stage0::Setup_Layer_Monster(const wstring & LayerTag)

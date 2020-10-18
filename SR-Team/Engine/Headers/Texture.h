@@ -6,7 +6,7 @@
 
 BEGIN(Engine)
 
-class CTexture final : public CComponent
+class ENGINE_DLL CTexture final : public CComponent
 {
 public:
 	enum TEXTURE_TYPE
@@ -24,8 +24,9 @@ private:
 public:
 	virtual HRESULT Setup_Component_Prototype() override;
 	virtual HRESULT Setup_Component(void* _pArg) override;
-	HRESULT SetTexture(_uint _iIndex);
 
+	HRESULT SetTexture(_uint _iIndex);
+	const IDirect3DBaseTexture9* GetTexture(_uint _iIndex) const;
 
 public:
 	static CTexture* Create(LPDIRECT3DDEVICE9 _pDevice, TEXTURE_TYPE _eTextureType, const wstring& _strFilePath, _uint _iCount = 1);

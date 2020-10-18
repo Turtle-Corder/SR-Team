@@ -12,7 +12,18 @@ CVIBuffer_RectTexture::CVIBuffer_RectTexture(const CVIBuffer_RectTexture & _rOth
 	: CVIBuffer(_rOther)
 	, m_pVTXOrigin(_rOther.m_pVTXOrigin)
 	, m_pVTXConvert(_rOther.m_pVTXConvert)
+	, m_pIndices(_rOther.m_pIndices)
 {
+}
+
+void * CVIBuffer_RectTexture::Get_Vertices() const
+{
+	return m_pVTXOrigin;
+}
+
+void * CVIBuffer_RectTexture::Get_Indices() const
+{
+	return m_pIndices;
 }
 
 HRESULT CVIBuffer_RectTexture::Setup_Component_Prototype()
@@ -68,6 +79,9 @@ HRESULT CVIBuffer_RectTexture::Setup_Component_Prototype()
 	pIndex[1]._2 = 2;
 	pIndex[1]._3 = 3;
 
+	m_pIndices = new INDEX16[m_iTriCount];
+	memcpy_s(m_pIndices, sizeof(INDEX16) * m_iTriCount, pIndex, sizeof(INDEX16) * m_iTriCount);
+
 	m_pIB->Unlock();
 
 	return S_OK;
@@ -75,7 +89,7 @@ HRESULT CVIBuffer_RectTexture::Setup_Component_Prototype()
 
 HRESULT CVIBuffer_RectTexture::Setup_Component(void * _pArg)
 {
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 HRESULT CVIBuffer_RectTexture::Set_Transform(const _matrix * _pMatWorld, const _matrix * _pMatView, const _matrix * _pMatProj)
@@ -105,11 +119,8 @@ HRESULT CVIBuffer_RectTexture::Set_Transform(const _matrix * _pMatWorld, const _
 
 HRESULT CVIBuffer_RectTexture::Set_Transform(const _matrix * _pMatWorld, const CCamera * _pCamera)
 {
-	_matrix matView;
-	_matrix matProj;
-
-	matView = _pCamera->Get_ViewMatrix();
-	matProj = _pCamera->Get_ProjectionMatrix();
+	const _matrix* matView = _pCamera->Get_ViewMatrix();
+	const _matrix* matProj = _pCamera->Get_ProjMatrix();
 
 	for (_uint iCnt = 0; iCnt < m_iVertexCount; ++iCnt)
 	{
@@ -117,13 +128,13 @@ HRESULT CVIBuffer_RectTexture::Set_Transform(const _matrix * _pMatWorld, const C
 		CPipeline::TransformCoord(&m_pVTXConvert[iCnt].vPosition, &m_pVTXOrigin[iCnt].vPosition, _pMatWorld);
 
 		// View
-		CPipeline::TransformCoord(&m_pVTXConvert[iCnt].vPosition, &m_pVTXConvert[iCnt].vPosition, &matView);
+		CPipeline::TransformCoord(&m_pVTXConvert[iCnt].vPosition, &m_pVTXConvert[iCnt].vPosition, matView);
 
 		if (1.f >= m_pVTXConvert[iCnt].vPosition.z)
 			continue;
 
 		// Projection
-		CPipeline::TransformCoord(&m_pVTXConvert[iCnt].vPosition, &m_pVTXConvert[iCnt].vPosition, &matProj);
+		CPipeline::TransformCoord(&m_pVTXConvert[iCnt].vPosition, &m_pVTXConvert[iCnt].vPosition, matProj);
 	}
 
 	VTX_TEXTURE* pVertex = nullptr;
@@ -167,6 +178,7 @@ void CVIBuffer_RectTexture::Free()
 	{
 		Safe_Delete_Array(m_pVTXConvert);
 		Safe_Delete_Array(m_pVTXOrigin);
+		Safe_Delete_Array(m_pIndices);
 	}
 
 	CVIBuffer::Free();

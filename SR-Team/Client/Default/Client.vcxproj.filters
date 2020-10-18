@@ -40,6 +40,27 @@
     <Filter Include="01.Scene\05.Scene_Stage4">
       <UniqueIdentifier>{e051c352-e510-4e63-83cb-dfb944743683}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\00.Terrain">
+      <UniqueIdentifier>{ab993916-14ba-401e-8c3b-84e3f524be5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\01.Camera">
+      <UniqueIdentifier>{a69d0c94-302a-469c-9f37-46e579fd3a62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.Skybox">
+      <UniqueIdentifier>{1a5effb4-6ce9-4520-841b-13ba87f51aba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.Environment">
+      <UniqueIdentifier>{5e7878ee-b283-4f40-a47d-1708c026751b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\04.Player">
+      <UniqueIdentifier>{f71d6c9a-97d6-43a2-8656-3ecaf7f1d345}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.Monster">
+      <UniqueIdentifier>{3520b15f-e9da-4318-8426-495d6229e6cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.Environment\00.Grass">
+      <UniqueIdentifier>{8d596baa-c101-4497-8912-1299a4edfc77}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -75,6 +96,18 @@
     <ClInclude Include="..\Headers\Scene_Stage0.h">
       <Filter>01.Scene\01.Scene_Stage0</Filter>
     </ClInclude>
+    <ClInclude Include="..\Headers\Terrain.h">
+      <Filter>02.GameObject\00.Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\MainCamera.h">
+      <Filter>02.GameObject\01.Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Player.h">
+      <Filter>02.GameObject\04.Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Skybox.h">
+      <Filter>02.GameObject\02.Skybox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -94,6 +127,18 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Scene_Stage0.cpp">
       <Filter>01.Scene\01.Scene_Stage0</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Terrain.cpp">
+      <Filter>02.GameObject\00.Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\MainCamera.cpp">
+      <Filter>02.GameObject\01.Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Player.cpp">
+      <Filter>02.GameObject\04.Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Skybox.cpp">
+      <Filter>02.GameObject\02.Skybox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

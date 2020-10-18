@@ -18,7 +18,7 @@ CGameObject * CObject_Manager::Get_GameObject(_int _iSceneID, const wstring & _s
 	if (m_pLayers[_iSceneID].end() == iter_find)
 		return nullptr;
 
-	return iter_find->second->Get_GameObject(_iSceneID);
+	return iter_find->second->Get_GameObject(_iIndex);
 }
 
 CComponent * CObject_Manager::Get_Component(_int _iSceneID, const wstring & _strLayerTag, const wstring & _strComponentTag, _uint _iIndex)
@@ -30,7 +30,7 @@ CComponent * CObject_Manager::Get_Component(_int _iSceneID, const wstring & _str
 	if (m_pLayers[_iSceneID].end() == iter_find)
 		return nullptr;
 
-	return iter_find->second->Get_Component(_strComponentTag, _iSceneID);
+	return iter_find->second->Get_Component(_strComponentTag, _iIndex);
 }
 
 HRESULT CObject_Manager::Setup_Object_Manager(_int _iSceneCount)
@@ -61,7 +61,7 @@ HRESULT CObject_Manager::Add_GameObject_Prototype(_int _iSceneID, const wstring 
 		return E_FAIL;
 	}
 
-	m_pGameObjects[_iSceneID].insert(make_pair(_strProtoTypeTag, _pProtoType));
+	m_pGameObjects[_iSceneID].emplace(_strProtoTypeTag, _pProtoType);
 
 	return S_OK;
 }
@@ -91,7 +91,7 @@ HRESULT CObject_Manager::Add_GameObject_InLayer(_int _iFromSceneID, const wstrin
 	if (m_pLayers[_iToSceneID].end() == iter_find_Layer)
 	{
 		CLayer* pLayer = CLayer::Create();
-		m_pLayers[_iToSceneID].insert(make_pair(_strLayerTag, pLayer));
+		m_pLayers[_iToSceneID].emplace(_strLayerTag, pLayer);
 	}
 
 	if (FAILED(m_pLayers[_iToSceneID][_strLayerTag]->Add_GameObject_InLayer(pClone)))

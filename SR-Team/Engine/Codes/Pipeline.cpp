@@ -12,9 +12,9 @@ HRESULT CPipeline::Setup_WorldMatrix(_matrix * _pOut, const _vec3 & _vScale, con
 		return E_FAIL;
 
 	D3DXMatrixIdentity(_pOut);
-	_vec3 vRight = { 1.0f, 0.f, 0.f };
-	_vec3 vUp = { 0.f, 1.f, 0.f };
-	_vec3 vLook = { 0.f, 0.f, 1.f };
+	_vec3 vRight	= { 1.f, 0.f, 0.f };
+	_vec3 vUp		= { 0.f, 1.f, 0.f };
+	_vec3 vLook		= { 0.f, 0.f, 1.f };
 
 	vRight.x *= _vScale.x;
 	vUp.y *= _vScale.y;
@@ -59,7 +59,7 @@ HRESULT CPipeline::Setup_ViewMatrix(_matrix * _pOut, const _vec3 & _vEye, const 
 	D3DXVec3Cross(&vRealUp, &vLook, &vRight);
 	D3DXVec3Normalize(&vRealUp, &vRealUp);
 
-	if (FAILED(Setup_StateMatrix(_pOut, vRight, vRealUp, vLook, vPosition)))
+	if (FAILED(Setup_StateMatrix(_pOut, vRight, vRealUp, vLook, _vEye)))
 	{
 		PRINT_LOG(L"Failed To Setup_StateMatrix", LOG::ENGINE);
 		return E_FAIL;
@@ -95,7 +95,7 @@ HRESULT CPipeline::Setup_ProjectionMatrix(_matrix * _pOut, float _fFovY, float _
 	return S_OK;
 }
 
-HRESULT CPipeline::Setup_StateMatrix(_matrix * _pOut, const _vec3 & _vRight, const _vec3 & _vUp, const _vec3 & _vLook, const _vec3 _vPosition)
+HRESULT CPipeline::Setup_StateMatrix(_matrix * _pOut, const _vec3 & _vRight, const _vec3 & _vUp, const _vec3 & _vLook, const _vec3& _vPosition)
 {
 	if (nullptr == _pOut)
 		return E_FAIL;
@@ -115,7 +115,7 @@ HRESULT CPipeline::TransformCoord(_vec3 * _pOut, const _vec3 * _pIn, const _matr
 	if (nullptr == _pOut)
 		return E_FAIL;
 
-	_vec4 vTemp = _vec4(_pOut->x, _pOut->y, _pOut->z, 1.f);
+	_vec4 vTemp = _vec4(_pIn->x, _pIn->y, _pIn->z, 1.f);
 	
 	_pOut->x = vTemp.x * _pMat->_11 + vTemp.y * _pMat->_21 + vTemp.z * _pMat->_31 + vTemp.w * _pMat->_41;
 	_pOut->y = vTemp.x * _pMat->_12 + vTemp.y * _pMat->_22 + vTemp.z * _pMat->_32 + vTemp.w * _pMat->_42;

@@ -4,19 +4,14 @@
 
 
 #pragma region Scene_Headers
-
+#include "Scene_Logo.h"
 #pragma endregion
 
 
 #pragma region GameObject_Headers
-
+#include "Player.h"
+#include "MainCamera.h"
 #pragma endregion
-
-
-#pragma region Component_Headers
-
-#pragma endregion
-
 
 
 USING(Client)
@@ -117,16 +112,42 @@ HRESULT CMainApp::Setup_StaticResources()
 	// GameObject
 	//----------------------------------------------------------------------------------------------------
 #pragma region GameObject_Player
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_Player", CPlayer::Create(m_pDevice))))
+		return E_FAIL;
 #pragma endregion
 
 #pragma region GameObject_MainCamera
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_MainCamera", CMainCamera::Create(m_pDevice))))
+		return E_FAIL;
 #pragma endregion
 
 
 	//----------------------------------------------------------------------------------------------------
 	// Component
 	//----------------------------------------------------------------------------------------------------
-#pragma region Component_
+#pragma region Component_VIBuffer_RectTextrue
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_VIBuffer_RectTexture", CVIBuffer_RectTexture::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_VIBuffer_CubeTextrue
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", CVIBuffer_CubeTexture::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Transform
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Transform", CTransform::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Texture_Player
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Player", CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL, L"../Resources/ÇÑ°Ü¹Ì%d.png"))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Raycast
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Raycast", CRaycast::Create(m_pDevice))))
+		return E_FAIL;
 #pragma endregion
 
 

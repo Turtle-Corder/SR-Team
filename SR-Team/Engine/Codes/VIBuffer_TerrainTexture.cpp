@@ -53,8 +53,8 @@ HRESULT CVIBuffer_TerrainTexture::Setup_Component_Prototype()
 		{
 			iIndex = iCntZ * m_iVertexCountX + iCntX;
 
-			pVertex[iIndex].vPosition = D3DXVECTOR3(iCntX * m_fVertexInterval, 0.f, iCntZ * m_fVertexInterval);
-			pVertex[iIndex].vUV = D3DXVECTOR2((float)iCntX / m_iVertexCountX, 1.f - (float)iCntZ / m_iVertexCountZ);
+			pVertex[iIndex].vPosition = _vec3(iCntX * m_fVertexInterval, 0.f, iCntZ * m_fVertexInterval);
+			pVertex[iIndex].vUV = _vec2((_float)iCntX / m_iVertexCountX, 1.f - (_float)iCntZ / m_iVertexCountZ);
 		}
 	}
 
@@ -94,6 +94,8 @@ HRESULT CVIBuffer_TerrainTexture::Setup_Component_Prototype()
 	memcpy_s(m_pIndices, sizeof(INDEX16) * m_iTriCount, pIndex, sizeof(INDEX16) * m_iTriCount);
 
 	m_pIB->Unlock();
+
+	return S_OK;
 }
 
 HRESULT CVIBuffer_TerrainTexture::Setup_Component_Prototype(const wstring & _strFilePath)
@@ -187,11 +189,8 @@ HRESULT CVIBuffer_TerrainTexture::Set_Transform(const _matrix * _pMatWorld, cons
 
 HRESULT CVIBuffer_TerrainTexture::Set_Transform(const _matrix * _pMatWorld, const CCamera * _pCamera)
 {
-	_matrix matView;
-	_matrix matProj;
-
-	//matView = _pCamera->Get_ViewMatrix();
-	//matProj = _pCamera->Get_ProjectionMatrix();
+	const _matrix* matView = _pCamera->Get_ViewMatrix();
+	const _matrix* matProj = _pCamera->Get_ProjMatrix();
 
 	for (_uint iCnt = 0; iCnt < m_iVertexCount; ++iCnt)
 	{
@@ -199,13 +198,13 @@ HRESULT CVIBuffer_TerrainTexture::Set_Transform(const _matrix * _pMatWorld, cons
 		CPipeline::TransformCoord(&m_pVTXConvert[iCnt].vPosition, &m_pVTXOrigin[iCnt].vPosition, _pMatWorld);
 
 		// View
-		CPipeline::TransformCoord(&m_pVTXConvert[iCnt].vPosition, &m_pVTXConvert[iCnt].vPosition, &matView);
+		CPipeline::TransformCoord(&m_pVTXConvert[iCnt].vPosition, &m_pVTXConvert[iCnt].vPosition, matView);
 
 		if (1.f >= m_pVTXConvert[iCnt].vPosition.z)
 			continue;
 
 		// Projection
-		CPipeline::TransformCoord(&m_pVTXConvert[iCnt].vPosition, &m_pVTXConvert[iCnt].vPosition, &matProj);
+		CPipeline::TransformCoord(&m_pVTXConvert[iCnt].vPosition, &m_pVTXConvert[iCnt].vPosition, matProj);
 	}
 
 	VTX_TEXTURE* pVertex = nullptr;
@@ -218,11 +217,11 @@ HRESULT CVIBuffer_TerrainTexture::Set_Transform(const _matrix * _pMatWorld, cons
 
 _bool CVIBuffer_TerrainTexture::IsOnTerrain(_vec3 * _pInOutPos)
 {
-	_uint iX = _uint(_pInOutPos->x / m_fVertexInterval);
-	_uint iZ = _uint(_pInOutPos->z / m_fVertexInterval);
+	_uint iX = (_uint)(_pInOutPos->x / m_fVertexInterval);
+	_uint iZ = (_uint)(_pInOutPos->z / m_fVertexInterval);
 
 	_uint iIndex = iZ * m_iVertexCountX + iX;
-	if (m_iVertexCountX * m_iVertexCountZ <= iIndex)
+	if (m_iVertexCount <= iIndex)
 		return false;
 
 	_float fRatioX = _pInOutPos->x - m_pVTXOrigin[iIndex + m_iVertexCountX].vPosition.x;
@@ -245,6 +244,10 @@ _bool CVIBuffer_TerrainTexture::IsOnTerrain(_vec3 * _pInOutPos)
 			&m_pVTXOrigin[iIndex].vPosition);
 	}
 
+	_pInOutPos->y = -(Plane.a * _pInOutPos->x + Plane.c * _pInOutPos->z + Plane.d) / Plane.b;
+	_pInOutPos->y += (m_fVertexInterval * 0.5f);
+
+	return true;
 }
 
 TILEINFO * CVIBuffer_TerrainTexture::Load_TerrainData_FromFile(const wstring & _strFIlePath)

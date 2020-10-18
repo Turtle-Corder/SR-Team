@@ -3,6 +3,8 @@
 #define __VIBUFFER_H__
 
 #include "Component.h"
+#include "Pipeline.h"
+#include "Camera.h"
 
 BEGIN(Engine)
 
@@ -24,9 +26,9 @@ public:
 	virtual HRESULT Setup_Component(void* _pArg) = 0;
 	virtual HRESULT Set_Transform(const _matrix* _pMatWorld, const _matrix* _pMatView, const _matrix* _pMatProj);
 	virtual HRESULT Set_Transform(const _matrix* _pMatWorld, const CCamera* _pCamera);
+	virtual HRESULT Render_VIBuffer();
 
 public:
-	virtual HRESULT Render_VIBuffer();
 	virtual CComponent* Clone_Component(void* _pArg) = 0;
 	virtual void Free() override;
 

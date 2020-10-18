@@ -1,6 +1,11 @@
 #include "stdafx.h"
 #include "..\Headers\PreLoader.h"
 
+#pragma region GameObject_Headers
+#include "Terrain.h"
+#include "Skybox.h"
+#pragma endregion
+
 USING(Client)
 
 
@@ -35,23 +40,45 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
+
 	//----------------------------------------------------------------------------------------------------
 	// GameObject
 	//----------------------------------------------------------------------------------------------------
+#pragma region GameObject_Terrain
+	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Terrain", CTerrain::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region GameObject_Skybox
+	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Skybox", CSkybox::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
 
 
 	//----------------------------------------------------------------------------------------------------
 	// Component
 	//----------------------------------------------------------------------------------------------------
+#pragma region Component_VIBuffer_TerrainTexture
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_VIBuffer_TerrainTexture", CVIBuffer_TerrainTexture::Create(m_pDevice, 129, 129))))
+		return E_FAIL;
+#pragma endregion
 
+#pragma region Component_Texture_Terrain
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_Terrain", CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL, L"../Resources/Terrain/Terrain%d.png"))))
+		return E_FAIL;
+#pragma endregion
 
+#pragma region Component_Texture_Terrain
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_Skybox", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/Monster%d.dds"))))
+		return E_FAIL;
+#pragma endregion
 
 	return S_OK;
 }
 
 HRESULT CPreLoader::Load_Resources_Stage1()
 {
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 HRESULT CPreLoader::Load_Resources_Stage2()

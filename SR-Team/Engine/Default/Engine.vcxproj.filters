@@ -97,6 +97,12 @@
     <Filter Include="01.Utillity\05.Component\01.VIBuffer\06.VIBuffer_CubeTexture">
       <UniqueIdentifier>{8270eef1-f8be-4374-9cd1-3507b1673920}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utillity\04.GameObject\01.Camera">
+      <UniqueIdentifier>{f39c8177-012c-473f-9314-832053d750b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utillity\05.Component\04.Raycast">
+      <UniqueIdentifier>{e0721a63-00d9-46d4-9716-9d3185648fd0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Headers\Device_Manager.h">
@@ -183,6 +189,12 @@
     <ClInclude Include="..\Headers\VIBuffer_CubeColor.h">
       <Filter>01.Utillity\05.Component\01.VIBuffer\03.VIBuffer_CubeColor</Filter>
     </ClInclude>
+    <ClInclude Include="..\Headers\Camera.h">
+      <Filter>01.Utillity\04.GameObject\01.Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Raycast.h">
+      <Filter>01.Utillity\05.Component\04.Raycast</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Codes\Device_Manager.cpp">
@@ -253,6 +265,12 @@
     </ClCompile>
     <ClCompile Include="..\Codes\VIBuffer_CubeColor.cpp">
       <Filter>01.Utillity\05.Component\01.VIBuffer\03.VIBuffer_CubeColor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Camera.cpp">
+      <Filter>01.Utillity\04.GameObject\01.Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Raycast.cpp">
+      <Filter>01.Utillity\05.Component\04.Raycast</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

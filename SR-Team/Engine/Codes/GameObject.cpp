@@ -26,6 +26,16 @@ void CGameObject::Free()
 	Safe_Release(m_pDevice);
 }
 
+_int CGameObject::Update_GameObject(_float _fDeltaTime)
+{
+	return GAMEOBJECT::NOEVENT;
+}
+
+_int CGameObject::LateUpdate_GameObject(_float _fDeltaTime)
+{
+	return GAMEOBJECT::NOEVENT;
+}
+
 HRESULT CGameObject::Render_Priority()
 {
 	return E_NOTIMPL;

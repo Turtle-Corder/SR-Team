@@ -3,6 +3,14 @@
 #define __COMPONENT_MANAGER_H__
 
 #include "Base.h"
+#include "VIBuffer_TriColor.h"
+#include "VIBuffer_RectColor.h"
+#include "VIBuffer_RectTexture.h"
+#include "VIBuffer_TerrainTexture.h"
+#include "VIBuffer_CubeTexture.h"
+#include "Transform.h"
+#include "Texture.h"
+#include "Raycast.h"
 
 BEGIN(Engine)
 

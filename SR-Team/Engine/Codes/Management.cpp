@@ -237,6 +237,38 @@ HRESULT CManagement::Change_CurrentScene(_uint _iSceneID, CScene * pCurrentScene
 	return m_pScene_Manager->Change_CurrentScene(_iSceneID, pCurrentScene);
 }
 
+CGameObject * CManagement::Get_GameObject(_int _iSceneID, const wstring & _strLayerTag, _uint _iIndex)
+{
+	if (nullptr == m_pObject_Manager)
+		return nullptr;
+
+	return m_pObject_Manager->Get_GameObject(_iSceneID, _strLayerTag, _iIndex);
+}
+
+CComponent * CManagement::Get_Component(_int _iSceneID, const wstring & _strLayerTag, const wstring & _strComponentTag, _uint _iIndex)
+{
+	if (nullptr == m_pObject_Manager)
+		return nullptr;
+
+	return m_pObject_Manager->Get_Component(_iSceneID, _strLayerTag, _strComponentTag, _iIndex);
+}
+
+HRESULT CManagement::Add_GameObject_Prototype(_int _iSceneID, const wstring & _strPrototypeTag, CGameObject * _pPrototype)
+{
+	if (nullptr == m_pObject_Manager)
+		return E_FAIL;
+
+	return m_pObject_Manager->Add_GameObject_Prototype(_iSceneID, _strPrototypeTag, _pPrototype);
+}
+
+HRESULT CManagement::Add_GameObject_InLayer(_int _iFromSceneID, const wstring & _strPrototypeTag, _int _iToSceneID, const wstring & _strLayerTag, void * _pArg)
+{
+	if (nullptr == m_pObject_Manager)
+		return E_FAIL;
+
+	return m_pObject_Manager->Add_GameObject_InLayer(_iFromSceneID, _strPrototypeTag, _iToSceneID, _strLayerTag, _pArg);
+}
+
 HRESULT CManagement::Add_Component_Prototype(_int _iSceneID, const wstring & _strPrototypeTag, CComponent * _pPrototype)
 {
 	if (nullptr == m_pComponent_Manager)

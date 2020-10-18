@@ -6,7 +6,7 @@
 
 BEGIN(Engine)
 class CComponent;
-class CGameObject abstract : public CBase
+class ENGINE_DLL CGameObject abstract : public CBase
 {
 protected:
 	explicit CGameObject(LPDIRECT3DDEVICE9 _pDevice);
@@ -16,12 +16,13 @@ protected:
 
 protected:
 	HRESULT Add_Component(_int _iSceneID, const wstring& _strPrototypeTag, const wstring& _strComponentTag, CComponent** _ppComponent = nullptr, void* _pArg = nullptr);
+
 public:
 	CComponent* Get_Component(const wstring& _strComponentTag);
 
 public:
 	virtual HRESULT Setup_GameObject_Prototype() = 0;
-	virtual HRESULT Setup_GameObject(void*) = 0;
+	virtual HRESULT Setup_GameObject(void* _pArg) = 0;
 	virtual _int Update_GameObject(_float _fDeltaTime) = 0;
 	virtual _int LateUpdate_GameObject(_float _fDeltaTime) = 0;
 
@@ -32,7 +33,7 @@ public:
 	virtual HRESULT Render_UI();
 
 public:
-	virtual CGameObject* Clone_GameObject(void* pArg) = 0;
+	virtual CGameObject* Clone_GameObject(void* _pArg) = 0;
 	virtual void Free() override;
 
 
