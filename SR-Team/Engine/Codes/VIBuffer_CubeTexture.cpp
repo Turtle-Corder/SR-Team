@@ -164,9 +164,9 @@ HRESULT CVIBuffer_CubeTexture::Set_Transform(const _matrix * _pMatWorld, const C
 		CPipeline::TransformCoord(&m_pVTXConvert[iCnt].vPosition, &m_pVTXConvert[iCnt].vPosition, matProj);
 	}
 
-	VTX_TEXTURE* pVertex = nullptr;
+	VTX_CUBETEXTURE* pVertex = nullptr;
 	m_pVB->Lock(0, 0, (void**)&pVertex, 0);
-	memcpy_s(pVertex, sizeof(VTX_TEXTURE) * m_iVertexCount, m_pVTXConvert, sizeof(VTX_TEXTURE) * m_iVertexCount);
+	memcpy_s(pVertex, sizeof(VTX_CUBETEXTURE) * m_iVertexCount, m_pVTXConvert, sizeof(VTX_CUBETEXTURE) * m_iVertexCount);
 	m_pVB->Unlock();
 
 	return S_OK;

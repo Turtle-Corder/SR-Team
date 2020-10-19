@@ -31,6 +31,12 @@ _int CPlayer::Update_GameObject(_float _fDeltaTime)
 	if (FAILED(Movement(_fDeltaTime)))
 		return GAMEOBJECT::WARN;
 
+	if (FAILED(m_pTransformCom->Update_Transform()))
+		return GAMEOBJECT::WARN;
+
+	if (FAILED(m_pColliderCom->Update_Collider(m_pTransformCom->Get_Desc().vPosition)))
+		return GAMEOBJECT::WARN;
+
 	return GAMEOBJECT::NOEVENT;
 }
 
@@ -40,8 +46,6 @@ _int CPlayer::LateUpdate_GameObject(_float _fDeltaTime)
 	if (nullptr == pManagemnet)
 		return GAMEOBJECT::ERR;
 
-	if (FAILED(m_pTransformCom->Update_Transform()))
-		return GAMEOBJECT::WARN;
 
 	if (FAILED(pManagemnet->Add_RendererList(CRenderer::RENDER_NONEALPHA, this)))
 		return GAMEOBJECT::WARN;
@@ -71,6 +75,11 @@ HRESULT CPlayer::Render_NoneAlpha()
 	return S_OK;
 }
 
+HRESULT CPlayer::Take_Damage()
+{
+	return S_OK;
+}
+
 HRESULT CPlayer::Add_Component()
 {
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_RectTexture", L"Com_VIBuffer", (CComponent**)&m_pVIBufferCom)))
@@ -88,6 +97,13 @@ HRESULT CPlayer::Add_Component()
 		return E_FAIL;
 
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Raycast", L"Com_Ray", (CComponent**)&m_pRaycastCom)))
+		return E_FAIL;
+
+	CCollider::COLLIDER_DESC tColDesc;
+	tColDesc.vPosition = tTransformDesc.vPosition;
+	tColDesc.fRadius = 0.7f;
+
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Collider", L"Com_Collider", (CComponent**)&m_pColliderCom, &tColDesc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -249,6 +265,7 @@ void CPlayer::Free()
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pRaycastCom);
+	Safe_Release(m_pColliderCom);
 
 	CGameObject::Free();
 }

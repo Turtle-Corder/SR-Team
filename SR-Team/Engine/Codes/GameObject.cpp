@@ -61,6 +61,11 @@ HRESULT CGameObject::Render_UI()
 	return E_NOTIMPL;
 }
 
+HRESULT CGameObject::Take_Damage()
+{
+	return E_NOTIMPL;
+}
+
 CComponent * CGameObject::Get_Component(const wstring & _strComponentTag)
 {
 	auto iter_find = m_Components.find(_strComponentTag);

@@ -11,6 +11,7 @@
 #include "Transform.h"
 #include "Texture.h"
 #include "Raycast.h"
+#include "Collider.h"
 
 BEGIN(Engine)
 

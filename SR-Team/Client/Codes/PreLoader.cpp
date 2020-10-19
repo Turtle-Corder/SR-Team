@@ -4,6 +4,7 @@
 #pragma region GameObject_Headers
 #include "Terrain.h"
 #include "Skybox.h"
+#include "Monster.h"
 #pragma endregion
 
 USING(Client)
@@ -54,6 +55,11 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 		return E_FAIL;
 #pragma endregion
 
+#pragma region GameObject_Monster
+	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Monster", CMonster::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
 
 	//----------------------------------------------------------------------------------------------------
 	// Component
@@ -70,6 +76,11 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 
 #pragma region Component_Texture_Terrain
 	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_Skybox", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/Monster%d.dds"))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Texture_Monster
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_Monster", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/Monster%d.dds"))))
 		return E_FAIL;
 #pragma endregion
 

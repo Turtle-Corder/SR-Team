@@ -24,6 +24,8 @@ public:
 	_int	Update_Layer(_float _fDeltaTime);
 	_int	LateUpdate_Layer(_float _fDeltaTime);
 
+	HRESULT Collision_Detection_Layers(CLayer* _pSrcLayer, const wstring& _strColliderTag);
+
 public:
 	static CLayer* Create();
 	virtual void Free() override;

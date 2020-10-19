@@ -103,6 +103,12 @@
     <Filter Include="01.Utillity\05.Component\04.Raycast">
       <UniqueIdentifier>{e0721a63-00d9-46d4-9716-9d3185648fd0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utillity\05.Component\05.Collision">
+      <UniqueIdentifier>{d4ad15a5-b0b0-4a1f-9eea-dc730abd5df2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utillity\05.Component\05.Collision\00.SphereCollider">
+      <UniqueIdentifier>{2238d114-93f7-4bde-b8f3-ee417d796f60}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Headers\Device_Manager.h">
@@ -195,6 +201,9 @@
     <ClInclude Include="..\Headers\Raycast.h">
       <Filter>01.Utillity\05.Component\04.Raycast</Filter>
     </ClInclude>
+    <ClInclude Include="..\Headers\Collider.h">
+      <Filter>01.Utillity\05.Component\05.Collision\00.SphereCollider</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Codes\Device_Manager.cpp">
@@ -271,6 +280,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Raycast.cpp">
       <Filter>01.Utillity\05.Component\04.Raycast</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Collider.cpp">
+      <Filter>01.Utillity\05.Component\05.Collision\00.SphereCollider</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

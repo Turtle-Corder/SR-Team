@@ -67,7 +67,7 @@ public:
 	//--------------------------------------------------
 	// 콜라이더
 	//--------------------------------------------------
-//	HRESULT Add_CollisionList(CGameObject* _pObject);
+	HRESULT Collision_Detection_Layers(_int _iSceneID, const wstring& _strSrcLayerTag, const wstring& _strDstLayerTag, const wstring& _strColliderTag);
 
 
 	//--------------------------------------------------

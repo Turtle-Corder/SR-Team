@@ -32,6 +32,8 @@ public:
 	virtual HRESULT Render_BlendAlpha();
 	virtual HRESULT Render_UI();
 
+	virtual HRESULT Take_Damage();
+
 public:
 	virtual CGameObject* Clone_GameObject(void* _pArg) = 0;
 	virtual void Free() override;

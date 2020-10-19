@@ -229,6 +229,14 @@ HRESULT CManagement::Add_RendererList(CRenderer::eRENDER_TYPE _eType, CGameObjec
 	return m_pRenderer->Add_RendererList(_eType, _pObject);
 }
 
+HRESULT CManagement::Collision_Detection_Layers(_int _iSceneID, const wstring & _strSrcLayerTag, const wstring & _strDstLayerTag, const wstring & _strColliderTag)
+{
+	if (nullptr == m_pObject_Manager)
+		return E_FAIL;
+
+	return m_pObject_Manager->Collision_Detection_Layers(_iSceneID, _strSrcLayerTag, _strDstLayerTag, _strColliderTag);
+}
+
 HRESULT CManagement::Change_CurrentScene(_uint _iSceneID, CScene * pCurrentScene)
 {
 	if (nullptr == m_pScene_Manager)

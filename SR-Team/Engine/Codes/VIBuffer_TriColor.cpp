@@ -19,7 +19,7 @@ CVIBuffer_TriColor::CVIBuffer_TriColor(const CVIBuffer_TriColor & _rOther)
 HRESULT CVIBuffer_TriColor::Setup_Component_Prototype()
 {
 	m_iVertexSize = sizeof(VTX_COLOR);
-//	m_iIndexSize = sizeof(INDEX16);
+	m_iIndexSize = sizeof(INDEX16);
 	m_iFVF = VTX_CLOLOR_FVF;
 	m_iVertexCount = 3;
 	m_iTriCount = 1;

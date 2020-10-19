@@ -25,8 +25,8 @@ HRESULT CScene_Stage0::Setup_Scene()
 	if (FAILED(Setup_Layer_Player(L"Layer_Player")))
 		return E_FAIL;
 
-	//if (FAILED(Setup_Layer_Monster()))
-	//	return E_FAIL;
+	if (FAILED(Setup_Layer_Monster(L"Layer_Monster")))
+		return E_FAIL;
 
 	//if (FAILED(Setup_Layer_Environment()))
 	//	return E_FAIL;
@@ -48,6 +48,14 @@ _int CScene_Stage0::Update_Scene(_float _fDeltaTime)
 
 _int CScene_Stage0::LateUpdate_Scene(_float _fDeltaTime)
 {
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return -1;
+
+	// Src가 공격자 Dst가 피격자
+	if (FAILED(pManagement->Collision_Detection_Layers(SCENE_STAGE0, L"Layer_Player", L"Layer_Monster", L"Com_Collider")))
+		return -1;
+
 	return 0;
 }
 
@@ -134,7 +142,14 @@ HRESULT CScene_Stage0::Setup_Layer_Player(const wstring & LayerTag)
 
 HRESULT CScene_Stage0::Setup_Layer_Monster(const wstring & LayerTag)
 {
-	return E_NOTIMPL;
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Monster", SCENE_STAGE0, LayerTag)))
+		return E_FAIL;
+
+	return S_OK;
 }
 
 HRESULT CScene_Stage0::Setup_Layer_Environment(const wstring & LayerTag)

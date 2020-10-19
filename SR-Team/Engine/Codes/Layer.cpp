@@ -1,4 +1,5 @@
 #include "GameObject.h"
+#include "Collider.h"
 #include "..\Headers\Layer.h"
 
 USING(Engine)
@@ -101,6 +102,35 @@ _int CLayer::LateUpdate_Layer(_float _fDeltaTime)
 	}
 
 	return iBehaviour;
+}
+
+HRESULT CLayer::Collision_Detection_Layers(CLayer* _pSrcLayer, const wstring& _strColliderTag)
+{
+	if (nullptr == _pSrcLayer)
+		return E_FAIL;
+
+	for (auto& pSrcObject : _pSrcLayer->m_GameObjects)
+	{
+		CCollider* pSrcCol = (CCollider*)pSrcObject->Get_Component(_strColliderTag);
+		if (nullptr == pSrcCol)
+			continue;
+
+		for (auto& pDstObject : m_GameObjects)
+		{
+			CCollider* pDstCol = (CCollider*)pDstObject->Get_Component(_strColliderTag);
+			if (nullptr == pDstCol)
+				continue;
+
+			_vec3 vDist = pSrcCol->Get_Desc().vPosition - pDstCol->Get_Desc().vPosition;
+			float fDistance = D3DXVec3Length(&vDist);
+			float fMaxDistance = pSrcCol->Get_Desc().fRadius + pDstCol->Get_Desc().fRadius;
+
+			if (fDistance < fMaxDistance)
+				pDstObject->Take_Damage();
+		}
+	}
+
+	return S_OK;
 }
 
 CLayer * CLayer::Create()
