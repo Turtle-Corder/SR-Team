@@ -9,11 +9,6 @@ CKeyManager::CKeyManager()
 	ZeroMemory(bKeyState, sizeof(bKeyState));
 }
 
-
-CKeyManager::~CKeyManager()
-{
-}
-
 bool CKeyManager::Key_Pressing(_int _key)
 {
 	if (GetAsyncKeyState(_key) & 0x8000)

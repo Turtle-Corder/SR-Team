@@ -56,7 +56,7 @@ HRESULT CMainCamera::Movement(_float _fDeltaTime)
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform");
+	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform0");
 	if (nullptr == pPlayerTransform)
 	{
 		PRINT_LOG(L"pPlayerTransform is nullptr in CMainCamera::Movement", LOG::CLIENT);

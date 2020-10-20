@@ -1,4 +1,8 @@
 #include "stdafx.h"
+#include "Item.h"
+#include "ItemManager.h"
+#include "UICamera.h"
+#include "KeyManager.h"
 #include "..\Headers\Inventory.h"
 
 USING(Client)
@@ -44,14 +48,14 @@ HRESULT CInventory::Setup_GameObject(void * pArg)
 
 _int CInventory::Update_GameObject(float DeltaTime)
 {
-	if (CKeyMgr::Get_Instance()->Key_Pressing('G'))
+	if (CKeyManager::Get_Instance()->Key_Pressing('G'))
 	{
 		// ÀÏ´ÜÀº ±×³É ¾ÆÀÌÅÛ ¸Ô´Â°Å·Î.. -> ³ªÁß¿¡ ¼öÁ¤
 		m_pInvenList = m_pItemMgrCom->Get_DropItem(L"±Ý °Ë", m_iInsertOrder, 200);
 		//PRINT_LOG(L"°Ë1 È¹µæ!");
 		++m_iInsertOrder;
 	}
-	if (CKeyMgr::Get_Instance()->Key_Pressing('H'))
+	if (CKeyManager::Get_Instance()->Key_Pressing('H'))
 	{
 		m_pInvenList = m_pItemMgrCom->Get_DropItem(L"Ã¶ °Ë", m_iInsertOrder, 100);
 		//PRINT_LOG(L"°Ë2 È¹µæ!");
@@ -64,7 +68,7 @@ _int CInventory::Update_GameObject(float DeltaTime)
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CItem* pItem = (CItem*)pManagement->Get_GameObject(CENE_STAGE, L"Layer_Item");
+	CItem* pItem = (CItem*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Item");
 	if (nullptr == pItem)
 		return E_FAIL;
 
@@ -97,7 +101,7 @@ HRESULT CInventory::Render_UI()
 		if (nullptr == pManagement)
 			return E_FAIL;
 
-		CUICamera* pCamera = (CUICamera*)pManagement->Get_GameObject(SCENE_STAGE, L"Layer_UICamera");
+		CUICamera* pCamera = (CUICamera*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_UICamera");
 		if (nullptr == pCamera)
 			return E_FAIL;
 

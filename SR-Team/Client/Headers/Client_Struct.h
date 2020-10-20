@@ -16,6 +16,16 @@ typedef struct tagInvenItem
 
 
 
+typedef struct tagTerrainInfo
+{
+	_int iFloor;
+	_int iIndex;
+	_int iTextureID;
+	_int iX_Index;
+	_int iZ_Index;
+} TERRAININFO;
+
+
 
 
 #endif // __CLINET_STRUCT_H__

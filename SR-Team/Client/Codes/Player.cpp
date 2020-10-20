@@ -2,6 +2,7 @@
 #include "Status.h"
 #include "KeyManager.h"
 #include "Inventory.h"
+#include "ItemManager.h"
 #include "..\Headers\Player.h"
 
 USING(Client)
@@ -202,22 +203,14 @@ HRESULT CPlayer::Add_Component()
 		// For.Com_Texture
 		TCHAR szTexture[MAX_STR] = L"", szTextureName[MAX_STR] = L"";
 		wsprintf(szTexture, L"Com_Texture%d", iCnt);
-		if (iCnt == PART_HEAD)
-			wsprintf(szTextureName, L"Component_Texture_Monster");
-		else if (iCnt == PART_BODY)
-			wsprintf(szTextureName, L"Component_Texture_PlayerHead");
-		else if (iCnt == PART_HAND_LEFT || iCnt == PART_HAND_RIGHT)
-			wsprintf(szTextureName, L"Component_Texture_PlayerHand");
-		else
-			wsprintf(szTextureName, L"Component_Texture_PlayerFoot");
+		if (iCnt == PART_HEAD)			wsprintf(szTextureName, L"Component_Texture_Monster");
+		else if (iCnt == PART_BODY)		wsprintf(szTextureName, L"Component_Texture_PlayerHead");
+		else if (iCnt == PART_HAND_LEFT || iCnt == PART_HAND_RIGHT)	wsprintf(szTextureName, L"Component_Texture_PlayerHand");
+		else							wsprintf(szTextureName, L"Component_Texture_PlayerFoot");
 
 		if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, szTextureName, szTexture, (CComponent**)&m_pTextureCom[iCnt])))
 			return E_FAIL;
 	}
-
-	// For.Com_Picking
-	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Raycast", L"Com_Ray", (CComponent**)&m_pRaycastCom)))
-		return E_FAIL;
 
 	// For.Com_Stat
 	CStatus::STAT tStat;
@@ -230,7 +223,7 @@ HRESULT CPlayer::Add_Component()
 		return E_FAIL;
 
 	// For.ItemMgr
-	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_ItemManagement", L"Com_ItemMgr", (CComponent**)&m_pItemMgrCom)))
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_ItemManager", L"Com_ItemMgr", (CComponent**)&m_pItemMgrCom)))
 		return E_FAIL;
 
 	CCollider::COLLIDER_DESC tColDesc;
@@ -278,9 +271,6 @@ HRESULT CPlayer::Movement(_float _fDeltaTime)
 	}
 
 	if (FAILED(IsOnTerrain()))
-		return E_FAIL;
-
-	if (FAILED(RaycastOnTerrain()))
 		return E_FAIL;
 
 	Jump(_fDeltaTime);
@@ -521,6 +511,8 @@ _int CPlayer::Initial_Update_GameObject()
 		m_vConstRot[iCnt] = m_pTransformCom[iCnt]->Get_Desc().vRotate;
 	}
 	m_bInitial = false;
+
+	return GAMEOBJECT::NOEVENT;
 }
 
 _int CPlayer::Update_Parts()
@@ -678,7 +670,7 @@ HRESULT CPlayer::Universal_Key()
 
 HRESULT CPlayer::Wnd_OpenClose()
 {
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 CPlayer * CPlayer::Create(LPDIRECT3DDEVICE9 _pDevice)
@@ -718,7 +710,7 @@ void CPlayer::Free()
 	}
 
 	Safe_Release(m_pItemMgrCom);
-	Safe_Release(m_pItemMgrCom);
+	Safe_Release(m_pStatusCom);
 	Safe_Release(m_pRaycastCom);
 	Safe_Release(m_pColliderCom);
 

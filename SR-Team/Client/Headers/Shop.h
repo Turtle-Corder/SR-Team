@@ -44,9 +44,9 @@ private:
 	bool			m_bRender = false;
 	RECT			m_tShopWnd;
 	// Component-----------------------------------
-	CVIBuffer*		m_pVIBufferCom;
-	CTransform*		m_pTransformCom;
-	CTexture*		m_pTextureCom;
+	CVIBuffer*		m_pVIBufferCom = nullptr;
+	CTransform*		m_pTransformCom = nullptr;
+	CTexture*		m_pTextureCom = nullptr;
 
 	// Pos, Scale----------------------------------
 	_vec3			m_vPos[SHOP_END];

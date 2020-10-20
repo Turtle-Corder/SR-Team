@@ -5,6 +5,7 @@
 USING(Engine)
 BEGIN(Client)
 
+class CItemManager;
 class CInventory : public CGameObject
 {
 private:
@@ -40,7 +41,7 @@ private:
 	bool				m_bRender = false;
 	list<INVEN_ITEM*>	m_pInvenList;
 
-	CItemManagement*	m_pItemMgrCom = nullptr;
+	CItemManager*		m_pItemMgrCom = nullptr;
 	CVIBuffer*			m_pVIBufferCom = nullptr;
 	CTransform*			m_pTransformCom = nullptr;
 	CTexture*			m_pTextureCom = nullptr;

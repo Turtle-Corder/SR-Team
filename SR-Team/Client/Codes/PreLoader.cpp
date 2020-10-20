@@ -5,6 +5,12 @@
 #include "Terrain.h"
 #include "Skybox.h"
 #include "Monster.h"
+#include "Slime.h"
+#include "Snail.h"
+#include "Yeti.h"
+#include "Snow.h"
+#include "Meteor.h"
+#include "CubeTerrain.h"
 #pragma endregion
 
 USING(Client)
@@ -60,12 +66,35 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 		return E_FAIL;
 #pragma endregion
 
+#pragma region GameObject_Translucent_Cube
+	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Translucent_Cube", CSlime::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region GameObject_Snail
+	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Snail", CSnail::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region GameObject_Yeti
+	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Yeti", CYeti::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+
 
 	//----------------------------------------------------------------------------------------------------
 	// Component
 	//----------------------------------------------------------------------------------------------------
+
+	// terrain
 #pragma region Component_VIBuffer_TerrainTexture
 	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_VIBuffer_TerrainTexture", CVIBuffer_TerrainTexture::Create(m_pDevice, 129, 129))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region GameObject_CubeTerrain
+	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_CubeTerrain", CCubeTerrain::Create(m_pDevice))))
 		return E_FAIL;
 #pragma endregion
 
@@ -74,15 +103,103 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 		return E_FAIL;
 #pragma endregion
 
-#pragma region Component_Texture_Terrain
+
+	// skybox
+#pragma region Component_Texture_Skybox
 	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_Skybox", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/Monster%d.dds"))))
 		return E_FAIL;
 #pragma endregion
 
-#pragma region Component_Texture_Monster
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_Monster", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/Monster%d.dds"))))
+
+	// monster
+#pragma region Component_Texture_Translucent_Cube
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_Translucent_Cube", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/TranslucentCube%d.dds"))))
 		return E_FAIL;
 #pragma endregion
+
+#pragma region Component_Texture_SnailBody
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_SnailBody", CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL, L"../Resources/SnailBody%d.dds"))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Texture_SnailHead
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_SnailHead", CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL, L"../Resources/SnailHead%d.dds"))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Texture_YetiBody
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_YetiBody", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/Monster%d.dds"))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Texture_YetiHead
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_YetiHead", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/Monster%d.dds"))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Texture_YetiLeft
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_YetiLeft", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/Monster%d.dds"))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Texture_YetiRight
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_YetiRight", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/Monster%d.dds"))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Texture_YetiLeftLeg
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_YetiLeftLeg", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/Monster%d.dds"))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Texture_YetiRightLeg
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_YetiRightLeg", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/Monster%d.dds"))))
+		return E_FAIL;
+#pragma endregion
+
+
+	//projectile
+#pragma region GameObject_Snow
+	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Snow", CSnow::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region GameObject_Meteor
+	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Meteor", CMeteor::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+
+	// player
+#pragma region Component_Texture_Player
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_Monster", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/Monster%d.dds"))))
+		return E_FAIL;
+
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_PlayerHead", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE,
+			L"../Resources/Player/PlayerHead%d.dds"))))
+		return E_FAIL;
+
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_PlayerHand", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE,
+			L"../Resources/Player/PlayerHand%d.dds"))))
+		return E_FAIL;
+
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_PlayerFoot", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE,
+			L"../Resources/Player/PlayerFoot%d.dds"))))
+		return E_FAIL;
+#pragma endregion
+
+	// item
+#pragma region Component_Texture_Item
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_DropDiamond", CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL, L"../Resources/item/diamond%d.png"))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Texture_Ruby
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_DropRuby", CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL, L"../Resources/item/ruby%d.png"))))
+		return E_FAIL;
+#pragma endregion
+
+
 
 	return S_OK;
 }

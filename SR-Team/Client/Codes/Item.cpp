@@ -2,6 +2,7 @@
 #include "Status.h"
 #include "UICamera.h"
 #include "Inventory.h"
+#include "ItemManager.h"
 #include "..\Headers\Item.h"
 
 USING(Client)
@@ -9,6 +10,21 @@ USING(Client)
 CItem::CItem(LPDIRECT3DDEVICE9 _pDevice)
 	: CGameObject(_pDevice)
 {
+	for (_uint i = 0; i < 5; ++i)
+	{
+		m_pPriceTextureCom[i] = nullptr;
+		m_pPriceTransformCom[i] = nullptr;
+		m_pPriceVIBufferCom[i] = nullptr;
+
+		m_pNameTextureCom[i] = nullptr;
+		m_pNameTransformCom[i] = nullptr;
+		m_pNameVIBufferCom[i] = nullptr;
+
+		m_pStatCom[i] = nullptr;
+		m_pTextureCom[i] = nullptr;
+		m_pTransformCom[i] = nullptr;
+		m_pVIBufferCom[i] = nullptr;
+	}
 }
 
 CItem::CItem(const CItem & _rOther)

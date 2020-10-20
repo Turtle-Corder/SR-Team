@@ -7,6 +7,8 @@
 BEGIN(Client)
 USING(Engine)
 
+class CStatus;
+class CItemManager;
 class CPlayer final : public CGameObject
 {
 public:
@@ -78,7 +80,7 @@ private:
 	CRaycast*			m_pRaycastCom	= nullptr;
 	CCollider*			m_pColliderCom	= nullptr;
 	CStatus*			m_pStatusCom	= nullptr;
-	CItemManagement*	m_pItemMgrCom	= nullptr;
+	CItemManager*		m_pItemMgrCom	= nullptr;
 
 
 
