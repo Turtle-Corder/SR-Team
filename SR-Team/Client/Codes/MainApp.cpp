@@ -13,6 +13,10 @@
 #include "MainCamera.h"
 #pragma endregion
 
+#pragma region Component_Headers
+#include "Status.h"
+#pragma endregion
+
 
 USING(Client)
 
@@ -154,6 +158,11 @@ HRESULT CMainApp::Setup_StaticResources()
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Collider", CCollider::Create(m_pDevice))))
 		return E_FAIL;
 #pragma  endregion
+	
+#pragma region Component_Status
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Status", CStatus::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
 
 
 	//----------------------------------------------------------------------------------------------------

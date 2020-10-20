@@ -23,9 +23,10 @@
 
 
 // TODO: 프로그램에 필요한 추가 헤더는 여기에서 참조합니다.
+#include "Management.h"
 #include "Client_Define.h"
 #include "Client_Enum.h"
-#include "Management.h"
+#include "Client_Struct.h"
 
 
 

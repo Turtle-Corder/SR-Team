@@ -39,6 +39,7 @@ public:
 public:
 	void Set_Position(const _vec3& _vPosition);
 	void Set_WorldMatrix(const _matrix& _matWorld);
+	void Set_Rotation(const _vec3& _vRotation);
 
 public:
 	virtual HRESULT Setup_Component_Prototype() override;

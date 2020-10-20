@@ -29,6 +29,11 @@ void CTransform::Set_WorldMatrix(const _matrix & _matWorld)
 	m_tTransformDesc.matWorld = _matWorld;
 }
 
+void CTransform::Set_Rotation(const _vec3 & _vRotation)
+{
+	m_tTransformDesc.vRotate = _vRotation;
+}
+
 HRESULT CTransform::Setup_Component_Prototype()
 {
 	return S_OK;

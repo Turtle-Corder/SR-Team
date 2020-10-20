@@ -117,6 +117,73 @@ HRESULT CVIBuffer_RectTexture::Set_Transform(const _matrix * _pMatWorld, const _
 	return S_OK;
 }
 
+HRESULT CVIBuffer_RectTexture::Set_UITransform(const _matrix * _pMatWorld, const CCamera * _pCamera, const _vec3 & _vPosition, const _vec3 & vScale)
+{
+	// 월드행렬을 항등행렬로
+	D3DXMATRIX matView;
+	D3DXMATRIX* matWorld = const_cast<D3DXMATRIX*>(_pMatWorld);
+	D3DXMatrixIdentity(matWorld);
+
+	// 뷰행렬을 항등행렬로
+	D3DXMatrixIdentity(&matView);
+
+	// 카메라로부터 직교투영행렬 얻기
+	D3DXMATRIX* matProj = const_cast<D3DXMATRIX*>(_pCamera->Get_ProjMatrix());
+	D3DXMatrixIdentity(matProj);
+	//matProj = const_cast<D3DXMATRIX*>(pCamera->Get_StateMatrix(1));
+	D3DXMatrixOrthoLH(matProj, 800.f, 600.f, 0.f, 1.f);
+
+	// 스케일 키워주기
+	matView._11 = vScale.x;
+	matView._22 = vScale.y;
+	matView._33 = 1.f;
+
+	// UI 객체의 기본 좌표
+	D3DXVECTOR3 UIPos = D3DXVECTOR3(_vPosition.x, _vPosition.y, _vPosition.z);
+
+	// 변환될 좌표
+	D3DXVECTOR3 ConvertUIPos = UIPos;
+
+	// 데카르트 좌표계를 윈도우 좌표계처럼 사용할 수 있도록
+	ConvertUIPos.y = -UIPos.y;
+	ConvertUIPos.x -= (float)(800 / 2);
+	ConvertUIPos.y += (float)(600 / 2);
+
+
+	// 좌표를 행렬의 이동값으로 반영
+	memcpy_s(&matView._41, sizeof(matView._41), &ConvertUIPos.x, sizeof(float));
+	memcpy_s(&matView._42, sizeof(matView._42), &ConvertUIPos.y, sizeof(float));
+	memcpy_s(&matView._43, sizeof(matView._43), &ConvertUIPos.z, sizeof(float));
+
+
+	// 정점 변환
+	for (_uint i = 0; i < m_iVertexCount; ++i)
+	{
+		// 월드 변환
+		CPipeline::TransformCoord(&m_pVTXConvert[i].vPosition,
+			&m_pVTXOrigin[i].vPosition, matWorld);
+
+		// 뷰 변환
+		CPipeline::TransformCoord(
+			&m_pVTXConvert[i].vPosition,
+			&m_pVTXConvert[i].vPosition, &matView);
+
+		//if (1.f >= m_pConvertVertices[i].vPosition.z)
+		//	continue;
+
+		D3DXVec3TransformNormal(&m_pVTXConvert[i].vPosition, &m_pVTXConvert[i].vPosition, &matView);
+	}
+
+	VTX_TEXTURE* pVertex = nullptr;
+	m_pVB->Lock(0, 0, (void**)&pVertex, 0);
+
+	memcpy_s(pVertex, sizeof(VTX_TEXTURE) * m_iVertexCount, m_pVTXConvert, sizeof(VTX_TEXTURE) * m_iVertexCount);
+
+	m_pVB->Unlock();
+
+	return S_OK;
+}
+
 HRESULT CVIBuffer_RectTexture::Set_Transform(const _matrix * _pMatWorld, const CCamera * _pCamera)
 {
 	const _matrix* matView = _pCamera->Get_ViewMatrix();
