@@ -11,6 +11,7 @@
 #include "Snow.h"
 #include "Meteor.h"
 #include "CubeTerrain.h"
+#include "DropItem.h"
 #pragma endregion
 
 USING(Client)
@@ -81,6 +82,10 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 		return E_FAIL;
 #pragma endregion
 
+#pragma region GameObject_Item
+	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_DropItem", CDropItem::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
 
 
 	//----------------------------------------------------------------------------------------------------

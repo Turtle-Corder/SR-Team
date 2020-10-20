@@ -73,7 +73,7 @@ _int CSlime::Update_GameObject(_float _fDeltaTime)
 	if (FAILED(m_pTransformCom->Update_Transform()))
 		return GAMEOBJECT::WARN;
 
-	return GAMEOBJECT::DEAD;
+	return GAMEOBJECT::NOEVENT;
 }
 
 _int CSlime::LateUpdate_GameObject(_float _fDeltaTime)
