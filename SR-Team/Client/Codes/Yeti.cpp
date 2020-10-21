@@ -511,7 +511,7 @@ HRESULT CYeti::Create_Snow(const wstring & LayerTag)
 	_vec3 vRightHand = m_pTransformCom[YETI_RIGHT]->Get_Desc().vPosition;
 
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Snow",
-		SCENE_STAGE0, LayerTag, this)))
+		SCENE_STAGE0, LayerTag, &m_pOwner)))
 		return E_FAIL;
 
 	return S_OK;

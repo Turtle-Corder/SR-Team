@@ -6,7 +6,7 @@
 
 USING(Engine)
 BEGIN(Client)
-
+class CStatus;
 class CSnow final : public CGameObject
 {
 private:
@@ -50,7 +50,7 @@ private:
 	bool		m_bGround = false;
 	float		m_fGravity = 0.f;
 	_vec3		m_vCompare = {};
-	ATTACKINFO* m_pAttackInfo = nullptr;
+	ATTACKINFO* m_pOwner = nullptr;
 
 };
 

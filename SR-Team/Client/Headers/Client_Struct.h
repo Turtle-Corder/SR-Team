@@ -2,7 +2,7 @@
 #ifndef __CLIENT_STRUCT_H__
 #define __CLIENT_STRUCT_H__
 
-
+USING(Engine)
 
 typedef struct tagInvenItem
 {
@@ -25,11 +25,9 @@ typedef struct tagTerrainInfo
 	_int iZ_Index;
 } TERRAININFO;
 
-class CGameObject;
-
 typedef struct tagAttackInfo
 {
-	CGameObject* pwho;
+	CGameObject* pOwner;
 	_int		iAttack;
 }ATTACKINFO;
 

@@ -54,7 +54,8 @@ private:
 	bool		m_bRHandDown = false;
 	bool		m_bHighestCheck = false;
 	float		m_fAttackTime = 0.f;
-
+private:
+	ATTACKINFO* m_pOwner = nullptr;
 };
 
 END

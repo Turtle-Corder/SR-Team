@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "Status.h"
 #include "..\Headers\Snow.h"
 
 
@@ -22,8 +23,8 @@ HRESULT CSnow::Setup_GameObject_Prototype()
 
 HRESULT CSnow::Setup_GameObject(void * pArg)
 {
-	if(pArg)
-	m_vPos = *(_vec3*)pArg;
+	if (pArg)
+	m_pOwner = (ATTACKINFO*)pArg;
 
 
 	if (FAILED(Add_Component()))
@@ -93,7 +94,7 @@ HRESULT CSnow::Add_Component()
 	// For.Com_Texture
 	if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, L"Component_Texture_Snow", L"Com_Texture", (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
-
+	
 	// For.Com_Transform
 	CTransform::TRANSFORM_DESC tTransformDesc;
 	tTransformDesc.vPosition = { m_vPos.x , m_vPos.y , m_vPos.z };
