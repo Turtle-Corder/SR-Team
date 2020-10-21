@@ -27,6 +27,7 @@ public:
 
 	HRESULT SetTexture(_uint _iIndex);
 	const IDirect3DBaseTexture9* GetTexture(_uint _iIndex) const;
+	const D3DXIMAGE_INFO* Get_TexInfo(_uint _iIndex) const;
 
 public:
 	static CTexture* Create(LPDIRECT3DDEVICE9 _pDevice, TEXTURE_TYPE _eTextureType, const wstring& _strFilePath, _uint _iCount = 1);
@@ -36,6 +37,8 @@ public:
 private:
 	typedef vector<IDirect3DBaseTexture9*> TEXTURES;
 	TEXTURES m_Textures;
+
+	vector<D3DXIMAGE_INFO*> m_TexInfo;
 
 	TEXTURE_TYPE	m_eTextureType	= TEXTURE_NORMAL;
 	wstring			m_strFilePath	= L"";

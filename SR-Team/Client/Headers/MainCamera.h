@@ -24,7 +24,7 @@ public:
 private:
 	HRESULT Movement(_float _fDeltaTime);
 	HRESULT ZoomInOut(_float _fDeltaTime);
-//	HRESULT UpDown(_float _fDeltaTime);
+	//	HRESULT UpDown(_float _fDeltaTime);
 
 public:
 	static CMainCamera* Create(LPDIRECT3DDEVICE9 _pDevice);
@@ -34,10 +34,13 @@ public:
 
 
 private:
-	_float m_fDistanceToTarget = 10.f;
 	_float m_fZoomInOutSpeedPerSecond = 10.f;
 	_float m_fCameraAngle = D3DXToRadian(45.f);
 	_float m_fUpDownSpeedPerSecond = D3DXToRadian(45.f);
+	_float m_fStartHeight = 4.f;
+	_float m_fStartDistance = 1.f;
+	_float m_fHeight = m_fStartHeight;
+	_float m_fDistance = m_fStartDistance;
 };
 
 END

@@ -45,7 +45,9 @@ public:
 	//--------------------------------------------------
 	// ÀåÄ¡
 	//--------------------------------------------------
-	LPDIRECT3DDEVICE9 Get_Device(void) const;
+	LPDIRECT3DDEVICE9	Get_Device(void)	const;
+	LPD3DXSPRITE		Get_Sprite(void)	const;
+	LPD3DXFONT			Get_Font(void)		const;
 
 
 	//--------------------------------------------------

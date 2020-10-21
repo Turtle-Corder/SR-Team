@@ -13,6 +13,7 @@ CTexture::CTexture(LPDIRECT3DDEVICE9 _pDevice, TEXTURE_TYPE _eTextureType, const
 CTexture::CTexture(const CTexture & _rOther)
 	: CComponent(_rOther)
 	, m_Textures(_rOther.m_Textures)
+	, m_TexInfo(_rOther.m_TexInfo)
 	, m_eTextureType(_rOther.m_eTextureType)
 	, m_strFilePath(_rOther.m_strFilePath)
 	, m_iCount(_rOther.m_iCount)
@@ -24,6 +25,7 @@ CTexture::CTexture(const CTexture & _rOther)
 HRESULT CTexture::Setup_Component_Prototype()
 {
 	IDirect3DBaseTexture9* pTexture = nullptr;
+	D3DXIMAGE_INFO* pTexInfo = nullptr;
 	TCHAR szFullPath[MAX_STR] = L"";
 	HRESULT hr = 0;
 
@@ -43,26 +45,27 @@ HRESULT CTexture::Setup_Component_Prototype()
 
 		case Engine::CTexture::TEXTURE_SPRITE:
 		{
-			D3DXIMAGE_INFO tTexInfo;
-			ZeroMemory(&tTexInfo, sizeof(D3DXIMAGE_INFO));
 
-			hr = D3DXGetImageInfoFromFile(szFullPath, &tTexInfo);
+			pTexInfo = new D3DXIMAGE_INFO;
+			ZeroMemory(pTexInfo, sizeof(D3DXIMAGE_INFO));
+
+			hr = D3DXGetImageInfoFromFile(szFullPath, pTexInfo);
 			if (FAILED(hr))	break;
 
 			hr = D3DXCreateTextureFromFileEx(m_pDevice,
 				szFullPath,
-				tTexInfo.Width,
-				tTexInfo.Height,
-				tTexInfo.MipLevels,
+				pTexInfo->Width,
+				pTexInfo->Height,
+				pTexInfo->MipLevels,
 				0,
-				tTexInfo.Format,
+				pTexInfo->Format,
 				D3DPOOL_MANAGED,
 				D3DX_DEFAULT,
 				D3DX_DEFAULT,
 				0,
 				nullptr,
 				nullptr,
-				(LPDIRECT3DTEXTURE9*)pTexture);
+				(LPDIRECT3DTEXTURE9*)&pTexture);
 		}
 		break;
 
@@ -75,6 +78,9 @@ HRESULT CTexture::Setup_Component_Prototype()
 		}
 
 		m_Textures.emplace_back(pTexture);
+
+		if (m_eTextureType == TEXTURE_TYPE::TEXTURE_SPRITE)
+			m_TexInfo.emplace_back(pTexInfo);
 	}
 
 	return S_OK;
@@ -99,6 +105,14 @@ const IDirect3DBaseTexture9 * CTexture::GetTexture(_uint _iIndex) const
 		return nullptr;
 
 	return m_Textures[_iIndex];
+}
+
+const D3DXIMAGE_INFO* CTexture::Get_TexInfo(_uint _iIndex) const
+{
+	if (m_iCount <= _iIndex)
+		return nullptr;
+
+	return m_TexInfo[_iIndex];
 }
 
 CTexture * CTexture::Create(LPDIRECT3DDEVICE9 _pDevice, TEXTURE_TYPE _eTextureType, const wstring & _strFilePath, _uint _iCount)
@@ -134,6 +148,14 @@ void CTexture::Free()
 		Safe_Release(pTexture);
 
 	m_Textures.clear();
+
+	if (!m_bIsClone)
+	{
+		for (auto& pTexInfo : m_TexInfo)
+			Safe_Delete(pTexInfo);
+
+		m_TexInfo.clear();
+	}
 
 	CComponent::Free();
 }

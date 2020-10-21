@@ -189,6 +189,22 @@ LPDIRECT3DDEVICE9 CManagement::Get_Device(void) const
 	return m_pDevice_Manager->Get_Device();
 }
 
+LPD3DXSPRITE CManagement::Get_Sprite(void) const
+{
+	if (nullptr == m_pDevice_Manager)
+		return nullptr;
+
+	return m_pDevice_Manager->Get_Sprite();
+}
+
+LPD3DXFONT CManagement::Get_Font(void) const
+{
+	if (nullptr == m_pDevice_Manager)
+		return nullptr;
+
+	return m_pDevice_Manager->Get_Font();
+}
+
 HRESULT CManagement::Add_Timer(const wstring & _strTimerTag, bool _bStart)
 {
 	if (nullptr == m_pTimer_Manager)

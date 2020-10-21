@@ -65,6 +65,8 @@ private:
 	// hp 바 지연 감소
 	HRESULT Draw_HpBar();
 
+	HRESULT Ready_Layer_Meteor(const wstring& _strLayerTag, _vec3 _vGoalPos);
+
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 _pDevice);

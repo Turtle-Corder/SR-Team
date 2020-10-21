@@ -5,7 +5,6 @@
 #include "Base.h"
 
 BEGIN(Client)
-
 USING(Engine)
 
 class CMainApp final : public CBase
@@ -30,6 +29,8 @@ public:
 private:
 	CManagement*		m_pManagement	= nullptr;
 	LPDIRECT3DDEVICE9	m_pDevice		= nullptr;
+	LPD3DXSPRITE		m_pSprite		= nullptr;
+	LPD3DXFONT			m_pFont			= nullptr;
 };
 
 END
