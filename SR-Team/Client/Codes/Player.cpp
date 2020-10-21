@@ -233,6 +233,9 @@ HRESULT CPlayer::Add_Component()
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Collider", L"Com_Collider", (CComponent**)&m_pColliderCom, &tColDesc)))
 		return E_FAIL;
 
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Raycast", L"Com_Ray", (CComponent**)&m_pRaycastCom)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -843,7 +846,7 @@ void CPlayer::Skill_Laser(float fDeltaTime)
 
 void CPlayer::Skill_ProjectileFall(float fDeltaTime)
 {
-	if (GetAsyncKeyState('C') & 0x8000)
+	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
 		m_bStartFall = true;
 		m_bIsFall = false;
@@ -852,6 +855,27 @@ void CPlayer::Skill_ProjectileFall(float fDeltaTime)
 		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
 		m_bUsingSkill = true;
 		m_ePlayerSkillID = PLAYER_SKILL_FALL;
+
+		CManagement* pManagement = CManagement::Get_Instance();
+		if (nullptr == pManagement)
+			return;
+
+		CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Terrain", L"Com_VIBuffer");
+		if (nullptr == pTerrainBuffer)
+			return;
+
+		CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Camera");
+
+		_matrix mat;
+		D3DXMatrixIdentity(&mat);
+		_vec3 vGoalPos = {};
+
+		if (true == m_pRaycastCom->IsSimulate<VTX_TEXTURE, INDEX16>(
+			g_hWnd, WINCX, WINCY, pTerrainBuffer, &mat, pCamera, &vGoalPos))
+		{
+			if (FAILED(Ready_Layer_Meteor(L"Layer_Meteor", vGoalPos)))
+				PRINT_LOG(L"Failed To Ready_Layer_Meteor in CPlayer", LOG::CLIENT);
+		}
 	}
 
 	else if (m_bStartFall)
@@ -912,4 +936,16 @@ void CPlayer::Skill_ProjectileFall(float fDeltaTime)
 HRESULT CPlayer::Draw_HpBar()
 {
 	return E_NOTIMPL;
+}
+
+HRESULT CPlayer::Ready_Layer_Meteor(const wstring& _strLayerTag, _vec3 _vGoalPos)
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Meteor", SCENE_STAGE0, _strLayerTag, &_vGoalPos)))
+		return E_FAIL;
+
+	return S_OK;
 }

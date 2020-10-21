@@ -2,15 +2,15 @@
 #ifndef __MAINUI_H__
 #define __MAINUI_H__
 
-#include "GameObject.h"
+#include "UIObject.h"
 
 USING(Engine)
 BEGIN(Client)
 
-class CMainUI : public CGameObject
+class CMainUI : public CUIObject
 {
 private:
-	explicit CMainUI(LPDIRECT3DDEVICE9 _pDevice);
+	explicit CMainUI(LPDIRECT3DDEVICE9 _pDevice, LPD3DXSPRITE _pSprite, LPD3DXFONT _pFont);
 	explicit CMainUI(const CMainUI& _rOther);
 	virtual ~CMainUI() = default;
 
@@ -24,7 +24,7 @@ private:
 	HRESULT Add_Component();
 
 public:
-	static CMainUI* Create(LPDIRECT3DDEVICE9 pDevice);
+	static CMainUI* Create(LPDIRECT3DDEVICE9 pDevice, LPD3DXSPRITE _pSprite, LPD3DXFONT _pFont);
 	virtual CGameObject * Clone_GameObject(void * pArg) override;
 	virtual void Free() override;
 

@@ -97,9 +97,6 @@
     <Filter Include="01.Utillity\05.Component\01.VIBuffer\06.VIBuffer_CubeTexture">
       <UniqueIdentifier>{8270eef1-f8be-4374-9cd1-3507b1673920}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utillity\04.GameObject\01.Camera">
-      <UniqueIdentifier>{f39c8177-012c-473f-9314-832053d750b6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utillity\05.Component\04.Raycast">
       <UniqueIdentifier>{e0721a63-00d9-46d4-9716-9d3185648fd0}</UniqueIdentifier>
     </Filter>
@@ -108,6 +105,12 @@
     </Filter>
     <Filter Include="01.Utillity\05.Component\05.Collision\00.SphereCollider">
       <UniqueIdentifier>{2238d114-93f7-4bde-b8f3-ee417d796f60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utillity\04.GameObject\02.Camera">
+      <UniqueIdentifier>{f39c8177-012c-473f-9314-832053d750b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utillity\04.GameObject\01.UIObject">
+      <UniqueIdentifier>{690a39cd-de5f-4e4f-a86d-a48226d2f08d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -196,13 +199,16 @@
       <Filter>01.Utillity\05.Component\01.VIBuffer\03.VIBuffer_CubeColor</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\Camera.h">
-      <Filter>01.Utillity\04.GameObject\01.Camera</Filter>
+      <Filter>01.Utillity\04.GameObject\02.Camera</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\Raycast.h">
       <Filter>01.Utillity\05.Component\04.Raycast</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\Collider.h">
       <Filter>01.Utillity\05.Component\05.Collision\00.SphereCollider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\UIObject.h">
+      <Filter>01.Utillity\04.GameObject\01.UIObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -276,13 +282,16 @@
       <Filter>01.Utillity\05.Component\01.VIBuffer\03.VIBuffer_CubeColor</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Camera.cpp">
-      <Filter>01.Utillity\04.GameObject\01.Camera</Filter>
+      <Filter>01.Utillity\04.GameObject\02.Camera</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Raycast.cpp">
       <Filter>01.Utillity\05.Component\04.Raycast</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Collider.cpp">
       <Filter>01.Utillity\05.Component\05.Collision\00.SphereCollider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\UIObject.cpp">
+      <Filter>01.Utillity\04.GameObject\01.UIObject</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
