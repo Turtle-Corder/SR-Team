@@ -8,12 +8,12 @@ USING(Engine)
 BEGIN(Client)
 
 class CStatus;
-
+class CDamageInfo;
 class CYeti final : public CGameObject
 {
 	enum YETI { YETI_BODY, YETI_HEAD, YETI_LEFT, YETI_RIGHT, YETI_LEFTLEG, YETI_RIGHTLEG, YETI_END };
 
-public:
+private:
 	explicit CYeti(LPDIRECT3DDEVICE9 pDevice);
 	explicit CYeti(const CYeti& other);
 	virtual ~CYeti() = default;
@@ -41,21 +41,22 @@ public:
 	HRESULT Create_Snow(const wstring& LayerTag);
 
 private:
-	CVIBuffer*	m_pVIBufferCom[YETI_END];
-	CTransform*	m_pTransformCom[YETI_END];
-	CTexture*	m_pTextureCom[YETI_END];
-	CStatus*	m_pStatusCom[YETI_END];
-	bool		m_bJump = false;
-	float		m_fJumpPower = 5.f;
-	float		m_fJumpTime = 0.f;
-	float		m_fAngle = 0.f;
-	bool		m_bAttack = false;
-	bool		m_bAttackDelay = false;
-	bool		m_bRHandDown = false;
-	bool		m_bHighestCheck = false;
-	float		m_fAttackTime = 0.f;
-private:
-	ATTACKINFO* m_pOwner = nullptr;
+	CVIBuffer*		m_pVIBufferCom[YETI_END];
+	CTransform*		m_pTransformCom[YETI_END];
+	CTexture*		m_pTextureCom[YETI_END];
+	CStatus*		m_pStatusCom[YETI_END];
+	CDamageInfo*	m_pDmgInfoComp = nullptr;
+	
+
+	_bool		m_bJump = false;
+	_float		m_fJumpPower = 5.f;
+	_float		m_fJumpTime = 0.f;
+	_float		m_fAngle = 0.f;
+	_bool		m_bAttack = false;
+	_bool		m_bAttackDelay = false;
+	_bool		m_bRHandDown = false;
+	_bool		m_bHighestCheck = false;
+	_float		m_fAttackTime = 0.f;
 };
 
 END

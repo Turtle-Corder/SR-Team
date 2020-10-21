@@ -142,6 +142,9 @@
     <Filter Include="02.GameObject\00.Terrain\01.CubeTerrain">
       <UniqueIdentifier>{8afd8849-1553-4ee4-bbe0-17864408260a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.Component\02.Damage">
+      <UniqueIdentifier>{32ce0397-da44-4304-9e3b-4769c073b0e7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -246,6 +249,9 @@
     <ClInclude Include="..\Headers\Tree.h">
       <Filter>02.GameObject\10.StaticObject\00.Tree</Filter>
     </ClInclude>
+    <ClInclude Include="..\Headers\DamageInfo.h">
+      <Filter>03.Component\02.Damage</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -334,6 +340,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Tree.cpp">
       <Filter>02.GameObject\10.StaticObject\00.Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\DamageInfo.cpp">
+      <Filter>03.Component\02.Damage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

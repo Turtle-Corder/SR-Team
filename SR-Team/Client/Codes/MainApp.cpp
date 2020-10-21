@@ -18,6 +18,7 @@
 #include "Item.h"
 #include "Inventory.h"
 #include "ItemManager.h"
+#include "DamageInfo.h"
 #pragma endregion
 
 #pragma region Component_Headers
@@ -215,6 +216,11 @@ HRESULT CMainApp::Setup_StaticResources()
 
 #pragma region Component_ItemManager
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_ItemManager", CItemManager::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_ItemManager
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_DamageInfo", CDamageInfo::Create(m_pDevice))))
 		return E_FAIL;
 #pragma endregion
 

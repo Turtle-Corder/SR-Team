@@ -162,6 +162,7 @@
     <ClInclude Include="..\Headers\Client_Enum.h" />
     <ClInclude Include="..\Headers\Client_Struct.h" />
     <ClInclude Include="..\Headers\CubeTerrain.h" />
+    <ClInclude Include="..\Headers\DamageInfo.h" />
     <ClInclude Include="..\Headers\DropItem.h" />
     <ClInclude Include="..\Headers\Inventory.h" />
     <ClInclude Include="..\Headers\Item.h" />
@@ -195,6 +196,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Codes\CubeTerrain.cpp" />
+    <ClCompile Include="..\Codes\DamageInfo.cpp" />
     <ClCompile Include="..\Codes\DropItem.cpp" />
     <ClCompile Include="..\Codes\Inventory.cpp" />
     <ClCompile Include="..\Codes\Item.cpp" />

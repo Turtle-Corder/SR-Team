@@ -9,6 +9,7 @@ USING(Engine)
 
 class CStatus;
 class CItemManager;
+class CDamageInfo;
 class CPlayer final : public CGameObject
 {
 public:
@@ -28,7 +29,7 @@ public:
 	virtual _int LateUpdate_GameObject(_float _fDeltaTime) override;
 	virtual HRESULT Render_NoneAlpha() override;
 
-	virtual HRESULT Take_Damage() override;
+	virtual HRESULT Take_Damage(const CComponent* _pDamageComp) override;
 
 private:
 	HRESULT Add_Component();
@@ -83,6 +84,7 @@ private:
 	CCollider*			m_pColliderCom	= nullptr;
 	CStatus*			m_pStatusCom	= nullptr;
 	CItemManager*		m_pItemMgrCom	= nullptr;
+	CDamageInfo*		m_pDmgInfoCom	= nullptr;
 
 
 

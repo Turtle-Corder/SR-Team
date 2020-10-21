@@ -123,7 +123,7 @@ HRESULT CObject_Manager::Clear_ForScene(_int _iSceneID)
 	return S_OK;
 }
 
-HRESULT CObject_Manager::Collision_Detection_Layers(_int _iSceneID, const wstring & _strSrcLayerTag, const wstring & _strDstLayerTag, const wstring& _strColliderTag)
+HRESULT CObject_Manager::Collision_Detection_Layers(_int _iSceneID, const wstring & _strSrcLayerTag, const wstring & _strDstLayerTag, const wstring& _strColliderTag, const wstring& _strDmgInfoTag)
 {
 	//--------------------------------------------------
 	// 존재하는 씬인지 확인
@@ -154,7 +154,7 @@ HRESULT CObject_Manager::Collision_Detection_Layers(_int _iSceneID, const wstrin
 	if (m_pLayers[_iSceneID].end() == iter_dst)
 		return E_FAIL;
 
-	if (FAILED(iter_dst->second->Collision_Detection_Layers(iter_src->second, _strColliderTag)))
+	if (FAILED(iter_dst->second->Collision_Detection_Layers(iter_src->second, _strColliderTag, _strDmgInfoTag)))
 		return E_FAIL;
 	
 	return S_OK;

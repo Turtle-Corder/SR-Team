@@ -32,7 +32,7 @@ public:
 	virtual HRESULT Render_BlendAlpha();
 	virtual HRESULT Render_UI();
 
-	virtual HRESULT Take_Damage();
+	virtual HRESULT Take_Damage(const CComponent* _pDamageComp);
 
 public:
 	virtual CGameObject* Clone_GameObject(void* _pArg) = 0;

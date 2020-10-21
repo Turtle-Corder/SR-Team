@@ -3,6 +3,7 @@
 #include "KeyManager.h"
 #include "Inventory.h"
 #include "ItemManager.h"
+#include "DamageInfo.h"
 #include "..\Headers\Player.h"
 
 USING(Client)
@@ -137,8 +138,16 @@ HRESULT CPlayer::Render_NoneAlpha()
 	return S_OK;
 }
 
-HRESULT CPlayer::Take_Damage()
+HRESULT CPlayer::Take_Damage(const CComponent* _pDamageComp)
 {
+	if (!_pDamageComp)
+		return S_OK;
+
+	m_pStatusCom->Set_HP(((CDamageInfo*)_pDamageComp)->Get_Desc().iAttack);
+
+	if (0 >= m_pStatusCom->Get_Status().iHp)
+		PRINT_LOG(L"¾Æ¾æ", LOG::CLIENT);
+
 	return S_OK;
 }
 
@@ -234,6 +243,13 @@ HRESULT CPlayer::Add_Component()
 		return E_FAIL;
 
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Raycast", L"Com_Ray", (CComponent**)&m_pRaycastCom)))
+		return E_FAIL;
+
+	CDamageInfo::DAMAGE_DESC tDmgInfo;
+	tDmgInfo.iAttack = 10;
+	tDmgInfo.pOwner = this;
+
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_DamageInfo", L"Com_DmgInfo", (CComponent**)&m_pDmgInfoCom, &tDmgInfo)))
 		return E_FAIL;
 
 	return S_OK;
