@@ -225,7 +225,7 @@ HRESULT CScene_Stage0::Setup_Layer_CubeTerrain(const wstring & LayerTag)
 			fin.getline(szTextureID, MAX_PATH);
 			_uint iFloor = _ttoi(szFloor);
 			_uint iIndex = _ttoi(szIndex);
-			_bool bOnOff = (bool)(_ttoi(szOnOff));
+			_bool bOnOff = 1 && (_ttoi(szOnOff));
 			_uint iTextureID = _ttoi(szTextureID);
 
 			//Index ±¸ÇÏ±â
