@@ -35,7 +35,7 @@ private:
 
 public:
 	static CYeti* Create(LPDIRECT3DDEVICE9 pDevice);
-	virtual CGameObject * Clone_GameObject(void * pArg) override;
+	virtual CGameObject* Clone_GameObject(void * pArg) override;
 	virtual void Free() override;
 	HRESULT LookAtPlayer(float _fDeltaTime);
 	HRESULT Create_Snow(const wstring& LayerTag);

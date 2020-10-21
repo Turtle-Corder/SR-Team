@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "..\Headers\Snow.h"
-#include "Yeti.h"
-#include "Status.h"
+
 
 USING(Client)
 
@@ -23,11 +22,9 @@ HRESULT CSnow::Setup_GameObject_Prototype()
 
 HRESULT CSnow::Setup_GameObject(void * pArg)
 {
-	//if(pArg)
-	//m_vPos = *(_vec3*)pArg;
+	if(pArg)
+	m_vPos = *(_vec3*)pArg;
 
-	if (pArg)
-		m_pOwner = (CYeti*)pArg;
 
 	if (FAILED(Add_Component()))
 		return E_FAIL;
