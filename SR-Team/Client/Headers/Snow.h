@@ -8,6 +8,8 @@ USING(Engine)
 BEGIN(Client)
 
 class CStatus;
+class CYeti;
+
 class CSnow final : public CGameObject
 {
 private:
@@ -51,6 +53,9 @@ private:
 	bool		m_bGround = false;
 	float		m_fGravity = 0.f;
 	_vec3		m_vCompare = {};
+private:
+	ATTACKINFO* m_pAttackInfo = nullptr;
+	CYeti*		m_pOwner = nullptr;
 };
 
 END

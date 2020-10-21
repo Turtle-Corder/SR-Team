@@ -24,8 +24,10 @@ HRESULT CSnail::Setup_GameObject_Prototype()
 	return S_OK;
 }
 
-HRESULT CSnail::Setup_GameObject(void * pArg)
+HRESULT CSnail::Setup_GameObject(void* pArg)
 {
+	
+	
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
@@ -284,4 +286,9 @@ void CSnail::Free()
 	}
 
 	CGameObject::Free();
+}
+
+HRESULT CSnail::Take_Damage()
+{
+	return E_NOTIMPL;
 }

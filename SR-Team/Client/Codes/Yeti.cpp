@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\Headers\Yeti.h"
+#include "Status.h"
 
 USING(Client)
 
@@ -184,7 +185,16 @@ HRESULT CYeti::Add_Component()
 
 		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", szName, (CComponent**)&m_pTransformCom[iAll], &tTransformDesc[iAll]))) ////»ý¼º °¹¼ö
 			return E_FAIL;
+
 	}
+		CStatus::STAT tStat;
+		tStat.iCriticalRate = 20;	tStat.iCriticalHit = 10;
+		tStat.iDef = 50;
+		tStat.iHp = 100;			tStat.iMp = 100;
+		tStat.iMinAtt = 10;			tStat.iMaxAtt = 50;
+
+		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Status", L"Com_Stat", (CComponent**)&m_pStatusCom, &tStat)))
+			return E_FAIL;
 
 	return S_OK;
 }
@@ -501,7 +511,7 @@ HRESULT CYeti::Create_Snow(const wstring & LayerTag)
 	_vec3 vRightHand = m_pTransformCom[YETI_RIGHT]->Get_Desc().vPosition;
 
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Snow",
-		SCENE_STAGE0, LayerTag, &vRightHand)))
+		SCENE_STAGE0, LayerTag, this)))
 		return E_FAIL;
 
 	return S_OK;

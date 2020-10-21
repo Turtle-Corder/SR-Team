@@ -17,7 +17,7 @@ private:
 
 public:
 	virtual HRESULT Setup_GameObject_Prototype() override;
-	virtual HRESULT Setup_GameObject(void * pArg) override;
+	virtual HRESULT Setup_GameObject(void* pArg) override;
 	virtual int Update_GameObject(float _fDeltaTime) override;
 	virtual int LateUpdate_GameObject(float _fDeltaTime) override;
 	virtual HRESULT Render_NoneAlpha() override;
@@ -44,6 +44,8 @@ private:
 	_vec3 m_vPlayerPos = {};
 	_vec3 m_vGoalPos = {};
 	float m_fDownTime = 0.f;
+private:
+	ATTACKINFO* m_pAttackInfo = nullptr;
 };
 
 END

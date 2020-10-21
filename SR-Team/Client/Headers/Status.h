@@ -62,7 +62,9 @@ public:
 	static CStatus* Create(LPDIRECT3DDEVICE9 _pDevice);
 	virtual CComponent * Clone_Component(void * _pArg) override;
 	virtual void Free() override;
-
+public:
+	//s
+	const STAT& Get_Status() { return m_tStat; }
 
 
 private:

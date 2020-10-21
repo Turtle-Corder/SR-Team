@@ -18,7 +18,7 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 _pDevice)
 	}
 }
 
-CPlayer::CPlayer(const CPlayer & _rOther)
+CPlayer::CPlayer(const CPlayer& _rOther)
 	:CGameObject(_rOther)
 {
 }
@@ -609,7 +609,6 @@ void CPlayer::MoveMotion(float fDeltaTime)
 
 		if (m_eMovingDir == CHANGE_LEFT)
 		{
-
 			if (m_ePlayerDir == MOVING_UP || m_ePlayerDir == MOVING_DOWN)
 			{
 				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime);

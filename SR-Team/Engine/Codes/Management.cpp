@@ -269,7 +269,7 @@ HRESULT CManagement::Add_GameObject_Prototype(_int _iSceneID, const wstring & _s
 	return m_pObject_Manager->Add_GameObject_Prototype(_iSceneID, _strPrototypeTag, _pPrototype);
 }
 
-HRESULT CManagement::Add_GameObject_InLayer(_int _iFromSceneID, const wstring & _strPrototypeTag, _int _iToSceneID, const wstring & _strLayerTag, void * _pArg)
+HRESULT CManagement::Add_GameObject_InLayer(_int _iFromSceneID, const wstring & _strPrototypeTag, _int _iToSceneID, const wstring & _strLayerTag, void* _pArg)
 {
 	if (nullptr == m_pObject_Manager)
 		return E_FAIL;

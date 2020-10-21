@@ -138,7 +138,7 @@ HRESULT CScene_Stage0::Setup_Layer_Player(const wstring & LayerTag)
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
-
+	
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_Player", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
 
@@ -154,16 +154,13 @@ HRESULT CScene_Stage0::Setup_Layer_Monster(const wstring & LayerTag)
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Monster", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Snail",
-		SCENE_STAGE0, LayerTag)))
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Snail", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Translucent_Cube",
-		SCENE_STAGE0, LayerTag)))
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Translucent_Cube", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Yeti",
-		SCENE_STAGE0, LayerTag)))
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Yeti", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
 
 	return S_OK;

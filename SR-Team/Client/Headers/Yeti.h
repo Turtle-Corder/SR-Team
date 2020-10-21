@@ -7,6 +7,8 @@
 USING(Engine)
 BEGIN(Client)
 
+class CStatus;
+
 class CYeti final : public CGameObject
 {
 	enum YETI { YETI_BODY, YETI_HEAD, YETI_LEFT, YETI_RIGHT, YETI_LEFTLEG, YETI_RIGHTLEG, YETI_END };
@@ -42,7 +44,7 @@ private:
 	CVIBuffer*	m_pVIBufferCom[YETI_END];
 	CTransform*	m_pTransformCom[YETI_END];
 	CTexture*	m_pTextureCom[YETI_END];
-
+	CStatus*	m_pStatusCom[YETI_END];
 	bool		m_bJump = false;
 	float		m_fJumpPower = 5.f;
 	float		m_fJumpTime = 0.f;

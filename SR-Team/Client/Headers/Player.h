@@ -160,6 +160,7 @@ private:
 	// 상점 그릴지 말지
 	bool				m_bRenderShop = false;
 	bool				m_bRenderInven = false;
+	//--------------------------------------------
 };
 
 END

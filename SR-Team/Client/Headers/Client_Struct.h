@@ -25,7 +25,15 @@ typedef struct tagTerrainInfo
 	_int iZ_Index;
 } TERRAININFO;
 
+class CGameObject;
 
+typedef struct tagAttackInfo
+{
+	CGameObject* pwho;
+	_int		iAttack;
+}ATTACKINFO;
 
-
+//----------------------------
+// 
+//----------------------------
 #endif // __CLINET_STRUCT_H__
