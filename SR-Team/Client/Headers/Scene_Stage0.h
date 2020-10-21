@@ -26,13 +26,14 @@ public:
 private:
 	HRESULT Setup_Layer_Skybox(const wstring& LayerTag);
 	HRESULT Setup_Layer_Terrain(const wstring& LayerTag);
+	HRESULT Setup_Layer_CubeTerrain(const wstring& LayerTag);
+	HRESULT Setup_Layer_Environment(const wstring& LayerTag);
+
 	HRESULT Setup_Layer_Camera(const wstring& LayerTag);
 	HRESULT Setup_Layer_Player(const wstring& LayerTag);
 	HRESULT Setup_Layer_Monster(const wstring& LayerTag);
-	HRESULT Setup_Layer_Environment(const wstring& LayerTag);
 
-	HRESULT Setup_Layer_CubeTerrain(const wstring& LayerTag);
-
+	HRESULT Setup_Layer_UI(const wstring& LayerTag);
 
 private:
 	CPreLoader*		m_pPreLoader = nullptr;

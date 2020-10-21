@@ -144,7 +144,7 @@ HRESULT CRenderer::Render_OnlyAlpha()
 
 HRESULT CRenderer::Render_UI()
 {
-	//m_pSprite->Begin(D3DXSPRITE_ALPHABLEND);
+	m_pSprite->Begin(D3DXSPRITE_ALPHABLEND);
 
 	for (auto& pObject : m_GameObjects[RENDER_UI])
 	{
@@ -154,7 +154,7 @@ HRESULT CRenderer::Render_UI()
 
 	m_GameObjects[RENDER_UI].clear();
 
-	//m_pSprite->End();
+	m_pSprite->End();
 
 	return S_OK;
 }

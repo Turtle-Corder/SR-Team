@@ -125,7 +125,7 @@ HRESULT CSnow::Setting_Dir()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform");
+	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform1");
 
 	if (nullptr == pPlayerTransform)
 		return E_FAIL;
@@ -147,7 +147,7 @@ CSnow * CSnow::Create(LPDIRECT3DDEVICE9 pDevice)
 	CSnow* pInstance = new CSnow(pDevice);
 	if (FAILED(pInstance->Setup_GameObject_Prototype()))
 	{
-		PRINT_LOG(L"Failed To Create CMonster", LOG::CLIENT);
+		PRINT_LOG(L"Failed To Create CSnow", LOG::CLIENT);
 		Safe_Release(pInstance);
 	}
 
@@ -159,7 +159,7 @@ CGameObject * CSnow::Clone_GameObject(void * pArg)
 	CSnow* pInstance = new CSnow(*this);
 	if (FAILED(pInstance->Setup_GameObject(pArg)))
 	{
-		PRINT_LOG(L"Failed To Clone CMonster", LOG::CLIENT);
+		PRINT_LOG(L"Failed To Clone CSnow", LOG::CLIENT);
 		Safe_Release(pInstance);
 	}
 

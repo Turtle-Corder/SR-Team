@@ -93,13 +93,6 @@ HRESULT CMeteor::Add_Component()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform");
-
-	if (nullptr == pPlayerTransform)
-		return E_FAIL;
-
-	m_vPlayerPos = pPlayerTransform->Get_Desc().vPosition;
-
 	CTransform::TRANSFORM_DESC tTransformDesc;
 
 	// TerrainY 로 부터 높이 구해서 20.f
@@ -184,7 +177,7 @@ CMeteor * CMeteor::Create(LPDIRECT3DDEVICE9 pDevice)
 	CMeteor* pInstance = new CMeteor(pDevice);
 	if (FAILED(pInstance->Setup_GameObject_Prototype()))
 	{
-		PRINT_LOG(L"Failed To Create CMonster", LOG::CLIENT);
+		PRINT_LOG(L"Failed To Create CMeteor", LOG::CLIENT);
 		Safe_Release(pInstance);
 	}
 
@@ -196,7 +189,7 @@ CGameObject * CMeteor::Clone_GameObject(void * pArg)
 	CMeteor* pInstance = new CMeteor(*this);
 	if (FAILED(pInstance->Setup_GameObject(pArg)))
 	{
-		PRINT_LOG(L"Failed To Clone CMonster", LOG::CLIENT);
+		PRINT_LOG(L"Failed To Clone CMeteor", LOG::CLIENT);
 		Safe_Release(pInstance);
 	}
 

@@ -65,7 +65,8 @@ HRESULT CMainCamera::Movement(_float _fDeltaTime)
 
 	m_tCameraDesc.vAt = pPlayerTransform->Get_Desc().vPosition;
 
-	_vec3 vPlayerLook;
+	//폐기코드
+	/*_vec3 vPlayerLook;
 	memcpy_s(&vPlayerLook, sizeof(_vec3), &pPlayerTransform->Get_Desc().matWorld.m[2][0], sizeof(_vec3));
 	D3DXVec3Normalize(&vPlayerLook, &vPlayerLook);
 
@@ -79,7 +80,15 @@ HRESULT CMainCamera::Movement(_float _fDeltaTime)
 	D3DXMatrixRotationAxis(&matRotAxis, &vPlayerRight, m_fCameraAngle);
 	D3DXVec3TransformNormal(&vPlayerLook, &vPlayerLook, &matRotAxis);
 
-	m_tCameraDesc.vEye = m_tCameraDesc.vAt + vPlayerLook;
+	m_tCameraDesc.vEye = m_tCameraDesc.vAt + vPlayerLook;*/
+
+	//마름모꼴 고정
+	_vec3 vXZDistanceNormal = { 1.f, 0.f, 1.f };
+	_vec3 vCameraHeight = { 0.f, 1.f, 0.f };
+	_vec3 vSemiTopView = m_fHeight * vCameraHeight - m_fDistance * vXZDistanceNormal;
+
+
+	m_tCameraDesc.vEye = m_tCameraDesc.vAt + vSemiTopView;
 
 	return S_OK;
 }
@@ -87,9 +96,15 @@ HRESULT CMainCamera::Movement(_float _fDeltaTime)
 HRESULT CMainCamera::ZoomInOut(_float _fDeltaTime)
 {
 	if (GetAsyncKeyState(VK_ADD) & 0x8000)
-		m_fDistanceToTarget -= m_fZoomInOutSpeedPerSecond * _fDeltaTime;
+	{
+		m_fHeight -= m_fZoomInOutSpeedPerSecond * _fDeltaTime * m_fStartHeight;
+		m_fDistance -= m_fZoomInOutSpeedPerSecond * _fDeltaTime * m_fStartDistance;
+	}
 	if (GetAsyncKeyState(VK_SUBTRACT) & 0x8000)
-		m_fDistanceToTarget += m_fZoomInOutSpeedPerSecond * _fDeltaTime;
+	{
+		m_fHeight += m_fZoomInOutSpeedPerSecond * _fDeltaTime* m_fStartHeight;
+		m_fDistance += m_fZoomInOutSpeedPerSecond * _fDeltaTime * m_fStartDistance;
+	}
 
 	return S_OK;
 }

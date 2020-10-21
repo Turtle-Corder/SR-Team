@@ -105,8 +105,7 @@ HRESULT CDropItem::Add_Component()
 		StringCchPrintf(szName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_DropRuby");
 		break;
 	case 10:
-		//StringCchPrintf(szName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_Dropiron_sword");
-
+		StringCchPrintf(szName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_Dropiron_sword");
 		break;
 	}
 

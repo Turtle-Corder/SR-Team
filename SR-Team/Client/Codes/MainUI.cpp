@@ -4,8 +4,8 @@
 
 USING(Client)
 
-CMainUI::CMainUI(LPDIRECT3DDEVICE9 _pDevice)
-	: CGameObject(_pDevice)
+CMainUI::CMainUI(LPDIRECT3DDEVICE9 _pDevice, LPD3DXSPRITE _pSprite, LPD3DXFONT _pFont)
+	: CUIObject(_pDevice, _pSprite, _pFont)
 {
 	for (_uint i = 0; i < MAINUI_END; ++i)
 	{
@@ -16,7 +16,7 @@ CMainUI::CMainUI(LPDIRECT3DDEVICE9 _pDevice)
 }
 
 CMainUI::CMainUI(const CMainUI & _rOther)
-	: CGameObject(_rOther)
+	: CUIObject(_rOther)
 {
 }
 
@@ -33,20 +33,20 @@ HRESULT CMainUI::Setup_GameObject(void * pArg)
 	for (_uint i = 0; i < MAINUI_END; ++i)
 		m_vScale[i] = { 80.f, 90.f, 1.f };
 
-	m_vPos[MAINUI_MAIN] = D3DXVECTOR3(400.f, 500.f, 0.f);
-	m_vScale[MAINUI_MAIN] = D3DXVECTOR3(155.f, 150.f, 1.f);
+	m_vPos[MAINUI_MAIN] = D3DXVECTOR3(WINCX * 0.5f, WINCY - 50.f, 0.f);
+	m_pTransformCom[MAINUI_MAIN]->Set_Position(m_vPos[MAINUI_MAIN]);
 
 	m_vPos[MAINUI_HP] = D3DXVECTOR3(365.f, 500.f, 0.f);
-	m_vScale[MAINUI_HP] = D3DXVECTOR3(80.f, 145.f, 1.f);
+	m_pTransformCom[MAINUI_HP]->Set_Position(m_vPos[MAINUI_HP]);
 
 	m_vPos[MAINUI_MP] = D3DXVECTOR3(445.f, 500.f, 0.f);
-	m_vScale[MAINUI_MP] = D3DXVECTOR3(80.f, 145.f, 1.f);
+	m_pTransformCom[MAINUI_MP]->Set_Position(m_vPos[MAINUI_MP]);
 
 	m_vPos[MAINUI_QUICKSLOT_LFFT] = D3DXVECTOR3(170.f, 500.f, 0.f);
-	m_vScale[MAINUI_QUICKSLOT_LFFT] = D3DXVECTOR3(250.f, 150.f, 1.f);
+	m_pTransformCom[MAINUI_QUICKSLOT_LFFT]->Set_Position(m_vPos[MAINUI_QUICKSLOT_LFFT]);
 
 	m_vPos[MAINUI_QUICKSLOT_RIGHT] = D3DXVECTOR3(660.f, 500.f, 0.f);
-	m_vScale[MAINUI_QUICKSLOT_RIGHT] = D3DXVECTOR3(250.f, 150.f, 1.f);
+	m_pTransformCom[MAINUI_QUICKSLOT_RIGHT]->Set_Position(m_vPos[MAINUI_QUICKSLOT_RIGHT]);
 
 	return S_OK;
 }
@@ -69,6 +69,9 @@ int CMainUI::Update_GameObject(float DeltaTime)
 		}
 	}
 
+	for (_uint i = 0; i < MAINUI_END; ++i)
+		m_pTransformCom[i]->Update_Transform();
+
 	return GAMEOBJECT::NOEVENT;
 }
 
@@ -86,30 +89,18 @@ int CMainUI::LateUpdate_GameObject(float DeltaTime)
 
 HRESULT CMainUI::Render_UI()
 {
-	m_pDevice->SetRenderState(D3DRS_ZENABLE, FALSE);
-
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CUICamera* pCamera = (CUICamera*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_UICamera");
-	if (nullptr == pCamera)
-		return E_FAIL;
-
 	for (_uint i = 0; i < MAINUI_END; ++i)
 	{
-		if (FAILED(dynamic_cast<CVIBuffer_RectTexture*>(m_pVIBufferCom[i])->Set_UITransform(
-			&m_pTransformCom[i]->Get_Desc().matWorld, pCamera, m_vPos[i], m_vScale[i])))
-			return E_FAIL;
+		auto pTexInfo = m_pTextureCom[i]->Get_TexInfo(0);
+		_vec3 vCenter = { pTexInfo->Width * 0.5f, pTexInfo->Height * 0.5f, 0.f };
 
-		if (FAILED(m_pTextureCom[i]->SetTexture(0)))
-			return E_FAIL;
-
-		if (FAILED(m_pVIBufferCom[i]->Render_VIBuffer()))
-			return E_FAIL;
+		m_pSprite->SetTransform(&m_pTransformCom[i]->Get_Desc().matWorld);
+		m_pSprite->Draw((LPDIRECT3DTEXTURE9)m_pTextureCom[i]->GetTexture(0), nullptr, &vCenter, nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
 	}
-
-	m_pDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
 
 	return S_OK;
 }
@@ -166,12 +157,12 @@ HRESULT CMainUI::Add_Component()
 	return S_OK;
 }
 
-CMainUI * CMainUI::Create(LPDIRECT3DDEVICE9 pDevice)
+CMainUI * CMainUI::Create(LPDIRECT3DDEVICE9 pDevice, LPD3DXSPRITE _pSprite, LPD3DXFONT _pFont)
 {
 	if (nullptr == pDevice)
 		return nullptr;
 
-	CMainUI* pInstance = new CMainUI(pDevice);
+	CMainUI* pInstance = new CMainUI(pDevice, _pSprite, _pFont);
 	if (FAILED(pInstance->Setup_GameObject_Prototype()))
 	{
 		PRINT_LOG(L"Failed To Create CMainUI", LOG::CLIENT);
@@ -202,5 +193,5 @@ void CMainUI::Free()
 		Safe_Release(m_pVIBufferCom[i]);
 	}
 
-	CGameObject::Free();
+	CUIObject::Free();
 }
