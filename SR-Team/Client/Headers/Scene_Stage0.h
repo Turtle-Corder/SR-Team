@@ -24,7 +24,7 @@ public:
 	virtual void Free() override;
 
 private:
-	HRESULT Setup_Layer_AllObject(const wstring& LayerTag);
+	HRESULT Setup_Layer_AllObject();
 
 
 	HRESULT Setup_Layer_Skybox(const wstring& LayerTag);

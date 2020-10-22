@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "Collider.h"
+#include "BoxCollider.h"
 #include "..\Headers\Layer.h"
 
 USING(Engine)
@@ -135,6 +136,53 @@ HRESULT CLayer::Collision_Detection_Layers(CLayer* _pSrcLayer, const wstring& _s
 
 	return S_OK;
 }
+
+
+HRESULT CLayer::Collision_Detection_Layers(CLayer* _pSrcLayer, const wstring& _strColliderTag, const wstring& _strDmgInfoTag)
+{
+	if (nullptr == _pSrcLayer)
+		return E_FAIL;
+
+	for (auto& pSrcObject : _pSrcLayer->m_GameObjects)
+	{
+		CBoxCollider* pSrcCol = (CBoxCollider*)pSrcObject->Get_Component(_strColliderTag);
+		if (nullptr == pSrcCol)
+			continue;
+
+		for (auto& pDstObject : m_GameObjects)
+		{
+			CBoxCollider* pDstCol = (CBoxCollider*)pDstObject->Get_Component(_strColliderTag);
+			if (nullptr == pDstCol)
+				continue;
+
+			_float fX, fY, fZ;
+
+			//나와 상대 사이의 벡터를 구함
+			_vec3 vDist = pSrcCol->Get_Desc().vPosition - pDstCol->Get_Desc().vPosition;
+
+			//해당 벡터를 축분리하여 기록
+			fX = vDist.x;
+			fY = vDist.y;
+			fZ = vDist.z;
+
+			/*
+			해당 축분리된 X, Y, Z에 대해, 미리 입력해둔 오브젝트의 사이즈(축과 평행함)와 비교하는 식
+			상대와 나와의 중점의 거리의 차이의 두배가 두 오브젝트의 같은 축의 사이즈보다 같거나 작다면 두 오브젝트의 BOX는 만난 상태이다.
+			*/
+			if (abs(fX) * 2 <= pSrcCol->Get_Desc().vObjectSize.x + pDstCol->Get_Desc().vObjectSize.x &&
+				abs(fY) * 2 <= pSrcCol->Get_Desc().vObjectSize.y + pDstCol->Get_Desc().vObjectSize.y &&
+				abs(fZ) * 2 <= pSrcCol->Get_Desc().vObjectSize.z + pDstCol->Get_Desc().vObjectSize.z
+				)
+			{
+				CComponent* pDmgInfoComp = pSrcObject->Get_Component(_strDmgInfoTag);
+				pDstObject->Take_Damage(pDmgInfoComp);
+			}
+		}
+	}
+
+	return S_OK;
+}
+
 
 CLayer * CLayer::Create()
 {
