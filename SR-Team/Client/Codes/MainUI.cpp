@@ -36,10 +36,10 @@ HRESULT CMainUI::Setup_GameObject(void * pArg)
 	m_vPos[MAINUI_MAIN] = D3DXVECTOR3(WINCX * 0.5f, WINCY - 50.f, 0.f);
 	m_pTransformCom[MAINUI_MAIN]->Set_Position(m_vPos[MAINUI_MAIN]);
 
-	m_vPos[MAINUI_HP] = D3DXVECTOR3(365.f, 500.f, 0.f);
+	m_vPos[MAINUI_HP] = D3DXVECTOR3(380.f, 550.f, 0.f);
 	m_pTransformCom[MAINUI_HP]->Set_Position(m_vPos[MAINUI_HP]);
 
-	m_vPos[MAINUI_MP] = D3DXVECTOR3(445.f, 500.f, 0.f);
+	m_vPos[MAINUI_MP] = D3DXVECTOR3(420.f, 550.f, 0.f);
 	m_pTransformCom[MAINUI_MP]->Set_Position(m_vPos[MAINUI_MP]);
 
 	m_vPos[MAINUI_QUICKSLOT_LFFT] = D3DXVECTOR3(170.f, 500.f, 0.f);
@@ -56,17 +56,13 @@ int CMainUI::Update_GameObject(float DeltaTime)
 	if (GetAsyncKeyState('P') & 0x8000)
 	{
 		for (_uint i = 0; i < MAINUI_END; ++i)
-		{
 			m_vPos[i].y -= 10.f;
-		}
 	}
 
 	if (GetAsyncKeyState('L') & 0x8000)
 	{
 		for (_uint i = 0; i < MAINUI_END; ++i)
-		{
 			m_vPos[i].y += 10.f;
-		}
 	}
 
 	for (_uint i = 0; i < MAINUI_END; ++i)
@@ -99,7 +95,9 @@ HRESULT CMainUI::Render_UI()
 		_vec3 vCenter = { pTexInfo->Width * 0.5f, pTexInfo->Height * 0.5f, 0.f };
 
 		m_pSprite->SetTransform(&m_pTransformCom[i]->Get_Desc().matWorld);
-		m_pSprite->Draw((LPDIRECT3DTEXTURE9)m_pTextureCom[i]->GetTexture(0), nullptr, &vCenter, nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
+		m_pSprite->Draw(
+			(LPDIRECT3DTEXTURE9)m_pTextureCom[i]->GetTexture(0), 
+			nullptr, &vCenter, nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
 	}
 
 	return S_OK;
