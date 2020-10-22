@@ -234,7 +234,7 @@ void CSlime::Jumping(float _fDeltaTime)
 		m_pTransformCom[SLIME_BASE]->Set_Position(vPos);
 	}
 }
-
+ 
 HRESULT CSlime::LookAtPlayer(float _fDeltaTime)
 {
 	CManagement* pManagement = CManagement::Get_Instance();
