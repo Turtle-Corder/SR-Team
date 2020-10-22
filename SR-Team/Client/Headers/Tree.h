@@ -25,9 +25,11 @@ private:
 	virtual int LateUpdate_GameObject(float DeltaTime) override;
 	virtual HRESULT Render_NoneAlpha() override;
 
+	
+
 private:
 	virtual HRESULT Add_Component();
-
+	HRESULT Add_Component(_vec3 _vPos);
 public:
 	static CTree* Create(LPDIRECT3DDEVICE9 pDevice);
 	virtual CGameObject * Clone_GameObject(void * pArg) override;

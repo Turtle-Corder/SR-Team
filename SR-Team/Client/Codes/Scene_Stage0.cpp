@@ -89,6 +89,20 @@ void CScene_Stage0::Free()
 	CScene::Free();
 }
 
+HRESULT CScene_Stage0::Setup_Layer_AllObject(const wstring & LayerTag)
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	wifstream fin;
+	wstring wstrFilePath = _T("../Resources/TestMap.txt");
+	fin.open(wstrFilePath.c_str());
+
+	return S_OK;
+}
+
+
 HRESULT CScene_Stage0::Setup_Layer_Skybox(const wstring & LayerTag)
 {
 	CManagement* pManagement = CManagement::Get_Instance();
