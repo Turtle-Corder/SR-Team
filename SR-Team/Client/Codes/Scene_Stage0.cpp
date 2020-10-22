@@ -214,7 +214,7 @@ HRESULT CScene_Stage0::Setup_Layer_Monster(const wstring & LayerTag)
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Snail", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Translucent_Cube", SCENE_STAGE0, LayerTag)))
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Slime", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
 
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Yeti", SCENE_STAGE0, LayerTag)))
