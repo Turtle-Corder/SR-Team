@@ -44,7 +44,7 @@ private:
 	CVIBuffer*		m_pVIBufferCom[YETI_END];
 	CTransform*		m_pTransformCom[YETI_END];
 	CTexture*		m_pTextureCom[YETI_END];
-	CStatus*		m_pStatusCom[YETI_END];
+	CStatus*		m_pStatusCom = nullptr;
 	CDamageInfo*	m_pDmgInfoComp = nullptr;
 	
 

@@ -186,9 +186,6 @@
     <ClInclude Include="..\Headers\Skybox.h">
       <Filter>02.GameObject\02.Skybox</Filter>
     </ClInclude>
-    <ClInclude Include="..\Headers\Monster.h">
-      <Filter>02.GameObject\05.Monster</Filter>
-    </ClInclude>
     <ClInclude Include="..\Headers\Status.h">
       <Filter>03.Component\01.Status</Filter>
     </ClInclude>
@@ -277,9 +274,6 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Skybox.cpp">
       <Filter>02.GameObject\02.Skybox</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\Monster.cpp">
-      <Filter>02.GameObject\05.Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Status.cpp">
       <Filter>03.Component\01.Status</Filter>

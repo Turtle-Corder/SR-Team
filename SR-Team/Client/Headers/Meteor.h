@@ -38,14 +38,11 @@ private:
 	CVIBuffer*	m_pVIBufferCom = nullptr;
 	CTransform*	m_pTransformCom = nullptr;
 	CTexture*	m_pTextureCom = nullptr;
-	CStatus*	m_pStatCom = nullptr;
 	
 	bool  m_bDead = false;
 	_vec3 m_vPlayerPos = {};
 	_vec3 m_vGoalPos = {};
 	float m_fDownTime = 0.f;
-private:
-	ATTACKINFO* m_pAttackInfo = nullptr;
 };
 
 END

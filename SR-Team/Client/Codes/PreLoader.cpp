@@ -4,7 +4,6 @@
 #pragma region GameObject_Headers
 #include "Terrain.h"
 #include "Skybox.h"
-#include "Monster.h"
 #include "Slime.h"
 #include "Snail.h"
 #include "Yeti.h"
@@ -59,11 +58,6 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 
 #pragma region GameObject_Skybox
 	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Skybox", CSkybox::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region GameObject_Monster
-	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Monster", CMonster::Create(m_pDevice))))
 		return E_FAIL;
 #pragma endregion
 

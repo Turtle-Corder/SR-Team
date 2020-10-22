@@ -172,7 +172,6 @@
     <ClInclude Include="..\Headers\MainCamera.h" />
     <ClInclude Include="..\Headers\MainUI.h" />
     <ClInclude Include="..\headers\Meteor.h" />
-    <ClInclude Include="..\Headers\Monster.h" />
     <ClInclude Include="..\Headers\Player.h" />
     <ClInclude Include="..\Headers\PreLoader.h" />
     <ClInclude Include="..\Headers\Scene_Logo.h" />
@@ -206,7 +205,6 @@
     <ClCompile Include="..\Codes\MainCamera.cpp" />
     <ClCompile Include="..\Codes\MainUI.cpp" />
     <ClCompile Include="..\Codes\Meteor.cpp" />
-    <ClCompile Include="..\Codes\Monster.cpp" />
     <ClCompile Include="..\Codes\Player.cpp" />
     <ClCompile Include="..\Codes\PreLoader.cpp" />
     <ClCompile Include="..\Codes\Scene_Logo.cpp" />

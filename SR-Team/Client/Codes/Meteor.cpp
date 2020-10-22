@@ -104,10 +104,6 @@ HRESULT CMeteor::Add_Component()
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", L"Com_Transform", (CComponent**)&m_pTransformCom, &tTransformDesc)))
 		return E_FAIL;
 
-	//CStat::STAT tStat;
-	//tStat.iCurHp = 100;
-
-
 	return S_OK;
 }
 

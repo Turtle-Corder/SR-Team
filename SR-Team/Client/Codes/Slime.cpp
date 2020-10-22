@@ -234,20 +234,14 @@ HRESULT CSlime::LookAtPlayer(float _fDeltaTime)
 		return S_OK;
 
 
-	CTransform* pMonsterTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Monster", L"Com_Transform");
-
-	if (nullptr == pMonsterTransform)
-		return E_FAIL;
 
 	if (fLimit > 0)
 	{
 		m_pTransformCom->Turn(CTransform::AXIS_Y, -_fDeltaTime * fRad);
-		pMonsterTransform->Turn(CTransform::AXIS_Y, -_fDeltaTime * fRad);
 	}
 	else
 	{
 		m_pTransformCom->Turn(CTransform::AXIS_Y, _fDeltaTime * fRad);
-		pMonsterTransform->Turn(CTransform::AXIS_Y, _fDeltaTime * fRad);
 	}
 	//------------------------------------------
 	// 공전 구현 순서생각하기 LateUpdate안에 월드구성하고 나서

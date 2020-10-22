@@ -731,6 +731,7 @@ void CPlayer::Free()
 	Safe_Release(m_pStatusCom);
 	Safe_Release(m_pRaycastCom);
 	Safe_Release(m_pColliderCom);
+	Safe_Release(m_pDmgInfoCom);
 
 	CGameObject::Free();
 }
