@@ -168,13 +168,13 @@ HRESULT CScene_Stage0::Setup_Layer_Monster(const wstring & LayerTag)
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Snail", SCENE_STAGE0, LayerTag)))
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Snail", SCENE_STAGE0, LayerTag , &_vec3(10.f , 0.f , 5.f))))/*여기 StartPos*/
 		return E_FAIL;
 
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Translucent_Cube", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Yeti", SCENE_STAGE0, LayerTag)))
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Yeti", SCENE_STAGE0, LayerTag , &_vec3(10.f, 0.f, 20.f))))
 		return E_FAIL;
 
 	return S_OK;
@@ -226,6 +226,8 @@ HRESULT CScene_Stage0::Setup_Layer_CubeTerrain(const wstring & LayerTag)
 		_int ZNumber = _ttoi(szZVerCount) - 1;
 		while (true)
 		{
+
+
 			//Cube Info 받기
 			fin.getline(szFloor, MAX_PATH, L'|');
 			fin.getline(szIndex, MAX_PATH, L'|');

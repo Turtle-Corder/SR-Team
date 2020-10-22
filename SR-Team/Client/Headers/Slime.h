@@ -10,6 +10,13 @@ BEGIN(Client)
 class CStatus;
 class CSlime final : public CGameObject
 {
+	enum SLIME 
+	{ 
+		SLIME_BODY,
+		SLIME_BASE,
+		SLIME_JELLY = SLIME_BASE,
+		SLIME_END 
+	};
 private:
 	explicit CSlime(LPDIRECT3DDEVICE9 pDevice);
 	explicit CSlime(const CSlime& other);
@@ -21,6 +28,7 @@ public:
 	virtual _int Update_GameObject(_float _fDeltaTime) override;
 	virtual _int LateUpdate_GameObject(_float _fDeltaTime) override;
 	virtual HRESULT Render_BlendAlpha() override;
+	virtual HRESULT Render_NoneAlpha() override;
 
 private:
 	HRESULT Add_Component();
@@ -34,12 +42,12 @@ public:
 	virtual CGameObject* Clone_GameObject(void * pArg) override;
 	virtual void Free() override;
 	HRESULT Create_Item(const wstring& LayerTag);
-
-
+	HRESULT Setting_SlimeBody();
+	HRESULT Setting_SlimeJelly();
 
 private:
-	CVIBuffer*	m_pVIBufferCom = nullptr;
-	CTransform*	m_pTransformCom = nullptr;
+	CVIBuffer*	m_pVIBufferCom[SLIME_END] = {};
+	CTransform*	m_pTransformCom[SLIME_END] = {};
 	CTexture*	m_pTextureCom = nullptr;
 //	CStatus*	m_pStatCom = nullptr;
 
@@ -49,6 +57,7 @@ private:
 	float		m_fJumpTime = 0.f;
 	int			m_iMaxCount = 4;
 	int			m_iCurCount = 1;
+	_vec3		m_vStartPos = {};
 };
 
 END

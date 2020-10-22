@@ -12,8 +12,8 @@ class CSnail final : public CGameObject
 	enum SNAIL { SNAIL_HEAD, SNAIL_BODY, SNAIL_END };
 
 private:
-	explicit CSnail(LPDIRECT3DDEVICE9 pDevice);
-	explicit CSnail(const CSnail& other);
+	explicit CSnail(LPDIRECT3DDEVICE9 _pDevice);
+	explicit CSnail(const CSnail& _rOther);
 	virtual ~CSnail() = default;
 
 public:
@@ -42,6 +42,7 @@ private:
 	CTexture*	m_pTextureCom[SNAIL_END] = {};
 private:
 	WCHAR		m_szOwnerName[MIN_STR];
+	_vec3		m_vStartPos = {};
 };
 
 END

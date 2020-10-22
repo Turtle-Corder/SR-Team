@@ -3,8 +3,8 @@
 
 USING(Client)
 
-CSnail::CSnail(LPDIRECT3DDEVICE9 pDevice)
-	: CGameObject(pDevice)
+CSnail::CSnail(LPDIRECT3DDEVICE9 _pDevice)
+	: CGameObject(_pDevice)
 {
 	for (_int iAll = 0; iAll < SNAIL_END; ++iAll)
 	{
@@ -14,8 +14,8 @@ CSnail::CSnail(LPDIRECT3DDEVICE9 pDevice)
 	}
 }
 
-CSnail::CSnail(const CSnail & other)
-	: CGameObject(other)
+CSnail::CSnail(const CSnail& _rOther)
+	: CGameObject(_rOther)
 {
 }
 
@@ -26,8 +26,9 @@ HRESULT CSnail::Setup_GameObject_Prototype()
 
 HRESULT CSnail::Setup_GameObject(void* pArg)
 {
-	
-	
+	if (pArg)
+		m_vStartPos = *(_vec3*)pArg;
+
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
@@ -42,6 +43,16 @@ int CSnail::Update_GameObject(_float _fDeltaTime)
 	if (FAILED(LookAtPlayer(_fDeltaTime)))
 		return GAMEOBJECT::WARN;
 
+
+	for (_int iAll = 0; iAll < SNAIL_END; ++iAll)
+	{
+		if (FAILED(m_pTransformCom[iAll]->Update_Transform()))
+			return 0;
+	}
+
+	if (FAILED(Setting_Part()))
+		return 0;
+
 	return GAMEOBJECT::NOEVENT;
 }
 
@@ -51,14 +62,6 @@ int CSnail::LateUpdate_GameObject(_float _fDeltaTime)
 	if (nullptr == pManagement)
 		return 0;
 
-	if (FAILED(Setting_Part()))
-		return 0;
-
-	for (_int iAll = 0; iAll < SNAIL_END; ++iAll)
-	{
-		if (FAILED(m_pTransformCom[iAll]->Update_Transform()))
-			return 0;
-	}
 
 	if (FAILED(pManagement->Add_RendererList(CRenderer::RENDER_NONEALPHA, this)))
 		return 0;
@@ -124,7 +127,7 @@ HRESULT CSnail::Add_Component()
 		CTransform::TRANSFORM_DESC tTransformDesc[SNAIL_END];
 		if (iAll == SNAIL_HEAD)
 		{
-			tTransformDesc[SNAIL_HEAD].vPosition = { 10.f, 0.5f, 10.f };
+			tTransformDesc[SNAIL_HEAD].vPosition = { 0.f, 0.f, 0.5f };
 			tTransformDesc[SNAIL_HEAD].fSpeedPerSecond = 10.f;
 			tTransformDesc[SNAIL_HEAD].fRotatePerSecond = D3DXToRadian(90.f);
 			tTransformDesc[SNAIL_HEAD].vScale = { 0.5f , 0.5f , 0.5f };
@@ -132,7 +135,7 @@ HRESULT CSnail::Add_Component()
 		}
 		else if (iAll == SNAIL_BODY)
 		{
-			tTransformDesc[SNAIL_BODY].vPosition = { vHeadPos.x + 0.5f, 1.f, vHeadPos.z };
+			tTransformDesc[SNAIL_BODY].vPosition = { m_vStartPos.x , 0.f, m_vStartPos.z };
 			tTransformDesc[SNAIL_BODY].fSpeedPerSecond = 10.f;
 			tTransformDesc[SNAIL_BODY].fRotatePerSecond = D3DXToRadian(90.f);
 		}
@@ -236,7 +239,7 @@ HRESULT CSnail::LookAtPlayer(_float _fDeltaTime)
 
 HRESULT CSnail::Setting_Part()
 {
-	_vec3 vBodyPos = m_pTransformCom[SNAIL_BODY]->Get_Desc().vPosition;
+	m_pTransformCom[SNAIL_HEAD]->Set_WorldMatrix(m_pTransformCom[SNAIL_HEAD]->Get_Desc().matWorld * m_pTransformCom[SNAIL_BODY]->Get_Desc().matWorld);
 
 	return S_OK;
 }

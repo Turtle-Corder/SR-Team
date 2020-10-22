@@ -19,6 +19,11 @@ const CTransform::TRANSFORM_DESC & CTransform::Get_Desc() const
 	return m_tTransformDesc;
 }
 
+void CTransform::Set_Transform(const TRANSFORM_DESC & _rTransform)
+{
+	m_tTransformDesc = _rTransform;
+}
+
 void CTransform::Set_Position(const _vec3 & _vPosition)
 {
 	m_tTransformDesc.vPosition = _vPosition;
@@ -32,6 +37,11 @@ void CTransform::Set_WorldMatrix(const _matrix & _matWorld)
 void CTransform::Set_Rotation(const _vec3 & _vRotation)
 {
 	m_tTransformDesc.vRotate = _vRotation;
+}
+
+void CTransform::Set_Scale(const _vec3 & _vScale)
+{
+	m_tTransformDesc.vScale = _vScale;
 }
 
 HRESULT CTransform::Setup_Component_Prototype()
