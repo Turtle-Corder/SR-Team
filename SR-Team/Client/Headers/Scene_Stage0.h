@@ -24,6 +24,9 @@ public:
 	virtual void Free() override;
 
 private:
+	HRESULT Setup_Layer_AllObject(const wstring& LayerTag);
+
+
 	HRESULT Setup_Layer_Skybox(const wstring& LayerTag);
 	HRESULT Setup_Layer_Terrain(const wstring& LayerTag);
 	HRESULT Setup_Layer_CubeTerrain(const wstring& LayerTag);
@@ -34,7 +37,7 @@ private:
 	HRESULT Setup_Layer_Monster(const wstring& LayerTag);
 
 	HRESULT Setup_Layer_UI(const wstring& LayerTag);
-
+	
 private:
 	CPreLoader*		m_pPreLoader = nullptr;
 };

@@ -24,9 +24,14 @@ HRESULT CTree::Setup_GameObject_Prototype()
 	return S_OK;
 }
 
-HRESULT CTree::Setup_GameObject(void * pArg)
+HRESULT CTree::Setup_GameObject(void * _pArg)
 {
-	if (FAILED(Add_Component()))
+	_vec3 vPos;
+
+	if (_pArg)
+		vPos = (*(_vec3*)(_pArg));
+
+	if (FAILED(Add_Component(vPos)))
 		return E_FAIL;
 
 	return S_OK;
@@ -78,6 +83,15 @@ HRESULT CTree::Add_Component()
 {
 	CTransform::TRANSFORM_DESC tTransformDesc[TREE_END];
 
+	return S_OK;
+}
+
+HRESULT CTree::Add_Component(_vec3 _vPos)
+{
+
+	CTransform::TRANSFORM_DESC tTransformDesc[TREE_END];
+	tTransformDesc[TREE_BODY].vPosition = _vPos;
+	tTransformDesc[TREE_HEAD].vPosition = _vPos;
 
 	//For.Com_VIBuffer
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_TreeHead", L"Com_VIBufferHead", (CComponent**)&m_pVIBufferCom[TREE_HEAD])))

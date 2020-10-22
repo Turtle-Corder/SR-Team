@@ -11,6 +11,7 @@
 #include "Meteor.h"
 #include "CubeTerrain.h"
 #include "DropItem.h"
+#include "Tree.h"
 #pragma endregion
 
 USING(Client)
@@ -66,6 +67,11 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 		return E_FAIL;
 #pragma endregion
 
+#pragma region GameObject_Translucent_Cube
+	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Slime", CSlime::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
 #pragma region GameObject_Snail
 	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Snail", CSnail::Create(m_pDevice))))
 		return E_FAIL;
@@ -78,6 +84,11 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 
 #pragma region GameObject_Item
 	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_DropItem", CDropItem::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region GameObject_Tree
+	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Tree", CTree::Create(m_pDevice))))
 		return E_FAIL;
 #pragma endregion
 
