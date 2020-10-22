@@ -129,7 +129,11 @@ HRESULT CScene_Stage0::Setup_Layer_AllObject()
 			if (fin.eof())
 				break;
 
-			if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, szGameObjectName, SCENE_STAGE0, szLayerName, &vPosition)))
+			vector<void*> test;
+
+			test.emplace_back(&vPosition);
+
+			if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, szGameObjectName, SCENE_STAGE0, szLayerName, &test)))
 					return E_FAIL;
 
 
