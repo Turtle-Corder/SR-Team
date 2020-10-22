@@ -40,7 +40,7 @@ list<INVEN_ITEM*>& CItemManager::Get_DropItem(wstring wstrItemName, int iSort, i
 	// 아니면 새로 만들어서 리스트에 넣어준다
 	INVEN_ITEM* pItem = new INVEN_ITEM;
 	StringCchPrintf(pItem->szItemTag, _countof(pItem->szItemTag), wstrItemName.c_str());
-	pItem->iSort = iSort;
+	//pItem->iSort = iSort;
 	pItem->iPrice = iPrice;
 	pItem->iInvneInsertOrder = m_iInvenInsertOrder;
 

@@ -6,12 +6,12 @@ USING(Engine)
 
 typedef struct tagInvenItem
 {
-	WCHAR	szItemTag[MIN_STR];
-	int		iSort = -1;
-	int		iCnt = 0;
-	int		iPrice = 0;
-	int		iInvneInsertOrder = -1;
-	_vec3	vInvenPos = { 0.f, 0.f, 0.f };
+	WCHAR			szItemTag[MIN_STR];
+	eITEM_SORT		eSort = SORT_END;
+	int				iCnt = 0;
+	int				iPrice = 0;
+	int				iInvneInsertOrder = -1;
+	_vec3			vInvenPos = { 0.f, 0.f, 0.f };
 } INVEN_ITEM;
 
 

@@ -167,7 +167,7 @@ HRESULT CMainApp::Setup_StaticResources()
 #pragma endregion
 
 #pragma region GameObject_Shop
-	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_Shop", CShop::Create(m_pDevice))))
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_Shop", CShop::Create(m_pDevice, m_pSprite, m_pFont))))
 		return E_FAIL;
 #pragma endregion
 
@@ -177,7 +177,7 @@ HRESULT CMainApp::Setup_StaticResources()
 #pragma endregion
 
 #pragma region GameObject_Inven
-	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_Inven", CInventory::Create(m_pDevice))))
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_Inven", CInventory::Create(m_pDevice, m_pSprite, m_pFont))))
 		return E_FAIL;
 #pragma endregion
 
@@ -268,6 +268,9 @@ HRESULT CMainApp::Setup_StaticResources()
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Shop_ShopWnd", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
 			L"../Resources/2DResource/Shop/ShopWnd%d.png"))))
 		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Shop_ShopScrollBar", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Shop/ScrollBar%d.png"))))
+		return E_FAIL;
 #pragma endregion
 
 
@@ -275,13 +278,23 @@ HRESULT CMainApp::Setup_StaticResources()
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Inven_InvenWnd", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
 			L"../Resources/2DResource/인벤이야%d.png"))))
 		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Inven_SellButton",CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+			L"../Resources/2DResource/Inven/SellButton%d.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_Empty",CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+			L"../Resources/2DResource/Item/empty%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Select_SellItem",CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+			L"../Resources/2DResource/Item/select_sellitem%d.png"))))
+		return E_FAIL;
 #pragma endregion
 
 
 #pragma region Component_Textures_Item
 
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_GoldenSword", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/2DResource/Item/golden_sword%d.png"))))
+			L"../Resources/2DResource/new_Item/golden_sword%d.png"))))
 		return E_FAIL;
 
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_ItemName_GoldenSword", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
@@ -294,7 +307,7 @@ HRESULT CMainApp::Setup_StaticResources()
 
 
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_IronSword", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/2DResource/Item/iron_sword%d.png"))))
+			L"../Resources/2DResource/new_Item/iron_sword%d.png"))))
 		return E_FAIL;
 
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_ItemName_IronSword", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
@@ -307,7 +320,7 @@ HRESULT CMainApp::Setup_StaticResources()
 
 
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_DiaSword", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/2DResource/Item/diamond_sword%d.png"))))
+			L"../Resources/2DResource/new_Item/diamond_sword%d.png"))))
 		return E_FAIL;
 
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_ItemName_DiaSword", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
@@ -321,7 +334,7 @@ HRESULT CMainApp::Setup_StaticResources()
 
 
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_BlackDress", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/2DResource/Item/black_dress%d.png"))))
+			L"../Resources/2DResource/new_Item/black_dress%d.png"))))
 		return E_FAIL;
 
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_ItemName_BlackDress", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
@@ -335,7 +348,7 @@ HRESULT CMainApp::Setup_StaticResources()
 
 
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_PupleDress", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/2DResource/Item/puple_dress%d.png"))))
+			L"../Resources/2DResource/new_Item/puple_dress%d.png"))))
 		return E_FAIL;
 
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_ItemName_PupleDress", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,

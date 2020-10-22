@@ -46,21 +46,21 @@ private:
 	virtual _int Initial_Update_GameObject();
 	_int Update_Parts();
 
-	void Jump(float fDeltaTime);
+	void Jump(_float fDeltaTime);
 
 	// 이동 모션
-	void MoveMotion(float fDeltaTime);
+	void MoveMotion(_float fDeltaTime);
 
 	HRESULT Universal_Key();
 	HRESULT Wnd_OpenClose();
 
 private:
 	// 일반 공격
-	void Normal_Attack(float fDeltaTime);
+	void Normal_Attack(_float fDeltaTime);
 	// 스킬1 - 레이저
-	void Skill_Laser(float fDeltaTime);
+	void Skill_Laser(_float fDeltaTime);
 	// 스킬2 - 투사체 낙하
-	void Skill_ProjectileFall(float fDeltaTime);
+	void Skill_ProjectileFall(_float fDeltaTime);
 
 private:
 	// hp 바 지연 감소
@@ -88,82 +88,82 @@ private:
 
 
 
-	bool		m_bIsTagetMove = false;
+	_bool		m_bIsTagetMove = false;
 	_vec3		m_vTargetPos = {};
 	
 
 	// 플레이어 초기 회전값 보관용
-	bool			m_bInitial = true;
+	_bool			m_bInitial = true;
 	D3DXVECTOR3		m_vConstRot[PART_END];
 
 	// 팔, 다리는 일정 거리만큼 떨어짐
-	float			m_fDisY = 2.5f;
-	float			m_fHandDis = 0.8f;
-	float			m_fFootDis = 0.2f;
+	_float			m_fDisY = 2.5f;
+	_float			m_fHandDis = 0.8f;
+	_float			m_fFootDis = 0.2f;
 
 	//---------------------------------------------
 	// 이동 모션
 	//---------------------------------------------
-	bool			m_bMove = false;
+	_bool			m_bMove = false;
 	CHANGE_MOVE		m_eMovingDir = CHANGE_LEFT;
 	MOVEING_DIR		m_ePlayerDir = MOVING_UP;
-	float			m_fMovingTime = 0.f;
+	_float			m_fMovingTime = 0.f;
 
 	//---------------------------------------------
 	// HP바 지연 감소
 	//---------------------------------------------
-	int				m_iHP = 100;
+	_int				m_iHP = 100;
 
 	//---------------------------------------------
 	// 점프
 	//---------------------------------------------
-	bool				m_bJump = false;
-	float				m_fFallSpeed = 0.f;
-	float				m_fJumpPower = 5.f;
-	float				m_fJumpTime = 0.f;
+	_bool				m_bJump = false;
+	_float				m_fFallSpeed = 0.f;
+	_float				m_fJumpPower = 5.f;
+	_float				m_fJumpTime = 0.f;
 
 	// 플레이어가 공격, 스킬 사용할 때 참고할 초기 회전값 보관
-	D3DXVECTOR3			m_vInitialRot;
+	_vec3			m_vInitialRot;
 	// 플레이어가 현재 스킬을 사용하고 있는 중인지
 	// 사용 -> true, 사용X -> false
-	bool				m_bUsingSkill = false;
+	_bool				m_bUsingSkill = false;
 	// 현재 플레이어가 사용하고 있는 스킬 아이디
 	ePLAYER_SKILL_ID	m_ePlayerSkillID = PLAYER_SKILL_END;
 
 	//---------------------------------------------
 	// 일반 공격
 	//---------------------------------------------
-	bool				m_bIsNormalAtt = false;
-	float				m_fAttTime = 0.f;
-	bool				m_bRightAtt = false;
-	bool				m_bLeftAtt = false;
+	_bool				m_bIsNormalAtt = false;
+	_float				m_fAttTime = 0.f;
+	_bool				m_bRightAtt = false;
+	_bool				m_bLeftAtt = false;
 
 	//---------------------------------------------
 	// 스킬1 - 레이저
 	//---------------------------------------------
-	bool				m_bStartLaser = false;
-	bool				m_bUsingLaser = false;
-	float				m_fLaserTime = 0.f;
+	_bool				m_bStartLaser = false;
+	_bool				m_bUsingLaser = false;
+	_float				m_fLaserTime = 0.f;
 
 	//---------------------------------------------
 	// 스킬2 - 투사체 낙하
 	//---------------------------------------------
-	bool				m_bStartFall = false;
-	bool				m_bIsFall = false;
-	bool				m_bDownHand = false;
-	float				m_fFallTime = 0.f;
+	_bool				m_bStartFall = false;
+	_bool				m_bIsFall = false;
+	_bool				m_bDownHand = false;
+	_float				m_fFallTime = 0.f;
 
 	//---------------------------------------------
 	// 상하좌우 이동할 때 마다 큐브들 자전
 	//---------------------------------------------
-	bool				m_bLeftTurn = false;
-	bool				m_bRightTurn = false;
-	bool				m_bUpTurn = false;
-	bool				m_bDownTurn = false;
+	_bool				m_bLeftTurn = false;
+	_bool				m_bRightTurn = false;
+	_bool				m_bUpTurn = false;
+	_bool				m_bDownTurn = false;
 
 	// 상점 그릴지 말지
-	bool				m_bRenderShop = false;
-	bool				m_bRenderInven = false;
+	_bool				m_bRenderShop = false;
+	_bool				m_bRenderInven = false;
 	//--------------------------------------------
 };
 

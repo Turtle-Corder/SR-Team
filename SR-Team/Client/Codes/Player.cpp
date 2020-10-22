@@ -4,6 +4,7 @@
 #include "Inventory.h"
 #include "ItemManager.h"
 #include "DamageInfo.h"
+#include "Shop.h"
 #include "..\Headers\Player.h"
 
 USING(Client)
@@ -72,6 +73,23 @@ HRESULT CPlayer::Setup_GameObject(void * _pArg)
 	m_bIsFall = false;
 	m_bDownHand = false;
 	m_fFallTime = 0.f;
+
+	_vec3 vRight = { 1.f, 0.f, 0.f };
+
+	// 오른쪽 손
+	_vec3 vRightHand = (vRight * m_fHandDis);
+	m_pTransformCom[PART_HAND_RIGHT]->Set_Position(vRightHand);
+	// 왼쪽 손
+	_vec3 vLeftHand = (-vRight * m_fHandDis);
+	m_pTransformCom[PART_HAND_LEFT]->Set_Position(vLeftHand);
+	// 오른쪽 발
+	_vec3 vRightFoot = (vRight * 0.3f);
+	vRightFoot.y = -0.7f;
+	m_pTransformCom[PART_FOOT_RIGHT]->Set_Position(vRightFoot);
+	// 왼쪽 발
+	_vec3 vLeftFoot = (-vRight * 0.3f);
+	vLeftFoot.y = -0.7f;
+	m_pTransformCom[PART_FOOT_LEFT]->Set_Position(vLeftFoot);
 
 	return S_OK;
 }
@@ -170,33 +188,33 @@ HRESULT CPlayer::Add_Component()
 		}
 		else if (iCnt == PART_BODY)
 		{
-			D3DXVECTOR3 vHeadPos = m_pTransformCom[PART_HEAD]->Get_Desc().vPosition;
+			_vec3 vHeadPos = m_pTransformCom[PART_HEAD]->Get_Desc().vPosition;
 			tTransformDesc.vPosition = { vHeadPos.x, vHeadPos.y - 1.5f, vHeadPos.z };
 			tTransformDesc.vScale = { 0.9f, 0.9f, 0.9f };
 		}
 		else if (iCnt == PART_HAND_LEFT)
 		{
-			D3DXVECTOR3 vBodyPos = m_pTransformCom[PART_BODY]->Get_Desc().vPosition;
+			_vec3 vBodyPos = m_pTransformCom[PART_BODY]->Get_Desc().vPosition;
 			tTransformDesc.vPosition
 				= { vBodyPos.x - 0.8f, vBodyPos.y - 2.5f, vBodyPos.z };
 			tTransformDesc.vScale = { 0.2f, 0.7f, 0.2f };
 		}
 		else if (iCnt == PART_HAND_RIGHT)
 		{
-			D3DXVECTOR3 vBodyPos = m_pTransformCom[PART_BODY]->Get_Desc().vPosition;
+			_vec3 vBodyPos = m_pTransformCom[PART_BODY]->Get_Desc().vPosition;
 			tTransformDesc.vPosition
 				= { vBodyPos.x + 0.8f, vBodyPos.y - 2.5f, vBodyPos.z };
 			tTransformDesc.vScale = { 0.2f, 0.7f, 0.2f };
 		}
 		else if (iCnt == PART_FOOT_LEFT)
 		{
-			D3DXVECTOR3 vBodyPos = m_pTransformCom[PART_BODY]->Get_Desc().vPosition;
+			_vec3 vBodyPos = m_pTransformCom[PART_BODY]->Get_Desc().vPosition;
 			tTransformDesc.vPosition = { vBodyPos.x - 0.2f, vBodyPos.y - 2.5f, vBodyPos.z };
 			tTransformDesc.vScale = { 0.3f, 0.5f, 0.5f };
 		}
 		else if (iCnt == PART_FOOT_RIGHT)
 		{
-			D3DXVECTOR3 vBodyPos = m_pTransformCom[PART_BODY]->Get_Desc().vPosition;
+			_vec3 vBodyPos = m_pTransformCom[PART_BODY]->Get_Desc().vPosition;
 			tTransformDesc.vPosition = { vBodyPos.x + 0.2f, vBodyPos.y - 2.5f, vBodyPos.z };
 			tTransformDesc.vScale = { 0.3f, 0.5f, 0.5f };
 		}
@@ -309,7 +327,7 @@ HRESULT CPlayer::IsOnTerrain()
 
 	for (_uint iCnt = 4; iCnt < PART_END; ++iCnt)
 	{
-		D3DXVECTOR3 vPosition = m_pTransformCom[iCnt]->Get_Desc().vPosition;
+		_vec3 vPosition = m_pTransformCom[iCnt]->Get_Desc().vPosition;
 		if (true == pTerrainBuffer->IsOnTerrain(&vPosition))
 		{
 			m_pTransformCom[iCnt]->Set_Position(vPosition);
@@ -318,19 +336,19 @@ HRESULT CPlayer::IsOnTerrain()
 
 	float fLeftFootPosY = m_pTransformCom[PART_FOOT_LEFT]->Get_Desc().vPosition.y;
 	// 변화한 다리의 위치에 따라 몸의 위치도 변경해준다
-	D3DXVECTOR3 vBodyPos = m_pTransformCom[PART_BODY]->Get_Desc().vPosition;
+	_vec3 vBodyPos = m_pTransformCom[PART_BODY]->Get_Desc().vPosition;
 	vBodyPos.y = fLeftFootPosY + 1.f;
 	m_pTransformCom[PART_BODY]->Set_Position(vBodyPos);
 
-	D3DXVECTOR3 vHeadPos = m_pTransformCom[PART_HEAD]->Get_Desc().vPosition;
+	_vec3 vHeadPos = m_pTransformCom[PART_HEAD]->Get_Desc().vPosition;
 	vHeadPos.y = vBodyPos.y + 0.5f;
 	m_pTransformCom[PART_HEAD]->Set_Position(vHeadPos);
 
-	D3DXVECTOR3 vLeftHandPos = m_pTransformCom[PART_HAND_LEFT]->Get_Desc().vPosition;
+	_vec3 vLeftHandPos = m_pTransformCom[PART_HAND_LEFT]->Get_Desc().vPosition;
 	vLeftHandPos.y = fLeftFootPosY + 1.f;
 	m_pTransformCom[PART_HAND_LEFT]->Set_Position(vLeftHandPos);
 
-	D3DXVECTOR3 vRightHandPos = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vPosition;
+	_vec3 vRightHandPos = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vPosition;
 	vRightHandPos.y = fLeftFootPosY + 1.f;
 	m_pTransformCom[PART_HAND_RIGHT]->Set_Position(vRightHandPos);
 
@@ -352,11 +370,11 @@ HRESULT CPlayer::RaycastOnTerrain()
 		return E_FAIL;
 
 	// 카메라의 월드행렬은 항등행렬!
-	D3DXMATRIX mat;
+	_matrix mat;
 	D3DXMatrixIdentity(&mat);
 
 	// 반환받을 마우스 위치값
-	D3DXVECTOR3 vOutPos;
+	_vec3 vOutPos;
 
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
@@ -379,7 +397,7 @@ void CPlayer::Move_Vertical(_float _fDeltaTime)
 		{
 			for (_uint i = 0; i < 2; ++i)
 			{
-				D3DXVECTOR3 vRot = m_pTransformCom[i]->Get_Desc().vRotate;
+				_vec3 vRot = m_pTransformCom[i]->Get_Desc().vRotate;
 				vRot.y = 0.f;
 				m_pTransformCom[i]->Set_Rotation(vRot);
 			}
@@ -387,7 +405,7 @@ void CPlayer::Move_Vertical(_float _fDeltaTime)
 		}
 
 		// 위로 이동
-		for (_uint i = 0; i < PART_END; ++i)
+		for (_uint i = 0; i < 2; ++i)
 		{
 			m_pTransformCom[i]->Move_Vertical(_fDeltaTime);
 		}
@@ -409,14 +427,14 @@ void CPlayer::Move_Vertical(_float _fDeltaTime)
 			for (_uint i = 0; i < 2; ++i)
 			{
 
-				D3DXVECTOR3 vRot = m_pTransformCom[i]->Get_Desc().vRotate;
+				_vec3 vRot = m_pTransformCom[i]->Get_Desc().vRotate;
 				vRot.y = -3.f;
 				m_pTransformCom[i]->Set_Rotation(vRot);
 			}
 			m_bDownTurn = true;
 		}
 
-		for (_uint i = 0; i < PART_END; ++i)
+		for (_uint i = 0; i < 2; ++i)
 			m_pTransformCom[i]->Move_Vertical(_fDeltaTime);
 
 		if (m_bLeftTurn)
@@ -446,7 +464,7 @@ void CPlayer::Move_Horizontal(_float _fDeltaTime)
 			m_bLeftTurn = true;
 		}
 
-		for (_uint i = 0; i < PART_END; ++i)
+		for (_uint i = 0; i < 2; ++i)
 			m_pTransformCom[i]->Move_Vertical(_fDeltaTime);
 
 		m_bMove = true;
@@ -465,14 +483,14 @@ void CPlayer::Move_Horizontal(_float _fDeltaTime)
 		{
 			for (_uint i = 0; i < 2; ++i)
 			{
-				D3DXVECTOR3 vRot = m_pTransformCom[i]->Get_Desc().vRotate;
+				_vec3 vRot = m_pTransformCom[i]->Get_Desc().vRotate;
 				vRot.y = 1.57079637f;
 				m_pTransformCom[i]->Set_Rotation(vRot);
 			}
 			m_bRightTurn = true;
 		}
 
-		for (_uint i = 0; i < PART_END; ++i)
+		for (_uint i = 0; i < 2; ++i)
 			m_pTransformCom[i]->Move_Vertical(_fDeltaTime);
 
 		m_bMove = true;
@@ -489,13 +507,13 @@ void CPlayer::Turn(_float _fDeltaTime)
 {
 	if (CKeyManager::Get_Instance()->Key_Pressing('Q'))
 	{
-		for (_uint i = 0; i < 6; ++i)
+		for (_uint i = 0; i < 2; ++i)
 			m_pTransformCom[i]->Turn(CTransform::AXIS_Y, -_fDeltaTime);
 	}
 
 	if (CKeyManager::Get_Instance()->Key_Pressing('E'))
 	{
-		for (_uint i = 0; i < 6; ++i)
+		for (_uint i = 0; i < 2; ++i)
 			m_pTransformCom[i]->Turn(CTransform::AXIS_Y, _fDeltaTime);
 	}
 }
@@ -536,43 +554,47 @@ _int CPlayer::Initial_Update_GameObject()
 
 _int CPlayer::Update_Parts()
 {
-	_vec3 vLook = {};
-	_vec3 vPos = {};
-	_vec3 vRight = {};
-	_vec3 vLeft = {};
-	_vec3 vRealUp = {};
-	vPos = m_pTransformCom[PART_BODY]->Get_Desc().vPosition;
-	memcpy_s(&vLook, sizeof(_vec3), &m_pTransformCom[PART_BODY]->Get_Desc().matWorld.m[2][0], sizeof(_vec3));
-
-	D3DXVec3Cross(&vRight, &_vec3(0.f, 1.f, 0.f), &vLook);
-	D3DXVec3Cross(&vLeft, &vLook, &_vec3(0.f, 1.f, 0.f));
-	D3DXVec3Cross(&vRealUp, &vLook, &vRight);
-
-	// 오른쪽 손
-	_vec3 vRightHand = vPos + (vRight * m_fHandDis);
-	m_pTransformCom[PART_HAND_RIGHT]->Set_Position(vRightHand);
-	// 왼쪽 손
-	_vec3 vLeftHand = vPos + (vLeft * m_fHandDis);
-	m_pTransformCom[PART_HAND_LEFT]->Set_Position(vPos + (vLeft * m_fHandDis));
-	// 오른쪽 발
-	_vec3 vRightFoot = vPos + (vRight * 0.3f);
-	vRightFoot.y = vPos.y - 1.f;
-	m_pTransformCom[PART_FOOT_RIGHT]->Set_Position(vRightFoot);
-	// 왼쪽 발
-	_vec3 vLeftFoot = vPos + (vLeft * 0.3f);
-	vLeftFoot.y = vPos.y - 1.f;
-	m_pTransformCom[PART_FOOT_LEFT]->Set_Position(vLeftFoot);
-
 	for (_uint iCnt = 0; iCnt < PART_END; ++iCnt)
 	{
 		if (FAILED(m_pTransformCom[iCnt]->Update_Transform()))
 			return GAMEOBJECT::WARN;
 	}
 
+	// 공전 곱
+	_vec3 vRotate = m_pTransformCom[PART_BODY]->Get_Desc().vRotate;
+	_matrix matWorld;
+	D3DXMatrixIdentity(&matWorld);
+	D3DXMatrixRotationZ(&matWorld, vRotate.z);
+	D3DXMatrixRotationY(&matWorld, vRotate.y);
+	D3DXMatrixRotationX(&matWorld, vRotate.x);
+
+	m_pTransformCom[PART_HAND_LEFT]->Set_WorldMatrix(
+		m_pTransformCom[PART_HAND_LEFT]->Get_Desc().matWorld * matWorld);
+	m_pTransformCom[PART_HAND_RIGHT]->Set_WorldMatrix(
+		m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().matWorld * matWorld);
+	m_pTransformCom[PART_FOOT_LEFT]->Set_WorldMatrix(
+		m_pTransformCom[PART_FOOT_LEFT]->Get_Desc().matWorld * matWorld);
+	m_pTransformCom[PART_FOOT_RIGHT]->Set_WorldMatrix(
+		m_pTransformCom[PART_FOOT_RIGHT]->Get_Desc().matWorld * matWorld);
+
+	// 부모의 월드행렬 곱해주기
+	m_pTransformCom[PART_HAND_LEFT]->Set_WorldMatrix(
+		(m_pTransformCom[PART_HAND_LEFT]->Get_Desc().matWorld
+			* m_pTransformCom[PART_BODY]->Get_Desc().matWorld));
+	m_pTransformCom[PART_HAND_RIGHT]->Set_WorldMatrix(
+		(m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().matWorld
+			* m_pTransformCom[PART_BODY]->Get_Desc().matWorld));
+	m_pTransformCom[PART_FOOT_LEFT]->Set_WorldMatrix(
+		(m_pTransformCom[PART_FOOT_LEFT]->Get_Desc().matWorld
+			* m_pTransformCom[PART_BODY]->Get_Desc().matWorld));
+	m_pTransformCom[PART_FOOT_RIGHT]->Set_WorldMatrix(
+		(m_pTransformCom[PART_FOOT_RIGHT]->Get_Desc().matWorld
+			* m_pTransformCom[PART_BODY]->Get_Desc().matWorld));
+
 	return GAMEOBJECT::NOEVENT;
 }
 
-void CPlayer::Jump(float fDeltaTime)
+void CPlayer::Jump(_float fDeltaTime)
 {
 	int k = 0;
 	if (CKeyManager::Get_Instance()->Key_Pressing(VK_SPACE))
@@ -580,7 +602,7 @@ void CPlayer::Jump(float fDeltaTime)
 		m_bJump = true;
 	}
 
-	D3DXVECTOR3 vCurPos[PART_END];
+	_vec3 vCurPos[PART_END];
 	// 플레이어의 현재 위치를 계속 받아온다
 	for (_uint i = 0; i < PART_END; ++i)
 		vCurPos[i] = m_pTransformCom[i]->Get_Desc().vPosition;
@@ -606,13 +628,13 @@ void CPlayer::Jump(float fDeltaTime)
 	}
 }
 
-void CPlayer::MoveMotion(float fDeltaTime)
+void CPlayer::MoveMotion(_float fDeltaTime)
 {
 	if (m_bMove)
 	{
 		m_fMovingTime += fDeltaTime;
 
-		if (m_fMovingTime >= 1.f/*0.5f*/)
+		if (m_fMovingTime >= 0.5f)
 		{
 			if (m_eMovingDir == CHANGE_LEFT)
 				m_eMovingDir = CHANGE_RIGHT;
@@ -621,37 +643,19 @@ void CPlayer::MoveMotion(float fDeltaTime)
 			m_fMovingTime = 0.f;
 
 			for (_uint i = 2; i < PART_END; ++i)
-			{
 				m_pTransformCom[i]->Set_Rotation(m_vConstRot[i]);
-			}
 		}
 
 		if (m_eMovingDir == CHANGE_LEFT)
 		{
-			if (m_ePlayerDir == MOVING_UP || m_ePlayerDir == MOVING_DOWN)
-			{
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime);
-				m_pTransformCom[PART_HAND_LEFT]->Turn(CTransform::AXIS_X, fDeltaTime);
-			}
-			else if (m_ePlayerDir == MOVING_LEFT || m_ePlayerDir == MOVING_RIGHT)
-			{
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Z, -fDeltaTime);
-				m_pTransformCom[PART_HAND_LEFT]->Turn(CTransform::AXIS_Z, fDeltaTime);
-			}
+			m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime);
+			m_pTransformCom[PART_HAND_LEFT]->Turn(CTransform::AXIS_X, fDeltaTime);
 		}
 
 		else if (m_eMovingDir == CHANGE_RIGHT)
 		{	
-			if (m_ePlayerDir == MOVING_UP || m_ePlayerDir == MOVING_DOWN)
-			{
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime);
-				m_pTransformCom[PART_HAND_LEFT]->Turn(CTransform::AXIS_X, -fDeltaTime);
-			}
-			else if (m_ePlayerDir == MOVING_LEFT || m_ePlayerDir == MOVING_RIGHT)
-			{
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Z, fDeltaTime);
-				m_pTransformCom[PART_HAND_LEFT]->Turn(CTransform::AXIS_Z, -fDeltaTime);
-			}
+			m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime);
+			m_pTransformCom[PART_HAND_LEFT]->Turn(CTransform::AXIS_X, -fDeltaTime);
 		}
 	}
 	else if (!m_bMove)
@@ -672,15 +676,6 @@ HRESULT CPlayer::Universal_Key()
 
 	if (CKeyManager::Get_Instance()->Key_Pressing('G'))
 	{
-		// 일단은 그냥 아이템 먹는거로.. -> 나중에 수정
-		list<INVEN_ITEM*> pInvenList = m_pItemMgrCom->Get_DropItem(L"금 검", 1, 200);
-		//PRINT_LOG(L"검1 획득!");
-
-		CInventory* pInven = (CInventory*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Inven");
-		if (nullptr == pInven)
-			return E_FAIL;
-
-		pInven->Set_InvenItemList(&pInvenList);
 	}
 
 	return S_OK;
@@ -688,6 +683,37 @@ HRESULT CPlayer::Universal_Key()
 
 HRESULT CPlayer::Wnd_OpenClose()
 {
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		E_FAIL;
+
+	// 상점 on/off
+	if (CKeyManager::Get_Instance()->Key_Down('O'))
+	{
+		m_bRenderShop = !m_bRenderShop;
+		//PRINT_LOG(L"상점!");
+
+		CShop* pShop
+			= (CShop*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Shop");
+		if (pShop == nullptr)
+			E_FAIL;
+
+		pShop->Set_Render(m_bRenderShop);
+	}
+	// 인벤 on/off
+	if (CKeyManager::Get_Instance()->Key_Down('I'))
+	{
+		m_bRenderInven = !m_bRenderInven;
+		//PRINT_LOG(L"인벤!");
+
+		CInventory* pInven
+			= (CInventory*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Inventory");
+		if (pInven == nullptr)
+			E_FAIL;
+
+		pInven->Set_Render(m_bRenderInven);
+	}
+
 	return S_OK;
 }
 
@@ -736,7 +762,7 @@ void CPlayer::Free()
 	CGameObject::Free();
 }
 
-void CPlayer::Normal_Attack(float fDeltaTime)
+void CPlayer::Normal_Attack(_float fDeltaTime)
 {
 	int k = 0;
 	if (GetAsyncKeyState('Z') & 0x8000)
@@ -765,20 +791,20 @@ void CPlayer::Normal_Attack(float fDeltaTime)
 			}
 
 			if (m_ePlayerDir == MOVING_UP || m_ePlayerDir == MOVING_DOWN)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Y, fDeltaTime * 2.3f);
+				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Y, fDeltaTime * 5.f);
 			else if (m_ePlayerDir == MOVING_RIGHT)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 2.3f);
+				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
 		}
 
 		else if (m_bLeftAtt)
 		{
 			m_fAttTime += fDeltaTime;
 			if (m_ePlayerDir == MOVING_UP || m_ePlayerDir == MOVING_DOWN)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Y, -fDeltaTime * 2.3f);
+				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Y, -fDeltaTime * 5.f);
 			else if (m_ePlayerDir == MOVING_RIGHT)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 2.3f);
+				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
 
-			if (m_fAttTime >= 0.6f)
+			if (m_fAttTime >= 0.3f)
 			{
 				m_fAttTime = 0.f;
 				m_bIsNormalAtt = false;
@@ -795,14 +821,14 @@ void CPlayer::Normal_Attack(float fDeltaTime)
 		{
 			m_fAttTime += fDeltaTime;
 			if (m_ePlayerDir == MOVING_UP)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 2.5f);
+				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
 			else if (m_ePlayerDir == MOVING_DOWN)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 2.5f);
+				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
 			else if (m_ePlayerDir == MOVING_RIGHT)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Z, fDeltaTime * 2.5f);
+				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Z, fDeltaTime * 5.f);
 			//m_pTransformCom[PLAYER_RIGHT_HAND]->Turn(CTransform::AXIS_Y, -fDeltaTime * 0.35f);
 
-			if (m_fAttTime >= 0.4f)
+			if (m_fAttTime >= 0.2f)
 			{
 				m_fAttTime = 0.f;
 				m_bRightAtt = true;
@@ -812,7 +838,7 @@ void CPlayer::Normal_Attack(float fDeltaTime)
 	}
 }
 
-void CPlayer::Skill_Laser(float fDeltaTime)
+void CPlayer::Skill_Laser(_float fDeltaTime)
 {
 	if (GetAsyncKeyState('X') & 0x8000)
 	{
@@ -845,13 +871,13 @@ void CPlayer::Skill_Laser(float fDeltaTime)
 		{
 			m_fAttTime += fDeltaTime;
 			if (m_ePlayerDir == MOVING_UP)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 2.7f);
+				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
 			else if (m_ePlayerDir == MOVING_DOWN)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 2.7f);
+				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
 			else if (m_ePlayerDir == MOVING_RIGHT)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Z, fDeltaTime * 2.7f);
+				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Z, fDeltaTime * 5.f);
 
-			if (m_fAttTime >= 0.4f)
+			if (m_fAttTime >= 0.2f)
 			{
 				m_fAttTime = 0.f;
 				m_bUsingLaser = true;
@@ -860,7 +886,7 @@ void CPlayer::Skill_Laser(float fDeltaTime)
 	}
 }
 
-void CPlayer::Skill_ProjectileFall(float fDeltaTime)
+void CPlayer::Skill_ProjectileFall(_float fDeltaTime)
 {
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
@@ -889,8 +915,11 @@ void CPlayer::Skill_ProjectileFall(float fDeltaTime)
 		if (true == m_pRaycastCom->IsSimulate<VTX_TEXTURE, INDEX16>(
 			g_hWnd, WINCX, WINCY, pTerrainBuffer, &mat, pCamera, &vGoalPos))
 		{
-			if (FAILED(Ready_Layer_Meteor(L"Layer_Meteor", vGoalPos)))
-				PRINT_LOG(L"Failed To Ready_Layer_Meteor in CPlayer", LOG::CLIENT);
+			if (!m_bRenderInven && !m_bRenderShop)
+			{
+				if (FAILED(Ready_Layer_Meteor(L"Layer_Meteor", vGoalPos)))
+					PRINT_LOG(L"Failed To Ready_Layer_Meteor in CPlayer", LOG::CLIENT);
+			}
 		}
 	}
 
@@ -900,7 +929,7 @@ void CPlayer::Skill_ProjectileFall(float fDeltaTime)
 		{
 			m_fAttTime += fDeltaTime;
 
-			if (m_fAttTime >= 2.f)
+			if (m_fAttTime >= 1.f)
 			{
 				m_fAttTime = 0.f;
 				m_bIsFall = false;
@@ -912,13 +941,13 @@ void CPlayer::Skill_ProjectileFall(float fDeltaTime)
 		{
 			m_fAttTime += fDeltaTime;
 			if (m_ePlayerDir == MOVING_UP)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 2.5f);
+				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
 			else if (m_ePlayerDir == MOVING_DOWN)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 2.5f);
+				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
 			else if (m_ePlayerDir == MOVING_RIGHT)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Z, -fDeltaTime * 2.5f);
+				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Z, -fDeltaTime * 5.f);
 
-			if (m_fAttTime >= 0.5f)
+			if (m_fAttTime >= 0.2f)
 			{
 				m_bStartFall = false;
 				m_bIsFall = false;
@@ -934,11 +963,11 @@ void CPlayer::Skill_ProjectileFall(float fDeltaTime)
 		{
 			m_fAttTime += fDeltaTime;
 			if (m_ePlayerDir == MOVING_UP)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 3.f);
+				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
 			else if (m_ePlayerDir == MOVING_DOWN)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 3.f);
+				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
 			else if (m_ePlayerDir == MOVING_RIGHT)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Z, fDeltaTime * 3.f);
+				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Z, fDeltaTime * 5.f);
 
 			if (m_fAttTime >= 0.4f)
 			{

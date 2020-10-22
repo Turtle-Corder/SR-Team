@@ -71,6 +71,7 @@ enum eSHOP_ID
 {
 	SHOP_START,
 	SHOP_WND = SHOP_START,
+	SHOP_SCROLLBAR,
 	SHOP_END
 };
 
@@ -82,11 +83,17 @@ enum eINVEN_ID
 {
 	INVEN_START,
 	INVEN_WND = INVEN_START,
+	INVEN_SELL_BUTTON,
 	INVEN_END
 };
 
 
-
-
+//--------------------------------------------------
+// 아이템 종류
+//--------------------------------------------------
+enum eITEM_SORT
+{
+	STAFF, SUIT, SORT_END
+};
 
 #endif

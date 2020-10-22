@@ -37,6 +37,8 @@ private:
 	HRESULT Setup_Layer_Monster(const wstring& LayerTag);
 
 	HRESULT Setup_Layer_UI(const wstring& LayerTag);
+	HRESULT SetUp_Layer_Inventory(const wstring& LayerTag);
+	HRESULT SetUp_Layer_Shop(const wstring& LayerTag);
 	
 private:
 	CPreLoader*		m_pPreLoader = nullptr;
