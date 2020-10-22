@@ -226,12 +226,6 @@ HRESULT CSnail::LookAtPlayer(float _fDeltaTime)
 	if (fabsf(fLimit) < 0.2f)
 		return S_OK;
 
-
-	CTransform* pMonsterTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Monster", L"Com_Transform");
-
-	if (nullptr == pMonsterTransform)
-		return E_FAIL;
-
 	if (fLimit > 0)
 		m_pTransformCom[SNAIL_BODY]->Turn(CTransform::AXIS_Y, -_fDeltaTime * fRad);
 	else
@@ -288,7 +282,7 @@ void CSnail::Free()
 	CGameObject::Free();
 }
 
-HRESULT CSnail::Take_Damage()
+HRESULT CSnail::Take_Damage(const CComponent* _pDamageComp)
 {
-	return E_NOTIMPL;
+	return S_OK;
 }

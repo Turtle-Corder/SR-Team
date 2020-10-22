@@ -35,13 +35,12 @@ public:
 	static CSnail* Create(LPDIRECT3DDEVICE9 pDevice);
 	virtual CGameObject * Clone_GameObject(void * pArg) override;
 	virtual void Free() override;
-	virtual HRESULT Take_Damage() override;
+	virtual HRESULT Take_Damage(const CComponent* _pDamageComp) override;
 private:
 	CVIBuffer*	m_pVIBufferCom[SNAIL_END] = {};
 	CTransform*	m_pTransformCom[SNAIL_END] = {};
 	CTexture*	m_pTextureCom[SNAIL_END] = {};
 private:
-	ATTACKINFO* m_pAttackInfo = nullptr;
 	WCHAR		m_szOwnerName[MIN_STR];
 };
 

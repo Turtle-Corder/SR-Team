@@ -60,7 +60,7 @@ _int CScene_Stage0::LateUpdate_Scene(_float _fDeltaTime)
 		return -1;
 
 	// Src가 공격자 Dst가 피격자
-	if (FAILED(pManagement->Collision_Detection_Layers(SCENE_STAGE0, L"Layer_Player", L"Layer_Monster", L"Com_Collider")))
+	if (FAILED(pManagement->Collision_Detection_Layers(SCENE_STAGE0, L"Layer_Player", L"Layer_Monster", L"Com_Collider", L"Com_DmgInfo")))
 		return -1;
 
 	CKeyManager::Get_Instance()->Key_Update();
@@ -166,9 +166,6 @@ HRESULT CScene_Stage0::Setup_Layer_Monster(const wstring & LayerTag)
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
-		return E_FAIL;
-
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Monster", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
 
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Snail", SCENE_STAGE0, LayerTag)))

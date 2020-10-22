@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "..\Headers\Yeti.h"
 #include "Status.h"
+#include "DamageInfo.h"
+#include "..\Headers\Yeti.h"
 
 USING(Client)
 
@@ -419,6 +420,10 @@ void CYeti::Free()
 		Safe_Release(m_pTextureCom[iAll]);
 	}
 
+	Safe_Release(m_pStatusCom);
+	Safe_Release(m_pDmgInfoComp);
+
+
 	CGameObject::Free();
 }
 
@@ -466,12 +471,6 @@ HRESULT CYeti::LookAtPlayer(float _fDeltaTime)
 	if (fabsf(fLimit) < 0.2f)
 		return S_OK;
 
-
-	CTransform* pMonsterTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Monster", L"Com_Transform");
-
-	if (nullptr == pMonsterTransform)
-		return E_FAIL;
-
 	if (fLimit > 0)
 	{
 		m_pTransformCom[YETI_BODY]->Turn(CTransform::AXIS_Y, -_fDeltaTime * fRad);
@@ -511,7 +510,7 @@ HRESULT CYeti::Create_Snow(const wstring & LayerTag)
 	_vec3 vRightHand = m_pTransformCom[YETI_RIGHT]->Get_Desc().vPosition;
 
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Snow",
-		SCENE_STAGE0, LayerTag, &m_pOwner)))
+		SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
 
 	return S_OK;

@@ -104,7 +104,7 @@ _int CLayer::LateUpdate_Layer(_float _fDeltaTime)
 	return iBehaviour;
 }
 
-HRESULT CLayer::Collision_Detection_Layers(CLayer* _pSrcLayer, const wstring& _strColliderTag)
+HRESULT CLayer::Collision_Detection_Layers(CLayer* _pSrcLayer, const wstring& _strColliderTag, const wstring& _strDmgInfoTag)
 {
 	if (nullptr == _pSrcLayer)
 		return E_FAIL;
@@ -126,7 +126,10 @@ HRESULT CLayer::Collision_Detection_Layers(CLayer* _pSrcLayer, const wstring& _s
 			float fMaxDistance = pSrcCol->Get_Desc().fRadius + pDstCol->Get_Desc().fRadius;
 
 			if (fDistance < fMaxDistance)
-				pDstObject->Take_Damage();
+			{
+				CComponent* pDmgInfoComp = pSrcObject->Get_Component(_strDmgInfoTag);
+				pDstObject->Take_Damage(pDmgInfoComp);
+			}
 		}
 	}
 

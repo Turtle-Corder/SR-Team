@@ -37,7 +37,6 @@ private:
 	CVIBuffer*	m_pVIBufferCom = nullptr;
 	CTransform*	m_pTransformCom = nullptr;
 	CTexture*	m_pTextureCom = nullptr;
-	CStatus*	m_pStatCom = nullptr;
 
 	bool		m_bDead = false;
 	bool		m_bJump = false;
@@ -50,7 +49,6 @@ private:
 	bool		m_bGround = false;
 	float		m_fGravity = 0.f;
 	_vec3		m_vCompare = {};
-	ATTACKINFO* m_pOwner = nullptr;
 
 };
 

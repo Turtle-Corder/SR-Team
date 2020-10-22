@@ -61,7 +61,7 @@ HRESULT CGameObject::Render_UI()
 	return E_NOTIMPL;
 }
 
-HRESULT CGameObject::Take_Damage()
+HRESULT CGameObject::Take_Damage(const CComponent* _pDamageComp)
 {
 	return E_NOTIMPL;
 }

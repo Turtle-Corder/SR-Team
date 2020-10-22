@@ -69,7 +69,7 @@ public:
 	//--------------------------------------------------
 	// 콜라이더
 	//--------------------------------------------------
-	HRESULT Collision_Detection_Layers(_int _iSceneID, const wstring& _strSrcLayerTag, const wstring& _strDstLayerTag, const wstring& _strColliderTag);
+	HRESULT Collision_Detection_Layers(_int _iSceneID, const wstring& _strSrcLayerTag, const wstring& _strDstLayerTag, const wstring& _strColliderTag, const wstring& _strDmgInfoTag);
 
 
 	//--------------------------------------------------

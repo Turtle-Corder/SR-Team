@@ -25,11 +25,14 @@ typedef struct tagTerrainInfo
 	_int iZ_Index;
 } TERRAININFO;
 
-typedef struct tagAttackInfo
+
+
+typedef struct tagDamageEvent
 {
-	CGameObject* pOwner;
-	_int		iAttack;
-}ATTACKINFO;
+	_vec3			vPosition;
+	CComponent*		pDmgInfoComp;
+} DAMAGE_EVENT;
+
 
 //----------------------------
 // 

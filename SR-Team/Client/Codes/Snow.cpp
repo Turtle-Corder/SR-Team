@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "Status.h"
 #include "..\Headers\Snow.h"
 
 
@@ -23,9 +22,7 @@ HRESULT CSnow::Setup_GameObject_Prototype()
 
 HRESULT CSnow::Setup_GameObject(void * pArg)
 {
-	if (pArg)
-	m_pOwner = (ATTACKINFO*)pArg;
-
+	// TODO
 
 	if (FAILED(Add_Component()))
 		return E_FAIL;
