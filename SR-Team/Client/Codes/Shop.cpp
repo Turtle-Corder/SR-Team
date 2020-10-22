@@ -199,7 +199,7 @@ HRESULT CShop::Render_UI()
 
 HRESULT CShop::Check_BuyItem()
 {
-	for (_uint j = 0; j < 3; ++j)
+	for (_uint j = m_iStartIndex; j < 3; ++j)
 	{
 		for (_uint i = 0; i < 4; ++i)
 		{
@@ -265,10 +265,6 @@ HRESULT CShop::Move_ScrollBar()
 		m_pTransformCom[SHOP_SCROLLBAR]->Set_Position(vScrollBarPos);
 	}
 	return S_OK;
-	//m_tScrollBarRt.left = (LONG)(vScrollBarPos.x - (m_vScale[SHOP_SCROLLBAR].x / 2.f));
-	//m_tScrollBarRt.right = (LONG)(vScrollBarPos.x + (m_vScale[SHOP_SCROLLBAR].x / 2.f));
-	//m_tScrollBarRt.top = (LONG)(m_vPos[SHOP_SCROLLBAR].y - (m_vScale[SHOP_SCROLLBAR].y / 2.f));
-	//m_tScrollBarRt.bottom = (LONG)(m_vPos[SHOP_SCROLLBAR].y + (m_vScale[SHOP_SCROLLBAR].y / 2.f));
 }
 
 HRESULT CShop::Add_Component()

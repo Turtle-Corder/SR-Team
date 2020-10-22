@@ -36,12 +36,11 @@ CTexture * CItem::Get_ItemInfo_Texture(const wstring & strItemTag)
 	_int iIndex = 0;
 	for (auto& pItem : m_vItemList)
 	{
-		if (pItem->szItemTag == strItemTag)
-		{
-			m_pTextureCom[iIndex];
-		}
+		if (!wcscmp(pItem->szItemTag, strItemTag.c_str()))
+			return m_pTextureCom[iIndex];
 		++iIndex;
 	}
+
 	return nullptr;
 }
 
@@ -53,6 +52,8 @@ HRESULT CItem::Setup_GameObject_Prototype()
 HRESULT CItem::Setup_GameObject(void * pArg)
 {
 	if (Add_Component())
+		return E_FAIL;
+	if (Add_Component_Item())
 		return E_FAIL;
 
 	return S_OK;
