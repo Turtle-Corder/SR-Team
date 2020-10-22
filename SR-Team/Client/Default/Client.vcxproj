@@ -164,6 +164,7 @@
     <ClInclude Include="..\Headers\CubeTerrain.h" />
     <ClInclude Include="..\Headers\DamageInfo.h" />
     <ClInclude Include="..\Headers\DropItem.h" />
+    <ClInclude Include="..\Headers\Golem.h" />
     <ClInclude Include="..\Headers\Inventory.h" />
     <ClInclude Include="..\Headers\Item.h" />
     <ClInclude Include="..\Headers\ItemManager.h" />
@@ -197,6 +198,7 @@
     <ClCompile Include="..\Codes\CubeTerrain.cpp" />
     <ClCompile Include="..\Codes\DamageInfo.cpp" />
     <ClCompile Include="..\Codes\DropItem.cpp" />
+    <ClCompile Include="..\Codes\Golem.cpp" />
     <ClCompile Include="..\Codes\Inventory.cpp" />
     <ClCompile Include="..\Codes\Item.cpp" />
     <ClCompile Include="..\Codes\ItemManager.cpp" />

@@ -51,12 +51,12 @@ private:
 	CTexture*	m_pTextureCom = nullptr;
 //	CStatus*	m_pStatCom = nullptr;
 
-	bool		m_bDead;
-	bool		m_bJump = false;
-	float		m_fJumpPower = 5.f;
-	float		m_fJumpTime = 0.f;
-	int			m_iMaxCount = 4;
-	int			m_iCurCount = 1;
+	_bool		m_bDead = false;
+	_bool		m_bJump = false;
+	_float		m_fJumpPower = 5.f;
+	_float		m_fJumpTime = 0.f;
+	_int			m_iMaxCount = 4;
+	_int			m_iCurCount = 1;
 	_vec3		m_vStartPos = {};
 };
 
