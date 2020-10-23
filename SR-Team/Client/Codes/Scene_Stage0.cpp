@@ -41,10 +41,12 @@ HRESULT CScene_Stage0::Setup_Scene()
 	if (FAILED(SetUp_Layer_Item(L"Layer_Item")))
 		return E_FAIL;
 
+
+
 	//if (FAILED(Setup_Layer_Golem(L"Layer_Golem")))
 	//	return E_FAIL;
-	//if (FAILED(Setup_Layer_Environment()))
-	//	return E_FAIL;
+	if (FAILED(Setup_Layer_Environment(L"Layer_Environment")))
+		return E_FAIL;
 
 	//m_pPreLoader = CPreLoader::Create(m_pDevice, SCENE_STAGE1);
 	//if (nullptr == m_pPreLoader)
@@ -285,7 +287,28 @@ HRESULT CScene_Stage0::SetUp_Layer_Item(const wstring & LayerTag)
 
 HRESULT CScene_Stage0::Setup_Layer_Environment(const wstring & LayerTag)
 {
-	return E_NOTIMPL;
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	vector<void*> Test;
+
+
+	_vec3 Pos = { 20.f, 0.f, 20.f };
+
+	Test.emplace_back(&Pos);
+
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Tree", SCENE_STAGE0, LayerTag, &Test)))
+		return E_FAIL;
+
+	
+	Pos = { 35.f, 0.f, 35.f };
+
+
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Flower", SCENE_STAGE0, LayerTag, &Test)))
+		return E_FAIL;
+
+	return S_OK;
 }
 
 HRESULT CScene_Stage0::Setup_Layer_CubeTerrain(const wstring & LayerTag)

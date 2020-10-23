@@ -236,7 +236,7 @@ CComponent * CVIBuffer_Flower::Clone_Component(void * pArg)
 
 void CVIBuffer_Flower::Free()
 {
-	if (m_bIsClone)
+	if (!m_bIsClone)
 	{
 		Safe_Delete_Array(m_pConvertVertices);
 		Safe_Delete_Array(m_pVertices);
