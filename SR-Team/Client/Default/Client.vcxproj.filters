@@ -151,6 +151,15 @@
     <Filter Include="02.GameObject\10.StaticObject\01.Flower">
       <UniqueIdentifier>{26dbb951-d526-4ff3-9e1f-a7d6ed1abbdf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\07.UI\03. Equip">
+      <UniqueIdentifier>{0a78c48d-e55e-425c-a65b-960514166361}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.Monster\03.Semi_Boss%28Golem%29\00.Bomb">
+      <UniqueIdentifier>{e73e157c-24ba-44b5-9438-c4728b8064a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.Monster\03.Semi_Boss%28Golem%29\01.MonSub">
+      <UniqueIdentifier>{e9e2c834-d279-4828-8b70-9fb9898e3ed6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -261,6 +270,13 @@
     <ClInclude Include="..\Headers\Flower.h">
       <Filter>02.GameObject\10.StaticObject\01.Flower</Filter>
     </ClInclude>
+    <ClInclude Include="..\Headers\Bomb.h">
+      <Filter>02.GameObject\05.Monster\03.Semi_Boss%28Golem%29\00.Bomb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\MonSub.h">
+      <Filter>02.GameObject\05.Monster\03.Semi_Boss%28Golem%29\01.MonSub</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Equip.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -355,6 +371,12 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Flower.cpp">
       <Filter>02.GameObject\10.StaticObject\01.Flower</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Bomb.cpp">
+      <Filter>02.GameObject\05.Monster\03.Semi_Boss%28Golem%29\00.Bomb</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\MonSub.cpp">
+      <Filter>02.GameObject\05.Monster\03.Semi_Boss%28Golem%29\01.MonSub</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -158,12 +158,14 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Headers\Bomb.h" />
     <ClInclude Include="..\Headers\Client_Define.h" />
     <ClInclude Include="..\Headers\Client_Enum.h" />
     <ClInclude Include="..\Headers\Client_Struct.h" />
     <ClInclude Include="..\Headers\CubeTerrain.h" />
     <ClInclude Include="..\Headers\DamageInfo.h" />
     <ClInclude Include="..\Headers\DropItem.h" />
+    <ClInclude Include="..\Headers\Equip.h" />
     <ClInclude Include="..\Headers\Flower.h" />
     <ClInclude Include="..\Headers\Golem.h" />
     <ClInclude Include="..\Headers\Inventory.h" />
@@ -174,6 +176,7 @@
     <ClInclude Include="..\Headers\MainCamera.h" />
     <ClInclude Include="..\Headers\MainUI.h" />
     <ClInclude Include="..\headers\Meteor.h" />
+    <ClInclude Include="..\Headers\MonSub.h" />
     <ClInclude Include="..\Headers\Player.h" />
     <ClInclude Include="..\Headers\PreLoader.h" />
     <ClInclude Include="..\Headers\Scene_Logo.h" />
@@ -196,9 +199,11 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Codes\Bomb.cpp" />
     <ClCompile Include="..\Codes\CubeTerrain.cpp" />
     <ClCompile Include="..\Codes\DamageInfo.cpp" />
     <ClCompile Include="..\Codes\DropItem.cpp" />
+    <ClCompile Include="..\Codes\Equip.cpp" />
     <ClCompile Include="..\Codes\Flower.cpp" />
     <ClCompile Include="..\Codes\Golem.cpp" />
     <ClCompile Include="..\Codes\Inventory.cpp" />
@@ -209,6 +214,7 @@
     <ClCompile Include="..\Codes\MainCamera.cpp" />
     <ClCompile Include="..\Codes\MainUI.cpp" />
     <ClCompile Include="..\Codes\Meteor.cpp" />
+    <ClCompile Include="..\Codes\MonSub.cpp" />
     <ClCompile Include="..\Codes\Player.cpp" />
     <ClCompile Include="..\Codes\PreLoader.cpp" />
     <ClCompile Include="..\Codes\Scene_Logo.cpp" />
