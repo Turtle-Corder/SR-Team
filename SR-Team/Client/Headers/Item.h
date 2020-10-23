@@ -16,13 +16,18 @@ private:
 	explicit CItem(const CItem& _rOther);
 	virtual ~CItem() = default;
 
-
 public:
-	void Set_RenderShopItem(bool bRender); 
-	void Set_RenderInvenItem(bool bRender); 
-
-public:
+	// ------------------------------------------------------------------
+	// 필요한 아이템의 텍스처를 반환하는 함수
+	// const wstring& strItemTag : 필요한 텍스처의 Tag
+	// ------------------------------------------------------------------
 	CTexture* Get_ItemInfo_Texture(const wstring& strItemTag);
+	// ------------------------------------------------------------------
+	// 필요한 아이템의 가격을 반환하는 함수
+	// const wstring& strItemTag : 필요한 텍스처의 Tag
+	// ------------------------------------------------------------------
+	const _int Get_ItemInfo_Price(const wstring& strItemTag);
+	HRESULT Get_ItemInfo(const wstring& strItemTag, INVEN_ITEM& tItem);
 
 public:
 	// CGameObject을(를) 통해 상속됨

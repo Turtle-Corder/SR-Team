@@ -13,14 +13,27 @@ private:
 	explicit CShop(const CShop& other);
 	virtual ~CShop() = default;
 
+// Setter===================================================================================
 public:
+	// ------------------------------------------------------------------
+	// 상점과 아이템을 그릴것인지 안그릴것인지 외부에서 설정해주는 함수
+	// bool bRender : true면 그린다, false면 그리지 않는다
+	// ------------------------------------------------------------------
 	void Set_Render(bool bRender) { m_bRender = bRender; }
+
 	void Set_ShopItemTexturePos(_vec3* pPos);
 	void Set_ShopItemNamePos(_vec3* pPos);
 	void Set_ShopItemPricePos(_vec3* pPos);
 
+
+// Setter===================================================================================
 public:
+	// ------------------------------------------------------------------
+	// 상점과 아이템을 그릴것인지 안그릴것인지 외부에게 알려주는 함수
+	// m_bRender : true면 그린다, false면 그리지 않는다
+	// ------------------------------------------------------------------
 	bool Get_Render() { return m_bRender; }
+
 
 public:
 	virtual HRESULT Setup_GameObject_Prototype() override;
@@ -29,13 +42,22 @@ public:
 	virtual int LateUpdate_GameObject(float DeltaTime) override;
 	virtual HRESULT Render_UI() override;
 
-// 아이템 구매 관련 함수들
+// 아이템 구매 관련 함수들===========================================================================
 private:
+	// ------------------------------------------------------------------
+	// 구매할 아이템을 선택하는 함수
+	// ------------------------------------------------------------------
 	HRESULT Check_BuyItem();
+	// ------------------------------------------------------------------
+	// 위의 함수에서 선택한 아이템의 인덱스를 받아와서 
+	// 인벤에게 해당 아이템의 Tag를 전달해준다
+	// ------------------------------------------------------------------
 	HRESULT Buy_Item(_uint iIndexJ, _uint iIndexI);
 
 private:
+	// ------------------------------------------------------------------
 	// 상점 스크롤 막대 이동
+	// ------------------------------------------------------------------
 	HRESULT Move_ScrollBar();
 
 private:
@@ -45,6 +67,9 @@ private:
 	HRESULT Add_Component_ShopItemPrice();
 
 private:
+	// ------------------------------------------------------------------
+	// 상점에 있는 아이템들을 그리는 함수
+	// ------------------------------------------------------------------
 	HRESULT Render_ShopItem();
 
 public:
@@ -56,6 +81,7 @@ private:
 	HDC				m_DC;
 	bool			m_bRender = false;
 	RECT			m_tShopWnd;
+
 	// Component-----------------------------------
 	// 상점 윈도우
 	CTransform*		m_pTransformCom[SHOP_END];

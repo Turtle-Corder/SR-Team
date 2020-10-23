@@ -126,42 +126,47 @@ HRESULT CMainUI::Add_Component()
 	for (_uint i = 0; i < MAINUI_END; ++i)
 	{
 		// 1. VIBuffer
-		TCHAR szVIBuffer[MAX_STR] = L"";
-		wsprintf(szVIBuffer, L"Com_VIBuffer%d", i);
-
+		TCHAR szVIBuffer[MAX_PATH] = L"";
+		StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH,
+			L"Com_VIBuffer%d", i);
 		if (FAILED(CGameObject::Add_Component(
 			SCENE_STATIC, L"Component_VIBuffer_RectTexture"
 			, szVIBuffer, (CComponent**)&m_pVIBufferCom[i])))
 			return E_FAIL;
 
 		// 2. Transform
-		TCHAR szTransform[MAX_STR] = L"";
-		wsprintf(szTransform, L"Com_Transform%d", i);
-
+		TCHAR szTransform[MAX_PATH] = L"";
+		StringCchPrintf(szTransform, sizeof(TCHAR) * MAX_PATH,
+			L"Com_Transform%d", i);
 		if (FAILED(CGameObject::Add_Component(
 			SCENE_STATIC, L"Component_Transform"
 			, szTransform, (CComponent**)&m_pTransformCom[i])))
 			return E_FAIL;
 
 		// 3. Texture
-		TCHAR szTexture[MAX_STR] = L"";
-		TCHAR szTextureName[MAX_STR] = L"";
+		TCHAR szTexture[MAX_PATH] = L"";
+		TCHAR szTextureName[MAX_PATH] = L"";
 		wstring strTexture = L"";
 		wstring strTextureName = L"";
 
-		wsprintf(szTexture, L"Com_Texture%d", i);
+		StringCchPrintf(szTexture, sizeof(TCHAR) * MAX_PATH,
+			L"Com_Texture%d", i);
 		strTexture = szTexture;
 		if (i == MAINUI_MAIN)
-			wsprintf(szTextureName, L"Component_Texture_MainUI_Main");
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_MainUI_Main");
 		else if (i == MAINUI_HP)
-			wsprintf(szTextureName, L"Component_Texture_MainUI_Hp");
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_MainUI_Hp");
 		else if (i == MAINUI_MP)
-			wsprintf(szTextureName, L"Component_Texture_MainUI_Mp");
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_MainUI_Mp");
 		else if (i == MAINUI_QUICKSLOT_LFFT)
-			wsprintf(szTextureName, L"Component_Texture_MainUI_QuickSlot_Left");
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_MainUI_QuickSlot_Left");
 		else if (i == MAINUI_QUICKSLOT_RIGHT)
-			wsprintf(szTextureName, L"Component_Texture_MainUI_QuickSlot_Right");
-
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_MainUI_QuickSlot_Right");
 		strTextureName = szTextureName;
 
 		if (FAILED(CGameObject::Add_Component(
