@@ -37,9 +37,11 @@ public:
 	const TRANSFORM_DESC& Get_Desc() const;
 
 public:
+	void Set_Transform(const TRANSFORM_DESC& _rTransform);
 	void Set_Position(const _vec3& _vPosition);
 	void Set_WorldMatrix(const _matrix& _matWorld);
 	void Set_Rotation(const _vec3& _vRotation);
+	void Set_Scale(const _vec3& _vScale);
 
 public:
 	virtual HRESULT Setup_Component_Prototype() override;

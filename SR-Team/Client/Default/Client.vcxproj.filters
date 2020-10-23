@@ -145,6 +145,9 @@
     <Filter Include="03.Component\02.Damage">
       <UniqueIdentifier>{32ce0397-da44-4304-9e3b-4769c073b0e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.Monster\03.Semi_Boss%28Golem%29">
+      <UniqueIdentifier>{6b4e3748-638b-41fb-8bf6-712b3dc1c690}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -249,6 +252,9 @@
     <ClInclude Include="..\Headers\DamageInfo.h">
       <Filter>03.Component\02.Damage</Filter>
     </ClInclude>
+    <ClInclude Include="..\Headers\Golem.h">
+      <Filter>02.GameObject\05.Monster\03.Semi_Boss%28Golem%29</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -337,6 +343,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\DamageInfo.cpp">
       <Filter>03.Component\02.Damage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Golem.cpp">
+      <Filter>02.GameObject\05.Monster\03.Semi_Boss%28Golem%29</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

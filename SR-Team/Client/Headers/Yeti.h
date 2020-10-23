@@ -57,6 +57,7 @@ private:
 	_bool		m_bRHandDown = false;
 	_bool		m_bHighestCheck = false;
 	_float		m_fAttackTime = 0.f;
+	_vec3		m_vStartPos = {};
 };
 
 END

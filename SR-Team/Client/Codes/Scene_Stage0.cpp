@@ -39,6 +39,8 @@ HRESULT CScene_Stage0::Setup_Scene()
 	if (FAILED(SetUp_Layer_Shop(L"Layer_Shop")))
 		return E_FAIL;
 
+	if (FAILED(Setup_Layer_Golem(L"Layer_Golem")))
+		return E_FAIL;
 	//if (FAILED(Setup_Layer_Environment()))
 	//	return E_FAIL;
 
@@ -93,15 +95,62 @@ void CScene_Stage0::Free()
 	CScene::Free();
 }
 
-HRESULT CScene_Stage0::Setup_Layer_AllObject(const wstring & LayerTag)
+HRESULT CScene_Stage0::Setup_Layer_AllObject()
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
 
 	wifstream fin;
-	wstring wstrFilePath = _T("../Resources/TestMap.txt");
+	wstring wstrFilePath = _T("../Resources/TestClientObject.txt");
 	fin.open(wstrFilePath.c_str());
+	if (!fin.fail())
+	{
+		//변수
+		TCHAR szGameObjectName[MAX_PATH] = L"";
+		TCHAR szLayerName[MAX_PATH] = L"";
+		TCHAR szFloor[MAX_PATH] = L"";
+		TCHAR szXPos[MAX_PATH] = L"";
+		TCHAR szZPos[MAX_PATH] = L"";
+
+
+		while (true)
+		{
+			//ADD_TO_LAYER 변수 받기
+			fin.getline(szGameObjectName, MAX_PATH, L'|');
+			fin.getline(szLayerName, MAX_PATH, L'|');
+			fin.getline(szFloor, MAX_PATH, L'|');
+			fin.getline(szXPos, MAX_PATH, L'|');
+			fin.getline(szZPos, MAX_PATH, L'|');
+			
+			_float X, Y, Z;
+
+			X = _ttof(szXPos);
+			Y = _ttof(szFloor);
+			Z = _ttof(szZPos);
+
+
+			_vec3 vPosition = { X, Y, Z };
+
+			if (fin.eof())
+				break;
+
+			vector<void*> test;
+
+			test.emplace_back(&vPosition);
+
+			if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, szGameObjectName, SCENE_STAGE0, szLayerName, &test)))
+					return E_FAIL;
+
+
+		}
+	}
+
+	else
+		return E_FAIL;
+
+	fin.close();
+
 
 	return S_OK;
 }
@@ -172,13 +221,13 @@ HRESULT CScene_Stage0::Setup_Layer_Monster(const wstring & LayerTag)
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Snail", SCENE_STAGE0, LayerTag)))
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Snail", SCENE_STAGE0, LayerTag , &_vec3(10.f , 0.f , 5.f))))/*여기 StartPos*/
 		return E_FAIL;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Translucent_Cube", SCENE_STAGE0, LayerTag)))
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Slime", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Yeti", SCENE_STAGE0, LayerTag)))
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Yeti", SCENE_STAGE0, LayerTag , &_vec3(10.f, 0.f, 20.f))))
 		return E_FAIL;
 
 	return S_OK;
@@ -254,6 +303,8 @@ HRESULT CScene_Stage0::Setup_Layer_CubeTerrain(const wstring & LayerTag)
 		_int ZNumber = _ttoi(szZVerCount) - 1;
 		while (true)
 		{
+
+
 			//Cube Info 받기
 			fin.getline(szFloor, MAX_PATH, L'|');
 			fin.getline(szIndex, MAX_PATH, L'|');

@@ -39,24 +39,24 @@ _int CSlime::Update_GameObject(_float _fDeltaTime)
 {
 	if (m_bDead)
 	{
-		//-------------------------------------------------
-		// 1 => 2 => 4 => Release;
-		//-------------------------------------------------
-		if (m_bIsClone && m_iCurCount < m_iMaxCount)
-		{
-			m_iCurCount *= 2;
+		////-------------------------------------------------
+		//// 1 => 2 => 4 => Release;
+		////-------------------------------------------------
+		//if (m_bIsClone && m_iCurCount < m_iMaxCount)
+		//{
+		//	m_iCurCount *= 2;
 
-			for (int i = 0; i < m_iCurCount; ++i)
-			{
-				if (FAILED(Divide_Cube(L"Layer_Translucent_Cube")))
-					return GAMEOBJECT::WARN;
-			}
-		}
-		else
-		{
+		//	for (int i = 0; i < m_iCurCount; ++i)
+		//	{
+		//		if (FAILED(Divide_Cube(L"Layer_Translucent_Cube")))
+		//			return GAMEOBJECT::WARN;
+		//	}
+		//}
+		//else
+		//{
 			if (FAILED(Create_Item(L"Layer_DropItem")))
 				return GAMEOBJECT::WARN;
-		}
+		//}
 
 		return GAMEOBJECT::DEAD;
 	}
@@ -70,8 +70,13 @@ _int CSlime::Update_GameObject(_float _fDeltaTime)
 	if (FAILED(LookAtPlayer(_fDeltaTime)))
 		return GAMEOBJECT::WARN;
 
-	if (FAILED(m_pTransformCom->Update_Transform()))
+	if (FAILED(Setting_SlimeJelly()))
 		return GAMEOBJECT::WARN;
+
+	if(FAILED(Setting_SlimeBody()))
+		return GAMEOBJECT::WARN;
+
+
 
 	return GAMEOBJECT::NOEVENT;
 }
@@ -82,8 +87,11 @@ _int CSlime::LateUpdate_GameObject(_float _fDeltaTime)
 	if (nullptr == pManagement)
 		return 0;
 
+	if (FAILED(pManagement->Add_RendererList(CRenderer::RENDER_NONEALPHA, this)))
+		return GAMEOBJECT::WARN;
+
 	if (FAILED(pManagement->Add_RendererList(CRenderer::RENDER_BLNEDALPHA, this)))
-		return 0;
+		return GAMEOBJECT::WARN;
 
 	return GAMEOBJECT::NOEVENT;
 }
@@ -98,13 +106,35 @@ HRESULT CSlime::Render_BlendAlpha()
 	if (nullptr == pCamera)
 		return E_FAIL;
 
-	if (FAILED(m_pVIBufferCom->Set_Transform(&m_pTransformCom->Get_Desc().matWorld, pCamera)))
+	if (FAILED(m_pVIBufferCom[SLIME_JELLY]->Set_Transform(&m_pTransformCom[SLIME_JELLY]->Get_Desc().matWorld, pCamera)))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->SetTexture(0)))
+	if (FAILED(m_pTextureCom->SetTexture(SLIME_JELLY)))
 		return E_FAIL;
 
-	if (FAILED(m_pVIBufferCom->Render_VIBuffer()))
+	if (FAILED(m_pVIBufferCom[SLIME_JELLY]->Render_VIBuffer()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CSlime::Render_NoneAlpha()
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Camera");
+	if (nullptr == pCamera)
+		return E_FAIL;
+
+	if (FAILED(m_pVIBufferCom[SLIME_BODY]->Set_Transform(&m_pTransformCom[SLIME_BODY]->Get_Desc().matWorld, pCamera)))
+		return E_FAIL;
+
+	if (FAILED(m_pTextureCom->SetTexture(SLIME_BODY)))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBufferCom[SLIME_BODY]->Render_VIBuffer()))
 		return E_FAIL;
 
 	return S_OK;
@@ -112,27 +142,44 @@ HRESULT CSlime::Render_BlendAlpha()
 
 HRESULT CSlime::Add_Component()
 {
-	// For.Com_VIBuffer
-	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", L"Com_VIBuffer", (CComponent**)&m_pVIBufferCom)))
+	CTransform::TRANSFORM_DESC tTransformDesc[SLIME_END];
+
+	tTransformDesc[SLIME_BODY].vPosition = { 0.f , 0.f , 0.01f };
+	tTransformDesc[SLIME_BODY].fSpeedPerSecond = 10.f;
+	tTransformDesc[SLIME_BODY].fRotatePerSecond = D3DXToRadian(90.f);
+	tTransformDesc[SLIME_BODY].vScale = { 1.0f / (float)m_iCurCount , 1.0f / (float)m_iCurCount, 1.0f / (float)m_iCurCount };
+
+	tTransformDesc[SLIME_JELLY].vPosition = { 25.f, 1.f, 10.f };
+	tTransformDesc[SLIME_JELLY].fSpeedPerSecond = 10.f;
+	tTransformDesc[SLIME_JELLY].fRotatePerSecond = D3DXToRadian(90.f);
+	tTransformDesc[SLIME_JELLY].vScale = { 1.4f / (float)m_iCurCount , 1.4f / (float)m_iCurCount , 1.4f / (float)m_iCurCount };
+
+	//--------------------------------------------------
+	// Body Component
+	//--------------------------------------------------
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", L"Com_VIBuffer1", (CComponent**)&m_pVIBufferCom[SLIME_BODY])))
+		return E_FAIL;
+	
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", L"Com_Transform1", (CComponent**)&m_pTransformCom[SLIME_BODY], &tTransformDesc[SLIME_BODY])))
 		return E_FAIL;
 
-	// For.Com_Texture
+
+	//--------------------------------------------------
+	// Jelly Component
+	//--------------------------------------------------
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", L"Com_VIBuffer0", (CComponent**)&m_pVIBufferCom[SLIME_JELLY])))
+		return E_FAIL;
+
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", L"Com_Transform0", (CComponent**)&m_pTransformCom[SLIME_JELLY], &tTransformDesc[SLIME_JELLY])))
+		return E_FAIL;
+
+
+	//--------------------------------------------------
+	// Texture Component
+	//--------------------------------------------------
 	if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, L"Component_Texture_Translucent_Cube", L"Com_Texture", (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
-	// For.Com_Transform
-	CTransform::TRANSFORM_DESC tTransformDesc;
-
-	float x = float(rand() % 20);
-	float z = float(rand() % 20);
-
-	tTransformDesc.vPosition = { x , 1.f , z };
-	tTransformDesc.fSpeedPerSecond = 10.f;
-	tTransformDesc.fRotatePerSecond = D3DXToRadian(90.f);
-	tTransformDesc.vScale = { 1.4f / (float)m_iCurCount , 1.4f , 1.4f / (float)m_iCurCount };
-
-	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", L"Com_Transform", (CComponent**)&m_pTransformCom, &tTransformDesc)))
-		return E_FAIL;
 
 	return S_OK;
 }
@@ -157,11 +204,11 @@ HRESULT CSlime::IsOnTerrain()
 	if (nullptr == pTerrainBuffer)
 		return E_FAIL;
 
-	D3DXVECTOR3 vPosition = m_pTransformCom->Get_Desc().vPosition;
+	D3DXVECTOR3 vPosition = m_pTransformCom[SLIME_BASE]->Get_Desc().vPosition;
 
 	if (true == pTerrainBuffer->IsOnTerrain(&vPosition))
 	{
-		m_pTransformCom->Set_Position(vPosition);
+		m_pTransformCom[SLIME_BASE]->Set_Position(vPosition);
 		m_bJump = true;
 	}
 
@@ -170,24 +217,24 @@ HRESULT CSlime::IsOnTerrain()
 
 void CSlime::Jumping(float _fDeltaTime)
 {
-	D3DXVECTOR3 vPos = m_pTransformCom->Get_Desc().vPosition;
+	D3DXVECTOR3 vPos = m_pTransformCom[SLIME_BASE]->Get_Desc().vPosition;
 
 	if (m_bJump)
 	{
 		vPos.y += m_fJumpPower * m_fJumpTime - 9.8f * m_fJumpTime * m_fJumpTime * 0.5f;
 		m_fJumpTime += _fDeltaTime;
 
-		if (vPos.y < m_pTransformCom->Get_Desc().vPosition.y)
+		if (vPos.y < m_pTransformCom[SLIME_BASE]->Get_Desc().vPosition.y)
 		{
-			vPos.y = m_pTransformCom->Get_Desc().vPosition.y;
+			vPos.y = m_pTransformCom[SLIME_BASE]->Get_Desc().vPosition.y;
 			m_bJump = false;
 			m_fJumpTime = 0.f;
 		}
 
-		m_pTransformCom->Set_Position(vPos);
+		m_pTransformCom[SLIME_BASE]->Set_Position(vPos);
 	}
 }
-
+ 
 HRESULT CSlime::LookAtPlayer(float _fDeltaTime)
 {
 	CManagement* pManagement = CManagement::Get_Instance();
@@ -202,14 +249,14 @@ HRESULT CSlime::LookAtPlayer(float _fDeltaTime)
 	// 플레이어와 this => Pos
 	//--------------------------------------------------
 	_vec3 vPlayerPos = pPlayerTransform->Get_Desc().vPosition;
-	_vec3 vMonPos = m_pTransformCom->Get_Desc().vPosition;
+	_vec3 vMonPos = m_pTransformCom[SLIME_BASE]->Get_Desc().vPosition;
 	_vec3 vMonLook = {};
 
 	////--------------------------------------------------
 	//// Look 과 목적지 - 출발지를 내적
 	////--------------------------------------------------
 
-	memcpy_s(&vMonLook, sizeof(_vec3), &m_pTransformCom->Get_Desc().matWorld._31, sizeof(_vec3));
+	memcpy_s(&vMonLook, sizeof(_vec3), &m_pTransformCom[SLIME_BASE]->Get_Desc().matWorld._31, sizeof(_vec3));
 
 	_vec3 vMonToPlayer = vPlayerPos - vMonPos;
 
@@ -237,11 +284,11 @@ HRESULT CSlime::LookAtPlayer(float _fDeltaTime)
 
 	if (fLimit > 0)
 	{
-		m_pTransformCom->Turn(CTransform::AXIS_Y, -_fDeltaTime * fRad);
+		m_pTransformCom[SLIME_BASE]->Turn(CTransform::AXIS_Y, -_fDeltaTime * fRad);
 	}
 	else
 	{
-		m_pTransformCom->Turn(CTransform::AXIS_Y, _fDeltaTime * fRad);
+		m_pTransformCom[SLIME_BASE]->Turn(CTransform::AXIS_Y, _fDeltaTime * fRad);
 	}
 	//------------------------------------------
 	// 공전 구현 순서생각하기 LateUpdate안에 월드구성하고 나서
@@ -298,8 +345,12 @@ CGameObject * CSlime::Clone_GameObject(void * pArg)
 
 void CSlime::Free()
 {
-	Safe_Release(m_pTransformCom);
-	Safe_Release(m_pVIBufferCom);
+	for (_uint iCnt = 0; iCnt < SLIME_END; ++iCnt)
+	{
+		Safe_Release(m_pTransformCom[iCnt]);
+		Safe_Release(m_pVIBufferCom[iCnt]);
+	}
+
 	Safe_Release(m_pTextureCom);
 
 	CGameObject::Free();
@@ -311,10 +362,28 @@ HRESULT CSlime::Create_Item(const wstring & LayerTag)
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	_vec3 vPos = m_pTransformCom->Get_Desc().vPosition;
+	_vec3 vPos = m_pTransformCom[SLIME_BASE]->Get_Desc().vPosition;
 
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_DropItem", SCENE_STAGE0, LayerTag, &vPos)))
 		return E_FAIL;
 
+	return S_OK;
+}
+
+HRESULT CSlime::Setting_SlimeBody()
+{
+	m_pTransformCom[SLIME_BODY]->Set_Position(m_pTransformCom[SLIME_JELLY]->Get_Desc().vPosition - _vec3(0.f, 0.f, 0.01f));
+	m_pTransformCom[SLIME_BODY]->Set_Rotation(m_pTransformCom[SLIME_JELLY]->Get_Desc().vRotate);
+
+	m_pTransformCom[SLIME_BODY]->Update_Transform();
+
+	return S_OK;
+}
+
+HRESULT CSlime::Setting_SlimeJelly()
+{
+	if (FAILED(m_pTransformCom[SLIME_JELLY]->Update_Transform()))
+		return E_FAIL;
+		
 	return S_OK;
 }

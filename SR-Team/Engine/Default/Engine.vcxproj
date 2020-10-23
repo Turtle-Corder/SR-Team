@@ -167,6 +167,7 @@ xcopy		/y		..\Headers\*.h			              ..\..\Reference\Headers\</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Headers\BoxCollider.h" />
     <ClInclude Include="..\Headers\Base.h" />
     <ClInclude Include="..\Headers\Camera.h" />
     <ClInclude Include="..\Headers\Collider.h" />
@@ -201,6 +202,7 @@ xcopy		/y		..\Headers\*.h			              ..\..\Reference\Headers\</Command>
     <ClInclude Include="..\Headers\VIBuffer_TriColor.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Codes\BoxCollider.cpp" />
     <ClCompile Include="..\Codes\Base.cpp" />
     <ClCompile Include="..\Codes\Camera.cpp" />
     <ClCompile Include="..\Codes\Collider.cpp" />

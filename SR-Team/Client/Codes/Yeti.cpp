@@ -28,6 +28,9 @@ HRESULT CYeti::Setup_GameObject_Prototype()
 
 HRESULT CYeti::Setup_GameObject(void * pArg)
 {
+	if (pArg)
+		m_vStartPos = *(_vec3*)pArg;
+
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
@@ -139,7 +142,7 @@ HRESULT CYeti::Add_Component()
 
 		if (iAll == YETI_BODY)
 		{
-			tTransformDesc[YETI_BODY].vPosition = { 20.f, 0.1f, 20.f };
+			tTransformDesc[YETI_BODY].vPosition = { m_vStartPos.x , 0.1f, m_vStartPos.z };
 			tTransformDesc[YETI_BODY].fSpeedPerSecond = 10.f;
 			tTransformDesc[YETI_BODY].fRotatePerSecond = D3DXToRadian(90.f);
 			tTransformDesc[YETI_BODY].vScale = { 1.0f , 1.0f , 1.0f };
