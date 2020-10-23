@@ -197,12 +197,12 @@ HRESULT CMainApp::Setup_StaticResources()
 #pragma endregion
 
 #pragma region Component_VIBuffer_TreeHead
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", CVIBuffer_TreeHead::Create(m_pDevice))))
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_VIBuffer_TreeHead", CVIBuffer_TreeHead::Create(m_pDevice))))
 		return E_FAIL;
 #pragma endregion
 
 #pragma region Component_VIBuffer_Flower
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", CVIBuffer_Flower::Create(m_pDevice))))
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_VIBuffer_Flower", CVIBuffer_Flower::Create(m_pDevice))))
 		return E_FAIL;
 #pragma endregion
 
