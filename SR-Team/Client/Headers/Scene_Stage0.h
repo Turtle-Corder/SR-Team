@@ -40,7 +40,6 @@ private:
 	HRESULT SetUp_Layer_Shop(const wstring& LayerTag);
 	
 
-	HRESULT Setup_Layer_Golem(const wstring& LayerTag);
 private:
 	CPreLoader*		m_pPreLoader = nullptr;
 };

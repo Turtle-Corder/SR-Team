@@ -39,8 +39,8 @@ HRESULT CScene_Stage0::Setup_Scene()
 	if (FAILED(SetUp_Layer_Shop(L"Layer_Shop")))
 		return E_FAIL;
 
-	if (FAILED(Setup_Layer_Golem(L"Layer_Golem")))
-		return E_FAIL;
+	//if (FAILED(Setup_Layer_Golem(L"Layer_Golem")))
+	//	return E_FAIL;
 	//if (FAILED(Setup_Layer_Environment()))
 	//	return E_FAIL;
 
