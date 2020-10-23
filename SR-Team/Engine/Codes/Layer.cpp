@@ -138,7 +138,7 @@ HRESULT CLayer::Collision_Detection_Layers(CLayer* _pSrcLayer, const wstring& _s
 }
 
 
-HRESULT CLayer::Collision_Detection_Layers(CLayer* _pSrcLayer, const wstring& _strColliderTag, const wstring& _strDmgInfoTag)
+HRESULT CLayer::CollisionBox_Detection_Layers(CLayer* _pSrcLayer, const wstring& _strColliderTag, const wstring& _strDmgInfoTag)
 {
 	if (nullptr == _pSrcLayer)
 		return E_FAIL;

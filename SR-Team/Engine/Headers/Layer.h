@@ -25,6 +25,7 @@ public:
 	_int	LateUpdate_Layer(_float _fDeltaTime);
 
 	HRESULT Collision_Detection_Layers(CLayer* _pSrcLayer, const wstring& _strColliderTag, const wstring& _strDmgInfoTag);
+	HRESULT CollisionBox_Detection_Layers(CLayer* _pSrcLayer, const wstring& _strColliderTag, const wstring& _strDmgInfoTag);
 
 public:
 	static CLayer* Create();

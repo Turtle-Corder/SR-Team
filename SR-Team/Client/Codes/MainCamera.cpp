@@ -10,6 +10,7 @@ CMainCamera::CMainCamera(LPDIRECT3DDEVICE9 _pDevice)
 
 CMainCamera::CMainCamera(const CMainCamera & _rOther)
 	: CCamera(_rOther)
+	, m_tShakeInfo(_rOther.m_tShakeInfo)
 	//, m_fDistanceToTarget(_rOther.m_fDistanceToTarget)
 	//, m_fZoomInOutSpeedPerSecond(_rOther.m_fZoomInOutSpeedPerSecond)
 	//, m_fCameraAngle(_rOther.m_fCameraAngle)
@@ -33,11 +34,32 @@ HRESULT CMainCamera::Setup_GameObject(void * _pArg)
 
 _int CMainCamera::Update_GameObject(_float _fDeltaTime)
 {
+	if (GetAsyncKeyState('A') & 0x8000)
+	{
+		Set_Camera_Wigging(1.0, 100.0, 3.0, WIG_TYPE::VERTICAL);
+	}
+
+
 	if (FAILED(Movement(_fDeltaTime)))
 		return GAMEOBJECT::WARN;
 
 	if (FAILED(ZoomInOut(_fDeltaTime)))
 		return GAMEOBJECT::WARN;
+
+	switch (m_eMode)
+	{
+	case Client::CMainCamera::CAMERA_NORMAL:
+		break;
+	case Client::CMainCamera::CARERA_WIGGING:
+		if (FAILED(Wigging(_fDeltaTime)))
+			return GAMEOBJECT::WARN;
+		break;
+	case Client::CMainCamera::CAMERA_2D:
+		break;
+	default:
+		break;
+	}
+
 
 	return GAMEOBJECT::NOEVENT;
 }
@@ -105,6 +127,57 @@ HRESULT CMainCamera::ZoomInOut(_float _fDeltaTime)
 		m_fHeight += m_fZoomInOutSpeedPerSecond * _fDeltaTime* m_fStartHeight;
 		m_fDistance += m_fZoomInOutSpeedPerSecond * _fDeltaTime * m_fStartDistance;
 	}
+
+	return S_OK;
+}
+
+HRESULT CMainCamera::Wigging(_float _fDeltaTime)
+{
+	//시간 지났을시 초기화, 유한기계상태 중립
+	if (m_tShakeInfo.m_fSettingTime < m_tShakeInfo.m_fTimeFlow)
+	{
+		m_tShakeInfo.m_fSettingTime = 0.f;
+		m_tShakeInfo.m_fTimeFlow = 0.f;
+		m_eMode = CAMERA_MODE::CAMERA_NORMAL;
+	}
+
+	//시간 누적
+	m_tShakeInfo.m_fTimeFlow += _fDeltaTime;
+
+
+	//실제로 흔드는 함수
+	switch (m_tShakeInfo.m_eWigType)
+	{
+	case Client::CMainCamera::VERTICAL:
+		//m_tCameraDesc.vAt += m_tCameraDesc.vUp * sinf(m_tShakeInfo.m_fTimeFlow * m_tShakeInfo.m_fFrequency) * m_tShakeInfo.m_fMagnitude;
+		m_tCameraDesc.vEye += m_tCameraDesc.vUp * sinf(m_tShakeInfo.m_fTimeFlow* m_tShakeInfo.m_fFrequency) * m_tShakeInfo.m_fMagnitude;
+		break;
+	case Client::CMainCamera::HORIZONAL:
+		break;
+	case Client::CMainCamera::MIXED:
+		break;
+	default:
+		break;
+	}
+	
+
+
+	return S_OK;
+}
+
+HRESULT CMainCamera::Set_Camera_Wigging(_float _Magnitude, _float _Frequency, _float _Time, WIG_TYPE _Option)
+{
+	if (_Magnitude < 0 || _Frequency < 0 || _Time < 0)
+	{
+		PRINT_LOG(_T("Camera Wigging Fail, Check The Value Which is Less Then 0"), LOG::CLIENT);
+		return E_FAIL;
+	}
+
+	m_eMode = CAMERA_MODE::CARERA_WIGGING;
+	m_tShakeInfo.m_eWigType = _Option;
+	m_tShakeInfo.m_fMagnitude = _Magnitude;
+	m_tShakeInfo.m_fFrequency = _Frequency;
+	m_tShakeInfo.m_fSettingTime = _Time;
 
 	return S_OK;
 }
