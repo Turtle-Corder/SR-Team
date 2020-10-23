@@ -89,5 +89,11 @@ typedef struct tagTileInfo
 } TILEINFO;
 
 
+typedef struct tagIVector
+{
+	_int iX;
+	_int iY;
+} _ivec2;
+
 
 #endif

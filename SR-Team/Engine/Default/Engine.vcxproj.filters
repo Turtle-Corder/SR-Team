@@ -115,6 +115,12 @@
     <Filter Include="01.Utillity\05.Component\05.Collision\01.BoxCollider">
       <UniqueIdentifier>{e0fe2ff7-0abd-4e2a-adf9-db0bf5d4b612}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utillity\05.Component\06.NavAgent">
+      <UniqueIdentifier>{1311bc6f-3755-4f1e-a547-ea1aed0214f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utillity\07.NavManager">
+      <UniqueIdentifier>{74f6597d-37f5-4785-a1fe-2d0d58705635}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Headers\Device_Manager.h">
@@ -216,6 +222,8 @@
     <ClInclude Include="..\Headers\BoxCollider.h">
       <Filter>01.Utillity\05.Component\05.Collision\01.BoxCollider</Filter>
     </ClInclude>
+    <ClInclude Include="..\Headers\Nav_Manager.h" />
+    <ClInclude Include="..\Headers\NavAgent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Codes\Device_Manager.cpp">
@@ -302,5 +310,7 @@
     <ClCompile Include="..\Codes\BoxCollider.cpp">
       <Filter>01.Utillity\05.Component\05.Collision\01.BoxCollider</Filter>
     </ClCompile>
+    <ClCompile Include="..\Codes\Nav_Manager.cpp" />
+    <ClCompile Include="..\Codes\NavAgent.cpp" />
   </ItemGroup>
 </Project>

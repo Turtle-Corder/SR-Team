@@ -182,6 +182,8 @@ xcopy		/y		..\Headers\*.h			              ..\..\Reference\Headers\</Command>
     <ClInclude Include="..\Headers\GameObject.h" />
     <ClInclude Include="..\Headers\Layer.h" />
     <ClInclude Include="..\Headers\Management.h" />
+    <ClInclude Include="..\Headers\NavAgent.h" />
+    <ClInclude Include="..\Headers\Nav_Manager.h" />
     <ClInclude Include="..\Headers\Raycast.h" />
     <ClInclude Include="..\Headers\Object_Manager.h" />
     <ClInclude Include="..\Headers\Pipeline.h" />
@@ -212,6 +214,8 @@ xcopy		/y		..\Headers\*.h			              ..\..\Reference\Headers\</Command>
     <ClCompile Include="..\Codes\GameObject.cpp" />
     <ClCompile Include="..\Codes\Layer.cpp" />
     <ClCompile Include="..\Codes\Management.cpp" />
+    <ClCompile Include="..\Codes\NavAgent.cpp" />
+    <ClCompile Include="..\Codes\Nav_Manager.cpp" />
     <ClCompile Include="..\Codes\Raycast.cpp" />
     <ClCompile Include="..\Codes\Object_Manager.cpp" />
     <ClCompile Include="..\Codes\Pipeline.cpp" />
