@@ -151,6 +151,9 @@
     <Filter Include="02.GameObject\10.StaticObject\01.Flower">
       <UniqueIdentifier>{26dbb951-d526-4ff3-9e1f-a7d6ed1abbdf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\07.UI\03. Equip">
+      <UniqueIdentifier>{0a78c48d-e55e-425c-a65b-960514166361}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
