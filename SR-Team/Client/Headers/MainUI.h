@@ -29,16 +29,18 @@ public:
 	virtual void Free() override;
 
 private:
+	// Component-------------------------------------------------------------
 	CVIBuffer*		m_pVIBufferCom[MAINUI_END];
 	CTransform*		m_pTransformCom[MAINUI_END];
 	CTexture*		m_pTextureCom[MAINUI_END];
 
-	D3DXVECTOR3		m_vPos[MAINUI_END];
-	D3DXVECTOR3		m_vScale[MAINUI_END];
+	// 위치, 크기-------------------------------------------------------------
+	_vec3			m_vPos[MAINUI_END];
+	_vec3			m_vScale[MAINUI_END];
 
-	bool			m_bRender = false;
+	// 충돌 렉트
+	RECT			m_tCollRt[MAINUI_END];
 };
-
 END
 
 #endif // !__MAINUI_H__

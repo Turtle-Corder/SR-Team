@@ -33,19 +33,19 @@ HRESULT CMainUI::Setup_GameObject(void * pArg)
 	for (_uint i = 0; i < MAINUI_END; ++i)
 		m_vScale[i] = { 80.f, 90.f, 1.f };
 
-	m_vPos[MAINUI_MAIN] = D3DXVECTOR3(WINCX * 0.5f, WINCY - 50.f, 0.f);
+	m_vPos[MAINUI_MAIN] = _vec3(WINCX * 0.5f, WINCY - 100.f, 0.f);
 	m_pTransformCom[MAINUI_MAIN]->Set_Position(m_vPos[MAINUI_MAIN]);
 
-	m_vPos[MAINUI_HP] = D3DXVECTOR3(380.f, 550.f, 0.f);
+	m_vPos[MAINUI_HP] = _vec3(380.f, 500.f, 0.f);
 	m_pTransformCom[MAINUI_HP]->Set_Position(m_vPos[MAINUI_HP]);
 
-	m_vPos[MAINUI_MP] = D3DXVECTOR3(420.f, 550.f, 0.f);
+	m_vPos[MAINUI_MP] = _vec3(420.f, 500.f, 0.f);
 	m_pTransformCom[MAINUI_MP]->Set_Position(m_vPos[MAINUI_MP]);
 
-	m_vPos[MAINUI_QUICKSLOT_LFFT] = D3DXVECTOR3(170.f, 500.f, 0.f);
+	m_vPos[MAINUI_QUICKSLOT_LFFT] = _vec3(170.f, 500.f, 0.f);
 	m_pTransformCom[MAINUI_QUICKSLOT_LFFT]->Set_Position(m_vPos[MAINUI_QUICKSLOT_LFFT]);
 
-	m_vPos[MAINUI_QUICKSLOT_RIGHT] = D3DXVECTOR3(660.f, 500.f, 0.f);
+	m_vPos[MAINUI_QUICKSLOT_RIGHT] = _vec3(660.f, 500.f, 0.f);
 	m_pTransformCom[MAINUI_QUICKSLOT_RIGHT]->Set_Position(m_vPos[MAINUI_QUICKSLOT_RIGHT]);
 
 	return S_OK;
@@ -56,13 +56,13 @@ int CMainUI::Update_GameObject(float DeltaTime)
 	if (GetAsyncKeyState('P') & 0x8000)
 	{
 		for (_uint i = 0; i < MAINUI_END; ++i)
-			m_vPos[i].y -= 10.f;
+			m_pTransformCom[i]->Set_Position(m_pTransformCom[i]->Get_Desc().vPosition - _vec3(0.f, 10.f, 0.f));
 	}
 
 	if (GetAsyncKeyState('L') & 0x8000)
 	{
 		for (_uint i = 0; i < MAINUI_END; ++i)
-			m_vPos[i].y += 10.f;
+			m_pTransformCom[i]->Set_Position(m_pTransformCom[i]->Get_Desc().vPosition + _vec3(0.f, 10.f, 0.f));
 	}
 
 	for (_uint i = 0; i < MAINUI_END; ++i)
@@ -85,19 +85,37 @@ int CMainUI::LateUpdate_GameObject(float DeltaTime)
 
 HRESULT CMainUI::Render_UI()
 {
+	_int iHP = 50;
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
 
 	for (_uint i = 0; i < MAINUI_END; ++i)
 	{
-		auto pTexInfo = m_pTextureCom[i]->Get_TexInfo(0);
+		const D3DXIMAGE_INFO* pTexInfo = m_pTextureCom[i]->Get_TexInfo(0);
 		_vec3 vCenter = { pTexInfo->Width * 0.5f, pTexInfo->Height * 0.5f, 0.f };
+
+		//D3DXMatrixScaling(&matSacle, 2.f, 2.f, 0.f);
+
+		//// ... 
+
+		//m_pTransformCom[i]->Set_WorldMatrix(matSacle * );
+
+		// - HP/MP 지연 감소
+		// HP/MP 감소에 따른 RECT 변경 나중에 하기
+		if (i == MAINUI_HP || i == MAINUI_MP)
+		{
+		}
+
+		m_tCollRt[i].left = 0;
+		m_tCollRt[i].right = (LONG)(pTexInfo->Width + (iHP - 50));
+		m_tCollRt[i].top = 0;
+		m_tCollRt[i].bottom = (LONG)(pTexInfo->Height);
 
 		m_pSprite->SetTransform(&m_pTransformCom[i]->Get_Desc().matWorld);
 		m_pSprite->Draw(
 			(LPDIRECT3DTEXTURE9)m_pTextureCom[i]->GetTexture(0), 
-			nullptr, &vCenter, nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
+			&m_tCollRt[i], &vCenter, nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
 	}
 
 	return S_OK;
@@ -108,42 +126,47 @@ HRESULT CMainUI::Add_Component()
 	for (_uint i = 0; i < MAINUI_END; ++i)
 	{
 		// 1. VIBuffer
-		TCHAR szVIBuffer[MAX_STR] = L"";
-		wsprintf(szVIBuffer, L"Com_VIBuffer%d", i);
-
+		TCHAR szVIBuffer[MAX_PATH] = L"";
+		StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH,
+			L"Com_VIBuffer%d", i);
 		if (FAILED(CGameObject::Add_Component(
 			SCENE_STATIC, L"Component_VIBuffer_RectTexture"
 			, szVIBuffer, (CComponent**)&m_pVIBufferCom[i])))
 			return E_FAIL;
 
 		// 2. Transform
-		TCHAR szTransform[MAX_STR] = L"";
-		wsprintf(szTransform, L"Com_Transform%d", i);
-
+		TCHAR szTransform[MAX_PATH] = L"";
+		StringCchPrintf(szTransform, sizeof(TCHAR) * MAX_PATH,
+			L"Com_Transform%d", i);
 		if (FAILED(CGameObject::Add_Component(
 			SCENE_STATIC, L"Component_Transform"
 			, szTransform, (CComponent**)&m_pTransformCom[i])))
 			return E_FAIL;
 
 		// 3. Texture
-		TCHAR szTexture[MAX_STR] = L"";
-		TCHAR szTextureName[MAX_STR] = L"";
+		TCHAR szTexture[MAX_PATH] = L"";
+		TCHAR szTextureName[MAX_PATH] = L"";
 		wstring strTexture = L"";
 		wstring strTextureName = L"";
 
-		wsprintf(szTexture, L"Com_Texture%d", i);
+		StringCchPrintf(szTexture, sizeof(TCHAR) * MAX_PATH,
+			L"Com_Texture%d", i);
 		strTexture = szTexture;
 		if (i == MAINUI_MAIN)
-			wsprintf(szTextureName, L"Component_Texture_MainUI_Main");
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_MainUI_Main");
 		else if (i == MAINUI_HP)
-			wsprintf(szTextureName, L"Component_Texture_MainUI_Hp");
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_MainUI_Hp");
 		else if (i == MAINUI_MP)
-			wsprintf(szTextureName, L"Component_Texture_MainUI_Mp");
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_MainUI_Mp");
 		else if (i == MAINUI_QUICKSLOT_LFFT)
-			wsprintf(szTextureName, L"Component_Texture_MainUI_QuickSlot_Left");
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_MainUI_QuickSlot_Left");
 		else if (i == MAINUI_QUICKSLOT_RIGHT)
-			wsprintf(szTextureName, L"Component_Texture_MainUI_QuickSlot_Right");
-
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_MainUI_QuickSlot_Right");
 		strTextureName = szTextureName;
 
 		if (FAILED(CGameObject::Add_Component(

@@ -34,9 +34,15 @@ HRESULT CScene_Stage0::Setup_Scene()
 
 	if (FAILED(Setup_Layer_UI(L"Layer_MainUI")))
 		return E_FAIL;
-
-	if (FAILED(Setup_Layer_Golem(L"Layer_Golem")))
+	if (FAILED(SetUp_Layer_Inventory(L"Layer_Inventory")))
 		return E_FAIL;
+	if (FAILED(SetUp_Layer_Shop(L"Layer_Shop")))
+		return E_FAIL;
+	if (FAILED(SetUp_Layer_Item(L"Layer_Item")))
+		return E_FAIL;
+
+	//if (FAILED(Setup_Layer_Golem(L"Layer_Golem")))
+	//	return E_FAIL;
 	//if (FAILED(Setup_Layer_Environment()))
 	//	return E_FAIL;
 
@@ -121,9 +127,9 @@ HRESULT CScene_Stage0::Setup_Layer_AllObject()
 			
 			_float X, Y, Z;
 
-			X = _ttof(szXPos);
-			Y = _ttof(szFloor);
-			Z = _ttof(szZPos);
+			X = (_float)_ttof(szXPos);
+			Y = (_float)_ttof(szFloor);
+			Z = (_float)_ttof(szZPos);
 
 
 			_vec3 vPosition = { X, Y, Z };
@@ -241,13 +247,37 @@ HRESULT CScene_Stage0::Setup_Layer_UI(const wstring & LayerTag)
 	return S_OK;
 }
 
-HRESULT CScene_Stage0::Setup_Layer_Golem(const wstring & LayerTag)
+HRESULT CScene_Stage0::SetUp_Layer_Inventory(const wstring & LayerTag)
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Golem", SCENE_STAGE0, LayerTag , &_vec3(5.f , 0.f , 30.f))))
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_Inven", SCENE_STAGE0, LayerTag)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CScene_Stage0::SetUp_Layer_Shop(const wstring & LayerTag)
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_Shop", SCENE_STAGE0, LayerTag)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CScene_Stage0::SetUp_Layer_Item(const wstring & LayerTag)
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_Item", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
 
 	return S_OK;
