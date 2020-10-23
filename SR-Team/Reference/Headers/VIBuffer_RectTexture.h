@@ -23,7 +23,6 @@ public:
 
 	virtual HRESULT Set_Transform(const _matrix* _pMatWorld, const CCamera* _pCamera) override;
 	virtual HRESULT Set_Transform(const _matrix* _pMatWorld, const _matrix* _pMatView, const _matrix* _pMatProj) override;
-	virtual HRESULT Set_UITransform(const _matrix* _pMatWorld, const CCamera* _pCamera, const _vec3& _vPosition, const _vec3& vScale = { 80.f, 90.f, 0.f });
 
 public:
 	static CVIBuffer_RectTexture* Create(LPDIRECT3DDEVICE9 _pDevice);
