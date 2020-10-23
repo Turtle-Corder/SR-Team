@@ -21,16 +21,6 @@ CItem::CItem(const CItem & _rOther)
 {
 }
 
-void CItem::Set_RenderShopItem(bool bRender)
-{
-	m_bRenderShopItem = bRender;
-}
-
-void CItem::Set_RenderInvenItem(bool bRender)
-{
-	m_bRenderInvenItem = bRender;
-}
-
 CTexture * CItem::Get_ItemInfo_Texture(const wstring & strItemTag)
 {
 	_int iIndex = 0;
@@ -43,6 +33,37 @@ CTexture * CItem::Get_ItemInfo_Texture(const wstring & strItemTag)
 
 	return nullptr;
 }
+
+const _int CItem::Get_ItemInfo_Price(const wstring & strItemTag)
+{
+	_int iIndex = 0;
+	for (auto& pItem : m_vItemList)
+	{
+		if (!wcscmp(pItem->szItemTag, strItemTag.c_str()))
+			return pItem->iPrice;
+		++iIndex;
+	}
+
+	return -1;
+}
+
+HRESULT CItem::Get_ItemInfo(const wstring & strItemTag, INVEN_ITEM & tItem)
+{
+	_int iIndex = 0;
+	for (auto& pItem : m_vItemList)
+	{
+		if (!wcscmp(pItem->szItemTag, strItemTag.c_str()))
+		{
+			memcpy_s(&tItem, sizeof(INVEN_ITEM), pItem, sizeof(INVEN_ITEM));
+			return S_OK;
+		}
+		++iIndex;
+	}
+
+	return E_FAIL;
+}
+
+
 
 HRESULT CItem::Setup_GameObject_Prototype()
 {
@@ -94,19 +115,26 @@ HRESULT CItem::Add_Component_Item()
 	for (_uint i = 0; i < 5; ++i)
 	{
 		// 3. Texture--------------------------------------------------------------
-		TCHAR szTexture[MAX_STR] = L"";
-		TCHAR szTextureName[MAX_STR] = L"";
+		TCHAR szTexture[MAX_PATH] = L"";
+		TCHAR szTextureName[MAX_PATH] = L"";
 		if (i == 0)
-			wsprintf(szTextureName, L"Component_Texture_Item_GoldenSword");
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_Item_GoldenSword");
 		else if (i == 1)
-			wsprintf(szTextureName, L"Component_Texture_Item_IronSword");
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_Item_IronSword");
 		else if (i == 2)
-			wsprintf(szTextureName, L"Component_Texture_Item_DiaSword");
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_Item_DiaSword");
 		else if (i == 3)
-			wsprintf(szTextureName, L"Component_Texture_Item_BlackDress");
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_Item_BlackDress");
 		else if (i == 4)
-			wsprintf(szTextureName, L"Component_Texture_Item_PupleDress");
-		wsprintf(szTexture, L"Com_Texture%d", i);
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_Item_PupleDress");
+		
+		StringCchPrintf(szTexture, sizeof(TCHAR) * MAX_PATH,
+			L"Com_Texture%d", i);
 
 		if (FAILED(CGameObject::Add_Component(
 			SCENE_STATIC, szTextureName,
@@ -184,7 +212,11 @@ CGameObject * CItem::Clone_GameObject(void * pArg)
 
 void CItem::Free()
 {
-	//Safe_Release(m_pItmeMgrCom);
+	for (auto& pItem : m_vItemList)
+	{
+		Safe_Delete(pItem);
+	}
+	m_vItemList.clear();
 
 	for (_uint i = 0; i < 5; ++i)
 	{

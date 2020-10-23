@@ -15,13 +15,23 @@ private:
 	explicit CInventory(const CInventory& _rOther);
 	virtual ~CInventory() = default;
 
+// Setter===================================================================================
 public:
+	// ------------------------------------------------------------------
+	// 인벤과 아이템을 그릴것인지 안그릴것인지 외부에서 설정해주는 함수
+	// bool bRender : true면 그린다, false면 그리지 않는다
+	// ------------------------------------------------------------------
 	void Set_Render(bool bRender);
-	void Set_InvenItemList(list<INVEN_ITEM*>* pItemList);
 
+
+// Getter===================================================================================
 public:
+	// ------------------------------------------------------------------
+	// 인벤과 아이템을 그릴것인지 안그릴것인지 외부에게 알려주는 함수
+	// m_bRender : true면 그린다, false면 그리지 않는다
+	// ------------------------------------------------------------------
 	bool Get_Render() { return m_bRender; }
-	const list<INVEN_ITEM*>& Get_InvenList() { return m_pInvenList; }
+
 
 public:
 	// ------------------------------------------------------------------
@@ -37,6 +47,7 @@ public:
 	virtual _int LateUpdate_GameObject(float DeltaTime) override;
 	virtual HRESULT Render_UI() override;
 
+
 // 판매 관련 함수
 private:
 	// ------------------------------------------------------------------
@@ -49,8 +60,6 @@ private:
 	// 판매 상태일 때, 판매할 아이템을 선택하는 함수
 	// ------------------------------------------------------------------
 	HRESULT Select_SellItem();
-
-	HRESULT Sell_Item();
 
 
 // 정렬 관련 함수
@@ -78,12 +87,16 @@ public:
 	virtual void Free() override;
 
 private:
+	// 현재 가지고 있는 골드
+	_int				m_iGold = 200;
 	// true : 인벤을 그린다 / false : 인벤을 그리지 않는다
 	bool				m_bRender = false;
 
-
+// 아이템--------------------------------------------------------------------------------
+private:
 	// 아이템들을 리스트로 관리
-	list<INVEN_ITEM*>	m_pInvenList;
+	//list<INVEN_ITEM*>	m_pInvenList;
+	vector<INVEN_ITEM*>	m_pInvenList;
 	// 인벤에 있는 아이템들
 	vector<CTexture*>	m_pTextureItem;
 	vector<CTransform*>	m_pTransformItem;
@@ -94,25 +107,24 @@ private:
 	// 판매할 아이템
 	CTexture*			m_pTextureSell = nullptr;
 
-	// 인벤창
+// 인벤창--------------------------------------------------------------------------------
+private:
 	CTransform*			m_pTransformCom[INVEN_END];
-	CTexture*			m_pTextureCom[INVEN_END];
-	// 인벤창 위치
+	CTexture*			m_pTextureCom[INVEN_END - 1];
+	// 인벤창 위치, 충돌 RECT
 	_vec3				m_vInvenWndPos[INVEN_END];
 	RECT				m_tInvenWndCollRt[INVEN_END];
 
-
+private:
 	// m_bRenderEmptySell가 true 일 때,
 	// 빈 텍스처를 그릴 버퍼, 텍스처
 	CTexture*			m_pTextureEmpty = nullptr;
 
 
+private:
 	// 아이템이 인벤에 삽입되는 순서
 	// == 인벤에 있는 아이템들 개수 - 1
 	_int				m_iInsertOrder = 0;
-	// 판매 버튼 충돌 RECT
-	RECT				m_tSellButtonRt = {};
-
 
 	// 판매 아이템을 선택하는중 = true, 그 외 = false
 	_bool				m_bSelect_SellItem = false;

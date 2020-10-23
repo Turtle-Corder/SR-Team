@@ -96,25 +96,33 @@ HRESULT CPlayer::Setup_GameObject(void * _pArg)
 
 _int CPlayer::Update_GameObject(_float _fDeltaTime)
 {
-	if (m_bInitial)
-		Initial_Update_GameObject();
-
-	if (FAILED(Movement(_fDeltaTime)))
-		return GAMEOBJECT::WARN;
-	
-	if (FAILED(Wnd_OpenClose()))
-		return GAMEOBJECT::WARN;
-
-
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return 0;
+	CInventory* pInven = (CInventory*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Inventory");
+	if (pInven == nullptr)
+		return 0;
+	CShop* pShop = (CShop*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Shop");
+	if (pShop == nullptr)
+		return 0;
 
-	if (Update_Parts())
-		return GAMEOBJECT::WARN;
+	if (m_bInitial)
+		Initial_Update_GameObject();
 
-	if (FAILED(m_pColliderCom->Update_Collider(m_pTransformCom[PART_BODY]->Get_Desc().vPosition)))
-		return GAMEOBJECT::WARN;
+	m_bRenderInven = pInven->Get_Render();
+	m_bRenderShop = pShop->Get_Render();
+
+	if (!m_bRenderInven & !m_bRenderShop)
+	{
+		if (FAILED(Movement(_fDeltaTime)))
+			return GAMEOBJECT::WARN;
+
+		if (Update_Parts())
+			return GAMEOBJECT::WARN;
+
+		if (FAILED(m_pColliderCom->Update_Collider(m_pTransformCom[PART_BODY]->Get_Desc().vPosition)))
+			return GAMEOBJECT::WARN;
+	}
 
 	return GAMEOBJECT::NOEVENT;
 }
@@ -175,8 +183,9 @@ HRESULT CPlayer::Add_Component()
 
 	for (_uint iCnt = 0; iCnt < PART_END; ++iCnt)
 	{
-		TCHAR szVIBuffer[MAX_STR] = L"";
-		wsprintf(szVIBuffer, L"Com_VIBuffer%d", iCnt);
+		TCHAR szVIBuffer[MAX_PATH] = L"";
+		StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH,
+			L"Com_VIBuffer%d", iCnt);
 
 		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", szVIBuffer, (CComponent**)&m_pVIBufferCom[iCnt])))
 			return E_FAIL;
@@ -221,19 +230,21 @@ HRESULT CPlayer::Add_Component()
 		tTransformDesc.fSpeedPerSecond = 10.f;
 		tTransformDesc.fRotatePerSecond = D3DXToRadian(90.f);
 
-		TCHAR szTransform[MAX_STR] = L"";
-		wsprintf(szTransform, L"Com_Transform%d", iCnt);
+		TCHAR szTransform[MAX_PATH] = L"";
+		StringCchPrintf(szTransform, sizeof(TCHAR) * MAX_PATH,
+			L"Com_Transform%d", iCnt);
 
 		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", szTransform, (CComponent**)&m_pTransformCom[iCnt], &tTransformDesc)))
 			return E_FAIL;
 
 		// For.Com_Texture
-		TCHAR szTexture[MAX_STR] = L"", szTextureName[MAX_STR] = L"";
-		wsprintf(szTexture, L"Com_Texture%d", iCnt);
-		if (iCnt == PART_HEAD)			wsprintf(szTextureName, L"Component_Texture_Monster");
-		else if (iCnt == PART_BODY)		wsprintf(szTextureName, L"Component_Texture_PlayerHead");
-		else if (iCnt == PART_HAND_LEFT || iCnt == PART_HAND_RIGHT)	wsprintf(szTextureName, L"Component_Texture_PlayerHand");
-		else							wsprintf(szTextureName, L"Component_Texture_PlayerFoot");
+		TCHAR szTexture[MAX_PATH] = L"", szTextureName[MAX_PATH] = L"";
+		StringCchPrintf(szTexture, sizeof(TCHAR) * MAX_PATH,
+			L"Com_Texture%d", iCnt);
+		if (iCnt == PART_HEAD)			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,L"Component_Texture_Monster");
+		else if (iCnt == PART_BODY)		StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_PlayerHead");
+		else if (iCnt == PART_HAND_LEFT || iCnt == PART_HAND_RIGHT)	StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_PlayerHand");
+		else							StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_PlayerFoot");
 
 		if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, szTextureName, szTexture, (CComponent**)&m_pTextureCom[iCnt])))
 			return E_FAIL;
@@ -556,6 +567,16 @@ _int CPlayer::Update_Parts()
 {
 	for (_uint iCnt = 0; iCnt < PART_END; ++iCnt)
 	{
+		if (iCnt > PART_BODY)
+		{
+			_vec3 vPos = m_pTransformCom[iCnt]->Get_Desc().vPosition;
+			if (iCnt == PART_FOOT_LEFT || iCnt == PART_FOOT_RIGHT)
+				vPos.y -= 1.5f;
+			else
+				vPos.y -= 1.f;
+			m_pTransformCom[iCnt]->Set_Position(vPos);
+		}
+
 		if (FAILED(m_pTransformCom[iCnt]->Update_Transform()))
 			return GAMEOBJECT::WARN;
 	}
@@ -676,42 +697,6 @@ HRESULT CPlayer::Universal_Key()
 
 	if (CKeyManager::Get_Instance()->Key_Pressing('G'))
 	{
-	}
-
-	return S_OK;
-}
-
-HRESULT CPlayer::Wnd_OpenClose()
-{
-	CManagement* pManagement = CManagement::Get_Instance();
-	if (nullptr == pManagement)
-		E_FAIL;
-
-	// 상점 on/off
-	if (CKeyManager::Get_Instance()->Key_Down('O'))
-	{
-		m_bRenderShop = !m_bRenderShop;
-		//PRINT_LOG(L"상점!");
-
-		CShop* pShop
-			= (CShop*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Shop");
-		if (pShop == nullptr)
-			E_FAIL;
-
-		pShop->Set_Render(m_bRenderShop);
-	}
-	// 인벤 on/off
-	if (CKeyManager::Get_Instance()->Key_Down('I'))
-	{
-		m_bRenderInven = !m_bRenderInven;
-		//PRINT_LOG(L"인벤!");
-
-		CInventory* pInven
-			= (CInventory*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Inventory");
-		if (pInven == nullptr)
-			E_FAIL;
-
-		pInven->Set_Render(m_bRenderInven);
 	}
 
 	return S_OK;

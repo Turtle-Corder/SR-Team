@@ -96,19 +96,21 @@ HRESULT CDropItem::Add_Component()
 	case 3:
 	case 4:
 	case 5:
-		StringCchPrintf(szName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_DropDiamond");
+		StringCchPrintf(szName, sizeof(TCHAR) * MAX_PATH, 
+			L"Component_Texture_DropDiamond");
 		break;
 	case 6:
 	case 7:
 	case 8:
 	case 9:
-		StringCchPrintf(szName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_DropRuby");
+		StringCchPrintf(szName, sizeof(TCHAR) * MAX_PATH, 
+			L"Component_Texture_DropRuby");
 		break;
 	case 10:
-		StringCchPrintf(szName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_Dropiron_sword");
+		StringCchPrintf(szName, sizeof(TCHAR) * MAX_PATH, 
+			L"Component_Texture_Dropiron_sword");
 		break;
 	}
-
 
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_RectTexture", L"Com_VIBuffer", (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;

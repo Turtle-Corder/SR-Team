@@ -34,25 +34,30 @@ public:
 private:
 	HRESULT Add_Component();
 
+	// 지형 타기
 	HRESULT IsOnTerrain();
+	// 이동
 	HRESULT Movement(_float _fDeltaTime);
 	void Move_Vertical(_float _fDeltaTime);
 	void Move_Horizontal(_float _fDeltaTime);
 	void Turn(_float _fDeltaTime);
 
+	// 마우스 피킹
 	HRESULT RaycastOnTerrain();
 	void Move_Target(_float _fDeltaTime);
 
+	// 처음 시작 상태로 돌아가기
 	virtual _int Initial_Update_GameObject();
+	// 부위별 업데이트
 	_int Update_Parts();
 
+	// 점프
 	void Jump(_float fDeltaTime);
 
 	// 이동 모션
 	void MoveMotion(_float fDeltaTime);
 
 	HRESULT Universal_Key();
-	HRESULT Wnd_OpenClose();
 
 private:
 	// 일반 공격
@@ -88,26 +93,26 @@ private:
 
 
 
-	_bool		m_bIsTagetMove = false;
-	_vec3		m_vTargetPos = {};
+	_bool				m_bIsTagetMove = false;
+	_vec3				m_vTargetPos = {};
 	
 
 	// 플레이어 초기 회전값 보관용
-	_bool			m_bInitial = true;
-	D3DXVECTOR3		m_vConstRot[PART_END];
+	_bool				m_bInitial = true;
+	D3DXVECTOR3			m_vConstRot[PART_END];
 
 	// 팔, 다리는 일정 거리만큼 떨어짐
-	_float			m_fDisY = 2.5f;
-	_float			m_fHandDis = 0.8f;
-	_float			m_fFootDis = 0.2f;
+	_float				m_fDisY = 2.5f;
+	_float				m_fHandDis = 0.8f;
+	_float				m_fFootDis = 0.2f;
 
 	//---------------------------------------------
 	// 이동 모션
 	//---------------------------------------------
-	_bool			m_bMove = false;
-	CHANGE_MOVE		m_eMovingDir = CHANGE_LEFT;
-	MOVEING_DIR		m_ePlayerDir = MOVING_UP;
-	_float			m_fMovingTime = 0.f;
+	_bool				m_bMove = false;
+	CHANGE_MOVE			m_eMovingDir = CHANGE_LEFT;
+	MOVEING_DIR			m_ePlayerDir = MOVING_UP;
+	_float				m_fMovingTime = 0.f;
 
 	//---------------------------------------------
 	// HP바 지연 감소
@@ -123,7 +128,7 @@ private:
 	_float				m_fJumpTime = 0.f;
 
 	// 플레이어가 공격, 스킬 사용할 때 참고할 초기 회전값 보관
-	_vec3			m_vInitialRot;
+	_vec3				m_vInitialRot;
 	// 플레이어가 현재 스킬을 사용하고 있는 중인지
 	// 사용 -> true, 사용X -> false
 	_bool				m_bUsingSkill = false;
@@ -161,7 +166,7 @@ private:
 	_bool				m_bUpTurn = false;
 	_bool				m_bDownTurn = false;
 
-	// 상점 그릴지 말지
+	// 상점, 인벤이 출력되어 있으면 
 	_bool				m_bRenderShop = false;
 	_bool				m_bRenderInven = false;
 	//--------------------------------------------

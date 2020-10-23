@@ -119,10 +119,8 @@ HRESULT CShop::Setup_GameObject(void * pArg)
 
 int CShop::Update_GameObject(float DeltaTime)
 {
-	if ((CKeyManager::Get_Instance()->Key_Pressing('O')) && !m_bRender)
-		m_bRender = true;
-	else if ((CKeyManager::Get_Instance()->Key_Pressing('O')) && m_bRender)
-		m_bRender = false;
+	if ((CKeyManager::Get_Instance()->Key_Down('O')))
+		m_bRender = !m_bRender;
 
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
@@ -242,7 +240,7 @@ HRESULT CShop::Move_ScrollBar()
 
 		if (PtInRect(&m_tShopWndCollRt[SHOP_SCROLLBAR], ptMouse))
 		{
-			vScrollBarPos.y = ptMouse.y;
+			vScrollBarPos.y = (_float)ptMouse.y;
 
 			if (vScrollBarPos.y >= 470.f)
 			{
@@ -407,27 +405,36 @@ HRESULT CShop::Add_Component_ShopItemPrice()
 		if (i == 5)
 			return S_OK;
 		// Transform-----------------------------------------------------------------
-		TCHAR szItemTransform[MAX_STR] = L"";
-		wsprintf(szItemTransform, L"Com_ShopItemPriceTransform%d", i);
+		TCHAR szItemTransform[MAX_PATH] = L"";
+		StringCchPrintf(szItemTransform, sizeof(TCHAR) * MAX_PATH,
+			L"Com_ShopItemPriceTransform%d", i);
+
 		if (FAILED(CGameObject::Add_Component(
 			SCENE_STATIC, L"Component_Transform",
 			szItemTransform, (CComponent**)&m_pItemPriceTransformCom[i])))
 			return E_FAIL;
 
 		// Texture-------------------------------------------------------------------
-		TCHAR szItemTexture[MAX_STR] = L"";
-		TCHAR szItemTextureName[MAX_STR] = L"";
+		TCHAR szItemTexture[MAX_PATH] = L"";
+		TCHAR szItemTextureName[MAX_PATH] = L"";
 		if (i == 0)
-			wsprintf(szItemTextureName, L"Component_Texture_ItemPrice_GoldenSword");
+			StringCchPrintf(szItemTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_ItemPrice_GoldenSword");
 		else if (i == 1)
-			wsprintf(szItemTextureName, L"Component_Texture_ItemPrice_IronSword");
+			StringCchPrintf(szItemTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_ItemPrice_IronSword");
 		else if (i == 2)
-			wsprintf(szItemTextureName, L"Component_Texture_ItemPrice_DiaSword");
+			StringCchPrintf(szItemTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_ItemPrice_DiaSword");
 		else if (i == 3)
-			wsprintf(szItemTextureName, L"Component_Texture_ItemPrice_BlackDress");
+			StringCchPrintf(szItemTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_ItemPrice_BlackDress");
 		else if (i == 4)
-			wsprintf(szItemTextureName, L"Component_Texture_ItemPrice_PupleDress");
-		wsprintf(szItemTexture, L"Com_ShopItemPriceTexture%d", i);
+			StringCchPrintf(szItemTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_ItemPrice_PupleDress");
+
+		StringCchPrintf(szItemTexture, sizeof(TCHAR) * MAX_PATH,
+			L"Com_ShopItemPriceTexture%d", i);
 
 		if (FAILED(CGameObject::Add_Component(
 			SCENE_STATIC, szItemTextureName,
@@ -537,6 +544,8 @@ void CShop::Free()
 
 	for (_uint i = 0; i < 15; ++i)
 	{
+		if (i >= 5)
+			break;
 		Safe_Release(m_pItemTransformCom[i]);
 		Safe_Release(m_pItemTextureCom[i]);
 
@@ -546,6 +555,10 @@ void CShop::Free()
 		Safe_Release(m_pItemPriceTransformCom[i]);
 		Safe_Release(m_pItemPriceTextureCom[i]);
 	}
+
+	for (auto& pItem : m_vShopItem)
+		Safe_Delete(pItem);
+	m_vShopItem.clear();
 
 	CUIObject::Free();
 }
