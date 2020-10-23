@@ -17,7 +17,7 @@ private:
 public:
 	enum CAMERA_MODE
 	{
-		CAMERA_NORMAL, CARERA_WIGGING, CAMERA_2D, MODE_END
+		CAMERA_NORMAL, CARERA_WIGGING, CAMERA_2D, CAMERA_DYNAMIC, MODE_END
 	};
 
 	virtual HRESULT Setup_GameObject_Prototype() override;

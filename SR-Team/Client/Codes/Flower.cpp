@@ -1,12 +1,12 @@
 #include "stdafx.h"
-#include "..\Headers\Tree.h"
+#include "..\Headers\Flower.h"
 
 USING(Client)
 
-CTree::CTree(LPDIRECT3DDEVICE9 pDevice)
+CFlower::CFlower(LPDIRECT3DDEVICE9 pDevice)
 	: CGameObject(pDevice)
 {
-	for (int i = 0; i < TREE_END; i++)
+	for (int i = 0; i < FLOWER_END; i++)
 	{
 		m_pVIBufferCom[i] = nullptr;
 		m_pTransformCom[i] = nullptr;
@@ -14,17 +14,17 @@ CTree::CTree(LPDIRECT3DDEVICE9 pDevice)
 	}
 }
 
-CTree::CTree(const CTree & other)
+CFlower::CFlower(const CFlower & other)
 	: CGameObject(other)
 {
 }
 
-HRESULT CTree::Setup_GameObject_Prototype()
+HRESULT CFlower::Setup_GameObject_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CTree::Setup_GameObject(void * _pArg)
+HRESULT CFlower::Setup_GameObject(void * _pArg)
 {
 	vector<void*> GetVector;
 	_vec3 vPos;
@@ -43,12 +43,12 @@ HRESULT CTree::Setup_GameObject(void * _pArg)
 	return S_OK;
 }
 
-int CTree::Update_GameObject(float DeltaTime)
+int CFlower::Update_GameObject(float DeltaTime)
 {
 	return 0;
 }
 
-int CTree::LateUpdate_GameObject(float DeltaTime)
+int CFlower::LateUpdate_GameObject(float DeltaTime)
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
@@ -60,7 +60,7 @@ int CTree::LateUpdate_GameObject(float DeltaTime)
 	return 0;
 }
 
-HRESULT CTree::Render_NoneAlpha()
+HRESULT CFlower::Render_NoneAlpha()
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
@@ -70,7 +70,7 @@ HRESULT CTree::Render_NoneAlpha()
 	if (nullptr == pCamera)
 		return E_FAIL;
 
-	for (int i = 0; i < BODY_ID::TREE_END; i++)
+	for (int i = 0; i < BODY_ID::FLOWER_END; i++)
 	{
 		if (FAILED(m_pVIBufferCom[i]->Set_Transform(&m_pTransformCom[i]->Get_Desc().matWorld, pCamera)))
 			return E_FAIL;
@@ -85,19 +85,19 @@ HRESULT CTree::Render_NoneAlpha()
 	return S_OK;
 }
 
-HRESULT CTree::Add_Component()
-{
-	CTransform::TRANSFORM_DESC tTransformDesc[TREE_END];
+HRESULT CFlower::Add_Component()
+{ 
+	CTransform::TRANSFORM_DESC tTransformDesc[FLOWER_END];
 
 	return S_OK;
 }
 
-HRESULT CTree::Add_Component(_vec3 _vPos)
+HRESULT CFlower::Add_Component(_vec3 _vPos)
 {
 
-	CTransform::TRANSFORM_DESC tTransformDesc[TREE_END];
-	tTransformDesc[TREE_BODY].vPosition = _vPos;
-	tTransformDesc[TREE_HEAD].vPosition = _vPos;
+	CTransform::TRANSFORM_DESC tTransformDesc[FLOWER_END];
+	tTransformDesc[FLOWER_END].vPosition = _vPos;
+	tTransformDesc[FLOWER_END].vPosition = _vPos;
 
 	//For.Com_VIBuffer
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_TreeHead", L"Com_VIBufferHead", (CComponent**)&m_pVIBufferCom[TREE_HEAD])))
@@ -124,12 +124,12 @@ HRESULT CTree::Add_Component(_vec3 _vPos)
 	return S_OK;
 }
 
-CTree * CTree::Create(LPDIRECT3DDEVICE9 pDevice)
+CFlower * CFlower::Create(LPDIRECT3DDEVICE9 pDevice)
 {
 	if (nullptr == pDevice)
 		return nullptr;
 
-	CTree* pInstance = new CTree(pDevice);
+	CFlower* pInstance = new CFlower(pDevice);
 	if (FAILED(pInstance->Setup_GameObject_Prototype()))
 	{
 		PRINT_LOG(_T("Failed To Create CTree"), LOG::CLIENT);
@@ -139,9 +139,9 @@ CTree * CTree::Create(LPDIRECT3DDEVICE9 pDevice)
 	return pInstance;
 }
 
-CGameObject * CTree::Clone_GameObject(void * pArg)
+CGameObject * CFlower::Clone_GameObject(void * pArg)
 {
-	CTree* pInstance = new CTree(*this);
+	CFlower* pInstance = new CFlower(*this);
 	if (FAILED(pInstance->Setup_GameObject(pArg)))
 	{
 		PRINT_LOG(_T("Failed To Clone CTree"), LOG::CLIENT);
@@ -151,13 +151,13 @@ CGameObject * CTree::Clone_GameObject(void * pArg)
 	return pInstance;
 }
 
-void CTree::Free()
+void CFlower::Free()
 {
-	for (int i = 0; i < 2; i++)
+	for (_uint iCnt = 0; iCnt < FLOWER_END; iCnt++)
 	{
-		Safe_Release(m_pTransformCom[i]);
-		Safe_Release(m_pVIBufferCom[i]);
-		Safe_Release(m_pTextureCom[i]);
+		Safe_Release(m_pTransformCom[iCnt]);
+		Safe_Release(m_pVIBufferCom[iCnt]);
+		Safe_Release(m_pTextureCom[iCnt]);
 	}
 
 	CGameObject::Free();
