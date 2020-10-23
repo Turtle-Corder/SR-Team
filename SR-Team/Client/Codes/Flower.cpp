@@ -99,27 +99,27 @@ HRESULT CFlower::Add_Component(_vec3 _vPos)
 	tTransformDesc[FLOWER_END].vPosition = _vPos;
 	tTransformDesc[FLOWER_END].vPosition = _vPos;
 
-	//For.Com_VIBuffer
-	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_TreeHead", L"Com_VIBufferHead", (CComponent**)&m_pVIBufferCom[TREE_HEAD])))
-		return E_FAIL;
+	////For.Com_VIBuffer
+	//if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_TreeHead", L"Com_VIBufferHead", (CComponent**)&m_pVIBufferCom[TREE_HEAD])))
+	//	return E_FAIL;
 
-	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", L"Com_VIBufferBody", (CComponent**)&m_pVIBufferCom[TREE_BODY])))
-		return E_FAIL;
+	//if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", L"Com_VIBufferBody", (CComponent**)&m_pVIBufferCom[TREE_BODY])))
+	//	return E_FAIL;
 
 
-	//For.Com_Texture
-	if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, L"Component_Texture_Monster", L"Com_TextureHead", (CComponent**)&m_pTextureCom[TREE_HEAD])))
-		return E_FAIL;
+	////For.Com_Texture
+	//if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, L"Component_Texture_Monster", L"Com_TextureHead", (CComponent**)&m_pTextureCom[TREE_HEAD])))
+	//	return E_FAIL;
 
-	if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, L"Component_Texture_Monster", L"Com_TextureBody", (CComponent**)&m_pTextureCom[TREE_BODY])))
-		return E_FAIL;
+	//if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, L"Component_Texture_Monster", L"Com_TextureBody", (CComponent**)&m_pTextureCom[TREE_BODY])))
+	//	return E_FAIL;
 
-	// For.Com_Transform
-	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", L"Com_TransformHead", (CComponent**)&m_pTransformCom[TREE_HEAD], &tTransformDesc[TREE_HEAD])))
-		return E_FAIL;
+	//// For.Com_Transform
+	//if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", L"Com_TransformHead", (CComponent**)&m_pTransformCom[TREE_HEAD], &tTransformDesc[TREE_HEAD])))
+	//	return E_FAIL;
 
-	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", L"Com_TransformBody", (CComponent**)&m_pTransformCom[TREE_BODY], &tTransformDesc[TREE_BODY])))
-		return E_FAIL;
+	//if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", L"Com_TransformBody", (CComponent**)&m_pTransformCom[TREE_BODY], &tTransformDesc[TREE_BODY])))
+	//	return E_FAIL;
 
 	return S_OK;
 }
