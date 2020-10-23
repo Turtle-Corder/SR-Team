@@ -112,6 +112,9 @@
     <Filter Include="01.Utillity\04.GameObject\01.UIObject">
       <UniqueIdentifier>{690a39cd-de5f-4e4f-a86d-a48226d2f08d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utillity\05.Component\05.Collision\01.BoxCollider">
+      <UniqueIdentifier>{e0fe2ff7-0abd-4e2a-adf9-db0bf5d4b612}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Headers\Device_Manager.h">
@@ -210,6 +213,9 @@
     <ClInclude Include="..\Headers\UIObject.h">
       <Filter>01.Utillity\04.GameObject\01.UIObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Headers\BoxCollider.h">
+      <Filter>01.Utillity\05.Component\05.Collision\01.BoxCollider</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Codes\Device_Manager.cpp">
@@ -292,6 +298,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\UIObject.cpp">
       <Filter>01.Utillity\04.GameObject\01.UIObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\BoxCollider.cpp">
+      <Filter>01.Utillity\05.Component\05.Collision\01.BoxCollider</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

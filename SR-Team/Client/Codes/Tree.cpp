@@ -26,10 +26,14 @@ HRESULT CTree::Setup_GameObject_Prototype()
 
 HRESULT CTree::Setup_GameObject(void * _pArg)
 {
+	vector<void*> GetVector;
 	_vec3 vPos;
 
 	if (_pArg)
-		vPos = (*(_vec3*)(_pArg));
+	{
+		GetVector = (*(vector<void*>*)(_pArg));
+		vPos = (*(_vec3*)GetVector[0]);
+	}
 
 	if (FAILED(Add_Component(vPos)))
 		return E_FAIL;

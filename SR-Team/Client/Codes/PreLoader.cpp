@@ -12,6 +12,7 @@
 #include "CubeTerrain.h"
 #include "DropItem.h"
 #include "Tree.h"
+#include "Golem.h"
 #pragma endregion
 
 USING(Client)
@@ -92,7 +93,10 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 		return E_FAIL;
 #pragma endregion
 
-
+#pragma region GameObject_Golem
+	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Golem", CGolem::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
 	//----------------------------------------------------------------------------------------------------
 	// Component
 	//----------------------------------------------------------------------------------------------------
@@ -123,7 +127,7 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 
 	// monster
 #pragma region Component_Texture_Translucent_Cube
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_Translucent_Cube", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/TranslucentCube%d.dds"))))
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_Translucent_Cube", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/TranslucentCube%d.dds", 2))))
 		return E_FAIL;
 #pragma endregion
 

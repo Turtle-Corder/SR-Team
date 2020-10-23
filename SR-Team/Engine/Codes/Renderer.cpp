@@ -60,10 +60,10 @@ HRESULT CRenderer::Render_Renderer()
 	if (FAILED(Render_NoneAlpha()))
 		return E_FAIL;
 
-	if (FAILED(Render_BlendAlpha()))
+	if (FAILED(Render_OnlyAlpha()))
 		return E_FAIL;
 
-	if (FAILED(Render_OnlyAlpha()))
+	if (FAILED(Render_BlendAlpha()))
 		return E_FAIL;
 
 	if (FAILED(Render_UI()))
