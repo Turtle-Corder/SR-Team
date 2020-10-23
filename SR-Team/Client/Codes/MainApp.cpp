@@ -19,6 +19,7 @@
 #include "Inventory.h"
 #include "ItemManager.h"
 #include "DamageInfo.h"
+#include "Equip.h"
 #pragma endregion
 
 #pragma region Component_Headers
