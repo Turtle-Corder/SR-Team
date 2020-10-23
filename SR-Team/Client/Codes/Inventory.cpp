@@ -518,6 +518,8 @@ HRESULT CInventory::Add_Component_Item()
 		SCENE_STATIC, L"Component_Texture_Item_Empty",
 		L"Com_EmptyItemTexture", (CComponent**)&m_pTextureEmpty)))
 		return E_FAIL;
+
+	return S_OK;
 }
 
 CInventory * CInventory::Create(LPDIRECT3DDEVICE9 pDevice, LPD3DXSPRITE _pSprite, LPD3DXFONT _pFont)

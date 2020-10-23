@@ -127,9 +127,9 @@ HRESULT CScene_Stage0::Setup_Layer_AllObject()
 			
 			_float X, Y, Z;
 
-			X = _ttof(szXPos);
-			Y = _ttof(szFloor);
-			Z = _ttof(szZPos);
+			X = (_float)_ttof(szXPos);
+			Y = (_float)_ttof(szFloor);
+			Z = (_float)_ttof(szZPos);
 
 
 			_vec3 vPosition = { X, Y, Z };

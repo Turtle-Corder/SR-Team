@@ -103,7 +103,7 @@ HRESULT CMainUI::Render_UI()
 
 		// - HP/MP 지연 감소
 		// HP/MP 감소에 따른 RECT 변경 나중에 하기
-		if (i == MAINUI_HP | i == MAINUI_MP)
+		if (i == MAINUI_HP || i == MAINUI_MP)
 		{
 		}
 
