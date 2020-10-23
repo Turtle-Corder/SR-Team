@@ -276,6 +276,7 @@
     <ClInclude Include="..\Headers\MonSub.h">
       <Filter>02.GameObject\05.Monster\03.Semi_Boss%28Golem%29\01.MonSub</Filter>
     </ClInclude>
+    <ClInclude Include="..\Headers\Equip.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

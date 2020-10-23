@@ -28,13 +28,11 @@ HRESULT CTree::Setup_GameObject(void * _pArg)
 {
 	vector<void*> GetVector;
 	_vec3 vPos;
-	BYTE chOption;
 
 	if (_pArg)
 	{
 		GetVector = (*(vector<void*>*)(_pArg));
 		vPos = (*(_vec3*)GetVector[0]);
-		chOption = (*(BYTE*)GetVector[1]);
 	}
 
 	if (FAILED(Add_Component(vPos)))
@@ -45,7 +43,14 @@ HRESULT CTree::Setup_GameObject(void * _pArg)
 
 int CTree::Update_GameObject(float DeltaTime)
 {
-	return 0;
+	for (_uint iCnt = 0; iCnt < TREE_END; iCnt++)
+	{
+		if (FAILED(m_pTransformCom[iCnt]->Update_Transform()))
+			return GAMEOBJECT::WARN;
+	}
+
+
+	return GAMEOBJECT::NOEVENT;
 }
 
 int CTree::LateUpdate_GameObject(float DeltaTime)
@@ -94,10 +99,12 @@ HRESULT CTree::Add_Component()
 
 HRESULT CTree::Add_Component(_vec3 _vPos)
 {
-
+	_vec3 vPositon_Head = _vPos + _vec3(0.f, 1.f, 0.f);
+	_vec3 vPositon_Body = _vPos + _vec3(0.f, 0.5f, 0.f);
 	CTransform::TRANSFORM_DESC tTransformDesc[TREE_END];
-	tTransformDesc[TREE_BODY].vPosition = _vPos;
-	tTransformDesc[TREE_HEAD].vPosition = _vPos;
+	tTransformDesc[TREE_BODY].vPosition = vPositon_Body;
+	tTransformDesc[TREE_BODY].vScale = { 0.5f, 1.f, 0.5f };
+	tTransformDesc[TREE_HEAD].vPosition = vPositon_Head;
 
 	//For.Com_VIBuffer
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_TreeHead", L"Com_VIBufferHead", (CComponent**)&m_pVIBufferCom[TREE_HEAD])))
@@ -120,6 +127,8 @@ HRESULT CTree::Add_Component(_vec3 _vPos)
 
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", L"Com_TransformBody", (CComponent**)&m_pTransformCom[TREE_BODY], &tTransformDesc[TREE_BODY])))
 		return E_FAIL;
+
+
 
 	return S_OK;
 }
