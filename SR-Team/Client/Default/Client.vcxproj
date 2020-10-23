@@ -159,13 +159,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Headers\Bomb.h" />
+    <ClInclude Include="..\Headers\Fire.h" />
+    <ClInclude Include="..\Headers\PinkBean.h" />
     <ClInclude Include="..\Headers\Client_Define.h" />
     <ClInclude Include="..\Headers\Client_Enum.h" />
     <ClInclude Include="..\Headers\Client_Struct.h" />
     <ClInclude Include="..\Headers\CubeTerrain.h" />
     <ClInclude Include="..\Headers\DamageInfo.h" />
     <ClInclude Include="..\Headers\DropItem.h" />
-    <ClInclude Include="..\Headers\Equip.h" />
     <ClInclude Include="..\Headers\Flower.h" />
     <ClInclude Include="..\Headers\Golem.h" />
     <ClInclude Include="..\Headers\Inventory.h" />
@@ -200,10 +201,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Codes\Bomb.cpp" />
+    <ClCompile Include="..\Codes\Fire.cpp" />
+    <ClCompile Include="..\Codes\PinkBean.cpp" />
     <ClCompile Include="..\Codes\CubeTerrain.cpp" />
     <ClCompile Include="..\Codes\DamageInfo.cpp" />
     <ClCompile Include="..\Codes\DropItem.cpp" />
-    <ClCompile Include="..\Codes\Equip.cpp" />
     <ClCompile Include="..\Codes\Flower.cpp" />
     <ClCompile Include="..\Codes\Golem.cpp" />
     <ClCompile Include="..\Codes\Inventory.cpp" />

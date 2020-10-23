@@ -160,6 +160,12 @@
     <Filter Include="02.GameObject\05.Monster\03.Semi_Boss%28Golem%29\01.MonSub">
       <UniqueIdentifier>{e9e2c834-d279-4828-8b70-9fb9898e3ed6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.Monster\04.PinkBean%28Boss%29">
+      <UniqueIdentifier>{1a31d838-1bb9-4d79-9d0e-a6a05db64783}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.Monster\04.PinkBean%28Boss%29\00.Fire">
+      <UniqueIdentifier>{3d212d16-de59-472b-834c-584aea8c77ec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -276,7 +282,12 @@
     <ClInclude Include="..\Headers\MonSub.h">
       <Filter>02.GameObject\05.Monster\03.Semi_Boss%28Golem%29\01.MonSub</Filter>
     </ClInclude>
-    <ClInclude Include="..\Headers\Equip.h" />
+    <ClInclude Include="..\Headers\PinkBean.h">
+      <Filter>02.GameObject\05.Monster\04.PinkBean%28Boss%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Fire.h">
+      <Filter>02.GameObject\05.Monster\04.PinkBean%28Boss%29\00.Fire</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -377,6 +388,12 @@
     </ClCompile>
     <ClCompile Include="..\Codes\MonSub.cpp">
       <Filter>02.GameObject\05.Monster\03.Semi_Boss%28Golem%29\01.MonSub</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\PinkBean.cpp">
+      <Filter>02.GameObject\05.Monster\04.PinkBean%28Boss%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Fire.cpp">
+      <Filter>02.GameObject\05.Monster\04.PinkBean%28Boss%29\00.Fire</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
