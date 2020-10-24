@@ -34,4 +34,5 @@ private:
 	_vec3			m_vPosition = {};
 };
 
+END
 #endif //__FIRE_H__

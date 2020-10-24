@@ -184,6 +184,11 @@ HRESULT CMainApp::Setup_StaticResources()
 		return E_FAIL;
 #pragma endregion
 
+#pragma region GameObject_Equip
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_Equip", CEquip::Create(m_pDevice, m_pSprite, m_pFont))))
+		return E_FAIL;
+#pragma endregion
+
 	//----------------------------------------------------------------------------------------------------
 	// Component
 	//----------------------------------------------------------------------------------------------------
@@ -300,6 +305,13 @@ HRESULT CMainApp::Setup_StaticResources()
 		return E_FAIL;
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Select_SellItem",CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
 			L"../Resources/2DResource/Item/select_sellitem%d.png"))))
+		return E_FAIL;
+#pragma endregion
+
+
+#pragma region Component_Textures_Equip
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Equip_Stat", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Equip/Stat%d.png"))))
 		return E_FAIL;
 #pragma endregion
 
