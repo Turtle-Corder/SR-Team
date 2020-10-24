@@ -17,6 +17,11 @@ const CNavAgent::NAV_DESC & CNavAgent::Get_NavDesc() const
 	return m_tNavDesc;
 }
 
+bool CNavAgent::IsFound() const
+{
+	return m_bNavDone;
+}
+
 HRESULT CNavAgent::Setup_Component_Prototype()
 {
 	return S_OK;
@@ -30,20 +35,28 @@ HRESULT CNavAgent::Setup_Component(void * _pArg)
 	return S_OK;
 }
 
+void CNavAgent::Set_NavDone()
+{
+	m_bNavDone = true;
+}
+
 void CNavAgent::Set_NavDesc(const NAV_DESC & tNavDesc)
 {
+	m_bNavDone = false;
 	m_tNavDesc = tNavDesc;
 	m_BranchList.clear();
 }
 
 void CNavAgent::Set_NavDesc(_int _iStartX, _int _iStartY, _int _iGoalX, _int _iGoalY)
 {
+	m_bNavDone = false;
 	m_tNavDesc.tStart = { _iStartX, _iStartY };
 	m_tNavDesc.tGoal = { _iGoalX, _iGoalY };
 }
 
 void CNavAgent::Set_NavDesc(const _ivec2 & _rStart, const _ivec2 & _rGoal)
 {
+	m_bNavDone = false;
 	m_tNavDesc.tStart = _rStart;
 	m_tNavDesc.tGoal = _rGoal;
 }
