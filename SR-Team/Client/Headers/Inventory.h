@@ -76,6 +76,10 @@ private:
 	// 아이템을 그리는 함수
 	// ------------------------------------------------------------------
 	HRESULT Render_Item();
+
+private:
+	HRESULT Move_InventoryWnd();
+	HRESULT Change_AllPos();
 	
 private:
 	HRESULT Add_Component();
@@ -91,6 +95,8 @@ private:
 	_int				m_iGold = 200;
 	// true : 인벤을 그린다 / false : 인벤을 그리지 않는다
 	bool				m_bRender = false;
+	// 인벤 윈도우 위치
+	_vec3 vWndPos =		{ 500.f, 200.f, 0.f };
 
 // 아이템--------------------------------------------------------------------------------
 private:

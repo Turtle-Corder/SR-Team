@@ -31,7 +31,7 @@ public:
 	virtual void Free() override;
 
 private:
-	_bool			m_bRender = true;
+	_bool			m_bRender = false;
 	
 	// 장비창 윈도우
 	CTransform*		m_pTransformCom[EQUIP_END];

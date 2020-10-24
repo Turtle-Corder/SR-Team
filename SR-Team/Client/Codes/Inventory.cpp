@@ -101,9 +101,12 @@ HRESULT CInventory::Setup_GameObject(void * pArg)
 	if (FAILED(Add_Component_Item()))
 		return E_FAIL;
 
-	m_pTransformCom[INVEN_WND]->Set_Position(_vec3(500.f, 200.f, 0.f));
-	m_pTransformCom[INVEN_SELL_BUTTON]->Set_Position(_vec3(610.f, 380.f, 0.f));
-	m_pTransformCom[INVEN_GOLD]->Set_Position(_vec3(525.f, 335.f, 0.f));
+	//_vec3 vWndPos = { 500.f, 200.f, 0.f };
+	m_pTransformCom[INVEN_WND]->Set_Position(vWndPos);
+	//m_pTransformCom[INVEN_SELL_BUTTON]->Set_Position(_vec3(610.f, 380.f, 0.f));
+	m_pTransformCom[INVEN_SELL_BUTTON]->Set_Position(_vec3(vWndPos.x + 110.f, vWndPos.y + 180.f, 0.f));
+	//m_pTransformCom[INVEN_GOLD]->Set_Position(_vec3(525.f, 335.f, 0.f));
+	m_pTransformCom[INVEN_GOLD]->Set_Position(_vec3(vWndPos.x + 25.f, vWndPos.y + 115.f, 0.f));
 
 	_int iIndex = 0;
 	for (_uint i = 0; i < 6; ++i)
@@ -111,9 +114,10 @@ HRESULT CInventory::Setup_GameObject(void * pArg)
 		for (_uint j = 0; j < 6; ++j)
 		{
 			iIndex = i * 6 + j;
-			m_vItemPos[i][j].x = (j * 45.f) + 380.f;
-			//m_vItemPos[i][j].y = (i * 30.f) + 117.f;
-			m_vItemPos[i][j].y = (i * 30.f) + 85.f;
+			//m_vItemPos[i][j].x = (j * 45.f) + 380.f;
+			//m_vItemPos[i][j].y = (i * 30.f) + 85.f;
+			m_vItemPos[i][j].x = (j * 45.f) + (vWndPos.x - 120.f);
+			m_vItemPos[i][j].y = (i * 30.f) + (vWndPos.y - 115.f);
 			m_vItemPos[i][j].z = 0.f;
 			m_pTransformItem[iIndex]->Set_Position(m_vItemPos[i][j]);
 		}
@@ -133,18 +137,24 @@ _int CInventory::Update_GameObject(float DeltaTime)
 	if ((CKeyManager::Get_Instance()->Key_Down('I')))
 		m_bRender = !m_bRender;
 
-	// 판매 버튼을 눌렀는지 확인(m_bSelect_SellItem)
-	if (FAILED(Check_SellButton()))
-		return GAMEOBJECT::WARN;
-	// 판매 버튼을 눌렀을 경우
-	if (m_bSelect_SellItem)
-		// 판매할 아이템 선택
-		if (FAILED(Select_SellItem()))
+	if (m_bRender)
+	{
+		// 판매 버튼을 눌렀는지 확인(m_bSelect_SellItem)
+		if (FAILED(Check_SellButton()))
+			return GAMEOBJECT::WARN;
+		// 판매 버튼을 눌렀을 경우
+		if (m_bSelect_SellItem)
+			// 판매할 아이템 선택
+			if (FAILED(Select_SellItem()))
+				return GAMEOBJECT::WARN;
+
+		// 자동 정렬 버튼을 눌렀는지 확인
+		if (FAILED(Check_AutoSortButton()))
 			return GAMEOBJECT::WARN;
 
-	// 자동 정렬 버튼을 눌렀는지 확인
-	if (FAILED(Check_AutoSortButton()))
-		return GAMEOBJECT::WARN;
+		if (FAILED(Move_InventoryWnd()))
+			return GAMEOBJECT::WARN;
+	}
 
 	for (_uint i = 0; i < INVEN_END; ++i)
 		m_pTransformCom[i]->Update_Transform();
@@ -199,12 +209,15 @@ HRESULT CInventory::Render_UI()
 			else if (i == INVEN_GOLD)
 			{
 				TCHAR		szBuff[MAX_PATH] = L"";
-				D3DXMATRIX	matScale;
+				D3DXMATRIX	matScale, matTrans, matWorld;
 				StringCchPrintf(szBuff, sizeof(TCHAR) * MAX_PATH, L"%d", m_iGold);
 				
 				D3DXMatrixScaling(&matScale, 1.5f, 1.5f, 0.f);
+				D3DXMatrixTranslation(&matTrans, vWndPos.x + 50.f, vWndPos.y + 135.f, 0.f);
+				matWorld = matScale * matTrans;
 
-				m_pSprite->SetTransform(&(matScale * m_pTransformCom[i]->Get_Desc().matWorld));
+				//m_pSprite->SetTransform(&(matScale * m_pTransformCom[i]->Get_Desc().matWorld));
+				m_pSprite->SetTransform(&matWorld);
 				m_pFont->DrawTextW(m_pSprite, szBuff, lstrlen(szBuff),
 					nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
 			}
@@ -435,6 +448,61 @@ HRESULT CInventory::Render_Item()
 			m_pSprite->SetTransform(&matWorld);
 			m_pFont->DrawTextW(m_pSprite, szBuff, lstrlen(szBuff),
 				nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
+		}
+	}
+
+	return S_OK;
+}
+
+HRESULT CInventory::Move_InventoryWnd()
+{
+	POINT ptMouse = {};
+	GetCursorPos(&ptMouse);
+	ScreenToClient(g_hWnd, &ptMouse);
+
+	if (CKeyManager::Get_Instance()->Key_Pressing(VK_LBUTTON))
+	{
+		if (PtInRect(&m_tInvenWndCollRt[INVEN_WND], ptMouse))
+		{
+			vWndPos.x = ptMouse.x;
+			vWndPos.y = ptMouse.y;
+			m_pTransformCom[INVEN_WND]->Set_Position(vWndPos);
+
+			if (Change_AllPos())
+				return E_FAIL;
+		}
+	}
+
+	return S_OK;
+}
+
+HRESULT CInventory::Change_AllPos()
+{
+	D3DXMATRIX matWorld;
+	matWorld = m_pTransformCom[INVEN_WND]->Get_Desc().matWorld;
+
+	//for (_uint i = 1; i < INVEN_END; ++i)
+	//{
+	//	m_pTransformCom[i]->Set_WorldMatrix(
+	//		m_pTransformCom[i]->Get_Desc().matWorld * matWorld);
+	//}
+
+	m_pTransformCom[INVEN_SELL_BUTTON]->Set_Position(_vec3(vWndPos.x + 110.f, vWndPos.y + 180.f, 0.f));
+	//m_pTransformCom[INVEN_GOLD]->Set_Position(_vec3(525.f, 335.f, 0.f));
+	m_pTransformCom[INVEN_GOLD]->Set_Position(_vec3(vWndPos.x + 25.f, vWndPos.y + 115.f, 0.f));
+
+	_int iIndex = 0;
+	for (_uint i = 0; i < 6; ++i)
+	{
+		for (_uint j = 0; j < 6; ++j)
+		{
+			iIndex = i * 6 + j;
+			//m_vItemPos[i][j].x = (j * 45.f) + 380.f;
+			//m_vItemPos[i][j].y = (i * 30.f) + 85.f;
+			m_vItemPos[i][j].x = (j * 45.f) + (vWndPos.x - 120.f);
+			m_vItemPos[i][j].y = (i * 30.f) + (vWndPos.y - 115.f);
+			m_vItemPos[i][j].z = 0.f;
+			m_pTransformItem[iIndex]->Set_Position(m_vItemPos[i][j]);
 		}
 	}
 
