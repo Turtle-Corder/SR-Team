@@ -10,7 +10,7 @@ USING(Client)
 CItem::CItem(LPDIRECT3DDEVICE9 _pDevice)
 	: CGameObject(_pDevice)
 {
-	for (_uint i = 0; i < 5; ++i)
+	for (_uint i = 0; i < 7; ++i)
 	{
 		m_pTextureCom[i] = nullptr;
 		m_pStatCom[i] = nullptr;
@@ -292,17 +292,17 @@ CGameObject * CItem::Clone_GameObject(void * pArg)
 
 void CItem::Free()
 {
-	for (auto& pItem : m_vItemList)
-	{
-		Safe_Delete(pItem);
-	}
-	m_vItemList.clear();
-
 	for (_uint i = 0; i < 7; ++i)
 	{
 		Safe_Release(m_pTextureCom[i]);
 		Safe_Release(m_pStatCom[i]);
 	}
+
+	for (auto& pItem : m_vItemList)
+	{
+		Safe_Delete(pItem);
+	}
+	m_vItemList.clear();
 
 	CGameObject::Free();
 }
