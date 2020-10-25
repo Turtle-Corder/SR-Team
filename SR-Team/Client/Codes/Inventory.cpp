@@ -96,7 +96,6 @@ HRESULT CInventory::Setup_GameObject(void * pArg)
 {
 	m_pTextureItem.resize(36);
 	m_pTransformItem.resize(36);
-	//m_pInvenList.resize(36);
 
 	if (FAILED(Add_Component()))
 		return E_FAIL;
@@ -261,8 +260,13 @@ HRESULT CInventory::Check_SellButton()
 				m_bSelect_SellItem = false;
 				// 이제 선택된 아이템들은 빈 공간으로 그려준다
 				m_bRenderEmptySell = true;
+
 				m_iGold += m_iSellGold;
 				m_iSellGold = 0;
+
+				m_iInsertOrder -= m_iDeleteCnt;
+				m_iDeleteCnt = 0;
+
 				PRINT_LOG(L"아이템 판매 시작.", LOG::CLIENT);
 			}
 		}
@@ -288,10 +292,11 @@ HRESULT CInventory::Select_SellItem()
 				{
 					_int k = 0;
 					// 아이템이 있는 칸들만 선택 할 수 있음
-					if (m_bIsItemHere[iIndex])
+					if (m_bIsItemHere[iIndex] && !m_bSelectedSell[iIndex])
 					{
 						m_bSelectedSell[iIndex] = true;
-						m_iSellGold += m_pInvenList[iIndex]->iPrice;
+						++m_iDeleteCnt;
+						m_iSellGold += (m_pInvenList[iIndex]->iPrice * m_pInvenList[iIndex]->iCnt);
 					}
 
 				}
@@ -362,6 +367,11 @@ HRESULT CInventory::Check_AutoSortButton()
 				szItemTextureName, szItemTexture, (CComponent**)&m_pTextureItem[i])))
 				return E_FAIL;
 			++m_iNewInsertOrder;
+		}
+
+		for (_int i = iDeleteCnt + 1; i < 36; ++i)
+		{
+			m_bIsItemHere[i] = false;
 		}
 
 		// 정렬 끝
@@ -444,11 +454,17 @@ HRESULT CInventory::Render_Item()
 				if (m_bSelectedSell[iIndex])
 				{
 					bRenderCnt = true;
+					D3DXMATRIX matScale, matTrans, matWorld;
 					// 선택되었다는 표시를 그리고
 					const D3DXIMAGE_INFO* pTexInfo = m_pTextureSell->Get_TexInfo(0);
 					_vec3 vCenter = { pTexInfo->Width * 0.5f, pTexInfo->Height * 0.5f, 0.f };
+					_vec3 vPos = m_pTransformItem[iIndex]->Get_Desc().vPosition;
 
-					m_pSprite->SetTransform(&m_pTransformItem[iIndex]->Get_Desc().matWorld);
+					D3DXMatrixScaling(&matScale, 1.5f, 1.5f, 0.f);
+					D3DXMatrixTranslation(&matTrans, vPos.x, vPos.y, 0.f);
+					matWorld = matScale * matTrans;
+
+					m_pSprite->SetTransform(&matWorld);
 					m_pSprite->Draw(
 						(LPDIRECT3DTEXTURE9)m_pTextureSell->GetTexture(0),
 						nullptr, &vCenter, nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
@@ -636,14 +652,6 @@ HRESULT CInventory::Add_Component_Item()
 			, szTransform, (CComponent**)&m_pTransformItem[i])))
 			return E_FAIL;
 
-		//// Status-------------------------------------------------------------------
-		//TCHAR szStatus[MAX_PATH] = L"";
-		//StringCchPrintf(szStatus, sizeof(TCHAR) * MAX_PATH,
-		//	L"Com_ItemStatus%d", i);
-		//if (FAILED(CGameObject::Add_Component(
-		//	SCENE_STATIC, L"Component_Status"
-		//	, szStatus, (CComponent**)&m_pStatItem[i])))
-		//	return E_FAIL;
 	}
 
 	if (FAILED(CGameObject::Add_Component(
@@ -703,7 +711,6 @@ void CInventory::Free()
 	for (auto& pItem : m_pTextureItem)
 		Safe_Release(pItem);
 	m_pTextureItem.clear();
-	//m_pTextureItem.swap(m_pTextureItem);
 	
 	for (auto& pItem : m_pTransformItem)
 		Safe_Release(pItem);

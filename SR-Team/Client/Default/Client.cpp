@@ -9,6 +9,7 @@ USING(Client)
 
 #define MAX_LOADSTRING 100
 
+
 // 전역 변수:
 HWND g_hWnd = NULL;
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
@@ -32,6 +33,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // TODO: 여기에 코드를 입력합니다.
 	timeBeginPeriod(1);
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	//_crtBreakAlloc = 21789;
 
 
     // 전역 문자열을 초기화합니다.
