@@ -298,7 +298,7 @@ void CItem::Free()
 	}
 	m_vItemList.clear();
 
-	for (_uint i = 0; i < 5; ++i)
+	for (_uint i = 0; i < 7; ++i)
 	{
 		Safe_Release(m_pTextureCom[i]);
 		Safe_Release(m_pStatCom[i]);

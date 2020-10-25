@@ -96,6 +96,7 @@ HRESULT CInventory::Setup_GameObject(void * pArg)
 {
 	m_pTextureItem.resize(36);
 	m_pTransformItem.resize(36);
+	//m_pInvenList.resize(36);
 
 	if (FAILED(Add_Component()))
 		return E_FAIL;
@@ -158,8 +159,11 @@ _int CInventory::Update_GameObject(float DeltaTime)
 			return GAMEOBJECT::WARN;
 
 		// 인벤 창 이동
-		if (FAILED(Move_InventoryWnd()))
-			return GAMEOBJECT::WARN;
+		if (!m_bSelect_SellItem)
+		{
+			if (FAILED(Move_InventoryWnd()))
+				return GAMEOBJECT::WARN;
+		}
 	}
 
 	for (_uint i = 0; i < INVEN_END; ++i)
@@ -311,11 +315,12 @@ HRESULT CInventory::Check_AutoSortButton()
 		{
 			if (m_bSelectedSell[iItemIndex])
 			{
-				m_bIsItemHere[iItemIndex] = false;
-				m_pInvenList.erase(iter++);
+				//m_bIsItemHere[iItemIndex] = false;
+				iter = m_pInvenList.erase(iter);
+				//m_pInvenList.erase(iter++);
 			}
 			else
-				iter++;
+				++iter;
 
 			++iItemIndex;
 		}
@@ -477,18 +482,21 @@ HRESULT CInventory::Render_Item()
 			}
 
 			// 아이템 개수
-			TCHAR		szBuff[MAX_PATH] = L"";
-			D3DXMATRIX	matScale, matTrans, matWorld;
-			D3DXMatrixIdentity(&matWorld);
-			StringCchPrintf(szBuff, sizeof(TCHAR) * MAX_PATH, L"%d", m_pInvenList[iIndex]->iCnt);
+			if (!m_bSelectedSell[iIndex])
+			{
+				TCHAR		szBuff[MAX_PATH] = L"";
+				D3DXMATRIX	matScale, matTrans, matWorld;
+				D3DXMatrixIdentity(&matWorld);
+				StringCchPrintf(szBuff, sizeof(TCHAR) * MAX_PATH, L"%d", m_pInvenList[iIndex]->iCnt);
 
-			D3DXMatrixTranslation(&matTrans, vPos.x + 10.f, vPos.y + 10.f, 0.f);
-			D3DXMatrixScaling(&matScale, 1.5f, 1.5f, 0.f);
-			matWorld = matScale * matTrans;
+				D3DXMatrixTranslation(&matTrans, vPos.x + 10.f, vPos.y + 10.f, 0.f);
+				D3DXMatrixScaling(&matScale, 1.5f, 1.5f, 0.f);
+				matWorld = matScale * matTrans;
 
-			m_pSprite->SetTransform(&matWorld);
-			m_pFont->DrawTextW(m_pSprite, szBuff, lstrlen(szBuff),
-				nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
+				m_pSprite->SetTransform(&matWorld);
+				m_pFont->DrawTextW(m_pSprite, szBuff, lstrlen(szBuff),
+					nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
+			}
 		}
 	}
 
@@ -684,10 +692,12 @@ void CInventory::Free()
 	for (auto& pItem : m_pTextureItem)
 		Safe_Release(pItem);
 	m_pTextureItem.clear();
+	//m_pTextureItem.swap(m_pTextureItem);
 	
 	for (auto& pItem : m_pTransformItem)
 		Safe_Release(pItem);
 	m_pTransformItem.clear();
+	//m_pTransformItem.swap(m_pTransformItem);
 
 
 	for (auto& pItem : m_pInvenList)
@@ -695,6 +705,7 @@ void CInventory::Free()
 		Safe_Delete(pItem);
 	}
 	m_pInvenList.clear();
+	//m_pInvenList.swap(m_pInvenList);
 
 	CUIObject::Free();
 }

@@ -85,6 +85,9 @@ _int CEquip::Update_GameObject(_float _fDeltaTime)
 	if (CKeyManager::Get_Instance()->Key_Down('U'))
 		m_bRender = !m_bRender;
 
+	if (FAILED(Count_Stat()))
+		return GAMEOBJECT::WARN;
+
 	for (_uint i = 0; i < EQUIP_END; ++i)
 	{
 		m_pTransformCom[i]->Update_Transform();
@@ -145,8 +148,8 @@ HRESULT CEquip::Render_UI()
 
 		if (FAILED(Render_EquipItem()))
 			return E_FAIL;
-		//if (FAILED(Render_Stat()))
-		//	return E_FAIL;
+		if (FAILED(Render_Stat()))
+			return E_FAIL;
 	}
 
 	return S_OK;
@@ -189,7 +192,43 @@ HRESULT CEquip::Render_Stat()
 		m_pStatCom->Get_Status().iMinAtt, m_pStatCom->Get_Status().iMaxAtt);
 
 	D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
-	D3DXMatrixTranslation(&matTrans, vPos.x, vPos.y - 65.f, 0.f);
+	D3DXMatrixTranslation(&matTrans, vPos.x + 200.f, vPos.y - 110.f, 0.f);
+	matWorld = matScale * matTrans;
+
+	m_pSprite->SetTransform(&matWorld);
+	m_pFont->DrawTextW(m_pSprite, szBuff2, lstrlen(szBuff2),
+		nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
+
+	// 방어력
+	StringCchPrintf(szBuff2, sizeof(TCHAR) * MAX_PATH, L"%d",
+		m_pStatCom->Get_Status().iDef);
+
+	D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
+	D3DXMatrixTranslation(&matTrans, vPos.x + 200.f, vPos.y - 65.f, 0.f);
+	matWorld = matScale * matTrans;
+
+	m_pSprite->SetTransform(&matWorld);
+	m_pFont->DrawTextW(m_pSprite, szBuff2, lstrlen(szBuff2),
+		nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
+
+	// 치명 확률
+	StringCchPrintf(szBuff2, sizeof(TCHAR) * MAX_PATH, L"%d",
+		m_pStatCom->Get_Status().iCriticalRate);
+
+	D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
+	D3DXMatrixTranslation(&matTrans, vPos.x + 200.f, vPos.y - 20.f, 0.f);
+	matWorld = matScale * matTrans;
+
+	m_pSprite->SetTransform(&matWorld);
+	m_pFont->DrawTextW(m_pSprite, szBuff2, lstrlen(szBuff2),
+		nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
+
+	// 치명 피해
+	StringCchPrintf(szBuff2, sizeof(TCHAR) * MAX_PATH, L"%d",
+		m_pStatCom->Get_Status().iCriticalRate);
+
+	D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
+	D3DXMatrixTranslation(&matTrans, vPos.x + 200.f, vPos.y + 25.f, 0.f);
 	matWorld = matScale * matTrans;
 
 	m_pSprite->SetTransform(&matWorld);

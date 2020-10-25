@@ -100,7 +100,7 @@ public:
 
 private:
 	// 현재 가지고 있는 골드
-	_int				m_iGold = 1000;
+	_int				m_iGold = 10000;
 	// true : 인벤을 그린다 / false : 인벤을 그리지 않는다
 	bool				m_bRender = false;
 	// 인벤 윈도우 위치

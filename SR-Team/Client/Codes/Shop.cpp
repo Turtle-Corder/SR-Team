@@ -460,7 +460,7 @@ void CShop::Free()
 
 	for (_uint i = 0; i < 15; ++i)
 	{
-		if (i >= 5)
+		if (i >= 7)
 			break;
 		Safe_Release(m_pItemTransformCom[i]);
 		Safe_Release(m_pItemTextureCom[i]);
