@@ -164,6 +164,13 @@ _uint CManagement::Release_Engine()
 		return iRefCnt;
 	}
 
+	// nav
+	if (iRefCnt = CNav_Manager::Get_Instance()->Destroy_Instance())
+	{
+		PRINT_LOG(L"Failed To Destroy CNav_Manager", LOG::ENGINE);
+		return iRefCnt;
+	}
+
 	// device
 	if (iRefCnt = CDevice_Manager::Get_Instance()->Destroy_Instance())
 	{
