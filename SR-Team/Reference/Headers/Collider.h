@@ -6,7 +6,6 @@
 
 BEGIN(Engine)
 
-class CGameObject;
 class ENGINE_DLL CCollider final : public CComponent
 {
 public:

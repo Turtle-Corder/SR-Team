@@ -6,9 +6,11 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <queue>
 #include <unordered_map>
 #include <fstream>
 #include <strsafe.h>
+#include <process.h>
 
 using namespace std;
 
