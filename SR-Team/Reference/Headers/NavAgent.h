@@ -5,7 +5,6 @@
 #include "Component.h"
 
 BEGIN(Engine)
-
 class CGameObject;
 class CNavAgent final : public CComponent
 {
@@ -39,10 +38,6 @@ public:
 	void Set_NavDesc(const _ivec2& _rStart, const _ivec2& _rGoal);	
 	void Add_Branch(const _ivec2& _rBranch);
 	void Add_Branch(_int _iX, _int _iZ);
-
-public:
-	const NAV_DESC& Get_NavDesc() const;
-	bool Get_NextGoal(_ivec2* _pBranch);
 
 public:
 	static CNavAgent* Create(LPDIRECT3DDEVICE9 _pDevice);
