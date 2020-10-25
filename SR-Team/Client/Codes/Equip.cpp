@@ -36,6 +36,7 @@ void CEquip::Equip_Item(INVEN_ITEM & _tItem)
 	if (pItem == nullptr)
 		return;
 
+	// 장비 장착
 	m_pStatItem[_tItem.eSort] = pItem->Get_ItemStat(_tItem.szItemTag);
 	m_pTextureItem[_tItem.eSort] = pItem->Get_ItemInfo_Texture(_tItem.szItemTag);
 	m_bEquip[_tItem.eSort] = true;
@@ -144,6 +145,8 @@ HRESULT CEquip::Render_UI()
 
 		if (FAILED(Render_EquipItem()))
 			return E_FAIL;
+		//if (FAILED(Render_Stat()))
+		//	return E_FAIL;
 	}
 
 	return S_OK;
@@ -170,6 +173,55 @@ HRESULT CEquip::Render_EquipItem()
 				nullptr, &vCenter, nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
 		}
 	}
+
+	return S_OK;
+}
+
+HRESULT CEquip::Render_Stat()
+{
+	// 공격력
+	TCHAR szBuff2[MAX_PATH] = L"";
+	_matrix matScale, matTrans, matWorld;
+	_vec3 vPos = m_pTransformCom[EQUIP_EQUIPMENT]->Get_Desc().vPosition;
+	D3DXMatrixIdentity(&matWorld);
+
+	StringCchPrintf(szBuff2, sizeof(TCHAR) * MAX_PATH, L"%d ~ %d", 
+		m_pStatCom->Get_Status().iMinAtt, m_pStatCom->Get_Status().iMaxAtt);
+
+	D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
+	D3DXMatrixTranslation(&matTrans, vPos.x, vPos.y - 65.f, 0.f);
+	matWorld = matScale * matTrans;
+
+	m_pSprite->SetTransform(&matWorld);
+	m_pFont->DrawTextW(m_pSprite, szBuff2, lstrlen(szBuff2),
+		nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
+
+	return S_OK;
+}
+
+HRESULT CEquip::Count_Stat()
+{
+	_int iMinAtt = 0, iMaxAtt = 0, iDef = 0, iCirRate = 0, iCriHit = 0;
+	for (_uint i = 0; i < ITEMSORT_END; ++i)
+	{
+		if (m_bEquip[i])
+		{
+			iMinAtt += m_pStatItem[i]->Get_Status().iMinAtt;
+			iMaxAtt += m_pStatItem[i]->Get_Status().iMaxAtt;
+			iDef += m_pStatItem[i]->Get_Status().iDef;
+			iCirRate += m_pStatItem[i]->Get_Status().iCriticalRate;
+			iCriHit += m_pStatItem[i]->Get_Status().iCriticalHit;
+		}
+	}
+
+	CStatus::STAT	tStat;
+	tStat.iMaxAtt = iMinAtt;
+	tStat.iMaxAtt = iMaxAtt;
+	tStat.iDef = iDef;
+	tStat.iCriticalRate = iCirRate;
+	tStat.iCriticalHit = iCriHit;
+
+	m_pStatCom->Set_Status(tStat);
 
 	return S_OK;
 }

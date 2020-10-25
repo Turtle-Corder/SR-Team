@@ -29,6 +29,13 @@ public:
 
 private:
 	HRESULT Render_EquipItem();
+	HRESULT Render_Stat();
+
+private:
+	// ------------------------------------------------------------------
+	// 스탯을 계산하는 함수
+	// ------------------------------------------------------------------
+	HRESULT Count_Stat();
 
 private:
 	HRESULT Add_Component();
@@ -43,7 +50,9 @@ private:
 
 	// 현재 플레이어의 스탯
 	CStatus*				m_pStatCom = nullptr;
-	
+	// 플레이어 스탯 폰트 위치
+	CTransform*				m_pTransformFont = nullptr;
+
 	// 장비창 윈도우
 	_vec3					m_vPos = _vec3(350.f, 300.f, 0.f);
 	CTransform*				m_pTransformCom[EQUIP_END];
