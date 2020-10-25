@@ -105,7 +105,7 @@ enum eEQUIP_ID
 //--------------------------------------------------
 enum eITEM_SORT
 {
-	STAFF, SUIT, SORT_END
+	STAFF, SUIT, ITEMSORT_END
 };
 
 #endif
