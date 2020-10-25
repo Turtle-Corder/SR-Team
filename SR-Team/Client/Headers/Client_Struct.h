@@ -2,7 +2,7 @@
 #ifndef __CLIENT_STRUCT_H__
 #define __CLIENT_STRUCT_H__
 
-#include "Client_Struct.h"
+#include "Status.h"
 USING(Engine)
 
 typedef struct tagInvenItem
@@ -12,7 +12,6 @@ typedef struct tagInvenItem
 	int				iCnt = 0;
 	int				iPrice = 0;
 	int				iInvneInsertOrder = -1;
-	_vec3			vInvenPos = { 0.f, 0.f, 0.f };
 } INVEN_ITEM;
 
 

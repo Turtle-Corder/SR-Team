@@ -319,35 +319,35 @@ HRESULT CShop::Add_Component_ShopItem()
 			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
 				L"%s", L"GoldenSword");
 			wsprintf(szItemTextureName, L"Component_Texture_Item_GoldenSword");
-			pItem->eSort = eITEM_SORT::STAFF;
+			pItem->eSort = eITEM_SORT::STAFF1;
 		}
 		else if (i == 1)
 		{
 			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
 				L"%s", L"IronSword");
 			wsprintf(szItemTextureName, L"Component_Texture_Item_IronSword");
-			pItem->eSort = eITEM_SORT::STAFF;
+			pItem->eSort = eITEM_SORT::STAFF1;
 		}
 		else if (i == 2)
 		{
 			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
 				L"%s", L"DiaSword");
 			wsprintf(szItemTextureName, L"Component_Texture_Item_DiaSword");
-			pItem->eSort = eITEM_SORT::STAFF;
+			pItem->eSort = eITEM_SORT::STAFF1;
 		}
 		else if (i == 3)
 		{
 			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
 				L"%s", L"BlackDress");
 			wsprintf(szItemTextureName, L"Component_Texture_Item_BlackDress");
-			pItem->eSort = eITEM_SORT::STAFF;
+			pItem->eSort = eITEM_SORT::STAFF1;
 		}
 		else if (i == 4)
 		{
 			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
 				L"%s", L"PupleDress");
 			wsprintf(szItemTextureName, L"Component_Texture_Item_PupleDress");
-			pItem->eSort = eITEM_SORT::STAFF;
+			pItem->eSort = eITEM_SORT::STAFF1;
 		}
 		m_vShopItem.emplace_back(pItem);
 		wsprintf(szItemTexture, L"Com_ShopItemTexture%d", i);
@@ -546,6 +546,7 @@ void CShop::Free()
 		Safe_Release(m_pTransformCom[i]);
 		Safe_Release(m_pTextureCom[i]);
 	}
+	
 
 	for (_uint i = 0; i < 15; ++i)
 	{

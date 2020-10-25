@@ -3,6 +3,7 @@
 #include "ItemManager.h"
 #include "UICamera.h"
 #include "KeyManager.h"
+#include "Equip.h"
 #include "..\Headers\Inventory.h"
 
 USING(Client)
@@ -152,6 +153,11 @@ _int CInventory::Update_GameObject(float DeltaTime)
 		if (FAILED(Check_AutoSortButton()))
 			return GAMEOBJECT::WARN;
 
+		// 아이템 장착
+		if (FAILED(Check_EquipItem()))
+			return GAMEOBJECT::WARN;
+
+		// 인벤 창 이동
 		if (FAILED(Move_InventoryWnd()))
 			return GAMEOBJECT::WARN;
 	}
@@ -353,6 +359,41 @@ HRESULT CInventory::Check_AutoSortButton()
 	return S_OK;
 }
 
+HRESULT CInventory::Check_EquipItem()
+{
+	int iIndex = 0;
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 1);
+
+	for (_uint i = 0; i < 6; i++)
+	{
+		for (_uint j = 0; j < 6; j++)
+		{
+			if (CKeyManager::Get_Instance()->Key_Pressing(VK_RBUTTON))
+			{
+				iIndex = i * 6 + j;
+				POINT ptMouse = {};
+				GetCursorPos(&ptMouse);
+				ScreenToClient(g_hWnd, &ptMouse);
+				if (PtInRect(&m_tItemCollRt[i][j], ptMouse))
+				{
+					_int k = 0;
+					// 아이템이 있는 칸들만 선택 할 수 있음
+					if (m_bIsItemHere[iIndex])
+					{
+						// 장비창에게 아이템 정보를 넘겨준다
+						pEquip->Equip_Item(*m_pInvenList[iIndex]);
+					}
+
+				}
+			}
+		}
+	}
+	return S_OK;
+}
+
 HRESULT CInventory::Render_Item()
 {
 	CManagement* pManagement = CManagement::Get_Instance();
@@ -464,8 +505,8 @@ HRESULT CInventory::Move_InventoryWnd()
 	{
 		if (PtInRect(&m_tInvenWndCollRt[INVEN_WND], ptMouse))
 		{
-			vWndPos.x = ptMouse.x;
-			vWndPos.y = ptMouse.y;
+			vWndPos.x = (_float)ptMouse.x;
+			vWndPos.y = (_float)ptMouse.y;
 			m_pTransformCom[INVEN_WND]->Set_Position(vWndPos);
 
 			if (Change_AllPos())
@@ -575,6 +616,15 @@ HRESULT CInventory::Add_Component_Item()
 			SCENE_STATIC, L"Component_Transform"
 			, szTransform, (CComponent**)&m_pTransformItem[i])))
 			return E_FAIL;
+
+		//// Status-------------------------------------------------------------------
+		//TCHAR szStatus[MAX_PATH] = L"";
+		//StringCchPrintf(szStatus, sizeof(TCHAR) * MAX_PATH,
+		//	L"Com_ItemStatus%d", i);
+		//if (FAILED(CGameObject::Add_Component(
+		//	SCENE_STATIC, L"Component_Status"
+		//	, szStatus, (CComponent**)&m_pStatItem[i])))
+		//	return E_FAIL;
 	}
 
 	if (FAILED(CGameObject::Add_Component(
@@ -638,7 +688,8 @@ void CInventory::Free()
 	for (auto& pItem : m_pTransformItem)
 		Safe_Release(pItem);
 	m_pTransformItem.clear();
-	
+
+
 	for (auto& pItem : m_pInvenList)
 	{
 		Safe_Delete(pItem);
