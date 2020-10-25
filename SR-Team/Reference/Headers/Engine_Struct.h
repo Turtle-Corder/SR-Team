@@ -85,9 +85,18 @@ typedef struct tagTileInfo
 {
 	_uint iX;
 	_uint iZ;
+	
+	// 0 : 갈 수 없음
+	// 1 : 갈 수 있음
 	_uint iOpt;
 } TILEINFO;
 
+
+typedef struct tagIVector
+{
+	_int iX;
+	_int iY;
+} _ivec2;
 
 
 #endif

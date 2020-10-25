@@ -9,16 +9,19 @@ CManagement::CManagement()
 	, m_pScene_Manager(CScene_Manager::Get_Instance())
 	, m_pComponent_Manager(CComponent_Manager::Get_Instance())
 	, m_pObject_Manager(CObject_Manager::Get_Instance())
+	, m_pNav_Manager(CNav_Manager::Get_Instance())
 {
 	Safe_AddRef(m_pDevice_Manager);
 	Safe_AddRef(m_pTimer_Manager);
 	Safe_AddRef(m_pScene_Manager);
 	Safe_AddRef(m_pComponent_Manager);
 	Safe_AddRef(m_pObject_Manager);
+	Safe_AddRef(m_pNav_Manager);
 }
 
 void CManagement::Free()
 {
+	Safe_Release(m_pNav_Manager);
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pComponent_Manager);
 	Safe_Release(m_pObject_Manager);
@@ -33,7 +36,8 @@ HRESULT CManagement::Setup_Engine(HWND _hWnd, _uint _iWinCX, _uint _iWinCY, CDev
 		nullptr == m_pScene_Manager		||
 		nullptr == m_pTimer_Manager		||
 		nullptr == m_pComponent_Manager ||
-		nullptr == m_pObject_Manager)
+		nullptr == m_pObject_Manager	||
+		nullptr == m_pNav_Manager)
 		return E_FAIL;
 
 	if (FAILED(m_pDevice_Manager->Setup_GraphicDevice(_hWnd, _iWinCX, _iWinCY, _eDisplayMode)))
@@ -54,6 +58,9 @@ HRESULT CManagement::Setup_Engine(HWND _hWnd, _uint _iWinCX, _uint _iWinCY, CDev
 		return E_FAIL;
 
 	if (FAILED(m_pObject_Manager->Setup_Object_Manager(_iSceneCnt)))
+		return E_FAIL;
+
+	if (FAILED(m_pNav_Manager->Setup_NavigationManager()))
 		return E_FAIL;
 
 	return S_OK;
@@ -307,4 +314,20 @@ CComponent * CManagement::Clone_Component(_int _iSceneID, const wstring& _strPro
 		return nullptr;
 
 	return m_pComponent_Manager->Clone_Component(_iSceneID, _strPrototypeTag, _pArg);
+}
+
+HRESULT CManagement::Set_TileInfo(TILEINFO * _pTileInfo, _int _iWidth, _int _iHeight)
+{
+	if (nullptr == m_pNav_Manager)
+		return E_FAIL;
+
+	return m_pNav_Manager->Set_TileInfo(_pTileInfo, _iWidth, _iHeight);
+}
+
+HRESULT CManagement::PathFind(CNavAgent * _pAgent, _int _iStartX, _int _iStartZ, _int _iGoalX, _int _iGoalZ)
+{
+	if (nullptr == m_pNav_Manager)
+		return E_FAIL;
+
+	return m_pNav_Manager->PathFind(_pAgent, _iStartX, _iStartZ, _iGoalX, _iGoalZ);
 }

@@ -8,6 +8,7 @@
 #include "Component_Manager.h"
 #include "Object_Manager.h"
 #include "Renderer.h"
+#include "Nav_Manager.h"
 
 BEGIN(Engine)
 
@@ -94,6 +95,12 @@ public:
 	CComponent* Clone_Component(_int _iSceneID, const wstring& _strPrototypeTag, void* _pArg = nullptr);
 
 
+	//--------------------------------------------------
+	// ±Ê√£±‚
+	//--------------------------------------------------
+	HRESULT Set_TileInfo(TILEINFO* _pTileInfo, _int _iWidth, _int _iHeight);
+	HRESULT PathFind(CNavAgent* _pAgent, _int _iStartX, _int _iStartZ, _int _iGoalX, _int _iGoalZ);
+
 public:
 	virtual void Free() override;
 
@@ -108,6 +115,7 @@ private:
 	CScene_Manager*		m_pScene_Manager		= nullptr;
 	CComponent_Manager*	m_pComponent_Manager	= nullptr;
 	CObject_Manager*	m_pObject_Manager		= nullptr;
+	CNav_Manager*		m_pNav_Manager			= nullptr;
 
 	CRenderer*			m_pRenderer				= nullptr;
 

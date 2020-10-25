@@ -10,6 +10,7 @@
 #include <unordered_map>
 #include <fstream>
 #include <strsafe.h>
+#include <process.h>
 
 using namespace std;
 

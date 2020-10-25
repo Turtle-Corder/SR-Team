@@ -22,6 +22,16 @@ bool CNavAgent::IsFound() const
 	return m_bNavDone;
 }
 
+CGameObject * CNavAgent::Get_Owner()
+{
+	return m_tNavDesc.pOwner;
+}
+
+_int CNavAgent::Get_BranchSize()
+{
+	return (_int)m_BranchList.size();
+}
+
 HRESULT CNavAgent::Setup_Component_Prototype()
 {
 	return S_OK;
@@ -47,11 +57,11 @@ void CNavAgent::Set_NavDesc(const NAV_DESC & tNavDesc)
 	m_BranchList.clear();
 }
 
-void CNavAgent::Set_NavDesc(_int _iStartX, _int _iStartY, _int _iGoalX, _int _iGoalY)
+void CNavAgent::Set_NavDesc(_int _iStartX, _int _iStartZ, _int _iGoalX, _int _iGoalZ)
 {
 	m_bNavDone = false;
-	m_tNavDesc.tStart = { _iStartX, _iStartY };
-	m_tNavDesc.tGoal = { _iGoalX, _iGoalY };
+	m_tNavDesc.tStart = { _iStartX, _iStartZ };
+	m_tNavDesc.tGoal = { _iGoalX, _iGoalZ };
 }
 
 void CNavAgent::Set_NavDesc(const _ivec2 & _rStart, const _ivec2 & _rGoal)
@@ -64,6 +74,12 @@ void CNavAgent::Set_NavDesc(const _ivec2 & _rStart, const _ivec2 & _rGoal)
 void CNavAgent::Add_Branch(const _ivec2 & _rBranch)
 {
 	m_BranchList.push_front(_rBranch);
+}
+
+void CNavAgent::Add_Branch(_int _iX, _int _iZ)
+{
+	_ivec2 tBranch = { _iX, _iZ };
+	m_BranchList.push_back(tBranch);
 }
 
 bool CNavAgent::Get_NextGoal(_ivec2 * _pBranch)
