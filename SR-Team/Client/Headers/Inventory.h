@@ -99,6 +99,8 @@ public:
 	virtual void Free() override;
 
 private:
+	_int				m_iNewInsertOrder = 0;
+	_int				m_iSellGold = 0;
 	// 현재 가지고 있는 골드
 	_int				m_iGold = 10000;
 	// true : 인벤을 그린다 / false : 인벤을 그리지 않는다
@@ -114,6 +116,7 @@ private:
 	// 인벤에 있는 아이템들
 	vector<CTexture*>	m_pTextureItem;
 	vector<CTransform*>	m_pTransformItem;
+
 	// 인벤에 있는 아이템들 위치
 	_vec3				m_vItemPos[6][6];
 	// 인벤에 있는 아이템들 충돌 RECT

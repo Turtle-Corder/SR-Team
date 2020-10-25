@@ -16,7 +16,7 @@ CShop::CShop(LPDIRECT3DDEVICE9 _pDevice, LPD3DXSPRITE _pSprite, LPD3DXFONT _pFon
 		m_pTextureCom[i] = nullptr;
 	}
 
-	for (_uint i = 0; i < 15; ++i)
+	for (_uint i = 0; i < 7; ++i)
 	{
 		m_pItemTransformCom[i] = nullptr;
 		m_pItemTextureCom[i] = nullptr;
@@ -50,7 +50,7 @@ HRESULT CShop::Setup_GameObject_Prototype()
 
 HRESULT CShop::Setup_GameObject(void * pArg)
 {
-	m_vShopItem.reserve(15);
+	m_vShopItem.reserve(7);
 
 	if (FAILED(Add_Component()))
 		return E_FAIL;
@@ -282,10 +282,8 @@ HRESULT CShop::Add_Component_ShopItem()
 	if (pOrigin == nullptr)
 		return E_FAIL;
 
-	for (_uint i = 0; i < 15; ++i)
+	for (_uint i = 0; i < 7; ++i)
 	{
-		if (i == 7)
-			return S_OK;
 		// Transform-----------------------------------------------------------------
 		TCHAR szItemTransform[MAX_STR] = L"";
 		wsprintf(szItemTransform, L"Com_ShopItemTransform%d", i);
@@ -341,7 +339,7 @@ HRESULT CShop::Add_Component_ShopItem()
 			wsprintf(szItemTextureName, L"Component_Texture_Item_ArcaneShoes");
 		}
 		pOrigin->Get_ItemInfo(pItem->szItemTag, *pItem);
-		m_pItemTextureCom[i] = pOrigin->Get_ItemInfo_Texture(pItem->szItemTag);
+		//m_pItemTextureCom[i] = pOrigin->Get_ItemInfo_Texture(pItem->szItemTag);
 		m_vShopItem.emplace_back(pItem);
 		wsprintf(szItemTexture, L"Com_ShopItemTexture%d", i);
 
@@ -458,10 +456,8 @@ void CShop::Free()
 	}
 	
 
-	for (_uint i = 0; i < 15; ++i)
+	for (_uint i = 0; i < 7; ++i)
 	{
-		if (i >= 7)
-			break;
 		Safe_Release(m_pItemTransformCom[i]);
 		Safe_Release(m_pItemTextureCom[i]);
 	}

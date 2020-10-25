@@ -261,6 +261,8 @@ HRESULT CInventory::Check_SellButton()
 				m_bSelect_SellItem = false;
 				// 이제 선택된 아이템들은 빈 공간으로 그려준다
 				m_bRenderEmptySell = true;
+				m_iGold += m_iSellGold;
+				m_iSellGold = 0;
 				PRINT_LOG(L"아이템 판매 시작.", LOG::CLIENT);
 			}
 		}
@@ -287,7 +289,10 @@ HRESULT CInventory::Select_SellItem()
 					_int k = 0;
 					// 아이템이 있는 칸들만 선택 할 수 있음
 					if (m_bIsItemHere[iIndex])
+					{
 						m_bSelectedSell[iIndex] = true;
+						m_iSellGold += m_pInvenList[iIndex]->iPrice;
+					}
 
 				}
 			}
@@ -316,8 +321,8 @@ HRESULT CInventory::Check_AutoSortButton()
 			if (m_bSelectedSell[iItemIndex])
 			{
 				//m_bIsItemHere[iItemIndex] = false;
+				Safe_Delete(*iter);
 				iter = m_pInvenList.erase(iter);
-				//m_pInvenList.erase(iter++);
 			}
 			else
 				++iter;
@@ -332,6 +337,7 @@ HRESULT CInventory::Check_AutoSortButton()
 			if (m_bSelectedSell[iTextureItemIdx])
 			{
 				++iDeleteCnt;
+				Safe_Release(*iter);
 				iter = m_pTextureItem.erase(iter);
 				m_bSelectedSell[iTextureItemIdx] = false;
 			}
@@ -339,9 +345,10 @@ HRESULT CInventory::Check_AutoSortButton()
 				++iter;
 			++iTextureItemIdx;
 		}
-
+		_int m = 0;
+		m_pTextureItem.resize(36);
 		// 삭제한만큼 새로 만들어서 넣어준다
-		for (_int i = 36 - iDeleteCnt; i < iDeleteCnt; i++)
+		for (_int i = 36 - iDeleteCnt, j = 0; j < iDeleteCnt; i++, ++j)
 		{
 			// Texture-------------------------------------------------------------------
 			TCHAR szItemTexture[MAX_STR] = L"";
@@ -349,11 +356,12 @@ HRESULT CInventory::Check_AutoSortButton()
 			//ITEM* pItem = new ITEM;
 			//pItem->wstrItemName = L"Empty";
 			wsprintf(szItemTextureName, L"Component_Texture_Item_Empty");
-			wsprintf(szItemTexture, L"Com_ItemTexture%d", i);
+			wsprintf(szItemTexture, L"Com_NewItemTexture%d", m_iNewInsertOrder);
 
 			if (FAILED(CGameObject::Add_Component(SCENE_STATIC, 
 				szItemTextureName, szItemTexture, (CComponent**)&m_pTextureItem[i])))
 				return E_FAIL;
+			++m_iNewInsertOrder;
 		}
 
 		// 정렬 끝
@@ -410,7 +418,8 @@ HRESULT CInventory::Render_Item()
 	{
 		for (_uint j = 0; j < 6; ++j)
 		{
-			int iIndex = i * 6 + j;
+			_bool bRenderCnt = true;
+			_int iIndex = i * 6 + j;
 
 			
 			// 정렬할 때 삭제한 벡터만큼 새로 생성해줘야 함
@@ -434,6 +443,7 @@ HRESULT CInventory::Render_Item()
 				// 판매 아이템으로 선택되었다면
 				if (m_bSelectedSell[iIndex])
 				{
+					bRenderCnt = true;
 					// 선택되었다는 표시를 그리고
 					const D3DXIMAGE_INFO* pTexInfo = m_pTextureSell->Get_TexInfo(0);
 					_vec3 vCenter = { pTexInfo->Width * 0.5f, pTexInfo->Height * 0.5f, 0.f };
@@ -461,6 +471,7 @@ HRESULT CInventory::Render_Item()
 				// 판매 아이템으로 선택된 아이템들은 빈 텍스처로 그린다
 				if (m_bSelectedSell[iIndex])
 				{
+					bRenderCnt = false;
 					const D3DXIMAGE_INFO* pTexInfo = m_pTextureEmpty->Get_TexInfo(0);
 					_vec3 vCenter = { pTexInfo->Width * 0.5f, pTexInfo->Height * 0.5f, 0.f };
 
@@ -482,7 +493,7 @@ HRESULT CInventory::Render_Item()
 			}
 
 			// 아이템 개수
-			if (!m_bSelectedSell[iIndex])
+			if (/*!m_bSelectedSell[iIndex] && */bRenderCnt)
 			{
 				TCHAR		szBuff[MAX_PATH] = L"";
 				D3DXMATRIX	matScale, matTrans, matWorld;
@@ -701,9 +712,7 @@ void CInventory::Free()
 
 
 	for (auto& pItem : m_pInvenList)
-	{
 		Safe_Delete(pItem);
-	}
 	m_pInvenList.clear();
 	//m_pInvenList.swap(m_pInvenList);
 
