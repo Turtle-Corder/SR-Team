@@ -36,9 +36,9 @@ HRESULT CScene_Stage0::Setup_Scene()
 		return E_FAIL;
 	if (FAILED(SetUp_Layer_Inventory(L"Layer_Inventory")))
 		return E_FAIL;
-	if (FAILED(SetUp_Layer_Shop(L"Layer_Shop")))
-		return E_FAIL;
 	if (FAILED(SetUp_Layer_Item(L"Layer_Item")))
+		return E_FAIL;
+	if (FAILED(SetUp_Layer_Shop(L"Layer_Shop")))
 		return E_FAIL;
 
 

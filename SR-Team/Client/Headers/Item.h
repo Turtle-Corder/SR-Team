@@ -22,12 +22,19 @@ public:
 	// const wstring& strItemTag : 필요한 텍스처의 Tag
 	// ------------------------------------------------------------------
 	CTexture* Get_ItemInfo_Texture(const wstring& strItemTag);
+
 	// ------------------------------------------------------------------
 	// 필요한 아이템의 가격을 반환하는 함수
 	// const wstring& strItemTag : 필요한 텍스처의 Tag
 	// ------------------------------------------------------------------
 	const _int Get_ItemInfo_Price(const wstring& strItemTag);
 	HRESULT Get_ItemInfo(const wstring& strItemTag, INVEN_ITEM& tItem);
+
+	// ------------------------------------------------------------------
+	// 필요한 아이템의 스탯을 반환하는 함수
+	// const wstring& strItemTag : 필요한 아이템의 Tag
+	// ------------------------------------------------------------------
+	CStatus* Get_ItemStat(const wstring& strItemTag);
 
 public:
 	// CGameObject을(를) 통해 상속됨
@@ -55,9 +62,11 @@ private:
 	//CItemManager*	m_pItmeMgrCom = nullptr;
 
 	// 아이템 이미지
-	CTexture*				m_pTextureCom[5];
+	CTexture*				m_pTextureCom[7];
+	// 아이템 스탯 정보
+	CStatus*				m_pStatCom[7];
 	vector<INVEN_ITEM*>		m_vItemList;
-};
+};	
 
 END
 

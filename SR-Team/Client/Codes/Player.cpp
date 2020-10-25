@@ -392,7 +392,6 @@ HRESULT CPlayer::RaycastOnTerrain()
 		if (m_pRaycastCom->IsSimulate<VTX_TEXTURE, INDEX16>(
 			g_hWnd, WINCX, WINCY, pTerrainBuffer, &mat, pCamera, &vOutPos))
 		{
-
 		}
 	}
 

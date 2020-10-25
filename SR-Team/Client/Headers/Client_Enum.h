@@ -94,6 +94,8 @@ enum eINVEN_ID
 enum eEQUIP_ID
 {
 	EQUIP_START,
+	EQUIP_WND = EQUIP_START, 
+	EQUIP_EQUIPMENT,
 	EQUIP_END
 };
 
@@ -103,7 +105,9 @@ enum eEQUIP_ID
 //--------------------------------------------------
 enum eITEM_SORT
 {
-	STAFF, SUIT, SORT_END
+	CAP, NECKLACE1, TOP, PANTS, SUIT, STAFF1, 
+	EARRING, CLOAK, GLOVES, NECKLACE2, SHOES, STAFF2,
+	ITEMSORT_END
 };
 
 #endif

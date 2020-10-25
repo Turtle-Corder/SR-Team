@@ -2,16 +2,16 @@
 #ifndef __CLIENT_STRUCT_H__
 #define __CLIENT_STRUCT_H__
 
+#include "Status.h"
 USING(Engine)
 
 typedef struct tagInvenItem
 {
 	WCHAR			szItemTag[MIN_STR];
-	eITEM_SORT		eSort = SORT_END;
+	eITEM_SORT		eSort = eITEM_SORT::ITEMSORT_END;
 	int				iCnt = 0;
 	int				iPrice = 0;
 	int				iInvneInsertOrder = -1;
-	_vec3			vInvenPos = { 0.f, 0.f, 0.f };
 } INVEN_ITEM;
 
 

@@ -23,22 +23,22 @@ public:
 		_int	iMp = 0;
 		_int	iSort = 0;
 
-		_bool	bShop = false;
-		_int	iShopCnt = 0;
-		_int	iPrice = 0;
-		_vec3	vShopPos = { 0.f, 0.f, 0.f };
-		_vec3	vShopNamePos = { 0.f, 0.f, 0.f };
-		_vec3	vShopPricePos = { 0.f, 0.f, 0.f };
-		_vec3	vShopScale = { 80.f, 90.f, 1.f };
-		_vec3	vShopNameScale = { 80.f, 90.f, 1.f };
-		_vec3	vShopPriceScale = { 80.f, 90.f, 1.f };
+		//_bool	bShop = false;
+		//_int	iShopCnt = 0;
+		//_int	iPrice = 0;
+		//_vec3	vShopPos = { 0.f, 0.f, 0.f };
+		//_vec3	vShopNamePos = { 0.f, 0.f, 0.f };
+		//_vec3	vShopPricePos = { 0.f, 0.f, 0.f };
+		//_vec3	vShopScale = { 80.f, 90.f, 1.f };
+		//_vec3	vShopNameScale = { 80.f, 90.f, 1.f };
+		//_vec3	vShopPriceScale = { 80.f, 90.f, 1.f };
 
-		_bool	bInven = false;
-		_int	iInvenCnt = 0;
-		_vec3	vInvenPos = { 0.f, 0.f, 0.f };
-		_vec3	vInvenCntPos = { 0.f, 0.f, 0.f };
-		_vec3	vInvenScale = { 80.f, 90.f, 1.f };
-		_vec3	vInvenCntScale = { 80.f, 90.f, 1.f };
+		//_bool	bInven = false;
+		//_int	iInvenCnt = 0;
+		//_vec3	vInvenPos = { 0.f, 0.f, 0.f };
+		//_vec3	vInvenCntPos = { 0.f, 0.f, 0.f };
+		//_vec3	vInvenScale = { 80.f, 90.f, 1.f };
+		//_vec3	vInvenCntScale = { 80.f, 90.f, 1.f };
 	} STAT;
 
 private:

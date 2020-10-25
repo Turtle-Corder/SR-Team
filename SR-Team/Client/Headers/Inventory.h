@@ -70,12 +70,24 @@ private:
 	HRESULT Check_AutoSortButton();
 
 
+// 아이템 장착 관련 함수
+private:
+	// ------------------------------------------------------------------
+	// 아이템을 장착할 것인지 확인하는 함수
+	// ------------------------------------------------------------------
+	HRESULT Check_EquipItem();
+
+
 // Render() 관련 함수
 private:
 	// ------------------------------------------------------------------
 	// 아이템을 그리는 함수
 	// ------------------------------------------------------------------
 	HRESULT Render_Item();
+
+private:
+	HRESULT Move_InventoryWnd();
+	HRESULT Change_AllPos();
 	
 private:
 	HRESULT Add_Component();
@@ -88,9 +100,11 @@ public:
 
 private:
 	// 현재 가지고 있는 골드
-	_int				m_iGold = 200;
+	_int				m_iGold = 1000;
 	// true : 인벤을 그린다 / false : 인벤을 그리지 않는다
 	bool				m_bRender = false;
+	// 인벤 윈도우 위치
+	_vec3 vWndPos =		{ 500.f, 200.f, 0.f };
 
 // 아이템--------------------------------------------------------------------------------
 private:
