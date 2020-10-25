@@ -40,8 +40,12 @@ public:
 
 private:
 	_bool			m_bRender = false;
+
+	// 현재 플레이어의 스탯
+	CStatus*				m_pStatCom = nullptr;
 	
 	// 장비창 윈도우
+	_vec3					m_vPos = _vec3(350.f, 300.f, 0.f);
 	CTransform*				m_pTransformCom[EQUIP_END];
 	CTexture*				m_pTextureCom[EQUIP_END];
 	RECT					m_tEquipWndCollRt[EQUIP_END];

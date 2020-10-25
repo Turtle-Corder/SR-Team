@@ -62,9 +62,9 @@ private:
 	//CItemManager*	m_pItmeMgrCom = nullptr;
 
 	// 아이템 이미지
-	CTexture*				m_pTextureCom[5];
+	CTexture*				m_pTextureCom[7];
 	// 아이템 스탯 정보
-	CStatus*				m_pStatCom[5];
+	CStatus*				m_pStatCom[7];
 	vector<INVEN_ITEM*>		m_vItemList;
 };	
 

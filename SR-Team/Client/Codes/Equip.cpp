@@ -37,6 +37,7 @@ void CEquip::Equip_Item(INVEN_ITEM & _tItem)
 		return;
 
 	m_pStatItem[_tItem.eSort] = pItem->Get_ItemStat(_tItem.szItemTag);
+	m_pTextureItem[_tItem.eSort] = pItem->Get_ItemInfo_Texture(_tItem.szItemTag);
 	m_bEquip[_tItem.eSort] = true;
 }
 
@@ -52,8 +53,28 @@ HRESULT CEquip::Setup_GameObject(void * _pArg)
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom[EQUIP_WND]->Set_Position(_vec3(350.f, 300.f, 0.f));
-	m_pTransformCom[EQUIP_EQUIPMENT]->Set_Position(_vec3(150.f, 300.f, 0.f));
+	m_pTransformCom[EQUIP_WND]->Set_Position(m_vPos);
+	m_pTransformCom[EQUIP_EQUIPMENT]->Set_Position(
+		_vec3(m_vPos.x - 200.f, m_vPos.y, 0.f));
+
+	for (_uint i = 0; i < 6; ++i)
+	{
+		_vec3 vPos = {};
+		if (i <= 5)
+			vPos.x = m_vPos.x - 297.f;
+		vPos.y = (i * 40) + (m_vPos.y - 85.f);
+		vPos.z = 0.f;
+		m_pTransformItem[i]->Set_Position(vPos);
+	}
+
+	for (_uint i = 6, j = 0; i < ITEMSORT_END; ++i, ++j)
+	{
+		_vec3 vPos = {};
+		vPos.x = m_vPos.x - 95.f;
+		vPos.y = (j * 40) + (m_vPos.y - 85.f);
+		vPos.z = 0.f;
+		m_pTransformItem[i]->Set_Position(vPos);
+	}
 
 	return S_OK;
 }
@@ -70,8 +91,7 @@ _int CEquip::Update_GameObject(_float _fDeltaTime)
 
 	for (_int i = 0; i < ITEMSORT_END; i++)
 	{
-		if (m_bEquip[i])
-			m_pTransformItem[i]->Update_Transform();
+		m_pTransformItem[i]->Update_Transform();
 	}
 
 	return GAMEOBJECT::NOEVENT;
@@ -137,8 +157,14 @@ HRESULT CEquip::Render_EquipItem()
 		{
 			const D3DXIMAGE_INFO* pTexInfo = m_pTextureItem[i]->Get_TexInfo(0);
 			_vec3 vCenter = { pTexInfo->Width * 0.5f, pTexInfo->Height * 0.5f, 0.f };
+			D3DXMATRIX matTrans, matScale, matWorld;
+			_vec3 vPos = m_pTransformItem[i]->Get_Desc().vPosition;
 
-			m_pSprite->SetTransform(&m_pTransformItem[i]->Get_Desc().matWorld);
+			D3DXMatrixScaling(&matScale, 0.7f, 0.7f, 0.f);
+			D3DXMatrixTranslation(&matTrans, vPos.x, vPos.y, vPos.z);
+			matWorld = matScale * matTrans;
+
+			m_pSprite->SetTransform(&matWorld);
 			m_pSprite->Draw(
 				(LPDIRECT3DTEXTURE9)m_pTextureItem[i]->GetTexture(0),
 				nullptr, &vCenter, nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
@@ -206,6 +232,11 @@ HRESULT CEquip::Add_Component()
 			return E_FAIL;
 	}
 
+	if (FAILED(CGameObject::Add_Component(
+		SCENE_STATIC, L"Component_Status",
+		L"Com_PlayerStat", (CComponent**)&m_pStatCom)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -238,6 +269,8 @@ CGameObject * CEquip::Clone_GameObject(void * _pArg)
 
 void CEquip::Free()
 {
+	Safe_Release(m_pStatCom);
+
 	for (_uint i = 0; i < EQUIP_END; ++i)
 	{
 		Safe_Release(m_pTransformCom[i]);

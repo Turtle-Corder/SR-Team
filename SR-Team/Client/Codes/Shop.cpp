@@ -20,12 +20,6 @@ CShop::CShop(LPDIRECT3DDEVICE9 _pDevice, LPD3DXSPRITE _pSprite, LPD3DXFONT _pFon
 	{
 		m_pItemTransformCom[i] = nullptr;
 		m_pItemTextureCom[i] = nullptr;
-
-		m_pItemNameTransformCom[i] = nullptr;
-		m_pItemNameTextureCom[i] = nullptr;
-
-		m_pItemPriceTransformCom[i] = nullptr;
-		m_pItemPriceTextureCom[i] = nullptr;
 	}
 }
 
@@ -62,10 +56,6 @@ HRESULT CShop::Setup_GameObject(void * pArg)
 		return E_FAIL;
 	if (FAILED(Add_Component_ShopItem()))
 		return E_FAIL;
-	if (FAILED(Add_Component_ShopItemName()))
-		return E_FAIL;
-	if (FAILED(Add_Component_ShopItemPrice()))
-		return E_FAIL;
 
 	m_pTransformCom[SHOP_WND]->Set_Position(_vec3(400.f, 300.f, 0.f));
 	m_pTransformCom[SHOP_SCROLLBAR]->Set_Position(_vec3(735.f, 160.f, 0.f));
@@ -81,19 +71,9 @@ HRESULT CShop::Setup_GameObject(void * pArg)
 			m_vItemTexturePos[j][i].y = (j * 172.f) + 105.f;
 			m_vItemTexturePos[j][i].z = 0.f;
 
-			m_vItemNamePos[j][i].x = (i * 115.f) + 260.f;
-			m_vItemNamePos[j][i].y = (j * 167.f) + 150.f;
-			m_vItemNamePos[j][i].z = 0.f;
-
-			m_vItemPricePos[j][i].x = (i * 115.f) + 280.f;
-			m_vItemPricePos[j][i].y = (j * 167.f) + 180.f;
-			m_vItemPricePos[j][i].z = 0.f;
-
-			if (iIndex < 5)
+			if (iIndex < 7)
 			{
 				m_pItemTransformCom[iIndex]->Set_Position(m_vItemTexturePos[j][i]);
-				m_pItemNameTransformCom[iIndex]->Set_Position(m_vItemNamePos[j][i]);
-				m_pItemPriceTransformCom[iIndex]->Set_Position(m_vItemPricePos[j][i]);
 			}
 			int k = 0;
 		}
@@ -105,7 +85,7 @@ HRESULT CShop::Setup_GameObject(void * pArg)
 		for (_uint i = 0; i < 4; ++i)
 		{
 			iIndex = j * 4 + i;
-			if (iIndex > 4)
+			if (iIndex > 7)
 				return S_OK;
 			m_tItemTextureRt[j][i].left = (LONG)(m_vItemTexturePos[j][i].x - 20.f);
 			m_tItemTextureRt[j][i].right = (LONG)(m_vItemTexturePos[j][i].x + 20.f);
@@ -137,11 +117,9 @@ int CShop::Update_GameObject(float DeltaTime)
 		{
 			m_pTransformCom[i]->Update_Transform();
 		}
-		for (_uint i = 0; i < 5; ++i)
+		for (_uint i = 0; i < 7; ++i)
 		{
 			m_pItemTransformCom[i]->Update_Transform();
-			m_pItemNameTransformCom[i]->Update_Transform();
-			m_pItemPriceTransformCom[i]->Update_Transform();
 		}
 	}
 
@@ -297,10 +275,16 @@ HRESULT CShop::Add_Component()
 HRESULT CShop::Add_Component_ShopItem()
 {
 	int iIndex = 0;
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (pManagement == nullptr)
+		return E_FAIL;
+	CItem* pOrigin = (CItem*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Item");
+	if (pOrigin == nullptr)
+		return E_FAIL;
 
 	for (_uint i = 0; i < 15; ++i)
 	{
-		if (i == 5)
+		if (i == 7)
 			return S_OK;
 		// Transform-----------------------------------------------------------------
 		TCHAR szItemTransform[MAX_STR] = L"";
@@ -317,133 +301,53 @@ HRESULT CShop::Add_Component_ShopItem()
 		if (i == 0)
 		{
 			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
-				L"%s", L"GoldenSword");
+				L"%s", L"GoldSword");
 			wsprintf(szItemTextureName, L"Component_Texture_Item_GoldenSword");
-			pItem->eSort = eITEM_SORT::STAFF1;
 		}
 		else if (i == 1)
 		{
 			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
 				L"%s", L"IronSword");
 			wsprintf(szItemTextureName, L"Component_Texture_Item_IronSword");
-			pItem->eSort = eITEM_SORT::STAFF1;
 		}
 		else if (i == 2)
 		{
 			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
 				L"%s", L"DiaSword");
 			wsprintf(szItemTextureName, L"Component_Texture_Item_DiaSword");
-			pItem->eSort = eITEM_SORT::STAFF1;
 		}
 		else if (i == 3)
 		{
 			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
 				L"%s", L"BlackDress");
 			wsprintf(szItemTextureName, L"Component_Texture_Item_BlackDress");
-			pItem->eSort = eITEM_SORT::STAFF1;
 		}
 		else if (i == 4)
 		{
 			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
 				L"%s", L"PupleDress");
 			wsprintf(szItemTextureName, L"Component_Texture_Item_PupleDress");
-			pItem->eSort = eITEM_SORT::STAFF1;
 		}
+		else if (i == 5)
+		{
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"ScholarShoes");
+			wsprintf(szItemTextureName, L"Component_Texture_Item_ScholarShoes");
+		}
+		else if (i == 6)
+		{
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"ArcaneShoes");
+			wsprintf(szItemTextureName, L"Component_Texture_Item_ArcaneShoes");
+		}
+		pOrigin->Get_ItemInfo(pItem->szItemTag, *pItem);
+		m_pItemTextureCom[i] = pOrigin->Get_ItemInfo_Texture(pItem->szItemTag);
 		m_vShopItem.emplace_back(pItem);
 		wsprintf(szItemTexture, L"Com_ShopItemTexture%d", i);
 
 		if (FAILED(CGameObject::Add_Component(
 			SCENE_STATIC, szItemTextureName,
 			szItemTexture, (CComponent**)&m_pItemTextureCom[i])))
-			return E_FAIL;
-	}
-
-	return S_OK;
-}
-
-HRESULT CShop::Add_Component_ShopItemName()
-{
-	int iIndex = 0;
-
-	for (_uint i = 0; i < 15; ++i)
-	{
-		if (i == 5)
-			return S_OK;
-		// Transform-----------------------------------------------------------------
-		TCHAR szItemTransform[MAX_STR] = L"";
-		wsprintf(szItemTransform, L"Com_ShopItemNameTransform%d", i);
-		if (FAILED(CGameObject::Add_Component(
-			SCENE_STATIC, L"Component_Transform",
-			szItemTransform, (CComponent**)&m_pItemNameTransformCom[i])))
-			return E_FAIL;
-
-		// Texture-------------------------------------------------------------------
-		TCHAR szItemTexture[MAX_STR] = L"";
-		TCHAR szItemTextureName[MAX_STR] = L"";
-		if (i == 0)
-			wsprintf(szItemTextureName, L"Component_Texture_ItemName_GoldenSword");
-		else if (i == 1)
-			wsprintf(szItemTextureName, L"Component_Texture_ItemName_IronSword");
-		else if (i == 2)
-			wsprintf(szItemTextureName, L"Component_Texture_ItemName_DiaSword");
-		else if (i == 3)
-			wsprintf(szItemTextureName, L"Component_Texture_ItemName_BlackDress");
-		else if (i == 4)
-			wsprintf(szItemTextureName, L"Component_Texture_ItemName_PupleDress");
-		wsprintf(szItemTexture, L"Com_ShopItemNameTexture%d", i);
-
-		if (FAILED(CGameObject::Add_Component(
-			SCENE_STATIC, szItemTextureName,
-			szItemTexture, (CComponent**)&m_pItemNameTextureCom[i])))
-			return E_FAIL;
-	}
-
-	return S_OK;
-}
-
-HRESULT CShop::Add_Component_ShopItemPrice()
-{
-	int iIndex = 0;
-
-	for (_uint i = 0; i < 15; ++i)
-	{
-		if (i == 5)
-			return S_OK;
-		// Transform-----------------------------------------------------------------
-		TCHAR szItemTransform[MAX_PATH] = L"";
-		StringCchPrintf(szItemTransform, sizeof(TCHAR) * MAX_PATH,
-			L"Com_ShopItemPriceTransform%d", i);
-
-		if (FAILED(CGameObject::Add_Component(
-			SCENE_STATIC, L"Component_Transform",
-			szItemTransform, (CComponent**)&m_pItemPriceTransformCom[i])))
-			return E_FAIL;
-
-		// Texture-------------------------------------------------------------------
-		TCHAR szItemTexture[MAX_PATH] = L"";
-		TCHAR szItemTextureName[MAX_PATH] = L"";
-		if (i == 0)
-			StringCchPrintf(szItemTextureName, sizeof(TCHAR) * MAX_PATH,
-				L"Component_Texture_ItemPrice_GoldenSword");
-		else if (i == 1)
-			StringCchPrintf(szItemTextureName, sizeof(TCHAR) * MAX_PATH,
-				L"Component_Texture_ItemPrice_IronSword");
-		else if (i == 2)
-			StringCchPrintf(szItemTextureName, sizeof(TCHAR) * MAX_PATH,
-				L"Component_Texture_ItemPrice_DiaSword");
-		else if (i == 3)
-			StringCchPrintf(szItemTextureName, sizeof(TCHAR) * MAX_PATH,
-				L"Component_Texture_ItemPrice_BlackDress");
-		else if (i == 4)
-			StringCchPrintf(szItemTextureName, sizeof(TCHAR) * MAX_PATH,
-				L"Component_Texture_ItemPrice_PupleDress");
-
-		StringCchPrintf(szItemTexture, sizeof(TCHAR) * MAX_PATH,
-			L"Com_ShopItemPriceTexture%d", i);
-
-		if (FAILED(CGameObject::Add_Component(
-			SCENE_STATIC, szItemTextureName,
-			szItemTexture, (CComponent**)&m_pItemPriceTextureCom[i])))
 			return E_FAIL;
 	}
 
@@ -463,7 +367,7 @@ HRESULT CShop::Render_ShopItem()
 		for (_uint i = 0; i < 4; ++i)
 		{
 			iIndex = j * 4 + i;
-			if (iIndex >= 5)
+			if (iIndex >= 7)
 				return S_OK;
 
 			// 아이템 이미지--------------------------------------------------------------------------------------
@@ -483,29 +387,35 @@ HRESULT CShop::Render_ShopItem()
 				(LPDIRECT3DTEXTURE9)m_pItemTextureCom[iIndex]->GetTexture(0),
 				nullptr, &vCenter, nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
 
-			// 아이템 이름
-			pTexInfo = m_pItemNameTextureCom[iIndex]->Get_TexInfo(0);
-			vCenter = { pTexInfo->Width * 0.5f, pTexInfo->Height * 0.5f, 0.f };
-			//vPos = m_pItemNameTransformCom[iIndex]->Get_Desc().vPosition;
-			vPos = m_vItemNamePos[k][i];
-			m_pItemNameTransformCom[iIndex]->Set_Position(vPos);
 
-			m_pSprite->SetTransform(&m_pItemNameTransformCom[iIndex]->Get_Desc().matWorld);
-			m_pSprite->Draw(
-				(LPDIRECT3DTEXTURE9)m_pItemNameTextureCom[iIndex]->GetTexture(0),
-				nullptr, &vCenter, nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
+			// 아이템 이름
+			TCHAR		szBuff[MAX_PATH] = L"";
+			D3DXMATRIX	matScale, matTrans, matWorld;
+			D3DXMatrixIdentity(&matWorld);
+			StringCchPrintf(szBuff, sizeof(TCHAR) * MAX_PATH, L"%s", m_vShopItem[iIndex]->szItemTag);
+
+			D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
+			D3DXMatrixTranslation(&matTrans, vPos.x - 68.f, vPos.y + 30.f, 0.f);
+			matWorld = matScale * matTrans;
+
+			m_pSprite->SetTransform(&matWorld);
+			m_pFont->DrawTextW(m_pSprite, szBuff, lstrlen(szBuff),
+				nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
+
 
 			// 아이템 가격
-			pTexInfo = m_pItemPriceTextureCom[iIndex]->Get_TexInfo(0);
-			vCenter = { pTexInfo->Width * 0.5f, pTexInfo->Height * 0.5f, 0.f };
-			//vPos = m_pItemPriceTransformCom[iIndex]->Get_Desc().vPosition;
-			vPos = m_vItemPricePos[k][i];
-			m_pItemPriceTransformCom[iIndex]->Set_Position(vPos);
+			TCHAR szBuff2[MAX_PATH] = L"";
+			matScale, matTrans, matWorld;
+			D3DXMatrixIdentity(&matWorld);
+			StringCchPrintf(szBuff2, sizeof(TCHAR) * MAX_PATH, L"%d", m_vShopItem[iIndex]->iPrice);
 
-			m_pSprite->SetTransform(&m_pItemPriceTransformCom[iIndex]->Get_Desc().matWorld);
-			m_pSprite->Draw(
-				(LPDIRECT3DTEXTURE9)m_pItemPriceTextureCom[iIndex]->GetTexture(0),
-				nullptr, &vCenter, nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
+			D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
+			D3DXMatrixTranslation(&matTrans, vPos.x, vPos.y + 65.f, 0.f);
+			matWorld = matScale * matTrans;
+
+			m_pSprite->SetTransform(&matWorld);
+			m_pFont->DrawTextW(m_pSprite, szBuff2, lstrlen(szBuff2),
+				nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
 		}
 	}
 	int l = 0;
@@ -554,12 +464,6 @@ void CShop::Free()
 			break;
 		Safe_Release(m_pItemTransformCom[i]);
 		Safe_Release(m_pItemTextureCom[i]);
-
-		Safe_Release(m_pItemNameTransformCom[i]);
-		Safe_Release(m_pItemNameTextureCom[i]);
-
-		Safe_Release(m_pItemPriceTransformCom[i]);
-		Safe_Release(m_pItemPriceTextureCom[i]);
 	}
 
 	for (auto& pItem : m_vShopItem)

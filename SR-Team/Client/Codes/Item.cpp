@@ -126,7 +126,7 @@ HRESULT CItem::Add_Component()
 
 HRESULT CItem::Add_Component_Item()
 {
-	for (_uint i = 0; i < 5; ++i)
+	for (_uint i = 0; i < 7; ++i)
 	{
 		// 3. Texture--------------------------------------------------------------
 		TCHAR szTexture[MAX_PATH] = L"";
@@ -146,6 +146,12 @@ HRESULT CItem::Add_Component_Item()
 		else if (i == 4)
 			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
 				L"Component_Texture_Item_PupleDress");
+		else if (i == 5)
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_Item_ScholarShoes");
+		else if (i == 6)
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_Item_ArcaneShoes");
 		
 		StringCchPrintf(szTexture, sizeof(TCHAR) * MAX_PATH,
 			L"Com_Texture%d", i);
@@ -163,7 +169,7 @@ HRESULT CItem::Add_Component_Item()
 			pItem->eSort = eITEM_SORT::STAFF1;
 			pItem->iPrice = 200;
 			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
-				L"%s", L"GoldenSword");
+				L"%s", L"GoldSword");
 		}
 		if (i == 1)
 		{
@@ -192,6 +198,20 @@ HRESULT CItem::Add_Component_Item()
 			pItem->eSort = eITEM_SORT::SUIT;
 			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
 				L"%s", L"PupleDress");
+		}
+		if (i == 5)
+		{
+			pItem->iPrice = 130;
+			pItem->eSort = eITEM_SORT::SHOES;
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"ScholarShoes");
+		}
+		if (i == 6)
+		{
+			pItem->iPrice = 270;
+			pItem->eSort = eITEM_SORT::SHOES;
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"ArcaneShoes");
 		}
 		m_vItemList.emplace_back(pItem);
 
@@ -225,6 +245,10 @@ HRESULT CItem::Add_Component_Item()
 		}
 		else if (i == 4)
 			tStat.iDef = 300;
+		else if (i == 5)
+			tStat.iDef = 200;
+		else if (i == 6)
+			tStat.iDef = 100;
 
 		TCHAR szStat[MAX_PATH] = L"";
 		StringCchPrintf(szStat, sizeof(TCHAR) * MAX_PATH,

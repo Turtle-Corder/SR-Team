@@ -63,8 +63,6 @@ private:
 private:
 	HRESULT Add_Component();
 	HRESULT Add_Component_ShopItem();
-	HRESULT Add_Component_ShopItemName();
-	HRESULT Add_Component_ShopItemPrice();
 
 private:
 	// ------------------------------------------------------------------
@@ -94,14 +92,6 @@ private:
 	// 상점 아이템 이미지
 	CTransform*		m_pItemTransformCom[15];
 	CTexture*		m_pItemTextureCom[15];
-
-	// 상점 아이템 이름
-	CTransform*		m_pItemNameTransformCom[15];
-	CTexture*		m_pItemNameTextureCom[15];
-
-	// 상점 아이템 가격
-	CTransform*		m_pItemPriceTransformCom[15];
-	CTexture*		m_pItemPriceTextureCom[15];
 
 	// Pos, Scale----------------------------------
 	_vec3			m_vPos[SHOP_END];
