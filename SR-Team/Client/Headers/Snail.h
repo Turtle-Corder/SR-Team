@@ -7,6 +7,7 @@
 USING(Engine)
 BEGIN(Client)
 
+class CStatus;
 class CDamageInfo;
 
 class CSnail final : public CGameObject
@@ -44,12 +45,13 @@ private:
 	CTransform*		m_pTransformCom[SNAIL_END] = {};
 	CTexture*		m_pTextureCom[SNAIL_END] = {};
 	CCollider*		m_pColliderCom = nullptr;
+	CStatus*		m_pStatusCom = nullptr;
 	CDamageInfo*	m_pDmgInfoCom = nullptr;
 private:
 	_vec3		m_vStartPos = {};
 	_bool		m_bAttack = false;
 	_vec3		m_vDir = {};
-
+	INSTANTIMPACT*	m_pInstantImpact = nullptr;
 };
 
 END

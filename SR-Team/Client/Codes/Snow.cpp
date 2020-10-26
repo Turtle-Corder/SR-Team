@@ -200,10 +200,10 @@ void CSnow::Free()
 
 HRESULT CSnow::Take_Damage(const CComponent * _pDamageComp)
 {
-	//if (!_pDamageComp)
-	//	return S_OK;
+	if (!_pDamageComp)
+		return S_OK;
 
-	//m_bDead = true;
+	m_bDead = true;
 
 	return S_OK;
 }

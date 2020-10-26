@@ -33,8 +33,9 @@ private:
 	CDamageInfo*	m_pDmgInfoCom = nullptr;
 
 
-	_vec3			m_vPos = {};
-	_bool			m_bDead = false;
+	_vec3				m_vPos = {};
+	_bool				m_bDead = false;
+	INSTANTIMPACT*    m_pInstant = nullptr;
 };
 
 END

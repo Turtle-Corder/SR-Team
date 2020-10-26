@@ -37,6 +37,12 @@ typedef struct tagDamageEvent
 	CComponent*		pDmgInfoComp;
 } DAMAGE_EVENT;
 
+typedef struct tagInstantImpact
+{
+	_vec3			vPosition;
+	CGameObject*	pAttacker;
+	_uint			iAttack;
+}INSTANTIMPACT;
 
 typedef struct tagFileInfo
 {

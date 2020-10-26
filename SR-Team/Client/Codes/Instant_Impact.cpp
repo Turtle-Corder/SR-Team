@@ -22,7 +22,7 @@ HRESULT CInstant_Impact::Setup_GameObject_Prototype()
 HRESULT CInstant_Impact::Setup_GameObject(void* _pArg)
 {
 	if (_pArg)
-		m_vPos = *(_vec3*)_pArg;
+		m_pInstant = (INSTANTIMPACT*)_pArg;
 
 	if (FAILED(Add_Component()))
 		return E_FAIL;
@@ -42,6 +42,8 @@ _int CInstant_Impact::Update_GameObject(_float _fDeltaTime)
 
 _int CInstant_Impact::LateUpdate_GameObject(_float _fDeltaTime)
 {
+	
+
 	return GAMEOBJECT::NOEVENT;
 }
 
@@ -69,6 +71,9 @@ HRESULT CInstant_Impact::Add_Component()
 
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_DamageInfo", L"Com_DmgInfo", (CComponent**)&m_pDmgInfoCom, &tDmgInfo)))
 		return E_FAIL;
+
+
+	return S_OK;
 }
 
 CGameObject * CInstant_Impact::Clone_GameObject(void * _pArg)
@@ -86,6 +91,10 @@ CGameObject * CInstant_Impact::Clone_GameObject(void * _pArg)
 void CInstant_Impact::Free()
 {
 	Safe_Release(m_pTransformCom);
+	Safe_Release(m_pColliderCom);
+	Safe_Release(m_pDmgInfoCom);
+
+	CGameObject::Free();
 }
 
 CInstant_Impact * CInstant_Impact::Create(LPDIRECT3DDEVICE9 _pDevice)
@@ -108,5 +117,5 @@ HRESULT CInstant_Impact::Take_Damage(const CComponent * _pDamageComp)
 	if (!_pDamageComp)
 		return E_FAIL;
 
-
+	return S_OK;
 }

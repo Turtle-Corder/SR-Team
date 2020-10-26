@@ -145,6 +145,29 @@ HRESULT CSnail::Add_Component()
 			return E_FAIL;
 	}
 
+	CStatus::STAT tStat;
+	tStat.iCriticalRate = 20;	tStat.iCriticalHit = 10;
+	tStat.iDef = 50;
+	tStat.iHp = 100;			tStat.iMp = 100;
+	tStat.iMinAtt = 10;			tStat.iMaxAtt = 50;
+
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Status", L"Com_Stat", (CComponent**)&m_pStatusCom, &tStat)))
+		return E_FAIL;
+
+	//CCollider::COLLIDER_DESC tColDesc;
+	//tColDesc.vPosition = tTransformDesc[SNAIL_BODY].vPosition;
+	//tColDesc.fRadius = 0.7f;
+
+	//if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Collider", L"Com_Collider", (CComponent**)&m_pColliderCom, &tColDesc)))
+	//	return E_FAIL;
+
+	//CDamageInfo::DAMAGE_DESC tDmgInfo;
+	//tDmgInfo.iAttack = 10;
+	//tDmgInfo.pOwner = this;
+
+	//if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_DamageInfo", L"Com_DmgInfo", (CComponent**)&m_pDmgInfoCom, &tDmgInfo)))
+	//	return E_FAIL;
+
 	return S_OK;
 }
 
@@ -282,9 +305,11 @@ HRESULT CSnail::SetUp_Layer_InstantImpact(const wstring & LayerTag)
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	_vec3 vPos = m_pTransformCom[SNAIL_BODY]->Get_Desc().vPosition;
+	m_pInstantImpact->vPosition = m_pTransformCom[SNAIL_BODY]->Get_Desc().vPosition;
+	m_pInstantImpact->pAttacker = this;
+	m_pInstantImpact->iAttack = m_pStatusCom->Get_Status().iMaxAtt;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Instant_Impact", SCENE_STAGE0, LayerTag , &vPos)))/*여기 StartPos*/
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Instant_Impact", SCENE_STAGE0, LayerTag , m_pInstantImpact)))/*여기 StartPos*/
 		return E_FAIL;
 
 	return S_OK;
@@ -327,6 +352,8 @@ void CSnail::Free()
 		Safe_Release(m_pVIBufferCom[iAll]);
 		Safe_Release(m_pTextureCom[iAll]);
 	}
+
+	Safe_Release(m_pStatusCom);
 
 	CGameObject::Free();
 }
