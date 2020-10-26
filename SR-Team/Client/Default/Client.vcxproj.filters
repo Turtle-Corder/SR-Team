@@ -169,6 +169,9 @@
     <Filter Include="03.Component\00.VIBuffer\03.Pyramid">
       <UniqueIdentifier>{bb22c851-55c5-41c8-94b4-8494f5c5b615}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\00.Terrain\99.MotherTerrain">
+      <UniqueIdentifier>{603b72b0-0a93-46f3-9b43-44bdce66315d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
