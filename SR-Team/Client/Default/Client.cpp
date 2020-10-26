@@ -64,8 +64,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			DispatchMessage(&msg);
 		}
 
-		pMainApp->Update_MainApp();
-		pMainApp->Render_MainApp();
+		if (pMainApp->Lock_FrameManager())
+		{
+			pMainApp->Update_MainApp();
+			pMainApp->Render_MainApp();
+			pMainApp->Render_FrameManager();
+		}
     }
 
 	if (Safe_Release(pMainApp))

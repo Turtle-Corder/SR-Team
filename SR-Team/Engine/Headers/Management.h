@@ -9,6 +9,7 @@
 #include "Object_Manager.h"
 #include "Renderer.h"
 #include "Nav_Manager.h"
+#include "FrameManager.h"
 
 BEGIN(Engine)
 
@@ -26,7 +27,7 @@ private:
 	// 일반 함수
 	//----------------------------------------------------------------------------------------------------
 public:
-	HRESULT Setup_Engine(HWND _hWnd, _uint _iWinCX, _uint _iWinCY, CDevice_Manager::DISPLAY_MODE _eDisplayMode, _uint _iSceneCnt, const wstring& _strAppTimerTag);
+	HRESULT Setup_Engine(HWND _hWnd, _uint _iFramePerSec, _uint _iWinCX, _uint _iWinCY, CDevice_Manager::DISPLAY_MODE _eDisplayMode, _uint _iSceneCnt, const wstring& _strAppTimerTag);
 	_int	Update_Engine(void);
 	HRESULT Render_Engine(void);
 	static _uint Release_Engine();
@@ -50,6 +51,12 @@ public:
 	LPD3DXSPRITE		Get_Sprite(void)	const;
 	LPD3DXFONT			Get_Font(void)		const;
 
+
+	//--------------------------------------------------
+	// 프레임
+	//--------------------------------------------------
+	_bool Lock_FrameManager();
+	void Render_FrameManager();
 
 	//--------------------------------------------------
 	// 타이머
@@ -119,6 +126,7 @@ private:
 	CComponent_Manager*	m_pComponent_Manager	= nullptr;
 	CObject_Manager*	m_pObject_Manager		= nullptr;
 	CNav_Manager*		m_pNav_Manager			= nullptr;
+	CFrame_Manager*		m_pFrame_Manager		= nullptr;
 
 	CRenderer*			m_pRenderer				= nullptr;
 

@@ -127,6 +127,9 @@
     <Filter Include="01.Utillity\07.NavManager\00.SingleThread">
       <UniqueIdentifier>{42e05f5a-a27d-4b17-bf1f-a50fb28a1b34}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utillity\08.FrameManager">
+      <UniqueIdentifier>{34f5c554-e62a-454b-89e9-fe47bb2e3a9d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Headers\Device_Manager.h">
@@ -237,6 +240,9 @@
     <ClInclude Include="..\Headers\Nav_Manager.h">
       <Filter>01.Utillity\07.NavManager\00.SingleThread</Filter>
     </ClInclude>
+    <ClInclude Include="..\Headers\FrameManager.h">
+      <Filter>01.Utillity\08.FrameManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Codes\Device_Manager.cpp">
@@ -331,6 +337,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Nav_Manager.cpp">
       <Filter>01.Utillity\07.NavManager\00.SingleThread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\FrameManager.cpp">
+      <Filter>01.Utillity\08.FrameManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

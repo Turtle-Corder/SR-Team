@@ -4,13 +4,15 @@ USING(Engine)
 IMPLEMENT_SINGLETON(CManagement)
 
 CManagement::CManagement()
-	: m_pDevice_Manager(CDevice_Manager::Get_Instance())
+	: m_pFrame_Manager(CFrame_Manager::Get_Instance())
+	, m_pDevice_Manager(CDevice_Manager::Get_Instance())
 	, m_pTimer_Manager(CTimer_Manager::Get_Instance())
 	, m_pScene_Manager(CScene_Manager::Get_Instance())
 	, m_pComponent_Manager(CComponent_Manager::Get_Instance())
 	, m_pObject_Manager(CObject_Manager::Get_Instance())
 	, m_pNav_Manager(CNav_Manager::Get_Instance())
 {
+	Safe_AddRef(m_pFrame_Manager);
 	Safe_AddRef(m_pDevice_Manager);
 	Safe_AddRef(m_pTimer_Manager);
 	Safe_AddRef(m_pScene_Manager);
@@ -28,16 +30,21 @@ void CManagement::Free()
 	Safe_Release(m_pScene_Manager);
 	Safe_Release(m_pTimer_Manager);
 	Safe_Release(m_pDevice_Manager);
+	Safe_Release(m_pFrame_Manager);
 }
 
-HRESULT CManagement::Setup_Engine(HWND _hWnd, _uint _iWinCX, _uint _iWinCY, CDevice_Manager::DISPLAY_MODE _eDisplayMode, _uint _iSceneCnt, const wstring & _strAppTimerTag)
+HRESULT CManagement::Setup_Engine(HWND _hWnd, _uint _iFramePerSec, _uint _iWinCX, _uint _iWinCY, CDevice_Manager::DISPLAY_MODE _eDisplayMode, _uint _iSceneCnt, const wstring & _strAppTimerTag)
 {
-	if (nullptr == m_pDevice_Manager	||
+	if (nullptr == m_pFrame_Manager		||
+		nullptr == m_pDevice_Manager	||
 		nullptr == m_pScene_Manager		||
 		nullptr == m_pTimer_Manager		||
 		nullptr == m_pComponent_Manager ||
 		nullptr == m_pObject_Manager	||
 		nullptr == m_pNav_Manager)
+		return E_FAIL;
+
+	if (FAILED(m_pFrame_Manager->Setup_FrameManager(_hWnd, _iFramePerSec)))
 		return E_FAIL;
 
 	if (FAILED(m_pDevice_Manager->Setup_GraphicDevice(_hWnd, _iWinCX, _iWinCY, _eDisplayMode)))
@@ -217,6 +224,22 @@ LPD3DXFONT CManagement::Get_Font(void) const
 		return nullptr;
 
 	return m_pDevice_Manager->Get_Font();
+}
+
+_bool CManagement::Lock_FrameManager()
+{
+	if (nullptr == m_pFrame_Manager)
+		return false;
+
+	return m_pFrame_Manager->Lock_FrameManager();
+}
+
+void CManagement::Render_FrameManager()
+{
+	if (nullptr == m_pFrame_Manager)
+		return;
+
+	m_pFrame_Manager->Render_FrameManager();
 }
 
 HRESULT CManagement::Add_Timer(const wstring & _strTimerTag, bool _bStart)

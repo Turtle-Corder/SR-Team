@@ -179,6 +179,7 @@ xcopy		/y		..\Headers\*.h			              ..\..\Reference\Headers\</Command>
     <ClInclude Include="..\Headers\Engine_Include.h" />
     <ClInclude Include="..\Headers\Engine_Struct.h" />
     <ClInclude Include="..\Headers\Engine_Typedef.h" />
+    <ClInclude Include="..\Headers\FrameManager.h" />
     <ClInclude Include="..\Headers\GameObject.h" />
     <ClInclude Include="..\Headers\Layer.h" />
     <ClInclude Include="..\Headers\Management.h" />
@@ -212,6 +213,7 @@ xcopy		/y		..\Headers\*.h			              ..\..\Reference\Headers\</Command>
     <ClCompile Include="..\Codes\Component.cpp" />
     <ClCompile Include="..\Codes\Component_Manager.cpp" />
     <ClCompile Include="..\Codes\Device_Manager.cpp" />
+    <ClCompile Include="..\Codes\FrameManager.cpp" />
     <ClCompile Include="..\Codes\GameObject.cpp" />
     <ClCompile Include="..\Codes\Layer.cpp" />
     <ClCompile Include="..\Codes\Management.cpp" />
