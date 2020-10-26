@@ -16,6 +16,7 @@
 #include "Bomb.h"
 #include "MonSub.h"
 #include "Flower.h"
+#include "PlaneSkill.h"
 #pragma endregion
 
 USING(Client)
@@ -113,6 +114,11 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 
 #pragma region GameObject_MonSub
 	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_MonSub", CMonSub::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region GameObject_PlanSkill
+	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_PlanSkill", CPlaneSkill::Create(m_pDevice))))
 		return E_FAIL;
 #pragma endregion
 	//----------------------------------------------------------------------------------------------------
@@ -219,7 +225,10 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 		return E_FAIL;
 #pragma endregion
 
-
+#pragma region Component_Texture_SpellJin
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_SpellJin", CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL, L"../Resources/SpellJin%d.png"))))
+		return E_FAIL;
+#pragma endregion
 	// player
 #pragma region Component_Texture_Player
 	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_Monster", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/Monster%d.dds"))))
@@ -243,7 +252,7 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_DropDiamond", CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL, L"../Resources/item/diamond%d.png"))))
 		return E_FAIL;
 #pragma endregion
-
+	
 #pragma region Component_Texture_Ruby
 	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_DropRuby", CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL, L"../Resources/item/ruby%d.png"))))
 		return E_FAIL;

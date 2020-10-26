@@ -73,6 +73,9 @@ private:
 
 	HRESULT Ready_Layer_Meteor(const wstring& _strLayerTag, _vec3 _vGoalPos);
 
+	HRESULT Setup_Layer_PlaneSkill(const wstring & LayerTag, _vec3 _vMouse);
+
+
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 _pDevice);
@@ -95,8 +98,8 @@ private:
 
 	_bool				m_bIsTagetMove = false;
 	_vec3				m_vTargetPos = {};
-	
-
+	_bool				m_bCheck = false;
+	_bool				m_bOnece = false;
 	// 플레이어 초기 회전값 보관용
 	_bool				m_bInitial = true;
 	D3DXVECTOR3			m_vConstRot[PART_END];

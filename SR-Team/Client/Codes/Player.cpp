@@ -6,6 +6,7 @@
 #include "DamageInfo.h"
 #include "Shop.h"
 #include "Equip.h"
+#include "PlaneSkill.h"
 #include "..\Headers\Player.h"
 
 USING(Client)
@@ -326,6 +327,8 @@ HRESULT CPlayer::Movement(_float _fDeltaTime)
 	if (FAILED(IsOnTerrain()))
 		return E_FAIL;
 
+	if (FAILED(RaycastOnTerrain()))
+		return E_FAIL;
 	Jump(_fDeltaTime);
 
 	return S_OK;
@@ -392,15 +395,37 @@ HRESULT CPlayer::RaycastOnTerrain()
 	// 반환받을 마우스 위치값
 	_vec3 vOutPos;
 
-	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+	if (GetAsyncKeyState(VK_F1) & 0x8000)
 	{
+		m_bCheck = true;
+		m_bOnece = true;
+	}
+
+	if (m_bCheck)
+	{
+		if (m_bOnece)
+		{
+			if (Setup_Layer_PlaneSkill(L"Layer_PlaneSkill", vOutPos))
+				return E_FAIL;
+
+			m_bOnece = false;
+		}
+
 		if (m_pRaycastCom->IsSimulate<VTX_TEXTURE, INDEX16>(
 			g_hWnd, WINCX, WINCY, pTerrainBuffer, &mat, pCamera, &vOutPos))
 		{
+			CTransform* pSkill = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_PlaneSkill", L"Com_Transform");
+			if (nullptr == pSkill)
+				return E_FAIL;
 
+			pSkill->Set_Position(vOutPos);
+
+			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+			{
+
+			}
 		}
 	}
-
 	return S_OK;
 }
 
@@ -980,6 +1005,18 @@ HRESULT CPlayer::Ready_Layer_Meteor(const wstring& _strLayerTag, _vec3 _vGoalPos
 		return E_FAIL;
 
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Meteor", SCENE_STAGE0, _strLayerTag, &_vGoalPos)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CPlayer::Setup_Layer_PlaneSkill(const wstring & LayerTag , _vec3 _vMouse)
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_PlanSkill", SCENE_STAGE0, LayerTag , &_vMouse)))
 		return E_FAIL;
 
 	return S_OK;
