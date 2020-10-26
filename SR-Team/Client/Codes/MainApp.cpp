@@ -43,7 +43,7 @@ HRESULT CMainApp::Setup_MainApp()
 	if (nullptr == m_pManagement)
 		return E_FAIL;
 
-	if (FAILED(m_pManagement->Setup_Engine(g_hWnd, WINCX, WINCY, CDevice_Manager::DISPLAY_WINDOW, SCENE_END, MAINAPP_TIMER)))
+	if (FAILED(m_pManagement->Setup_Engine(g_hWnd, FRAME_PER_SEC, WINCX, WINCY, CDevice_Manager::DISPLAY_WINDOW, SCENE_END, MAINAPP_TIMER)))
 	{
 		PRINT_LOG(L"Failed To Setup Engine", LOG::CLIENT);
 		return E_FAIL;
@@ -130,6 +130,23 @@ HRESULT CMainApp::Render_MainApp()
 	}
 
 	return S_OK;
+}
+
+_bool CMainApp::Lock_FrameManager()
+{
+	if (nullptr == m_pManagement)
+		return false;
+
+	return m_pManagement->Lock_FrameManager();
+}
+
+void CMainApp::Render_FrameManager()
+{
+	if (nullptr == m_pManagement)
+		return;
+
+	return m_pManagement->Render_FrameManager();
+
 }
 
 HRESULT CMainApp::Setup_DefaultSetting()

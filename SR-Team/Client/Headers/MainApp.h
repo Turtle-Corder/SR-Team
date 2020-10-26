@@ -18,6 +18,9 @@ public:
 	_int	Update_MainApp();
 	HRESULT Render_MainApp();
 
+	_bool Lock_FrameManager();
+	void Render_FrameManager();
+
 private:
 	HRESULT Setup_DefaultSetting();
 	HRESULT Setup_StaticResources();
