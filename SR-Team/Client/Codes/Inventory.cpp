@@ -67,6 +67,8 @@ HRESULT CInventory::Get_ShopItem(const wstring & strItemName)
 		m_iGold -= iPrice;
 
 		// 아이템 클래스에서 strItemName(아이템의 이름)으로 구매한 아이템의 텍스처를 가져와서 저장
+		if (m_pTextureItem[m_iInsertOrder])
+			Safe_Release(m_pTextureItem[m_iInsertOrder]);
 		m_pTextureItem[m_iInsertOrder] = pItem->Get_ItemInfo_Texture(strItemName);
 
 		INVEN_ITEM* pInvenItem = new INVEN_ITEM;
@@ -407,7 +409,9 @@ HRESULT CInventory::Check_EquipItem()
 					if (m_bIsItemHere[iIndex])
 					{
 						// 장비창에게 아이템 정보를 넘겨준다
-						pEquip->Equip_Item(*m_pInvenList[iIndex]);
+						//pEquip->Equip_Item(*m_pInvenList[iIndex]);
+						pEquip->Equip_Item(m_pInvenList[iIndex]->eSort, m_pInvenList[iIndex]->szItemTag);
+						return S_OK;
 					}
 
 				}
@@ -460,7 +464,7 @@ HRESULT CInventory::Render_Item()
 					_vec3 vCenter = { pTexInfo->Width * 0.5f, pTexInfo->Height * 0.5f, 0.f };
 					_vec3 vPos = m_pTransformItem[iIndex]->Get_Desc().vPosition;
 
-					D3DXMatrixScaling(&matScale, 1.5f, 1.5f, 0.f);
+					D3DXMatrixScaling(&matScale, 2.7f, 2.7f, 0.f);
 					D3DXMatrixTranslation(&matTrans, vPos.x, vPos.y, 0.f);
 					matWorld = matScale * matTrans;
 

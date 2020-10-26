@@ -14,11 +14,11 @@ CEquip::CEquip(LPDIRECT3DDEVICE9 _pDevice, LPD3DXSPRITE _pSprite, LPD3DXFONT _pF
 		m_pTransformCom[i] = nullptr;
 		m_pTextureCom[i] = nullptr;
 	}
-	for (_uint i = 0; i < ITEMSORT_END; i++)
+
+	for (_uint i = 0; i < ITEMSORT_END; ++i)
 	{
 		m_pStatItem[i] = nullptr;
 		m_pTextureItem[i] = nullptr;
-		m_pTransformItem[i] = nullptr;
 	}
 }
 
@@ -27,7 +27,7 @@ CEquip::CEquip(const CEquip & other)
 {
 }
 
-void CEquip::Equip_Item(INVEN_ITEM & _tItem)
+void CEquip::Equip_Item(eITEM_SORT eSort, const wstring& strItemTag/*INVEN_ITEM & _tItem*/)
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
@@ -37,9 +37,15 @@ void CEquip::Equip_Item(INVEN_ITEM & _tItem)
 		return;
 
 	// Àåºñ ÀåÂø
-	m_pStatItem[_tItem.eSort] = pItem->Get_ItemStat(_tItem.szItemTag);
-	m_pTextureItem[_tItem.eSort] = pItem->Get_ItemInfo_Texture(_tItem.szItemTag);
-	m_bEquip[_tItem.eSort] = true;
+	if (m_pStatItem[eSort])
+		m_pStatItem[eSort] = nullptr;
+	if (m_pTextureItem[eSort])
+		m_pTextureItem[eSort] = nullptr;
+
+	m_pStatItem[eSort] = pItem->Get_ItemStat(strItemTag);
+	m_pTextureItem[eSort] = pItem->Get_ItemInfo_Texture(strItemTag);
+
+	m_bEquip[eSort] = true;
 }
 
 
@@ -51,6 +57,10 @@ HRESULT CEquip::Setup_GameObject_Prototype()
 
 HRESULT CEquip::Setup_GameObject(void * _pArg)
 {
+	// 12
+	//m_pStatItem.resize(12);
+	//m_pTextureItem.resize(12);
+	m_pTransformItem.resize(12);
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
@@ -86,6 +96,8 @@ _int CEquip::Update_GameObject(_float _fDeltaTime)
 		m_bRender = !m_bRender;
 
 	if (FAILED(Count_Stat()))
+		return GAMEOBJECT::WARN;
+	if (FAILED(UnEquip_Item()))
 		return GAMEOBJECT::WARN;
 
 	for (_uint i = 0; i < EQUIP_END; ++i)
@@ -159,7 +171,7 @@ HRESULT CEquip::Render_EquipItem()
 {
 	for (_uint i = 0; i < ITEMSORT_END; ++i)
 	{
-		if (m_bEquip[i])
+		if (m_bEquip[i] && (m_pTextureItem[i] != nullptr))
 		{
 			const D3DXIMAGE_INFO* pTexInfo = m_pTextureItem[i]->Get_TexInfo(0);
 			_vec3 vCenter = { pTexInfo->Width * 0.5f, pTexInfo->Height * 0.5f, 0.f };
@@ -169,6 +181,11 @@ HRESULT CEquip::Render_EquipItem()
 			D3DXMatrixScaling(&matScale, 0.7f, 0.7f, 0.f);
 			D3DXMatrixTranslation(&matTrans, vPos.x, vPos.y, vPos.z);
 			matWorld = matScale * matTrans;
+
+			m_tEquipItemCollRt[i].left = (LONG)(vPos.x - vCenter.x);
+			m_tEquipItemCollRt[i].right = (LONG)(vPos.x + vCenter.x);
+			m_tEquipItemCollRt[i].top = (LONG)(vPos.y - vCenter.y);
+			m_tEquipItemCollRt[i].bottom = (LONG)(vPos.y + vCenter.y);
 
 			m_pSprite->SetTransform(&matWorld);
 			m_pSprite->Draw(
@@ -265,6 +282,28 @@ HRESULT CEquip::Count_Stat()
 	return S_OK;
 }
 
+HRESULT CEquip::UnEquip_Item()
+{
+	for (_uint i = 0; i < ITEMSORT_END; ++i)
+	{
+		if (m_bEquip[i])
+		{
+			if (CKeyManager::Get_Instance()->Key_Down(VK_LBUTTON))
+			{
+				POINT ptMouse = {};
+				GetCursorPos(&ptMouse);
+				ScreenToClient(g_hWnd, &ptMouse);
+				if (PtInRect(&m_tEquipItemCollRt[i], ptMouse))
+				{
+					m_bEquip[i] = false;
+				}
+			}
+		}
+	}
+
+	return S_OK;
+}
+
 HRESULT CEquip::Add_Component()
 {
 	for (_uint i = 0; i < EQUIP_END; ++i)
@@ -293,33 +332,30 @@ HRESULT CEquip::Add_Component()
 
 	for (_uint i = 0; i < ITEMSORT_END; i++)
 	{
-		// 2. Stat
-		TCHAR szStat[MAX_STR] = L"";
-		wsprintf(szStat, L"Com_ItemStat%d", i);
-		if (FAILED(CGameObject::Add_Component(
-			SCENE_STATIC, L"Component_Status"
-			, szStat, (CComponent**)&m_pStatItem[i])))
-			return E_FAIL;
+		//// 2. Stat
+		//TCHAR szStat[MAX_STR] = L"";
+		//wsprintf(szStat, L"Com_ItemStat%d", i);
+		//if (FAILED(CGameObject::Add_Component(
+		//	SCENE_STATIC, L"Component_Status"
+		//	, szStat, (CComponent**)&m_pStatItem[i])))
+		//	return E_FAIL;
 
-		// 2. Texture
-		TCHAR szStat1[MAX_STR] = L"";
-		wsprintf(szStat1, L"Com_ItemTexture%d", i);
-		if (FAILED(CGameObject::Add_Component(
-			SCENE_STATIC, L"Component_Texture_Equip_BackGround"
-			, szStat1, (CComponent**)&m_pTextureItem[i])))
-			return E_FAIL;
+		//// 2. Texture
+		//TCHAR szStat1[MAX_STR] = L"";
+		//wsprintf(szStat1, L"Com_ItemTexture%d", i);
+		//if (FAILED(CGameObject::Add_Component(
+		//	SCENE_STATIC, L"Component_Texture_Equip_BackGround"
+		//	, szStat1, (CComponent**)&m_pTextureItem[i])))
+		//	return E_FAIL;
 
 		// 2. Transform
 		TCHAR szStat2[MAX_STR] = L"";
 		CTransform::TRANSFORM_DESC tTransform;
 		wsprintf(szStat2, L"Com_ItemTransform%d", i);
 
-		if (i == 5)
-			tTransform.vPosition = _vec3(300.f, 200.f, 0.f);
-
 		if (FAILED(CGameObject::Add_Component(
 			SCENE_STATIC, L"Component_Transform"
-			, szStat2, (CComponent**)&m_pTransformItem[i], &tTransform)))
+			, szStat2, (CComponent**)&m_pTransformItem[i])))
 			return E_FAIL;
 	}
 
@@ -327,6 +363,14 @@ HRESULT CEquip::Add_Component()
 		SCENE_STATIC, L"Component_Status",
 		L"Com_PlayerStat", (CComponent**)&m_pStatCom)))
 		return E_FAIL;
+
+	//CTransform::TRANSFORM_DESC tTransform;
+	//tTransform.vPosition = { m_vPos.x + 200.f, m_vPos.y - 110.f, 0.f };
+
+	//if (FAILED(CGameObject::Add_Component(
+	//	SCENE_STATIC, L"Component_Transform",
+	//	L"Com_PlayerStatTransform", (CComponent**)&m_pTransformFont, &tt)))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -368,11 +412,23 @@ void CEquip::Free()
 		Safe_Release(m_pTextureCom[i]);
 	}
 
+	//for (auto& pItem : m_pStatItem)
+	//	Safe_Release(pItem);
+	//m_pStatItem.clear();
+
+	//for (auto& pItem : m_pTextureItem)
+	//	Safe_Release(pItem);
+	//m_pTextureItem.clear();
+
+	for (auto& pItem : m_pTransformItem)
+		Safe_Release(pItem);
+	m_pTransformItem.clear();
+
 	for (_uint i = 0; i < ITEMSORT_END; i++)
 	{
-		Safe_Release(m_pStatItem[i]);
-		Safe_Release(m_pTextureItem[i]);
-		Safe_Release(m_pTransformItem[i]);
+		//Safe_Release(m_pStatItem[i]);
+		//Safe_Release(m_pTextureItem[i]);
+		//Safe_Release(m_pTransformItem[i]);
 	}
 
 	CUIObject::Free();

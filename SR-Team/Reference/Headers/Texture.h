@@ -25,11 +25,7 @@ public:
 	virtual HRESULT Setup_Component_Prototype() override;
 	virtual HRESULT Setup_Component(void* _pArg) override;
 
-	//--------------------------------------------------
-	// ** 해당 함수를 사용하려면 Set_FrameRange 함수로 범위를 먼저 설정해주어야 함!!
-	//  내부에서 SetTexture를 알아서 처리해주므로 해당 함수 사용시 SetTexture 함수를 호출하지 마시오
-	//--------------------------------------------------
-	_uint Update_Frame(_float _fDeltaTime);
+	HRESULT Update_Frame(_float _fDeltaTime, _uint* _pCurFrame);
 
 	HRESULT SetTexture(_uint _iIndex);
 	HRESULT SetFrameRange(_uint _iFrameBegin, _uint _iFrameEnd, _float _fFrameSpeed = 1.f);
