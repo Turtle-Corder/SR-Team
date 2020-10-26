@@ -13,6 +13,8 @@
 #include "DropItem.h"
 #include "Tree.h"
 #include "Golem.h"
+#include "Bomb.h"
+#include "MonSub.h"
 #include "Flower.h"
 #pragma endregion
 
@@ -103,6 +105,16 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Golem", CGolem::Create(m_pDevice))))
 		return E_FAIL;
 #pragma endregion
+
+#pragma region GameObject_Bomb
+	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Bomb", CBomb::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region GameObject_MonSub
+	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_MonSub", CMonSub::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
 	//----------------------------------------------------------------------------------------------------
 	// Component
 	//----------------------------------------------------------------------------------------------------
@@ -177,6 +189,24 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 		return E_FAIL;
 #pragma endregion
 
+#pragma region Component_Texture_SemiBossBody
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_SemiBossBody", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/SemiBossBody%d.dds"))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Texture_SemiBossHead
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_SemiBossHead", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/SemiBossHead%d.dds"))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Texture_SemiBossPart
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_SemiBossPart", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/SemiBossPart%d.dds"))))
+		return E_FAIL;
+
+#pragma region Component_Texture_Bomb
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_Bomb", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/Bomb/Bomb%d.dds", 2))))
+		return E_FAIL;
+#pragma endregion
 
 	//projectile
 #pragma region GameObject_Snow

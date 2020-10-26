@@ -54,8 +54,8 @@ _int CSlime::Update_GameObject(_float _fDeltaTime)
 		//}
 		//else
 		//{
-			if (FAILED(Create_Item(L"Layer_DropItem")))
-				return GAMEOBJECT::WARN;
+		if (FAILED(Create_Item(L"Layer_DropItem")))
+			return GAMEOBJECT::WARN;
 		//}
 
 		return GAMEOBJECT::DEAD;
@@ -70,10 +70,13 @@ _int CSlime::Update_GameObject(_float _fDeltaTime)
 	if (FAILED(LookAtPlayer(_fDeltaTime)))
 		return GAMEOBJECT::WARN;
 
+	if (FAILED(Move(_fDeltaTime)))
+		return GAMEOBJECT::WARN;
+
 	if (FAILED(Setting_SlimeJelly()))
 		return GAMEOBJECT::WARN;
 
-	if(FAILED(Setting_SlimeBody()))
+	if (FAILED(Setting_SlimeBody()))
 		return GAMEOBJECT::WARN;
 
 
@@ -159,7 +162,7 @@ HRESULT CSlime::Add_Component()
 	//--------------------------------------------------
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", L"Com_VIBuffer1", (CComponent**)&m_pVIBufferCom[SLIME_BODY])))
 		return E_FAIL;
-	
+
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", L"Com_Transform1", (CComponent**)&m_pTransformCom[SLIME_BODY], &tTransformDesc[SLIME_BODY])))
 		return E_FAIL;
 
@@ -234,7 +237,7 @@ void CSlime::Jumping(float _fDeltaTime)
 		m_pTransformCom[SLIME_BASE]->Set_Position(vPos);
 	}
 }
- 
+
 HRESULT CSlime::LookAtPlayer(float _fDeltaTime)
 {
 	CManagement* pManagement = CManagement::Get_Instance();
@@ -276,11 +279,8 @@ HRESULT CSlime::LookAtPlayer(float _fDeltaTime)
 
 	float fLimit = D3DXVec3Dot(&vMonRight, &vMonToPlayer);
 
-
 	if (fabsf(fLimit) < 0.2f)
 		return S_OK;
-
-
 
 	if (fLimit > 0)
 	{
@@ -384,6 +384,31 @@ HRESULT CSlime::Setting_SlimeJelly()
 {
 	if (FAILED(m_pTransformCom[SLIME_JELLY]->Update_Transform()))
 		return E_FAIL;
-		
+
+	return S_OK;
+}
+
+HRESULT CSlime::Move(_float _fDeltaTime)
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform0");
+
+	if (nullptr == pPlayerTransform)
+		return E_FAIL;
+
+	_vec3 vPlayerPos = pPlayerTransform->Get_Desc().vPosition;
+	_vec3 m_vPos = m_pTransformCom[SLIME_BASE]->Get_Desc().vPosition;
+	_vec3 vDir = vPlayerPos - m_vPos;
+	_float m_fLength = D3DXVec3Length(&vDir);
+	D3DXVec3Normalize(&vDir, &vDir);
+
+	if (0.5f <= m_fLength)
+	{
+		m_vPos += vDir * _fDeltaTime;
+		m_pTransformCom[SLIME_BASE]->Set_Position(m_vPos);
+	}
 	return S_OK;
 }

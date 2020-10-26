@@ -20,7 +20,7 @@ HRESULT CPinkBean::Setup_GameObject_Prototype()
 
 HRESULT CPinkBean::Setup_GameObject(void * _pArg)
 {
-	if(_pArg)
+	//if(_pArg)
 
 	return S_OK;
 }

@@ -52,7 +52,10 @@ int CDropItem::Update_GameObject(float _fDeltaTime)
 
 	if (FAILED(Setting_ItemBox()))
 		return GAMEOBJECT::WARN;
-	
+
+	if (FAILED(m_pTextureCom[ITEM_BOX]->Update_Frame(_fDeltaTime, &m_iCurFrame)))
+		return GAMEOBJECT::WARN;
+
 	return 0;
 }
 
@@ -106,7 +109,7 @@ HRESULT CDropItem::Render_BlendAlpha()
 	if (FAILED(m_pVIBufferCom[ITEM_BOX]->Set_Transform(&m_pTransformCom[ITEM_BOX]->Get_Desc().matWorld, pCamera)))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom[ITEM_BOX]->SetTexture(1)))
+	if (FAILED(m_pTextureCom[ITEM_BOX]->SetTexture(m_iCurFrame)))
 		return E_FAIL;
 
 	if (FAILED(m_pVIBufferCom[ITEM_BOX]->Render_VIBuffer()))
@@ -177,6 +180,9 @@ HRESULT CDropItem::Add_Component()
 		return E_FAIL;
 
 	if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, L"Component_Texture_Translucent_Cube" , L"Com_Texture1", (CComponent**)&m_pTextureCom[ITEM_BOX])))
+		return E_FAIL;
+
+	if (FAILED(m_pTextureCom[ITEM_BOX]->SetFrameRange(0, 1)))
 		return E_FAIL;
 
 	return S_OK;

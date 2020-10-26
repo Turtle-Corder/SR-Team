@@ -41,10 +41,9 @@ HRESULT CScene_Stage0::Setup_Scene()
 	if (FAILED(SetUp_Layer_Shop(L"Layer_Shop")))
 		return E_FAIL;
 
+	if (FAILED(Setup_Layer_Golem(L"Layer_Golem")))
+		return E_FAIL;
 
-
-	//if (FAILED(Setup_Layer_Golem(L"Layer_Golem")))
-	//	return E_FAIL;
 	if (FAILED(Setup_Layer_Environment(L"Layer_Environment")))
 		return E_FAIL;
 
@@ -235,6 +234,16 @@ HRESULT CScene_Stage0::Setup_Layer_Monster(const wstring & LayerTag)
 		return E_FAIL;
 
 	return S_OK;
+}
+
+HRESULT CScene_Stage0::Setup_Layer_Golem(const wstring & LayerTag)
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Golem", SCENE_STAGE0, LayerTag, &_vec3(10.f, 0.f, 30.f))))/*¿©±â StartPos*/
+		return E_FAIL;
 }
 
 HRESULT CScene_Stage0::Setup_Layer_UI(const wstring & LayerTag)
