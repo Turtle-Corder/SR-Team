@@ -426,7 +426,15 @@ HRESULT CMainApp::Setup_SaveData()
 			wstring wstrCombine = L"";
 			wstring wstrObjKey = pFileInfo.wstrObjectKey;
 
-			wstrCombine = L"Component_Texture_" + wstrObjKey;
+			wchar_t *ptr = wcschr(pFileInfo.wstrObjectKey, L'_');
+			wprintf(L"%s\n", ptr);
+
+			wstrCombine = L"Component_Texture" + wstring(ptr);
+
+			ptr = nullptr;
+
+			delete ptr;
+
 
 			wstring wstrFullPath = pFileInfo.wstrFilePath;
 
