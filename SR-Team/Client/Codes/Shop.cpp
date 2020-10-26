@@ -16,7 +16,7 @@ CShop::CShop(LPDIRECT3DDEVICE9 _pDevice, LPD3DXSPRITE _pSprite, LPD3DXFONT _pFon
 		m_pTextureCom[i] = nullptr;
 	}
 
-	for (_uint i = 0; i < 7; ++i)
+	for (_uint i = 0; i < 10; ++i)
 	{
 		m_pItemTransformCom[i] = nullptr;
 		m_pItemTextureCom[i] = nullptr;
@@ -50,7 +50,7 @@ HRESULT CShop::Setup_GameObject_Prototype()
 
 HRESULT CShop::Setup_GameObject(void * pArg)
 {
-	m_vShopItem.reserve(7);
+	m_vShopItem.reserve(10);
 
 	if (FAILED(Add_Component()))
 		return E_FAIL;
@@ -71,7 +71,7 @@ HRESULT CShop::Setup_GameObject(void * pArg)
 			m_vItemTexturePos[j][i].y = (j * 172.f) + 105.f;
 			m_vItemTexturePos[j][i].z = 0.f;
 
-			if (iIndex < 7)
+			if (iIndex < 10)
 			{
 				m_pItemTransformCom[iIndex]->Set_Position(m_vItemTexturePos[j][i]);
 			}
@@ -85,7 +85,7 @@ HRESULT CShop::Setup_GameObject(void * pArg)
 		for (_uint i = 0; i < 4; ++i)
 		{
 			iIndex = j * 4 + i;
-			if (iIndex > 7)
+			if (iIndex >= 10)
 				return S_OK;
 			m_tItemTextureRt[j][i].left = (LONG)(m_vItemTexturePos[j][i].x - 20.f);
 			m_tItemTextureRt[j][i].right = (LONG)(m_vItemTexturePos[j][i].x + 20.f);
@@ -117,7 +117,7 @@ int CShop::Update_GameObject(float DeltaTime)
 		{
 			m_pTransformCom[i]->Update_Transform();
 		}
-		for (_uint i = 0; i < 7; ++i)
+		for (_uint i = 0; i < 10; ++i)
 		{
 			m_pItemTransformCom[i]->Update_Transform();
 		}
@@ -282,7 +282,7 @@ HRESULT CShop::Add_Component_ShopItem()
 	if (pOrigin == nullptr)
 		return E_FAIL;
 
-	for (_uint i = 0; i < 7; ++i)
+	for (_uint i = 0; i < 10; ++i)
 	{
 		// Transform-----------------------------------------------------------------
 		TCHAR szItemTransform[MAX_STR] = L"";
@@ -338,6 +338,24 @@ HRESULT CShop::Add_Component_ShopItem()
 				L"%s", L"ArcaneShoes");
 			wsprintf(szItemTextureName, L"Component_Texture_Item_ArcaneShoes");
 		}
+		else if (i == 7)
+		{
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"RedPotion");
+			wsprintf(szItemTextureName, L"Component_Texture_Item_RedPotion");
+		}
+		else if (i == 8)
+		{
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"OrangePotion");
+			wsprintf(szItemTextureName, L"Component_Texture_Item_OrangePotion");
+		}
+		else if (i == 9)
+		{
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"WhitePotion");
+			wsprintf(szItemTextureName, L"Component_Texture_Item_WhitePotion");
+		}
 		pOrigin->Get_ItemInfo(pItem->szItemTag, *pItem);
 		//m_pItemTextureCom[i] = pOrigin->Get_ItemInfo_Texture(pItem->szItemTag);
 		m_vShopItem.emplace_back(pItem);
@@ -365,7 +383,7 @@ HRESULT CShop::Render_ShopItem()
 		for (_uint i = 0; i < 4; ++i)
 		{
 			iIndex = j * 4 + i;
-			if (iIndex >= 7)
+			if (iIndex >= 10)
 				return S_OK;
 
 			// 아이템 이미지--------------------------------------------------------------------------------------
@@ -456,7 +474,7 @@ void CShop::Free()
 	}
 	
 
-	for (_uint i = 0; i < 7; ++i)
+	for (_uint i = 0; i < 10; ++i)
 	{
 		Safe_Release(m_pItemTransformCom[i]);
 		Safe_Release(m_pItemTextureCom[i]);

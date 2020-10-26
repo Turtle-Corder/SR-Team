@@ -244,6 +244,8 @@ HRESULT CScene_Stage0::Setup_Layer_Golem(const wstring & LayerTag)
 
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Golem", SCENE_STAGE0, LayerTag, &_vec3(10.f, 0.f, 30.f))))/*¿©±â StartPos*/
 		return E_FAIL;
+
+	return S_OK;
 }
 
 HRESULT CScene_Stage0::Setup_Layer_UI(const wstring & LayerTag)

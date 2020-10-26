@@ -10,7 +10,7 @@ USING(Client)
 CItem::CItem(LPDIRECT3DDEVICE9 _pDevice)
 	: CGameObject(_pDevice)
 {
-	for (_uint i = 0; i < 7; ++i)
+	for (_uint i = 0; i < 10; ++i)
 	{
 		m_pTextureCom[i] = nullptr;
 		m_pStatCom[i] = nullptr;
@@ -126,7 +126,7 @@ HRESULT CItem::Add_Component()
 
 HRESULT CItem::Add_Component_Item()
 {
-	for (_uint i = 0; i < 7; ++i)
+	for (_uint i = 0; i < 10; ++i)
 	{
 		// 3. Texture--------------------------------------------------------------
 		TCHAR szTexture[MAX_PATH] = L"";
@@ -152,6 +152,15 @@ HRESULT CItem::Add_Component_Item()
 		else if (i == 6)
 			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
 				L"Component_Texture_Item_ArcaneShoes");
+		else if (i == 7)
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_Item_RedPotion");
+		else if (i == 8)
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_Item_OrangePotion");
+		else if (i == 9)
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_Item_WhitePotion");
 		
 		StringCchPrintf(szTexture, sizeof(TCHAR) * MAX_PATH,
 			L"Com_Texture%d", i);
@@ -213,6 +222,27 @@ HRESULT CItem::Add_Component_Item()
 			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
 				L"%s", L"ArcaneShoes");
 		}
+		if (i == 7)
+		{
+			pItem->iPrice = 100;
+			pItem->eSort = eITEM_SORT::POTION;
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"RedPotion");
+		}
+		if (i == 8)
+		{
+			pItem->iPrice = 150;
+			pItem->eSort = eITEM_SORT::POTION;
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"OrangePotion");
+		}
+		if (i == 9)
+		{
+			pItem->iPrice = 200;
+			pItem->eSort = eITEM_SORT::POTION;
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"WhitePotion");
+		}
 		m_vItemList.emplace_back(pItem);
 
 
@@ -249,6 +279,12 @@ HRESULT CItem::Add_Component_Item()
 			tStat.iDef = 200;
 		else if (i == 6)
 			tStat.iDef = 100;
+		else if (i == 7)
+			tStat.iHp = 50;
+		else if (i == 8)
+			tStat.iHp = 100;
+		else if (i == 9)
+			tStat.iHp = 150;
 
 		TCHAR szStat[MAX_PATH] = L"";
 		StringCchPrintf(szStat, sizeof(TCHAR) * MAX_PATH,
@@ -292,7 +328,7 @@ CGameObject * CItem::Clone_GameObject(void * pArg)
 
 void CItem::Free()
 {
-	for (_uint i = 0; i < 7; ++i)
+	for (_uint i = 0; i < 10; ++i)
 	{
 		Safe_Release(m_pTextureCom[i]);
 		Safe_Release(m_pStatCom[i]);

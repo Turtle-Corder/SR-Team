@@ -90,8 +90,8 @@ private:
 	vector<INVEN_ITEM*>	m_vShopItem;
 
 	// 상점 아이템 이미지
-	CTransform*		m_pItemTransformCom[7];
-	CTexture*		m_pItemTextureCom[7];
+	CTransform*		m_pItemTransformCom[10];
+	CTexture*		m_pItemTextureCom[10];
 
 	// Pos, Scale----------------------------------
 	_vec3			m_vPos[SHOP_END];

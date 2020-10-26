@@ -40,6 +40,8 @@ public:
 	// ------------------------------------------------------------------
 	HRESULT Get_ShopItem(const wstring& strItemName);
 
+	_int Get_ItemCount(const wstring& strItemName);
+
 public:
 	virtual HRESULT Setup_GameObject_Prototype() override;
 	virtual HRESULT Setup_GameObject(void * pArg) override;
@@ -76,6 +78,11 @@ private:
 	// 아이템을 장착할 것인지 확인하는 함수
 	// ------------------------------------------------------------------
 	HRESULT Check_EquipItem();
+
+
+// 아이템 퀵슬롯으로 이동
+private:
+	HRESULT Move_To_QuickSlot();
 
 
 // Render() 관련 함수
@@ -133,6 +140,7 @@ private:
 	_vec3				m_vInvenWndPos[INVEN_END];
 	RECT				m_tInvenWndCollRt[INVEN_END];
 
+
 private:
 	// m_bRenderEmptySell가 true 일 때,
 	// 빈 텍스처를 그릴 버퍼, 텍스처
@@ -160,6 +168,9 @@ private:
 
 	// 정렬했는지
 	_bool				m_bAutoSort = false;
+
+	// 인벤 창 움직이면 안된다
+	_bool				m_bMoveInvenWnd = true;
 
 };
 

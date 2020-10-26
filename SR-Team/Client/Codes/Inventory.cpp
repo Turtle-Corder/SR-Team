@@ -4,6 +4,7 @@
 #include "UICamera.h"
 #include "KeyManager.h"
 #include "Equip.h"
+#include "MainUI.h"
 #include "..\Headers\Inventory.h"
 
 USING(Client)
@@ -88,6 +89,20 @@ HRESULT CInventory::Get_ShopItem(const wstring & strItemName)
 	return S_OK;
 }
 
+_int CInventory::Get_ItemCount(const wstring & strItemName)
+{
+	_int iIndex = 0;
+
+	for (auto& pItem : m_pInvenList)
+	{
+		if (!wcscmp(pItem->szItemTag, strItemName.c_str()))
+			return pItem->iCnt;
+		++iIndex;
+	}
+
+	return -1;
+}
+
 HRESULT CInventory::Setup_GameObject_Prototype()
 {
 	
@@ -142,6 +157,8 @@ _int CInventory::Update_GameObject(float DeltaTime)
 
 	if (m_bRender)
 	{
+		//m_bMoveInvenWnd = true;
+
 		// 판매 버튼을 눌렀는지 확인(m_bSelect_SellItem)
 		if (FAILED(Check_SellButton()))
 			return GAMEOBJECT::WARN;
@@ -159,8 +176,12 @@ _int CInventory::Update_GameObject(float DeltaTime)
 		if (FAILED(Check_EquipItem()))
 			return GAMEOBJECT::WARN;
 
+		// 퀵슬롯으로 이동
+		if (FAILED(Move_To_QuickSlot()))
+			return GAMEOBJECT::WARN;
+
 		// 인벤 창 이동
-		if (!m_bSelect_SellItem)
+		if (!m_bSelect_SellItem && m_bMoveInvenWnd)
 		{
 			if (FAILED(Move_InventoryWnd()))
 				return GAMEOBJECT::WARN;
@@ -371,6 +392,11 @@ HRESULT CInventory::Check_AutoSortButton()
 			++m_iNewInsertOrder;
 		}
 
+		for (_int i = 0; i < iDeleteCnt + 1; ++i)
+		{
+			m_bIsItemHere[i] = true;
+		}
+
 		for (_int i = iDeleteCnt + 1; i < 36; ++i)
 		{
 			m_bIsItemHere[i] = false;
@@ -396,7 +422,7 @@ HRESULT CInventory::Check_EquipItem()
 	{
 		for (_uint j = 0; j < 6; j++)
 		{
-			if (CKeyManager::Get_Instance()->Key_Pressing(VK_RBUTTON))
+			if (CKeyManager::Get_Instance()->Key_Down(VK_RBUTTON))
 			{
 				iIndex = i * 6 + j;
 				POINT ptMouse = {};
@@ -418,6 +444,43 @@ HRESULT CInventory::Check_EquipItem()
 			}
 		}
 	}
+	return S_OK;
+}
+
+HRESULT CInventory::Move_To_QuickSlot()
+{
+	_int iIndex = 0;
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (pManagement == nullptr)
+		return E_FAIL;
+	CMainUI* pMainUI = (CMainUI*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 0);
+
+	for (_uint i = 0; i < 6; i++)
+	{
+		for (_uint j = 0; j < 6; j++)
+		{
+			if (CKeyManager::Get_Instance()->Key_Pressing(VK_LBUTTON))
+			{
+				iIndex = i * 6 + j;
+				POINT ptMouse = {};
+				GetCursorPos(&ptMouse);
+				ScreenToClient(g_hWnd, &ptMouse);
+				if (PtInRect(&m_tItemCollRt[i][j], ptMouse))
+				{
+					_int k = 0;
+					m_bMoveInvenWnd = false;
+					// 아이템이 있는 칸들만 선택 할 수 있음
+					if (m_bIsItemHere[iIndex])
+					{
+						pMainUI->Get_QuickSlotItem(m_pInvenList[iIndex]);
+						return S_OK;
+					}
+
+				}
+			}
+		}
+	}
+
 	return S_OK;
 }
 
@@ -537,8 +600,28 @@ HRESULT CInventory::Render_Item()
 HRESULT CInventory::Move_InventoryWnd()
 {
 	POINT ptMouse = {};
+	_int iIndex = 0;
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
+
+	// 아이템 가리키고 있을 땐 인벤창 움직이면 안됨
+	for (_uint i = 0; i < 6; i++)
+	{
+		for (_uint j = 0; j < 6; j++)
+		{
+			
+			iIndex = i * 6 + j;
+			POINT ptMouse = {};
+			GetCursorPos(&ptMouse);
+			ScreenToClient(g_hWnd, &ptMouse);
+			if (PtInRect(&m_tItemCollRt[i][j], ptMouse))
+			{
+				m_bMoveInvenWnd = false;
+				return S_OK;
+			}
+			
+		}
+	}
 
 	if (CKeyManager::Get_Instance()->Key_Pressing(VK_LBUTTON))
 	{
