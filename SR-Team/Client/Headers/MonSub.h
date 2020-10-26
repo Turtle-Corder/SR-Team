@@ -10,6 +10,12 @@ BEGIN(Client)
 
 class CMonSub final : public CGameObject
 {
+	enum MONSUB
+	{
+		MONSUB_BASE,
+		MONSUB_RIGHT,
+		MONSUB_END
+	};
 private:
 	explicit CMonSub(LPDIRECT3DDEVICE9 _pDevice);
 	explicit CMonSub(const CMonSub& _rOther);
@@ -24,15 +30,18 @@ private:
 	HRESULT Add_Component();
 	HRESULT Movement(_float _fDeltaTime);
 	HRESULT IsOnTerrain(_float _fDeltaTime);
+	HRESULT Move(_float _fDeltaTime);
+	HRESULT Roll(_float _fDeltaTime);
 public:
 	virtual CGameObject * Clone_GameObject(void * _pArg) override;
 	virtual void Free() override;
 	static CMonSub* Create(LPDIRECT3DDEVICE9 _pDevice);
 	HRESULT Setting_Dir();
+	HRESULT LookAtPlayer(_float _fDeltaTime);
 private:
-	CVIBuffer*		m_pVIBufferCom = nullptr;
-	CTransform*		m_pTransformCom = nullptr;
-	CTexture*		m_pTextureCom = nullptr;
+	CVIBuffer*		m_pVIBufferCom[MONSUB_END] = {};
+	CTransform*		m_pTransformCom[MONSUB_END] = {};
+	CTexture*		m_pTextureCom[MONSUB_END] = {};
 
 
 	_vec3			m_vStartPos = {};
@@ -43,9 +52,9 @@ private:
 	_bool			m_bFallDown = false;
 	_bool			m_bAllStop = false;
 	_bool			m_bMoveOn = false;
+	_bool			m_bCheck = false;
 };
 
 END
 
 #endif //__MONSUB_H__
-

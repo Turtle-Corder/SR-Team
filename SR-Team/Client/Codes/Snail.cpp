@@ -40,10 +40,6 @@ int CSnail::Update_GameObject(_float _fDeltaTime)
 	if (FAILED(Movement(_fDeltaTime)))
 		return GAMEOBJECT::WARN;
 
-	if (FAILED(LookAtPlayer(_fDeltaTime)))
-		return GAMEOBJECT::WARN;
-
-
 	for (_int iAll = 0; iAll < SNAIL_END; ++iAll)
 	{
 		if (FAILED(m_pTransformCom[iAll]->Update_Transform()))
@@ -153,6 +149,18 @@ HRESULT CSnail::Movement(_float _fDeltaTime)
 	if (FAILED(IsOnTerrain()))
 		return E_FAIL;
 
+	if (GetAsyncKeyState(VK_NUMPAD4) & 0x8000)
+		m_bAttack = true;
+
+	if (m_bAttack)
+	{
+		if (FAILED(LookAtPlayer(_fDeltaTime)))
+			return E_FAIL;
+
+		if (FAILED(Move(_fDeltaTime)))
+			return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -165,23 +173,43 @@ HRESULT CSnail::IsOnTerrain()
 	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Terrain", L"Com_VIBuffer");
 	if (nullptr == pTerrainBuffer)
 		return E_FAIL;
-	D3DXVECTOR3 vPosition[SNAIL_END];
 
-	for (int i = 0; i < SNAIL_END; ++i)
+	_vec3 vPosition = m_pTransformCom[SNAIL_BODY]->Get_Desc().vPosition;
+
+	if (true == pTerrainBuffer->IsOnTerrain(&vPosition))
 	{
-		vPosition[i] = m_pTransformCom[i]->Get_Desc().vPosition;
-
-		if (true == pTerrainBuffer->IsOnTerrain(&vPosition[i]))
-		{
-			m_pTransformCom[i]->Set_Position(vPosition[i]);
-		}
+		m_pTransformCom[SNAIL_BODY]->Set_Position(vPosition);
 	}
+
 
 	return S_OK;
 }
-
 HRESULT CSnail::Move(_float _fDeltaTime)
 {
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform0");
+
+	if (nullptr == pPlayerTransform)
+		return E_FAIL;
+
+	_vec3 vPlayerPos = pPlayerTransform->Get_Desc().vPosition;
+	_vec3 m_vPos = m_pTransformCom[SNAIL_BODY]->Get_Desc().vPosition;
+	m_vDir = vPlayerPos - m_vPos;
+	_float m_fLength = D3DXVec3Length(&m_vDir);
+	D3DXVec3Normalize(&m_vDir, &m_vDir);
+
+	if (!m_bAttack)
+		return S_OK;
+
+	if (0.f <= m_fLength)
+	{
+		m_vPos += m_vDir * _fDeltaTime;
+		m_pTransformCom[SNAIL_BODY]->Set_Position(m_vPos);
+	}
+
 	return S_OK;
 }
 
@@ -244,7 +272,7 @@ HRESULT CSnail::Setting_Part()
 	return S_OK;
 }
 
-CSnail * CSnail::Create(LPDIRECT3DDEVICE9 _pDevice)
+CSnail* CSnail::Create(LPDIRECT3DDEVICE9 _pDevice)
 {
 	if (nullptr == _pDevice)
 		return nullptr;
@@ -289,3 +317,4 @@ HRESULT CSnail::Take_Damage(const CComponent* _pDamageComp)
 {
 	return S_OK;
 }
+

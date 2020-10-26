@@ -37,7 +37,6 @@ public:
 	virtual void Free() override;
 	static  CGolem* Create(LPDIRECT3DDEVICE9 _pDevice);
 private:
-	//HRESULT	Late_Setup();
 	HRESULT Attack(_float _fDeltaTime);
 	HRESULT Add_Component();
 	HRESULT Movement(float _fDeltaTime);
@@ -47,7 +46,9 @@ private:
 	HRESULT Create_Bomb(_float _fDeltaTime);
 	HRESULT Create_MonSub(_float _fDeltaTime);
 	HRESULT Setup_LayerBomb(const wstring & LayerTag, _vec3 _vPos);
-	HRESULT Setup_Layer_MonSub(const wstring & LayerTag);
+	HRESULT Setup_Layer_MonSub(const wstring & LayerTag, _vec3 _vPos);
+	HRESULT	Move(_float _fDeltaTIme);
+	HRESULT LookAtPlayer(_float _fDeltaTime);
 private:
 	CVIBuffer*		m_pVIBufferCom[GOLEM_END] = {};
 	CTransform*		m_pTransformCom[GOLEM_END] = {};
@@ -55,24 +56,31 @@ private:
 
 	//----------------------------------------------
 	//----------------------------------------------
-	_float			m_fAttackTime = 0.f;
 	_int			m_iRandAttack = -1;
 	_uint			m_iCreateCnt = 0;
 	_vec3			m_vStartPos = {};
 	_vec3			m_vTemp = {};
-	_vec3 			m_vRand[5] = {};
+	_vec3 			m_vBombRand[5] = {};
+	_vec3 			m_vMonSubRand[4] = {};
 	_bool			m_bDead = false;
 	_bool			m_bAttack = false;
-	_bool			m_bAttackStart = false;
 	_bool			m_bAttackDelay = false;
 	_bool			m_bCreate_Bomb = false;
 	_bool			m_bMonSubOn = false;
-	//list<CGameObject*> m_vecSub = {}; //핑크빈에서 쓸거
-	//_bool			m_bLateSetUp = false;
-	// 기준이 될녀석	=> Transform만
-	// 나머지는 싹다
+	_bool			m_bDirCheck = false;
+	_bool			m_bMove = false;
+	_bool			m_bLook = false;
+	_float			m_fRad = 0.f;
+	_float			m_fLimit = 0.f;
+	_float			m_fLength = 0.f;
+	_vec3			m_vDir = {};
+	_vec3			m_vPos = {};
+	_int			m_iAttackPattern = 0;
+	_float			m_fTime = 0.f;
+	_float			m_fAttTime = 0.f;
+	_float			m_fHandAttackTime = 0.f;
+	_uint			m_iMonSubCreateCnt = 0;
 };
-
 
 END
 #endif //__GOLEM_H__

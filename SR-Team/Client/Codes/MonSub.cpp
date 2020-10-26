@@ -41,13 +41,19 @@ _int CMonSub::LateUpdate_GameObject(_float _fDeltaTime)
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
-		return 0;
-
-	if (FAILED(m_pTransformCom->Update_Transform()))
 		return GAMEOBJECT::WARN;
 
+	if (FAILED(m_pTransformCom[MONSUB_BASE]->Update_Transform()))
+		return GAMEOBJECT::WARN;
+
+
+	if (FAILED(m_pTransformCom[MONSUB_RIGHT]->Update_Transform()))
+		return GAMEOBJECT::WARN;
+
+	m_pTransformCom[MONSUB_RIGHT]->Set_WorldMatrix(m_pTransformCom[MONSUB_RIGHT]->Get_Desc().matWorld * m_pTransformCom[MONSUB_BASE]->Get_Desc().matWorld);
+
 	if (FAILED(pManagement->Add_RendererList(CRenderer::RENDER_NONEALPHA, this)))
-		return 0;
+		return GAMEOBJECT::WARN;
 
 	return 0;
 }
@@ -62,13 +68,13 @@ HRESULT CMonSub::Render_NoneAlpha()
 	if (nullptr == pCamera)
 		return E_FAIL;
 
-	if (FAILED(m_pVIBufferCom->Set_Transform(&m_pTransformCom->Get_Desc().matWorld, pCamera)))
+	if (FAILED(m_pVIBufferCom[MONSUB_RIGHT]->Set_Transform(&m_pTransformCom[MONSUB_RIGHT]->Get_Desc().matWorld, pCamera)))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->SetTexture(0)))
+	if (FAILED(m_pTextureCom[MONSUB_RIGHT]->SetTexture(0)))
 		return E_FAIL;
 
-	if (FAILED(m_pVIBufferCom->Render_VIBuffer()))
+	if (FAILED(m_pVIBufferCom[MONSUB_RIGHT]->Render_VIBuffer()))
 		return E_FAIL;
 
 	return S_OK;
@@ -76,49 +82,89 @@ HRESULT CMonSub::Render_NoneAlpha()
 
 HRESULT CMonSub::Add_Component()
 {
-	CTransform::TRANSFORM_DESC tTransformDesc;
+	TCHAR szName[MAX_PATH] = L"";
+	TCHAR szPartName[MAX_PATH] = L"";
+	CTransform::TRANSFORM_DESC tTransformDesc[MONSUB_END];
 
-	tTransformDesc.vPosition = { m_vStartPos.x , 1.f , m_vStartPos.z };
-	tTransformDesc.fSpeedPerSecond = 10.f;
-	tTransformDesc.fRotatePerSecond = D3DXToRadian(90.f);
-	tTransformDesc.vScale = { 1.f , 1.f , 1.f };
-	//--------------------------------------------------
-	// VIBuffer Component
-	//--------------------------------------------------
-	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", L"Com_VIBuffer", (CComponent**)&m_pVIBufferCom)))
-		return E_FAIL;
+	for (_uint iCnt = 0; iCnt < MONSUB_END; ++iCnt)
+	{
 
-	//--------------------------------------------------
-	// Transform Component
-	//--------------------------------------------------
-	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", L"Com_Transform", (CComponent**)&m_pTransformCom, &tTransformDesc)))
-		return E_FAIL;
+		if (iCnt == MONSUB_BASE)
+		{
+			tTransformDesc[iCnt].vPosition = { m_vStartPos.x , 0.f , m_vStartPos.z };
+			tTransformDesc[iCnt].fSpeedPerSecond = 10.f;
+			tTransformDesc[iCnt].fRotatePerSecond = D3DXToRadian(90.f);
+			tTransformDesc[iCnt].vScale = { 1.f , 1.f , 1.f };
+		}
+		else if (MONSUB_RIGHT)
+		{
+			tTransformDesc[iCnt].vPosition = { 0.f , 0.f , 0.f };
+			tTransformDesc[iCnt].fSpeedPerSecond = 10.f;
+			tTransformDesc[iCnt].fRotatePerSecond = D3DXToRadian(90.f);
+			tTransformDesc[iCnt].vScale = { 1.f , 1.f , 1.f };
+		}
+		//--------------------------------------------------
+		// VIBuffer Component
+		//--------------------------------------------------
+		StringCchPrintf(szName, sizeof(TCHAR) * MAX_PATH, L"Com_VIBuffer%d", iCnt);
 
-	//--------------------------------------------------
-	// Texture Component
-	//--------------------------------------------------
-	if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, L"Component_Texture_Translucent_Cube", L"Com_Texture", (CComponent**)&m_pTextureCom)))
-		return E_FAIL;
+		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", szName, (CComponent**)&m_pVIBufferCom[iCnt]))) //생성 갯수
+			return E_FAIL;
 
+		//--------------------------------------------------
+		// Transform Component
+		//--------------------------------------------------
+		StringCchPrintf(szName, sizeof(TCHAR) * MAX_PATH, L"Com_Transform%d", iCnt);
+
+		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", szName, (CComponent**)&m_pTransformCom[iCnt], &tTransformDesc[iCnt]))) ////생성 갯수
+			return E_FAIL;
+		//--------------------------------------------------
+		// Texture Component
+		//--------------------------------------------------
+		if (iCnt == MONSUB_BASE)
+		{
+			StringCchPrintf(szPartName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_SnailBody");
+		}
+		else if (iCnt == MONSUB_RIGHT)
+		{
+			StringCchPrintf(szPartName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_SnailBody");
+		}
+
+		StringCchPrintf(szName, sizeof(TCHAR) * MAX_PATH, L"Com_Texture%d", iCnt);
+
+		if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, szPartName, szName, (CComponent**)&m_pTextureCom[iCnt]))) ////생성 갯수
+			return E_FAIL;
+	}
 
 	return S_OK;
 }
 
 HRESULT CMonSub::Movement(_float _fDeltaTime)
 {
-	if (FAILED(Setting_Dir()))
-		return E_FAIL;
+	if (!m_bIsClone)
+	{
+		if (FAILED(Setting_Dir()))
+			return E_FAIL;
+	}
 
 	if (FAILED(IsOnTerrain(_fDeltaTime)))
 		return E_FAIL;
 
+	if (FAILED(Move(_fDeltaTime)))
+		return E_FAIL;
+
+	if (FAILED(LookAtPlayer(_fDeltaTime)))
+		return E_FAIL;
+
+	if (FAILED(Roll(_fDeltaTime)))
+		return E_FAIL;
 
 	return S_OK;
 }
 
 HRESULT CMonSub::IsOnTerrain(_float _fDeltaTime)
 {
-	D3DXVECTOR3 vPos = m_pTransformCom->Get_Desc().vPosition;
+	D3DXVECTOR3 vPos = m_pTransformCom[MONSUB_BASE]->Get_Desc().vPosition;
 
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
@@ -128,28 +174,54 @@ HRESULT CMonSub::IsOnTerrain(_float _fDeltaTime)
 	if (nullptr == pTerrainBuffer)
 		return E_FAIL;
 
-	D3DXVECTOR3 vPosition = m_pTransformCom->Get_Desc().vPosition;
+	D3DXVECTOR3 vPosition = m_pTransformCom[MONSUB_BASE]->Get_Desc().vPosition;
 
 	if (true == pTerrainBuffer->IsOnTerrain(&vPosition))
 	{
-		m_pTransformCom->Set_Position(vPosition);
+		m_pTransformCom[MONSUB_BASE]->Set_Position(vPosition);
+		m_bMoveOn = true;
 	}
 
-	if (m_bFallDown)
+
+
+	return S_OK;
+}
+HRESULT CMonSub::Move(_float _fDeltaTime)
+{
+	if (m_bMoveOn)
 	{
-		vPos.y += m_fJumpPower * m_fJumpTime - 9.8f * m_fJumpTime * m_fJumpTime;
-		m_fJumpTime += _fDeltaTime;
+		CManagement* pManagement = CManagement::Get_Instance();
+		if (nullptr == pManagement)
+			return E_FAIL;
 
-		//vPos += _vec3(m_vDir.x, 0.f, m_vDir.z) * (_fDeltaTime * 10.f);
+		CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform0");
+
+		if (nullptr == pPlayerTransform)
+			return E_FAIL;
+
+		_vec3 vMonsterPos = m_pTransformCom[MONSUB_BASE]->Get_Desc().vPosition;
+		_vec3 vPlayerPos = pPlayerTransform->Get_Desc().vPosition;
+
+		_vec3 vLength = vPlayerPos - vMonsterPos;
+		_vec3 vDir = vLength;
+		D3DXVec3Normalize(&vDir, &vDir);
+		float fLength = D3DXVec3Length(&vLength);
+
+		if (fLength < 1.5f)
+		{
+			m_bMoveOn = false;
+		}
+		else if (m_bMoveOn)
+		{
+			vMonsterPos += vDir * _fDeltaTime;
+			m_pTransformCom[MONSUB_BASE]->Set_Position(vMonsterPos);
+		}
 	}
-
-	if (vPosition.y > vPos.y)
-	{
-		m_bFallDown = false;
-	}
-
-	m_pTransformCom->Set_Position(_vec3(vPos.x, vPos.y, vPos.z));
-
+	return S_OK;
+}
+HRESULT CMonSub::Roll(_float _fDeltaTime)
+{
+	m_pTransformCom[MONSUB_RIGHT]->Turn(CTransform::AXIS_X, -_fDeltaTime);
 	return S_OK;
 }
 CGameObject* CMonSub::Clone_GameObject(void * _pArg)
@@ -167,9 +239,12 @@ CGameObject* CMonSub::Clone_GameObject(void * _pArg)
 
 void CMonSub::Free()
 {
-	Safe_Release(m_pTransformCom);
-	Safe_Release(m_pVIBufferCom);
-	Safe_Release(m_pTextureCom);
+	for (_uint iCnt = 0; iCnt < MONSUB_END; ++iCnt)
+	{
+		Safe_Release(m_pTransformCom[iCnt]);
+		Safe_Release(m_pVIBufferCom[iCnt]);
+		Safe_Release(m_pTextureCom[iCnt]);
+	}
 
 	CGameObject::Free();
 }
@@ -192,7 +267,7 @@ CMonSub * CMonSub::Create(LPDIRECT3DDEVICE9 _pDevice)
 
 HRESULT CMonSub::Setting_Dir()
 {
-	_vec3 vPos = m_pTransformCom->Get_Desc().vPosition;
+	_vec3 vPos = m_pTransformCom[MONSUB_BASE]->Get_Desc().vPosition;
 
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
@@ -205,9 +280,62 @@ HRESULT CMonSub::Setting_Dir()
 
 	_vec3 vPlayerPos = pPlayerTransform->Get_Desc().vPosition;
 
-	m_vDir = vPlayerPos - vPos;
+	m_vDir = m_vStartPos - vPos;
 	D3DXVec3Normalize(&m_vDir, &m_vDir);
 	m_bFallDown = true;
+	m_bOnece = true;
+
+	return S_OK;
+}
+
+HRESULT CMonSub::LookAtPlayer(_float _fDeltaTime)
+{
+
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform0");
+	if (nullptr == pPlayerTransform)
+		return E_FAIL;
+	//--------------------------------------------------
+	// 플레이어와 this => Pos
+	//-------------------------------------------------- 
+	_vec3 vPlayerPos = pPlayerTransform->Get_Desc().vPosition;
+	_vec3 vMonPos = m_pTransformCom[MONSUB_BASE]->Get_Desc().vPosition;
+	_vec3 vMonLook = {};
+
+	////--------------------------------------------------
+	//// Look 과 목적지 - 출발지를 내적
+	////--------------------------------------------------
+
+	memcpy_s(&vMonLook, sizeof(_vec3), &m_pTransformCom[MONSUB_BASE]->Get_Desc().matWorld._31, sizeof(_vec3));
+
+	_vec3 vMonToPlayer = vPlayerPos - vMonPos;
+
+	D3DXVec3Normalize(&vMonLook, &vMonLook);
+	D3DXVec3Normalize(&vMonToPlayer, &vMonToPlayer);
+
+	float fDot = 0.f;
+	float fRad = 0.f;
+
+	fDot = D3DXVec3Dot(&vMonLook, &vMonToPlayer);
+	fRad = (float)acos(fDot);
+
+	_vec3 vMonRight = {};
+	D3DXVec3Cross(&vMonRight, &_vec3(0.f, 1.f, 0.f), &vMonLook);
+
+	D3DXVec3Dot(&vMonRight, &vMonToPlayer);
+
+	float fLimit = D3DXVec3Dot(&vMonRight, &vMonToPlayer);
+
+	if (fabsf(fLimit) < 0.2f)
+		return S_OK;
+
+	if (fLimit > 0.2f)
+		m_pTransformCom[MONSUB_BASE]->Turn(CTransform::AXIS_Y, -_fDeltaTime * fRad);
+	else
+		m_pTransformCom[MONSUB_BASE]->Turn(CTransform::AXIS_Y, _fDeltaTime * fRad);
 
 	return S_OK;
 }

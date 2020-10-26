@@ -37,16 +37,6 @@ _int CBomb::Update_GameObject(_float _fDeltaTime)
 	if (Movement(_fDeltaTime))
 		return 0;
 
-	if (GetAsyncKeyState(VK_F7) & 0x8000)
-	{
-		m_iTexCnt = 1;
-	}
-
-	if (GetAsyncKeyState(VK_F8) & 0x8000)
-	{
-		m_iTexCnt = 0;
-	}
-
 	return 0;
 }
 
@@ -184,6 +174,7 @@ HRESULT CBomb::IsOnTerrain(_float _fDeltaTime)
 		D3DXVECTOR3 vLastPos = m_pTransformCom->Get_Desc().vPosition;
 		m_pTransformCom->Set_Position(_vec3(vLastPos.x, vPosition.y, vLastPos.z));
 	}
+
 	return S_OK;
 }
 CGameObject* CBomb::Clone_GameObject(void * _pArg)
@@ -254,19 +245,19 @@ HRESULT CBomb::Dead_Bomb(_float _fDeltaTime)
 		m_fBombTime += _fDeltaTime;
 		m_fDeadTime += _fDeltaTime;
 
-		if (m_iTexCnt == 0 && m_fBombTime >= 1.f)
+		if (m_iTexCnt == 0 && m_fBombTime >= 0.6f)
 		{
 			m_iTexCnt = 1;
 			m_fBombTime = 0.f;
 		}
-		else if (m_iTexCnt == 1 && m_fBombTime >= 1.f)
+		else if (m_iTexCnt == 1 && m_fBombTime >= 0.6f)
 		{
 			m_iTexCnt = 0;
 			m_fBombTime = 0.f;
 		}
 	}
 
-	if (m_fDeadTime >= 5.f)
+	if (m_fDeadTime >= 3.f)
 	{
 		m_bStart = false;
 		m_bDead = true;

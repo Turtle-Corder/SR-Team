@@ -10,12 +10,12 @@ BEGIN(Client)
 class CStatus;
 class CSlime final : public CGameObject
 {
-	enum SLIME 
-	{ 
+	enum SLIME
+	{
 		SLIME_BODY,
 		SLIME_BASE,
 		SLIME_JELLY = SLIME_BASE,
-		SLIME_END 
+		SLIME_END
 	};
 private:
 	explicit CSlime(LPDIRECT3DDEVICE9 pDevice);
@@ -45,11 +45,13 @@ public:
 	HRESULT Setting_SlimeBody();
 	HRESULT Setting_SlimeJelly();
 
+	HRESULT Move(_float _fDeltaTime);
+
 private:
 	CVIBuffer*	m_pVIBufferCom[SLIME_END] = {};
 	CTransform*	m_pTransformCom[SLIME_END] = {};
 	CTexture*	m_pTextureCom = nullptr;
-//	CStatus*	m_pStatCom = nullptr;
+	//	CStatus*	m_pStatCom = nullptr;
 
 	_bool		m_bDead = false;
 	_bool		m_bJump = false;
@@ -63,3 +65,4 @@ private:
 END
 
 #endif // !__SLIME_H__
+

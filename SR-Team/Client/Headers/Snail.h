@@ -43,6 +43,8 @@ private:
 private:
 	WCHAR		m_szOwnerName[MIN_STR];
 	_vec3		m_vStartPos = {};
+	_bool		m_bAttack = false;
+	_vec3		m_vDir = {};
 };
 
 END
