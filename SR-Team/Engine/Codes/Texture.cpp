@@ -101,17 +101,17 @@ HRESULT CTexture::Setup_Component(void * _pArg)
 	return S_OK;
 }
 
-_uint CTexture::Update_Frame(_float _fDeltaTime)
+HRESULT CTexture::Update_Frame(_float _fDeltaTime, _uint* _pCurFrame)
 {
 	m_fFrameCur += m_fFrameEnd * m_fFrameSpeed * _fDeltaTime;
-	if (m_fFrameCur >= m_fFrameEnd)
+	if (m_fFrameCur > m_fFrameEnd)
 	{
 		m_fFrameCur = m_fFrameBegin;
 	}
 
-	_uint iRet = (_uint)m_fFrameCur;
-	m_pDevice->SetTexture(0, m_Textures[iRet]);
-	return iRet;
+	*_pCurFrame = (_uint)m_fFrameCur;
+
+	return S_OK;
 }
 
 HRESULT CTexture::SetTexture(_uint _iIndex)
@@ -126,7 +126,7 @@ HRESULT CTexture::SetTexture(_uint _iIndex)
 
 HRESULT CTexture::SetFrameRange(_uint _iFrameBegin, _uint _iFrameEnd, _float _fFrameSpeed)
 {
-	if (_iFrameBegin >= m_iMaxCount || _iFrameEnd >= m_iMaxCount)
+	if (_iFrameBegin + 1 > m_iMaxCount || _iFrameEnd + 1 > m_iMaxCount)
 	{
 		PRINT_LOG(L"Inavlidate Frame Range", LOG::ENGINE);
 		return E_FAIL;
@@ -134,7 +134,7 @@ HRESULT CTexture::SetFrameRange(_uint _iFrameBegin, _uint _iFrameEnd, _float _fF
 
 	m_fFrameSpeed = _fFrameSpeed;
 	m_fFrameCur = m_fFrameBegin = (_float)_iFrameBegin;
-	m_fFrameEnd = (_float)_iFrameEnd;
+	m_fFrameEnd = (_float)_iFrameEnd + 1;
 	return S_OK;
 }
 

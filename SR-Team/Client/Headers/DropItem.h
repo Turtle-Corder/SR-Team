@@ -48,6 +48,8 @@ private:
 	_bool		m_bDead = false;
 	_vec3		m_vPos = { 0.f , 0.f , 0.f };
 	_int		m_iRand = 0;
+
+	_uint		m_iCurFrame = 0;
 };
 
 END
