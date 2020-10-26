@@ -21,7 +21,7 @@ public:
 private:
 	HRESULT Setup_DefaultSetting();
 	HRESULT Setup_StaticResources();
-	HRESULT Setup_TestLine();
+	HRESULT Setup_SaveData();
 
 
 public:

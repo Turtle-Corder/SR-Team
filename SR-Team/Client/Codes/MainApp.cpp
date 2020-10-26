@@ -98,7 +98,11 @@ HRESULT CMainApp::Setup_MainApp()
 		return E_FAIL;
 	}
 
-	Setup_TestLine();
+	if (FAILED(Setup_SaveData()))
+	{
+		PRINT_LOG(L"Failed To Setup_SaveData", LOG::CLIENT);
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -374,7 +378,7 @@ HRESULT CMainApp::Setup_StaticResources()
 	return S_OK;
 }
 
-HRESULT CMainApp::Setup_TestLine()
+HRESULT CMainApp::Setup_SaveData()
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
