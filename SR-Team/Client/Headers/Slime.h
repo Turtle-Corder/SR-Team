@@ -51,6 +51,7 @@ private:
 	CVIBuffer*	m_pVIBufferCom[SLIME_END] = {};
 	CTransform*	m_pTransformCom[SLIME_END] = {};
 	CTexture*	m_pTextureCom = nullptr;
+	
 	//	CStatus*	m_pStatCom = nullptr;
 
 	_bool		m_bDead = false;

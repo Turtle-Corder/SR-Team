@@ -6,7 +6,10 @@
 
 USING(Engine)
 BEGIN(Client)
+
 class CStatus;
+class CDamageInfo;
+
 class CSnow final : public CGameObject
 {
 private:
@@ -28,28 +31,30 @@ public:
 	static CSnow* Create(LPDIRECT3DDEVICE9 pDevice);
 	virtual CGameObject * Clone_GameObject(void * pArg) override;
 	virtual void Free() override;
+	virtual HRESULT Take_Damage(const CComponent* _pDamageComp) override;
 public:
 	HRESULT Throwing_Snow(float _fDeltaTime);
 
 
 
 private:
-	CVIBuffer*	m_pVIBufferCom = nullptr;
-	CTransform*	m_pTransformCom = nullptr;
-	CTexture*	m_pTextureCom = nullptr;
-
-	bool		m_bDead = false;
-	bool		m_bJump = false;
-	float		m_fJumpPower = 1.1f;
-	float		m_fJumpTime = 0.f;
-	_vec3		m_vPos = {};
-	_vec3		m_vDir = {};
-	bool		m_bCheck = false;
-	bool		m_bFallDown = false;
-	bool		m_bGround = false;
-	float		m_fGravity = 0.f;
-	_vec3		m_vCompare = {};
-
+	CVIBuffer*		m_pVIBufferCom = nullptr;
+	CTransform*		m_pTransformCom = nullptr;
+	CTexture*		m_pTextureCom = nullptr;
+	CCollider*		m_pColliderCom = nullptr;
+	CStatus*		m_pStatusCom = nullptr;
+	CDamageInfo*	m_pDmgInfoCom = nullptr;
+	bool			m_bDead = false;
+	bool			m_bJump = false;
+	float			m_fJumpPower = 1.1f;
+	float			m_fJumpTime = 0.f;
+	_vec3			m_vPos = {};
+	_vec3			m_vDir = {};
+	bool			m_bCheck = false;
+	bool			m_bFallDown = false;
+	bool			m_bGround = false;
+	float			m_fGravity = 0.f;
+	_float			m_fDeadTime = 0.f;
 };
 
 END

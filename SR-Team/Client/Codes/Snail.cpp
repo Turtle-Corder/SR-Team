@@ -86,7 +86,11 @@ HRESULT CSnail::Render_NoneAlpha()
 		if (FAILED(m_pVIBufferCom[iAll]->Render_VIBuffer()))
 			return E_FAIL;
 	}
-
+	/*
+	
+		if (FAILED(SetUp_Layer_InstantImpact(L"Layer_Instant_Impact")))
+		return E_FAIL;
+	*/
 	return S_OK;
 }
 
@@ -272,6 +276,20 @@ HRESULT CSnail::Setting_Part()
 	return S_OK;
 }
 
+HRESULT CSnail::SetUp_Layer_InstantImpact(const wstring & LayerTag)
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	_vec3 vPos = m_pTransformCom[SNAIL_BODY]->Get_Desc().vPosition;
+
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Instant_Impact", SCENE_STAGE0, LayerTag , &vPos)))/*¿©±â StartPos*/
+		return E_FAIL;
+
+	return S_OK;
+}
+
 CSnail* CSnail::Create(LPDIRECT3DDEVICE9 _pDevice)
 {
 	if (nullptr == _pDevice)
@@ -315,6 +333,10 @@ void CSnail::Free()
 
 HRESULT CSnail::Take_Damage(const CComponent* _pDamageComp)
 {
+	if (!_pDamageComp)
+		return S_OK;
+
+
 	return S_OK;
 }
 
