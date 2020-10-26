@@ -28,7 +28,11 @@ public:
 	HRESULT Add_GameObject_InLayer(_int _iFromSceneID, const wstring& _strProtoTypeTag, _int _iToSceneID, const wstring& _strLayerTag, void* _pArg = nullptr);
 	HRESULT Clear_ForScene(_int _iSceneID);
 
-	HRESULT Collision_Detection_Layers(_int _iSceneID, const wstring& _strSrcLayerTag, const wstring& _strDstLayerTag, const wstring& _strColliderTag, const wstring& _strDmgInfoTag);
+	HRESULT CollisionSphere_Detection_Layers(_int _iSceneID, const wstring& _strSrcLayerTag, const wstring& _strDstLayerTag, const wstring& _strColliderTag, const wstring& _strDmgInfoTag);
+	HRESULT CollisionSphere_Detection_Layers_Both(_int _iSceneID, const wstring& _strSrcLayerTag, const wstring& _strDstLayerTag, const wstring& _strColliderTag, const wstring& _strDmgInfoTag);
+
+	HRESULT CollisionBox_Detection_Layers(_int _iSceneID, const wstring& _strSrcLayerTag, const wstring& _strDstLayerTag, const wstring& _strColliderTag, const wstring& _strDmgInfoTag);
+	HRESULT CollisionBox_Detection_Layers_Both(_int _iSceneID, const wstring& _strSrcLayerTag, const wstring& _strDstLayerTag, const wstring& _strColliderTag, const wstring& _strDmgInfoTag);
 
 public:
 	_int Update_Object_Manger(_float _fDeltaTime);
