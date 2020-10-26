@@ -105,7 +105,7 @@ HRESULT CMainCamera::Movement(_float _fDeltaTime)
 	m_tCameraDesc.vEye = m_tCameraDesc.vAt + vPlayerLook;*/
 
 	//마름모꼴 고정
-	_vec3 vXZDistanceNormal = { 1.f, 0.f, 1.f };
+	_vec3 vXZDistanceNormal = { 0.7f, 0.f, 1.f };
 	_vec3 vCameraHeight = { 0.f, 1.f, 0.f };
 	_vec3 vSemiTopView = m_fHeight * vCameraHeight - m_fDistance * vXZDistanceNormal;
 
@@ -128,31 +128,43 @@ HRESULT CMainCamera::ZoomInOut(_float _fDeltaTime)
 		m_fDistance += m_fZoomInOutSpeedPerSecond * _fDeltaTime * m_fStartDistance;
 	}
 
+	if (GetAsyncKeyState(VK_NUMPAD2) & 0x8000)
+	{
+		m_fHeight -= m_fUpDownSpeedPerSecond * _fDeltaTime * m_fStartHeight;
+	}
+	if (GetAsyncKeyState(VK_NUMPAD8) & 0x8000)
+	{
+		m_fHeight += m_fUpDownSpeedPerSecond * _fDeltaTime* m_fStartHeight;
+	}
+
 	return S_OK;
 }
 
 HRESULT CMainCamera::Wigging(_float _fDeltaTime)
 {
-	//시간 지났을시 초기화, 유한기계상태 중립
+	//시간 지났을시(혹은 진동강도가 0이 되었을 시) 초기화, 유한기계상태 중립
 	if (m_tShakeInfo.m_fSettingTime < m_tShakeInfo.m_fTimeFlow || m_tShakeInfo.m_fMagnitude < 0)
 	{
 		m_tShakeInfo.m_fSettingTime = 0.f;
 		m_tShakeInfo.m_fTimeFlow = 0.f;
 		m_eMode = CAMERA_MODE::CAMERA_NORMAL;
 	}
-
 	//시간 누적
 	m_tShakeInfo.m_fTimeFlow += _fDeltaTime;
-	m_tShakeInfo.m_fMagnitude -= _fDeltaTime;
-
+	
+	//-----------------------------------------------------------------------
 	//실제로 흔드는 함수
+	//DAMPED : 감쇠진동(일정한 힘을 밖으로 방출하는 진동이 서서히 약해지는 진동)
+	//HARMONIC : 조화진동(시간동안 일정한 힘으로 진동)
+	//-----------------------------------------------------------------------
 	switch (m_tShakeInfo.m_eWigType)
 	{
 	case Client::CMainCamera::DAMPED:
-		//m_tCameraDesc.vAt += m_tCameraDesc.vUp * sinf(m_tShakeInfo.m_fTimeFlow * m_tShakeInfo.m_fFrequency) * m_tShakeInfo.m_fMagnitude;
+		m_tShakeInfo.m_fMagnitude -= _fDeltaTime;
 		m_tCameraDesc.vEye += m_tCameraDesc.vUp * sinf(m_tShakeInfo.m_fTimeFlow* m_tShakeInfo.m_fFrequency) * m_tShakeInfo.m_fMagnitude;
 		break;
 	case Client::CMainCamera::HARMONIC:
+		m_tCameraDesc.vEye += m_tCameraDesc.vUp * sinf(m_tShakeInfo.m_fTimeFlow* m_tShakeInfo.m_fFrequency) * m_tShakeInfo.m_fMagnitude;
 		break;
 	case Client::CMainCamera::MIXED:
 		break;

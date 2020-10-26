@@ -23,6 +23,10 @@ typedef struct tagTerrainInfo
 	_int iTextureID;
 	_int iX_Index;
 	_int iZ_Index;
+	_int iInterval;
+	_int iMaxX;
+	_int iMaxZ;
+
 } TERRAININFO;
 
 
@@ -33,6 +37,12 @@ typedef struct tagDamageEvent
 	CComponent*		pDmgInfoComp;
 } DAMAGE_EVENT;
 
+typedef struct tagInstantImpact
+{
+	_vec3			vPosition;
+	CGameObject*	pAttacker;
+	_uint			iAttack;
+}INSTANTIMPACT;
 
 typedef struct tagFileInfo
 {
@@ -43,6 +53,16 @@ typedef struct tagFileInfo
 	TCHAR wstrSaveTypeKey[MID_STR];
 	int		iCount;
 }MYFILEINFO;
+
+
+typedef struct tagInitializeInfo
+{
+
+	_vec3 vStartPos;
+	_uint iOption;
+
+}INITIALINFO;
+
 
 
 //----------------------------

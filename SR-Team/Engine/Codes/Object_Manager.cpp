@@ -123,19 +123,12 @@ HRESULT CObject_Manager::Clear_ForScene(_int _iSceneID)
 	return S_OK;
 }
 
-HRESULT CObject_Manager::Collision_Detection_Layers(_int _iSceneID, const wstring & _strSrcLayerTag, const wstring & _strDstLayerTag, const wstring& _strColliderTag, const wstring& _strDmgInfoTag)
+HRESULT CObject_Manager::CollisionSphere_Detection_Layers(_int _iSceneID, const wstring & _strSrcLayerTag, const wstring & _strDstLayerTag, const wstring& _strColliderTag, const wstring& _strDmgInfoTag)
 {
 	//--------------------------------------------------
 	// 존재하는 씬인지 확인
 	//--------------------------------------------------
 	if (0 > _iSceneID || m_iSceneCount <= _iSceneID)
-		return E_FAIL;
-
-
-	//--------------------------------------------------
-	// 같은 레이어인지 확인
-	//--------------------------------------------------
-	if (_strSrcLayerTag == _strDstLayerTag)
 		return E_FAIL;
 
 
@@ -154,9 +147,99 @@ HRESULT CObject_Manager::Collision_Detection_Layers(_int _iSceneID, const wstrin
 	if (m_pLayers[_iSceneID].end() == iter_dst)
 		return E_FAIL;
 
-	if (FAILED(iter_dst->second->Collision_Detection_Layers(iter_src->second, _strColliderTag, _strDmgInfoTag)))
+	if (FAILED(iter_dst->second->CollisionSphere_Detection_Layers(iter_src->second, _strColliderTag, _strDmgInfoTag)))
 		return E_FAIL;
 	
+	return S_OK;
+}
+
+HRESULT CObject_Manager::CollisionSphere_Detection_Layers_Both(_int _iSceneID, const wstring & _strSrcLayerTag, const wstring & _strDstLayerTag, const wstring & _strColliderTag, const wstring & _strDmgInfoTag)
+{
+	//--------------------------------------------------
+	// 존재하는 씬인지 확인
+	//--------------------------------------------------
+	if (0 > _iSceneID || m_iSceneCount <= _iSceneID)
+		return E_FAIL;
+
+
+	//--------------------------------------------------
+	// 존재하는 레이어인지 확인1
+	//--------------------------------------------------
+	auto iter_src = m_pLayers[_iSceneID].find(_strSrcLayerTag);
+	if (m_pLayers[_iSceneID].end() == iter_src)
+		return E_FAIL;
+
+
+	//--------------------------------------------------
+	// 존재하는 레이어인지 확인2
+	//--------------------------------------------------
+	auto iter_dst = m_pLayers[_iSceneID].find(_strDstLayerTag);
+	if (m_pLayers[_iSceneID].end() == iter_dst)
+		return E_FAIL;
+
+	if (FAILED(iter_dst->second->CollisionSphere_Detection_Layers_Both(iter_src->second, _strColliderTag, _strDmgInfoTag)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CObject_Manager::CollisionBox_Detection_Layers(_int _iSceneID, const wstring& _strSrcLayerTag, const wstring& _strDstLayerTag, const wstring& _strColliderTag, const wstring& _strDmgInfoTag)
+{
+	//--------------------------------------------------
+	// 존재하는 씬인지 확인
+	//--------------------------------------------------
+	if (0 > _iSceneID || m_iSceneCount <= _iSceneID)
+		return E_FAIL;
+
+
+	//--------------------------------------------------
+	// 존재하는 레이어인지 확인1
+	//--------------------------------------------------
+	auto iter_src = m_pLayers[_iSceneID].find(_strSrcLayerTag);
+	if (m_pLayers[_iSceneID].end() == iter_src)
+		return E_FAIL;
+
+
+	//--------------------------------------------------
+	// 존재하는 레이어인지 확인2
+	//--------------------------------------------------
+	auto iter_dst = m_pLayers[_iSceneID].find(_strDstLayerTag);
+	if (m_pLayers[_iSceneID].end() == iter_dst)
+		return E_FAIL;
+
+	if (FAILED(iter_dst->second->CollisionBox_Detection_Layers(iter_src->second, _strColliderTag, _strDmgInfoTag)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CObject_Manager::CollisionBox_Detection_Layers_Both(_int _iSceneID, const wstring& _strSrcLayerTag, const wstring& _strDstLayerTag, const wstring& _strColliderTag, const wstring& _strDmgInfoTag)
+{
+	//--------------------------------------------------
+	// 존재하는 씬인지 확인
+	//--------------------------------------------------
+	if (0 > _iSceneID || m_iSceneCount <= _iSceneID)
+		return E_FAIL;
+
+
+	//--------------------------------------------------
+	// 존재하는 레이어인지 확인1
+	//--------------------------------------------------
+	auto iter_src = m_pLayers[_iSceneID].find(_strSrcLayerTag);
+	if (m_pLayers[_iSceneID].end() == iter_src)
+		return E_FAIL;
+
+
+	//--------------------------------------------------
+	// 존재하는 레이어인지 확인2
+	//--------------------------------------------------
+	auto iter_dst = m_pLayers[_iSceneID].find(_strDstLayerTag);
+	if (m_pLayers[_iSceneID].end() == iter_dst)
+		return E_FAIL;
+
+	if (FAILED(iter_dst->second->CollisionBox_Detection_Layers_Both(iter_src->second, _strColliderTag, _strDmgInfoTag)))
+		return E_FAIL;
+
 	return S_OK;
 }
 

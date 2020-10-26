@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "..\Headers\Snow.h"
-
+#include "DamageInfo.h"
 
 USING(Client)
 
@@ -22,7 +22,8 @@ HRESULT CSnow::Setup_GameObject_Prototype()
 
 HRESULT CSnow::Setup_GameObject(void * pArg)
 {
-	// TODO
+	if (pArg)
+		m_vPos = *(_vec3*)pArg;
 
 	if (FAILED(Add_Component()))
 		return E_FAIL;
@@ -51,8 +52,6 @@ int CSnow::LateUpdate_GameObject(float _fDeltaTime)
 	if (FAILED(m_pTransformCom->Update_Transform()))
 		return GAMEOBJECT::WARN;
 
-	//if (FAILED(LookAtPlayer(_fDeltaTime)))
-	//	return E_FAIL;
 
 	if (FAILED(pManagement->Add_RendererList(CRenderer::RENDER_NONEALPHA, this)))
 		return GAMEOBJECT::WARN;
@@ -102,6 +101,20 @@ HRESULT CSnow::Add_Component()
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", L"Com_Transform", (CComponent**)&m_pTransformCom, &tTransformDesc)))
 		return E_FAIL;
 
+	CCollider::COLLIDER_DESC tColDesc;
+	tColDesc.vPosition = tTransformDesc.vPosition;
+	tColDesc.fRadius = 0.7f;
+
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Collider", L"Com_Collider", (CComponent**)&m_pColliderCom, &tColDesc)))
+		return E_FAIL;
+
+	CDamageInfo::DAMAGE_DESC tDmgInfo;
+	tDmgInfo.iAttack = 10;
+	tDmgInfo.pOwner = this;
+
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_DamageInfo", L"Com_DmgInfo", (CComponent**)&m_pDmgInfoCom, &tDmgInfo)))
+		return E_FAIL;
+
 	if (FAILED(Setting_Dir()))
 		return E_FAIL;
 
@@ -112,6 +125,15 @@ HRESULT CSnow::Movement(float _fDeltaTime)
 {
 	if (FAILED(Throwing_Snow(_fDeltaTime)))
 		return E_FAIL;
+
+	if (FAILED(m_pColliderCom->Update_Collider(m_pTransformCom->Get_Desc().vPosition)))
+		return E_FAIL;
+
+	m_fDeadTime += _fDeltaTime;
+
+	if (m_fDeadTime >= 10.f)
+		m_bDead = true;
+
 
 	return S_OK;
 }
@@ -170,8 +192,20 @@ void CSnow::Free()
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pTextureCom);
+	Safe_Release(m_pColliderCom);
+	Safe_Release(m_pDmgInfoCom);
 
 	CGameObject::Free();
+}
+
+HRESULT CSnow::Take_Damage(const CComponent * _pDamageComp)
+{
+	if (!_pDamageComp)
+		return S_OK;
+
+	m_bDead = true;
+
+	return S_OK;
 }
 
 HRESULT CSnow::Throwing_Snow(float _fDeltaTime)
@@ -206,6 +240,7 @@ HRESULT CSnow::Throwing_Snow(float _fDeltaTime)
 		m_bFallDown = false;
 		m_bDead = true;
 	}
+
 	m_pTransformCom->Set_Position(_vec3(vPos.x, vPos.y, vPos.z));
 
 	return S_OK;

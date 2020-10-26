@@ -169,6 +169,9 @@
     <Filter Include="03.Component\00.VIBuffer\03.Pyramid">
       <UniqueIdentifier>{bb22c851-55c5-41c8-94b4-8494f5c5b615}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\11.Instant_Impact">
+      <UniqueIdentifier>{b3ed9e18-8920-43db-b876-047dc6c8b215}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -297,6 +300,9 @@
     <ClInclude Include="..\Headers\VIBuffer_Pyramid.h">
       <Filter>03.Component\00.VIBuffer\03.Pyramid</Filter>
     </ClInclude>
+    <ClInclude Include="..\Headers\Instant_Impact.h">
+      <Filter>02.GameObject\11.Instant_Impact</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -409,6 +415,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\VIBuffer_Pyramid.cpp">
       <Filter>03.Component\00.VIBuffer\03.Pyramid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Instant_Impact.cpp">
+      <Filter>02.GameObject\11.Instant_Impact</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

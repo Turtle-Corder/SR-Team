@@ -44,6 +44,9 @@ HRESULT CScene_Stage0::Setup_Scene()
 	if (FAILED(Setup_Layer_Golem(L"Layer_Golem")))
 		return E_FAIL;
 
+	if (FAILED(Setup_Layer_Snow(L"Layer_Snow")))
+		return E_FAIL;
+
 	if (FAILED(Setup_Layer_Environment(L"Layer_Environment")))
 		return E_FAIL;
 
@@ -69,7 +72,10 @@ _int CScene_Stage0::LateUpdate_Scene(_float _fDeltaTime)
 		return -1;
 
 	// Src가 공격자 Dst가 피격자
-	if (FAILED(pManagement->Collision_Detection_Layers(SCENE_STAGE0, L"Layer_Player", L"Layer_Monster", L"Com_Collider", L"Com_DmgInfo")))
+	if (FAILED(pManagement->CollisionSphere_Detection_Layers(SCENE_STAGE0, L"Layer_Player", L"Layer_Monster", L"Com_Collider", L"Com_DmgInfo")))
+		return -1;
+
+	if (FAILED(pManagement->CollisionSphere_Detection_Layers_Both(SCENE_STAGE0, L"Layer_Snow", L"Layer_Player", L"Com_Collider", L"Com_DmgInfo")))
 		return -1;
 
 	CKeyManager::Get_Instance()->Key_Update();
@@ -243,6 +249,19 @@ HRESULT CScene_Stage0::Setup_Layer_Golem(const wstring & LayerTag)
 		return E_FAIL;
 
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Golem", SCENE_STAGE0, LayerTag, &_vec3(10.f, 0.f, 30.f))))/*여기 StartPos*/
+		return E_FAIL;
+
+	return S_OK;
+
+}
+
+HRESULT CScene_Stage0::Setup_Layer_Snow(const wstring & LayerTag)
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Snow", SCENE_STAGE0, LayerTag, &_vec3(10.f, 100.f, 30.f))))/*여기 StartPos*/
 		return E_FAIL;
 
 	return S_OK;
