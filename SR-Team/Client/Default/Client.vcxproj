@@ -192,6 +192,7 @@
     <ClInclude Include="..\Headers\Terrain.h" />
     <ClInclude Include="..\Headers\Tree.h" />
     <ClInclude Include="..\Headers\VIBuffer_Flower.h" />
+    <ClInclude Include="..\Headers\VIBuffer_Pyramid.h" />
     <ClInclude Include="..\Headers\VIBuffer_TreeHead.h" />
     <ClInclude Include="..\Headers\UICamera.h" />
     <ClInclude Include="..\Headers\Yeti.h" />
@@ -232,6 +233,7 @@
     <ClCompile Include="..\Codes\Terrain.cpp" />
     <ClCompile Include="..\Codes\Tree.cpp" />
     <ClCompile Include="..\Codes\VIBuffer_Flower.cpp" />
+    <ClCompile Include="..\Codes\VIBuffer_Pyramid.cpp" />
     <ClCompile Include="..\Codes\VIBuffer_TreeHead.cpp" />
     <ClCompile Include="..\Codes\UICamera.cpp" />
     <ClCompile Include="..\Codes\Yeti.cpp" />

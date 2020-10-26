@@ -2,11 +2,16 @@
 
 USING(Engine)
 
-CTexture::CTexture(LPDIRECT3DDEVICE9 _pDevice, TEXTURE_TYPE _eTextureType, const wstring & _strFilePath, _uint _iCount)
+CTexture::CTexture(LPDIRECT3DDEVICE9 _pDevice, TEXTURE_TYPE _eTextureType, const wstring & _strFilePath, _uint _iMaxCount)
 	: CComponent(_pDevice)
 	, m_eTextureType(_eTextureType)
 	, m_strFilePath(_strFilePath)
-	, m_iCount(_iCount)
+	, m_iMaxCount(_iMaxCount)
+	, m_iCurCount(0)
+	, m_fFrameSpeed(0.f)
+	, m_fFrameBegin(0.f)
+	, m_fFrameCur(0.f)
+	, m_fFrameEnd((_float)_iMaxCount)
 {
 }
 
@@ -16,7 +21,12 @@ CTexture::CTexture(const CTexture & _rOther)
 	, m_TexInfo(_rOther.m_TexInfo)
 	, m_eTextureType(_rOther.m_eTextureType)
 	, m_strFilePath(_rOther.m_strFilePath)
-	, m_iCount(_rOther.m_iCount)
+	, m_iMaxCount(_rOther.m_iMaxCount)
+	, m_iCurCount(_rOther.m_iCurCount)
+	, m_fFrameSpeed(_rOther.m_fFrameSpeed)
+	, m_fFrameBegin(_rOther.m_fFrameBegin)
+	, m_fFrameCur(_rOther.m_fFrameCur)
+	, m_fFrameEnd(_rOther.m_fFrameEnd)
 {
 	for (auto& pTexture : m_Textures)
 		Safe_AddRef(pTexture);
@@ -29,7 +39,7 @@ HRESULT CTexture::Setup_Component_Prototype()
 	TCHAR szFullPath[MAX_STR] = L"";
 	HRESULT hr = 0;
 
-	for (_uint iCnt = 0; iCnt < m_iCount; ++iCnt)
+	for (_uint iCnt = 0; iCnt < m_iMaxCount; ++iCnt)
 	{
 		StringCchPrintf(szFullPath, _countof(szFullPath), m_strFilePath.c_str(), iCnt);
 
@@ -91,36 +101,70 @@ HRESULT CTexture::Setup_Component(void * _pArg)
 	return S_OK;
 }
 
+HRESULT CTexture::Update_Frame(_float _fDeltaTime, _uint* _pCurFrame)
+{
+	m_fFrameCur += m_fFrameEnd * m_fFrameSpeed * _fDeltaTime;
+	if (m_fFrameCur > m_fFrameEnd)
+	{
+		m_fFrameCur = m_fFrameBegin;
+	}
+
+	*_pCurFrame = (_uint)m_fFrameCur;
+
+	return S_OK;
+}
+
 HRESULT CTexture::SetTexture(_uint _iIndex)
 {
-	if (m_iCount <= _iIndex)
+	if (m_iMaxCount <= _iIndex)
 		return E_FAIL;
+
+	m_iCurCount = _iIndex;
 
 	return m_pDevice->SetTexture(0, m_Textures[_iIndex]);
 }
 
+HRESULT CTexture::SetFrameRange(_uint _iFrameBegin, _uint _iFrameEnd, _float _fFrameSpeed)
+{
+	if (_iFrameBegin + 1 > m_iMaxCount || _iFrameEnd + 1 > m_iMaxCount)
+	{
+		PRINT_LOG(L"Inavlidate Frame Range", LOG::ENGINE);
+		return E_FAIL;
+	}
+
+	m_fFrameSpeed = _fFrameSpeed;
+	m_fFrameCur = m_fFrameBegin = (_float)_iFrameBegin;
+	m_fFrameEnd = (_float)_iFrameEnd + 1;
+	return S_OK;
+}
+
 const IDirect3DBaseTexture9 * CTexture::GetTexture(_uint _iIndex) const
 {
-	if (m_iCount <= _iIndex)
+	if (m_iMaxCount <= _iIndex)
 		return nullptr;
 
 	return m_Textures[_iIndex];
 }
 
+const IDirect3DBaseTexture9 * CTexture::Get_CurrentTexture() const
+{
+	return m_Textures[m_iCurCount];
+}
+
 const D3DXIMAGE_INFO* CTexture::Get_TexInfo(_uint _iIndex) const
 {
-	if (m_iCount <= _iIndex)
+	if (m_iMaxCount <= _iIndex)
 		return nullptr;
 
 	return m_TexInfo[_iIndex];
 }
 
-CTexture * CTexture::Create(LPDIRECT3DDEVICE9 _pDevice, TEXTURE_TYPE _eTextureType, const wstring & _strFilePath, _uint _iCount)
+CTexture * CTexture::Create(LPDIRECT3DDEVICE9 _pDevice, TEXTURE_TYPE _eTextureType, const wstring & _strFilePath, _uint _iMaxCount)
 {
 	if (nullptr == _pDevice)
 		return nullptr;
 
-	CTexture* pInstance = new CTexture(_pDevice, _eTextureType, _strFilePath, _iCount);
+	CTexture* pInstance = new CTexture(_pDevice, _eTextureType, _strFilePath, _iMaxCount);
 	if (FAILED(pInstance->Setup_Component_Prototype()))
 	{
 		PRINT_LOG(L"Failed To Create CTexture", LOG::ENGINE);
