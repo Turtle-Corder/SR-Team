@@ -166,6 +166,9 @@
     <Filter Include="02.GameObject\05.Monster\04.PinkBean%28Boss%29\00.Fire">
       <UniqueIdentifier>{3d212d16-de59-472b-834c-584aea8c77ec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.Component\00.VIBuffer\03.Pyramid">
+      <UniqueIdentifier>{bb22c851-55c5-41c8-94b4-8494f5c5b615}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -291,6 +294,9 @@
     <ClInclude Include="..\Headers\Equip.h">
       <Filter>02.GameObject\07.UI\03. Equip</Filter>
     </ClInclude>
+    <ClInclude Include="..\Headers\VIBuffer_Pyramid.h">
+      <Filter>03.Component\00.VIBuffer\03.Pyramid</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -400,6 +406,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Equip.cpp">
       <Filter>02.GameObject\07.UI\03. Equip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\VIBuffer_Pyramid.cpp">
+      <Filter>03.Component\00.VIBuffer\03.Pyramid</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

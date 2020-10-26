@@ -107,7 +107,7 @@ HRESULT CTree::Add_Component(_vec3 _vPos)
 	tTransformDesc[TREE_HEAD].vPosition = vPositon_Head;
 
 	//For.Com_VIBuffer
-	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_TreeHead", L"Com_VIBufferHead", (CComponent**)&m_pVIBufferCom[TREE_HEAD])))
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_Pyramid", L"Com_VIBufferHead", (CComponent**)&m_pVIBufferCom[TREE_HEAD])))
 		return E_FAIL;
 
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", L"Com_VIBufferBody", (CComponent**)&m_pVIBufferCom[TREE_BODY])))

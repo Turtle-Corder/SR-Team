@@ -26,6 +26,7 @@
 #include "Status.h"
 #include "VIBuffer_TreeHead.h"
 #include "VIBuffer_Flower.h"
+#include "VIBuffer_Pyramid.h"
 #pragma endregion
 
 
@@ -215,6 +216,11 @@ HRESULT CMainApp::Setup_StaticResources()
 
 #pragma region Component_VIBuffer_Flower
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_VIBuffer_Flower", CVIBuffer_Flower::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_VIBuffer_Pyramid
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_VIBuffer_Pyramid", CVIBuffer_Pyramid::Create(m_pDevice))))
 		return E_FAIL;
 #pragma endregion
 
