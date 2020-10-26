@@ -5,6 +5,7 @@
 #include "ItemManager.h"
 #include "DamageInfo.h"
 #include "Shop.h"
+#include "Equip.h"
 #include "..\Headers\Player.h"
 
 USING(Client)
@@ -105,14 +106,18 @@ _int CPlayer::Update_GameObject(_float _fDeltaTime)
 	CShop* pShop = (CShop*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Shop");
 	if (pShop == nullptr)
 		return 0;
+	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 1);
+	if (pEquip == nullptr)
+		return 0;
 
 	if (m_bInitial)
 		Initial_Update_GameObject();
 
 	m_bRenderInven = pInven->Get_Render();
 	m_bRenderShop = pShop->Get_Render();
+	m_bRenderEquip = pEquip->Get_Render();
 
-	if (!m_bRenderInven & !m_bRenderShop)
+	if (!m_bRenderInven && !m_bRenderShop && !m_bRenderEquip)
 	{
 		if (FAILED(Movement(_fDeltaTime)))
 			return GAMEOBJECT::WARN;
@@ -290,7 +295,7 @@ HRESULT CPlayer::Movement(_float _fDeltaTime)
 	if (!m_bUsingSkill)
 	{
 		Move_Vertical(_fDeltaTime);
-		Move_Horizontal(_fDeltaTime);
+		//Move_Horizontal(_fDeltaTime);
 		Turn(_fDeltaTime);
 
 		Normal_Attack(_fDeltaTime);
@@ -434,18 +439,18 @@ void CPlayer::Move_Vertical(_float _fDeltaTime)
 		m_ePlayerDir = MOVING_DOWN;
 		if (!m_bDownTurn)
 		{
-			for (_uint i = 0; i < 2; ++i)
+			/*for (_uint i = 0; i < 2; ++i)
 			{
 
 				_vec3 vRot = m_pTransformCom[i]->Get_Desc().vRotate;
 				vRot.y = -3.f;
 				m_pTransformCom[i]->Set_Rotation(vRot);
-			}
+			}*/
 			m_bDownTurn = true;
 		}
 
 		for (_uint i = 0; i < 2; ++i)
-			m_pTransformCom[i]->Move_Vertical(_fDeltaTime);
+			m_pTransformCom[i]->Move_Vertical(-_fDeltaTime);
 
 		if (m_bLeftTurn)
 			m_bLeftTurn = false;
@@ -515,13 +520,13 @@ void CPlayer::Move_Horizontal(_float _fDeltaTime)
 
 void CPlayer::Turn(_float _fDeltaTime)
 {
-	if (CKeyManager::Get_Instance()->Key_Pressing('Q'))
+	if (CKeyManager::Get_Instance()->Key_Pressing(VK_LEFT))
 	{
 		for (_uint i = 0; i < 2; ++i)
 			m_pTransformCom[i]->Turn(CTransform::AXIS_Y, -_fDeltaTime);
 	}
 
-	if (CKeyManager::Get_Instance()->Key_Pressing('E'))
+	if (CKeyManager::Get_Instance()->Key_Pressing(VK_RIGHT))
 	{
 		for (_uint i = 0; i < 2; ++i)
 			m_pTransformCom[i]->Turn(CTransform::AXIS_Y, _fDeltaTime);

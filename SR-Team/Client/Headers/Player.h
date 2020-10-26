@@ -166,9 +166,10 @@ private:
 	_bool				m_bUpTurn = false;
 	_bool				m_bDownTurn = false;
 
-	// 상점, 인벤이 출력되어 있으면 
+	// 상점, 인벤, 장비창이 출력되어 있으면 
 	_bool				m_bRenderShop = false;
 	_bool				m_bRenderInven = false;
+	_bool				m_bRenderEquip = false;
 	//--------------------------------------------
 };
 

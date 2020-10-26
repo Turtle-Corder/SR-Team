@@ -30,7 +30,7 @@ public:
 	// 인벤과 아이템을 그릴것인지 안그릴것인지 외부에게 알려주는 함수
 	// m_bRender : true면 그린다, false면 그리지 않는다
 	// ------------------------------------------------------------------
-	bool Get_Render() { return m_bRender; }
+	_bool Get_Render() { return m_bRender; }
 
 
 public:
