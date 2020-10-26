@@ -36,7 +36,7 @@ _int CMainCamera::Update_GameObject(_float _fDeltaTime)
 {
 	if (GetAsyncKeyState('A') & 0x8000)
 	{
-		Set_Camera_Wigging(1.0, 100.0, 3.0, WIG_TYPE::VERTICAL);
+		Set_Camera_Wigging(1.0, 100.0, 3.0, WIG_TYPE::DAMPED);
 	}
 
 
@@ -134,7 +134,7 @@ HRESULT CMainCamera::ZoomInOut(_float _fDeltaTime)
 HRESULT CMainCamera::Wigging(_float _fDeltaTime)
 {
 	//시간 지났을시 초기화, 유한기계상태 중립
-	if (m_tShakeInfo.m_fSettingTime < m_tShakeInfo.m_fTimeFlow)
+	if (m_tShakeInfo.m_fSettingTime < m_tShakeInfo.m_fTimeFlow || m_tShakeInfo.m_fMagnitude < 0)
 	{
 		m_tShakeInfo.m_fSettingTime = 0.f;
 		m_tShakeInfo.m_fTimeFlow = 0.f;
@@ -143,16 +143,16 @@ HRESULT CMainCamera::Wigging(_float _fDeltaTime)
 
 	//시간 누적
 	m_tShakeInfo.m_fTimeFlow += _fDeltaTime;
-
+	m_tShakeInfo.m_fMagnitude -= _fDeltaTime;
 
 	//실제로 흔드는 함수
 	switch (m_tShakeInfo.m_eWigType)
 	{
-	case Client::CMainCamera::VERTICAL:
+	case Client::CMainCamera::DAMPED:
 		//m_tCameraDesc.vAt += m_tCameraDesc.vUp * sinf(m_tShakeInfo.m_fTimeFlow * m_tShakeInfo.m_fFrequency) * m_tShakeInfo.m_fMagnitude;
 		m_tCameraDesc.vEye += m_tCameraDesc.vUp * sinf(m_tShakeInfo.m_fTimeFlow* m_tShakeInfo.m_fFrequency) * m_tShakeInfo.m_fMagnitude;
 		break;
-	case Client::CMainCamera::HORIZONAL:
+	case Client::CMainCamera::HARMONIC:
 		break;
 	case Client::CMainCamera::MIXED:
 		break;

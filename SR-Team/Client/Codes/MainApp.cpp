@@ -98,7 +98,7 @@ HRESULT CMainApp::Setup_MainApp()
 		return E_FAIL;
 	}
 
-	//Setup_TestLine();
+	Setup_TestLine();
 
 	return S_OK;
 }
@@ -384,30 +384,34 @@ HRESULT CMainApp::Setup_TestLine()
 	fin.open("../DataPath/3DPath.txt");
 	if (!fin.fail())
 	{
-		TCHAR szFilePath[MAX_PATH] = L"";
-		TCHAR szDimenKey[MAX_PATH] = L"";
-		TCHAR szLayerKey[MAX_PATH] = L"";
-		TCHAR szObjectKey[MAX_PATH] = L"";
-		TCHAR szSaveTypeKey[MAX_PATH] = L"";
-		TCHAR szCount[MAX_PATH] = L"";
+		TCHAR szCount[3] = L"";
 		while (true)
 		{
+			//---------------------------------------------------------------
+			//FILEINFO 로딩
+			//---------------------------------------------------------------
 
 
 			MYFILEINFO pFileInfo;
 
 			fin.getline(pFileInfo.wstrFilePath, MAX_PATH, L'|');
-			fin.getline(pFileInfo.wstrObjectKey, MAX_PATH, L'|');
-			fin.getline(pFileInfo.wstrLayerKey, MAX_PATH, L'|');
 			fin.getline(pFileInfo.wstrDimenKey, MAX_PATH, L'|');
+			fin.getline(pFileInfo.wstrLayerKey, MAX_PATH, L'|');
+			fin.getline(pFileInfo.wstrObjectKey, MAX_PATH, L'|');
 			fin.getline(pFileInfo.wstrSaveTypeKey, MAX_PATH, L'|');
-			fin.getline(szCount, MAX_PATH);
 
+			fin.getline(szCount, MAX_PATH);
+			pFileInfo.iCount = _ttoi(szCount);
+
+			//끝나면 탈출
 			if (fin.eof())
 				break;
 
 
-			pFileInfo.iCount = _ttoi(szCount);
+
+			//---------------------------------------------------------------
+			//처리용 문자열 세팅
+			//---------------------------------------------------------------
 
 			wstring wstrCombine = L"";
 			wstring wstrObjKey = pFileInfo.wstrObjectKey;
@@ -416,17 +420,51 @@ HRESULT CMainApp::Setup_TestLine()
 
 			wstring wstrFullPath = pFileInfo.wstrFilePath;
 
-			if(pFileInfo.wstrSaveTypeKey == L"DDS")
-			wstrFullPath = wstrFullPath.substr(0, wstrFullPath.length() - 1);
+			wsprintf(szCount, L"%d", pFileInfo.iCount - 1);
 
 
 
+			//---------------------------------------------------------------
+			//확장자 합성
+			//---------------------------------------------------------------
+
+			if(!wcscmp(pFileInfo.wstrSaveTypeKey, L"DDS") && pFileInfo.iCount < 10)
+				wstrFullPath = wstrFullPath.substr(0, wstrFullPath.length() - 6)+ szCount + L".dds";
+
+			else if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"DDS") && pFileInfo.iCount >= 10)
+				wstrFullPath = wstrFullPath.substr(0, wstrFullPath.length() - 7) + szCount + L".dds";
+			
+			else if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"PNG") && pFileInfo.iCount < 10)
+				wstrFullPath = wstrFullPath.substr(0, wstrFullPath.length() - 6) + szCount + L".png";
+
+			else if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"PNG") && pFileInfo.iCount >= 10)
+				wstrFullPath = wstrFullPath.substr(0, wstrFullPath.length() - 7) + szCount + L".png";
 
 
 
-			if (FAILED(pManagement->Add_Component_Prototype(SCENE_STATIC, wstrCombine.c_str(), CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE,
-				wstrFullPath))))
-				return E_FAIL;
+			
+			//---------------------------------------------------------------
+			//ProtoType 추가
+			//---------------------------------------------------------------
+
+			if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"DDS"))
+			{
+				if (FAILED(pManagement->Add_Component_Prototype(SCENE_STATIC, wstrCombine.c_str(), CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE,
+					wstrFullPath))))
+					return E_FAIL;
+			}
+			else if(!wcscmp(pFileInfo.wstrSaveTypeKey, L"PNG") && !wcscmp(pFileInfo.wstrDimenKey, L"3D"))
+			{
+				if (FAILED(pManagement->Add_Component_Prototype(SCENE_STATIC, wstrCombine.c_str(), CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL,
+					wstrFullPath))))
+					return E_FAIL;
+			}
+			else if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"PNG") && !wcscmp(pFileInfo.wstrDimenKey, L"Sprite"))
+			{
+				if (FAILED(pManagement->Add_Component_Prototype(SCENE_STATIC, wstrCombine.c_str(), CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL,
+					wstrFullPath.c_str()))))
+					return E_FAIL;
+			}
 
 		}
 	}

@@ -320,6 +320,7 @@ HRESULT CScene_Stage0::Setup_Layer_CubeTerrain(const wstring & LayerTag)
 		return E_FAIL;
 
 	//·ÎµùÆÄÃ÷
+
 	wifstream fin;
 	wstring wstrFilePath = _T("../Resources/TestMap.txt");
 	fin.open(wstrFilePath.c_str());
@@ -340,6 +341,9 @@ HRESULT CScene_Stage0::Setup_Layer_CubeTerrain(const wstring & LayerTag)
 
 		_int XNumber = _ttoi(szXVerCount) - 1;
 		_int ZNumber = _ttoi(szZVerCount) - 1;
+
+		TILEINFO* tTileInfo = new TILEINFO[XNumber * ZNumber];
+
 		while (true)
 		{
 
@@ -365,6 +369,13 @@ HRESULT CScene_Stage0::Setup_Layer_CubeTerrain(const wstring & LayerTag)
 			Temp_Info.iTextureID = iTextureID;
 			Temp_Info.iX_Index = iXIndex;
 			Temp_Info.iZ_Index = iZIndex;
+			
+			
+			tTileInfo[iIndex].iOpt = 0;
+			tTileInfo[iIndex].iX = iXIndex;
+			tTileInfo[iIndex].iZ = iZIndex;
+
+
 
 			if (fin.eof())
 				break;
@@ -377,10 +388,15 @@ HRESULT CScene_Stage0::Setup_Layer_CubeTerrain(const wstring & LayerTag)
 			}
 
 		}
+
+		pManagement->Set_TileInfo(tTileInfo, XNumber, ZNumber);
+		
+
 	}
 
 	else
 		return E_FAIL;
+
 
 	fin.close();
 	return S_OK;

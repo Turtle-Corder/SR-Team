@@ -232,6 +232,7 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 		L"../Resources/Snow%d.dds"))))
 		return E_FAIL;
 
+	//타일 데이터 불러오기
 
 	return S_OK;
 }

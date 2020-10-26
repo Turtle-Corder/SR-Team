@@ -36,11 +36,11 @@ private:
 public:
 	enum WIG_TYPE
 	{
-		VERTICAL, HORIZONAL, MIXED, WIG_END
+		DAMPED, HARMONIC, MIXED, WIG_END
 	};
 
 	// 카메라 진동함수, Option은 2를 넘기지 않음, 강도와 진동수는 음수일 수 없음.
-	HRESULT Set_Camera_Wigging(_float _Magnitude, _float _Frequency, _float _Time, WIG_TYPE Option = WIG_TYPE::VERTICAL);
+	HRESULT Set_Camera_Wigging(_float _Magnitude, _float _Frequency, _float _Time, WIG_TYPE Option = WIG_TYPE::DAMPED);
 
 public:
 	static CMainCamera* Create(LPDIRECT3DDEVICE9 _pDevice);
@@ -56,7 +56,7 @@ private:
 		_float m_fSettingTime = 0.f;
 		_float m_fMagnitude = 0.f;
 		_float m_fFrequency = 0.f;
-		WIG_TYPE m_eWigType = WIG_TYPE::VERTICAL;
+		WIG_TYPE m_eWigType = WIG_TYPE::DAMPED;
 	};
 
 	_float m_fZoomInOutSpeedPerSecond = 10.f;
