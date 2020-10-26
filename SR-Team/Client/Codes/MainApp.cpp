@@ -98,6 +98,8 @@ HRESULT CMainApp::Setup_MainApp()
 		return E_FAIL;
 	}
 
+	//Setup_TestLine();
+
 	return S_OK;
 }
 
@@ -368,6 +370,67 @@ HRESULT CMainApp::Setup_StaticResources()
 	//----------------------------------------------------------------------------------------------------
 #pragma region Sound_
 #pragma endregion
+
+	return S_OK;
+}
+
+HRESULT CMainApp::Setup_TestLine()
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	wifstream fin;
+	fin.open("../DataPath/3DPath.txt");
+	if (!fin.fail())
+	{
+		TCHAR szFilePath[MAX_PATH] = L"";
+		TCHAR szDimenKey[MAX_PATH] = L"";
+		TCHAR szLayerKey[MAX_PATH] = L"";
+		TCHAR szObjectKey[MAX_PATH] = L"";
+		TCHAR szSaveTypeKey[MAX_PATH] = L"";
+		TCHAR szCount[MAX_PATH] = L"";
+		while (true)
+		{
+
+
+			MYFILEINFO pFileInfo;
+
+			fin.getline(pFileInfo.wstrFilePath, MAX_PATH, L'|');
+			fin.getline(pFileInfo.wstrObjectKey, MAX_PATH, L'|');
+			fin.getline(pFileInfo.wstrLayerKey, MAX_PATH, L'|');
+			fin.getline(pFileInfo.wstrDimenKey, MAX_PATH, L'|');
+			fin.getline(pFileInfo.wstrSaveTypeKey, MAX_PATH, L'|');
+			fin.getline(szCount, MAX_PATH);
+
+			if (fin.eof())
+				break;
+
+
+			pFileInfo.iCount = _ttoi(szCount);
+
+			wstring wstrCombine = L"";
+			wstring wstrObjKey = pFileInfo.wstrObjectKey;
+
+			wstrCombine = L"Component_Texture_" + wstrObjKey;
+
+			wstring wstrFullPath = pFileInfo.wstrFilePath;
+
+			if(pFileInfo.wstrSaveTypeKey == L"DDS")
+			wstrFullPath = wstrFullPath.substr(0, wstrFullPath.length() - 1);
+
+
+
+
+
+
+			if (FAILED(pManagement->Add_Component_Prototype(SCENE_STATIC, wstrCombine.c_str(), CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE,
+				wstrFullPath))))
+				return E_FAIL;
+
+		}
+	}
+	fin.close();
 
 	return S_OK;
 }

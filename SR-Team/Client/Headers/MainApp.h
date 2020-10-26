@@ -21,6 +21,8 @@ public:
 private:
 	HRESULT Setup_DefaultSetting();
 	HRESULT Setup_StaticResources();
+	HRESULT Setup_TestLine();
+
 
 public:
 	static CMainApp* Create();

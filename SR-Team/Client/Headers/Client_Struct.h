@@ -34,6 +34,17 @@ typedef struct tagDamageEvent
 } DAMAGE_EVENT;
 
 
+typedef struct tagFileInfo
+{
+	TCHAR wstrFilePath[MID_STR];
+	TCHAR wstrDimenKey[MID_STR];
+	TCHAR wstrLayerKey[MID_STR];
+	TCHAR wstrObjectKey[MID_STR];
+	TCHAR wstrSaveTypeKey[MID_STR];
+	int		iCount;
+}MYFILEINFO;
+
+
 //----------------------------
 // 
 //----------------------------
