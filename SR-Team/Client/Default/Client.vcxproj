@@ -161,7 +161,7 @@
     <ClInclude Include="..\Headers\Bomb.h" />
     <ClInclude Include="..\Headers\Equip.h" />
     <ClInclude Include="..\Headers\Fire.h" />
-    <ClInclude Include="..\Headers\Instant_Impact.h" />
+    <ClInclude Include="..\Headers\Golem_Impact.h" />
     <ClInclude Include="..\Headers\PinkBean.h" />
     <ClInclude Include="..\Headers\Client_Define.h" />
     <ClInclude Include="..\Headers\Client_Enum.h" />
@@ -208,7 +208,7 @@
     <ClCompile Include="..\Codes\Bomb.cpp" />
     <ClCompile Include="..\Codes\Equip.cpp" />
     <ClCompile Include="..\Codes\Fire.cpp" />
-    <ClCompile Include="..\Codes\Instant_Impact.cpp" />
+    <ClCompile Include="..\Codes\Golem_Impact.cpp" />
     <ClCompile Include="..\Codes\PinkBean.cpp" />
     <ClCompile Include="..\Codes\CubeTerrain.cpp" />
     <ClCompile Include="..\Codes\DamageInfo.cpp" />
