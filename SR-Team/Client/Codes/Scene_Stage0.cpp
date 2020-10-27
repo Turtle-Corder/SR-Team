@@ -371,7 +371,7 @@ HRESULT CScene_Stage0::Setup_Layer_CubeTerrain(const wstring & LayerTag)
 	//·ÎµùÆÄÃ÷
 
 	wifstream fin;
-	wstring wstrFilePath = _T("../Resources/TestMap.txt");
+	wstring wstrFilePath = _T("../DataPath/MapSource/Stage0.txt");
 	fin.open(wstrFilePath.c_str());
 	if (!fin.fail())
 	{
@@ -382,7 +382,7 @@ HRESULT CScene_Stage0::Setup_Layer_CubeTerrain(const wstring & LayerTag)
 		TCHAR szIndex[MAX_PATH] = L"";
 		TCHAR szOnOff[MAX_PATH] = L"";
 		TCHAR szTextureID[MAX_PATH] = L"";
-
+		TCHAR szMovePossible[10] = L"";
 
 		//X, Z Ãà°¹¼ö
 		fin.getline(szXVerCount, MAX_PATH, L'|');
@@ -401,7 +401,8 @@ HRESULT CScene_Stage0::Setup_Layer_CubeTerrain(const wstring & LayerTag)
 			fin.getline(szFloor, MAX_PATH, L'|');
 			fin.getline(szIndex, MAX_PATH, L'|');
 			fin.getline(szOnOff, MAX_PATH, L'|');
-			fin.getline(szTextureID, MAX_PATH);
+			fin.getline(szTextureID, MAX_PATH, L'|');
+			fin.getline(szMovePossible, MAX_PATH);
 			_uint iFloor = _ttoi(szFloor);
 			_uint iIndex = _ttoi(szIndex);
 			_bool bOnOff = 1 && (_ttoi(szOnOff));
@@ -418,8 +419,11 @@ HRESULT CScene_Stage0::Setup_Layer_CubeTerrain(const wstring & LayerTag)
 			Temp_Info.iTextureID = iTextureID;
 			Temp_Info.iX_Index = iXIndex;
 			Temp_Info.iZ_Index = iZIndex;
-			
-			
+			Temp_Info.iInterval = 2.f;
+			Temp_Info.iMaxX = XNumber;
+			Temp_Info.iMaxZ = ZNumber;
+
+
 			tTileInfo[iIndex].iOpt = 0;
 			tTileInfo[iIndex].iX = iXIndex;
 			tTileInfo[iIndex].iZ = iZIndex;

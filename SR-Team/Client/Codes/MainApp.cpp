@@ -21,6 +21,7 @@
 #include "DamageInfo.h"
 #include "Equip.h"
 #include "Skill.h"
+#include "TerrainBundle.h"
 #pragma endregion
 
 #pragma region Component_Headers
@@ -517,67 +518,72 @@ HRESULT CMainApp::Setup_ProtoTypeData()
 			//처리용 문자열 세팅
 			//---------------------------------------------------------------
 
-			wstring wstrCombine = L"";
-			wstring wstrObjKey = pFileInfo.wstrObjectKey;
-
-			wchar_t *ptr = wcschr(pFileInfo.wstrObjectKey, L'_');
-			wprintf(L"%s\n", ptr);
-
-			wstrCombine = L"Component_Texture" + wstring(ptr);
-
-			ptr = nullptr;
-
-			delete ptr;
-
-
-			wstring wstrFullPath = pFileInfo.wstrFilePath;
-
-			wsprintf(szCount, L"%d", pFileInfo.iCount - 1);
-
-
-
-			//---------------------------------------------------------------
-			//확장자 합성
-			//---------------------------------------------------------------
-
-			if(!wcscmp(pFileInfo.wstrSaveTypeKey, L"DDS") && pFileInfo.iCount < 10)
-				wstrFullPath = wstrFullPath.substr(0, wstrFullPath.length() - 6)+ szCount + L".dds";
-
-			else if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"DDS") && pFileInfo.iCount >= 10)
-				wstrFullPath = wstrFullPath.substr(0, wstrFullPath.length() - 7) + szCount + L".dds";
-			
-			else if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"PNG") && pFileInfo.iCount < 10)
-				wstrFullPath = wstrFullPath.substr(0, wstrFullPath.length() - 6) + szCount + L".png";
-
-			else if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"PNG") && pFileInfo.iCount >= 10)
-				wstrFullPath = wstrFullPath.substr(0, wstrFullPath.length() - 7) + szCount + L".png";
-
-
-
-			
-			//---------------------------------------------------------------
-			//ProtoType 추가
-			//---------------------------------------------------------------
-
-			if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"DDS"))
+			for (_uint iCount = 0; iCount < pFileInfo.iCount; iCount++)
 			{
-				if (FAILED(pManagement->Add_Component_Prototype(SCENE_STATIC, wstrCombine.c_str(), CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE,
-					wstrFullPath))))
-					return E_FAIL;
-			}
-			else if(!wcscmp(pFileInfo.wstrSaveTypeKey, L"PNG") && !wcscmp(pFileInfo.wstrDimenKey, L"3D"))
-			{
-				if (FAILED(pManagement->Add_Component_Prototype(SCENE_STATIC, wstrCombine.c_str(), CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL,
-					wstrFullPath))))
-					return E_FAIL;
-			}
-			else if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"PNG") && !wcscmp(pFileInfo.wstrDimenKey, L"Sprite"))
-			{
-				if (FAILED(pManagement->Add_Component_Prototype(SCENE_STATIC, wstrCombine.c_str(), CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL,
-					wstrFullPath.c_str()))))
-					return E_FAIL;
-			}
 
+				TCHAR szNowCount[10] = L"";
+				wstring wstrCombine = L"";
+				wstring wstrObjKey = pFileInfo.wstrObjectKey;
+
+				wsprintf(szNowCount, _T("%d"), iCount);
+
+				wchar_t *ptr = wcschr(pFileInfo.wstrObjectKey, L'_');
+				wprintf(L"%s\n", ptr);
+
+				wstrCombine = L"Component_Texture" + wstring(ptr) ;
+
+				if (1 != pFileInfo.iCount)
+				{
+					wstrCombine = wstrCombine + szNowCount;
+				}
+
+				ptr = nullptr;
+
+				delete ptr;
+
+
+				wstring wstrFullPath = pFileInfo.wstrFilePath;
+
+				wsprintf(szCount, L"%d", pFileInfo.iCount - 1);
+
+
+
+
+				//---------------------------------------------------------------
+				//확장자 합성
+				//---------------------------------------------------------------
+				if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"DDS"))
+					wstrFullPath = wstrFullPath.substr(0, wstrFullPath.length() - 6) + szNowCount + L".dds";
+
+				else if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"PNG"))
+					wstrFullPath = wstrFullPath.substr(0, wstrFullPath.length() - 6) + szNowCount + L".png";
+
+
+
+
+				//---------------------------------------------------------------
+				//ProtoType 추가
+				//---------------------------------------------------------------
+
+				if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"DDS"))
+				{
+					if (FAILED(pManagement->Add_Component_Prototype(SCENE_STATIC, wstrCombine.c_str(), CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE,
+						wstrFullPath))))
+						return E_FAIL;
+				}
+				else if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"PNG") && !wcscmp(pFileInfo.wstrDimenKey, L"3D"))
+				{
+					if (FAILED(pManagement->Add_Component_Prototype(SCENE_STATIC, wstrCombine.c_str(), CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL,
+						wstrFullPath))))
+						return E_FAIL;
+				}
+				else if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"PNG") && !wcscmp(pFileInfo.wstrDimenKey, L"Sprite"))
+				{
+					if (FAILED(pManagement->Add_Component_Prototype(SCENE_STATIC, wstrCombine.c_str(), CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+						wstrFullPath.c_str()))))
+						return E_FAIL;
+				}
+			}
 		}
 	}
 	fin.close();

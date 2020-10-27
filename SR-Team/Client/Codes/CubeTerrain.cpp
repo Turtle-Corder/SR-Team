@@ -85,10 +85,13 @@ HRESULT CCubeTerrain::Add_Component()
 	tTransformDesc.fRotatePerSecond = 0.f;
 
 
+	TCHAR szTextureCom[MIN_STR] = L"";
+	StringCchPrintf(szTextureCom, sizeof(TCHAR) * MID_STR, _T("Component_Texture_TerrainBox%d"), m_tInfo.iTextureID);
+
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", L"Com_VIBuffer", (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
 
-	if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, L"Component_Texture_Monster", L"Com_Texture", (CComponent**)&m_pTextureCom)))
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, szTextureCom, L"Com_Texture", (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", L"Com_Transform", (CComponent**)&m_pTransformCom, &tTransformDesc)))
