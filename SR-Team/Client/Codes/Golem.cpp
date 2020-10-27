@@ -71,9 +71,8 @@ HRESULT CGolem::Render_NoneAlpha()
 	if (nullptr == pCamera)
 		return E_FAIL;
 
-	for (int iCnt = GOLEM_BODY; iCnt < GOLEM_END; ++iCnt)
+	for (int iCnt = GOLEM_CENTER; iCnt < GOLEM_END; ++iCnt)
 	{
-		int iTemp = iCnt - 2;
 
 		if (FAILED(m_pVIBufferCom[iCnt]->Set_Transform(&m_pTransformCom[iCnt]->Get_Desc().matWorld, pCamera)))
 			return E_FAIL;
@@ -186,13 +185,13 @@ HRESULT CGolem::Add_Component()
 		else if (iCnt == GOLEM_HEAD)
 			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_CubeTexture");
 		else if (iCnt == GOLEM_LEFT_ARM)
-			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_Pyramid");
+			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_TreeHead");
 		else if (iCnt == GOLEM_RIGHT_ARM)
-			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_Pyramid");
+			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_TreeHead");
 		else if (iCnt == GOLEM_LEFT_LEG)
-			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_Pyramid");
+			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_TreeHead");
 		else if (iCnt == GOLEM_RIGHT_LEG)
-			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_Pyramid");
+			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_TreeHead");
 
 		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, szVIBuffer , szName, (CComponent**)&m_pVIBufferCom[iCnt]))) //»ý¼º °¹¼ö
 			return E_FAIL;
@@ -233,54 +232,52 @@ HRESULT CGolem::Add_Component()
 		}
 		else if (iCnt == GOLEM_CENTER)
 		{
-			tTransformDesc[GOLEM_CENTER].vPosition = { 0.f , 1.f, 0.f };
+			tTransformDesc[GOLEM_CENTER].vPosition = { 0.f , 2.5f, 0.f };
 			tTransformDesc[GOLEM_CENTER].fSpeedPerSecond = 10.f;
 			tTransformDesc[GOLEM_CENTER].fRotatePerSecond = D3DXToRadian(90.f);
+			tTransformDesc[GOLEM_HEAD].vScale = { 1.f , 1.f , 1.f };
 		}
 		else if (iCnt == GOLEM_BODY)
 		{
-			tTransformDesc[GOLEM_BODY].vPosition = { 0.f , 0.f, 0.f };
+			tTransformDesc[GOLEM_BODY].vPosition = { 0.f , 1.4f, 0.f };
 			tTransformDesc[GOLEM_BODY].fSpeedPerSecond = 10.f;
 			tTransformDesc[GOLEM_BODY].fRotatePerSecond = D3DXToRadian(90.f);
 			tTransformDesc[GOLEM_BODY].vScale = { 3.0f , 1.7f , 1.f };
-			tTransformDesc[GOLEM_BODY].vScale = { 5.0f , 3.f , 3.f };
 		}
 		else if (iCnt == GOLEM_HEAD)
 		{
-			tTransformDesc[GOLEM_HEAD].vPosition = { 0.f , 0.f , -0.6f };
-			tTransformDesc[GOLEM_HEAD].vPosition = { 0.f , 0.f , -2.f };
+			tTransformDesc[GOLEM_HEAD].vPosition = { 0.f , 1.8f , -0.6f };
 			tTransformDesc[GOLEM_HEAD].fSpeedPerSecond = 10.f;
 			tTransformDesc[GOLEM_HEAD].fRotatePerSecond = D3DXToRadian(90.f);
 			tTransformDesc[GOLEM_HEAD].vScale = { 1.f , 1.f , 0.5f };
-			tTransformDesc[GOLEM_HEAD].vScale = { 3.f , 2.f , 2.f };
 		}
 		else if (iCnt == GOLEM_LEFT_ARM)
 		{
-			tTransformDesc[GOLEM_LEFT_ARM].vPosition = { -1.6f , 0.1f , -0.2f };
+			tTransformDesc[GOLEM_LEFT_ARM].vPosition = { -2.5f , 0.5f , -0.6f };
 			tTransformDesc[GOLEM_LEFT_ARM].fSpeedPerSecond = 10.f;
 			tTransformDesc[GOLEM_LEFT_ARM].fRotatePerSecond = D3DXToRadian(90.f);
-			tTransformDesc[GOLEM_LEFT_ARM].vScale = { 2.f , 1.4f , 0.7f };
+			tTransformDesc[GOLEM_LEFT_ARM].vScale = { 1.f , 1.4f , 0.7f };
 		}
 		else if (iCnt == GOLEM_RIGHT_ARM)
 		{
-			tTransformDesc[GOLEM_RIGHT_ARM].vPosition = { 1.6f , 0.1f , -0.2f };
+			tTransformDesc[GOLEM_RIGHT_ARM].vPosition = { 2.5f , 0.5f , -0.6f };
 			tTransformDesc[GOLEM_RIGHT_ARM].fSpeedPerSecond = 10.f;
 			tTransformDesc[GOLEM_RIGHT_ARM].fRotatePerSecond = D3DXToRadian(90.f);
-			tTransformDesc[GOLEM_RIGHT_ARM].vScale = { 2.f , 1.4f , 0.7f };
+			tTransformDesc[GOLEM_RIGHT_ARM].vScale = { 1.f , 1.4f , 0.7f };
 		}
 		else if (iCnt == GOLEM_LEFT_LEG)
 		{
-			tTransformDesc[GOLEM_LEFT_LEG].vPosition = { -0.5f , -1.f , 0.f };
+			tTransformDesc[GOLEM_LEFT_LEG].vPosition = { -1.f , -2.5f , 0.f };
 			tTransformDesc[GOLEM_LEFT_LEG].fSpeedPerSecond = 10.f;
 			tTransformDesc[GOLEM_LEFT_LEG].fRotatePerSecond = D3DXToRadian(90.f);
-			tTransformDesc[GOLEM_LEFT_LEG].vScale = { 2.f , 0.7f , 0.3f };
+			tTransformDesc[GOLEM_LEFT_LEG].vScale = { 1.5f , 2.0f , 1.f };
 		}
 		else if (iCnt == GOLEM_RIGHT_LEG)
 		{
-			tTransformDesc[GOLEM_RIGHT_LEG].vPosition = { 0.5f , -1.f , 0.f };
+			tTransformDesc[GOLEM_RIGHT_LEG].vPosition = { 1.f , -2.5f , 0.f };
 			tTransformDesc[GOLEM_RIGHT_LEG].fSpeedPerSecond = 10.f;
 			tTransformDesc[GOLEM_RIGHT_LEG].fRotatePerSecond = D3DXToRadian(90.f);
-			tTransformDesc[GOLEM_RIGHT_LEG].vScale = { 2.f , 0.7f , 0.3f };
+			tTransformDesc[GOLEM_RIGHT_LEG].vScale = { 1.5f , 2.0f , 1.f };
 		}
 
 		StringCchPrintf(szName, sizeof(TCHAR) * MAX_PATH, L"Com_Transform%d", iCnt);
@@ -289,6 +286,11 @@ HRESULT CGolem::Add_Component()
 			return E_FAIL;
 	}
 
+	m_pTransformCom[GOLEM_RIGHT_ARM]->Turn(CTransform::AXIS_Z , 0.4f);
+	m_pTransformCom[GOLEM_LEFT_ARM]->Turn(CTransform::AXIS_Z, -0.4f);
+
+	m_pTransformCom[GOLEM_RIGHT_ARM]->Turn(CTransform::AXIS_X, 0.5f);
+	m_pTransformCom[GOLEM_LEFT_ARM]->Turn(CTransform::AXIS_X, 0.5f);
 	return S_OK;
 }
 
@@ -587,5 +589,10 @@ HRESULT CGolem::LookAtPlayer(_float _fDeltaTime)
 	else if (!m_bDirCheck)
 		m_pTransformCom[GOLEM_BASE]->Turn(CTransform::AXIS_Y, _fDeltaTime * m_fRad);
 
+	return S_OK;
+}
+
+HRESULT CGolem::Update_State()
+{
 	return S_OK;
 }

@@ -21,7 +21,7 @@ class CGolem final : public CGameObject
 		GOLEM_RIGHT_LEG,
 		GOLEM_END
 	};
-
+	enum STATE {IDLE , MOVE , ATTACK , ATTACK2 , ATTACK3 , STATE_DEAD};
 private:
 	explicit CGolem(LPDIRECT3DDEVICE9 _pDevice);
 	explicit CGolem(const CGolem& _rOther);
@@ -49,6 +49,7 @@ private:
 	HRESULT Setup_Layer_MonSub(const wstring & LayerTag, _vec3 _vPos);
 	HRESULT	Move(_float _fDeltaTIme);
 	HRESULT LookAtPlayer(_float _fDeltaTime);
+	HRESULT Update_State();
 private:
 	CVIBuffer*		m_pVIBufferCom[GOLEM_END] = {};
 	CTransform*		m_pTransformCom[GOLEM_END] = {};
