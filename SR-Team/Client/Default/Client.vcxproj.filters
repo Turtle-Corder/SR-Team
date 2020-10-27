@@ -175,6 +175,9 @@
     <Filter Include="02.GameObject\06.Projectile\03.Plane">
       <UniqueIdentifier>{f411ec74-1aa1-49db-aadd-6167aa9d7ef6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\00.Terrain\99.TerrainBundle">
+      <UniqueIdentifier>{1c343f57-81c6-4993-9853-91c5861cc28c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -309,6 +312,9 @@
     <ClInclude Include="..\Headers\PlaneSkill.h">
       <Filter>02.GameObject\06.Projectile\03.Plane</Filter>
     </ClInclude>
+    <ClInclude Include="..\Headers\TerrainBundle.h">
+      <Filter>02.GameObject\00.Terrain\99.TerrainBundle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -427,6 +433,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\PlaneSkill.cpp">
       <Filter>02.GameObject\06.Projectile\03.Plane</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\TerrainBundle.cpp">
+      <Filter>02.GameObject\00.Terrain\99.TerrainBundle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
