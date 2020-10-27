@@ -155,43 +155,48 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 		return E_FAIL;
 #pragma endregion
 
+#pragma region Component_Texture_MonSub
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_MonSub", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/MonSub%d.dds"))))
+		return E_FAIL;
+#pragma endregion
+
 #pragma region Component_Texture_SnailBody
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_SnailBody", CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL, L"../Resources/SnailBody%d.dds"))))
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_SnailBody", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/SnailBody%d.dds"))))
 		return E_FAIL;
 #pragma endregion
 
 #pragma region Component_Texture_SnailHead
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_SnailHead", CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL, L"../Resources/SnailHead%d.dds"))))
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_SnailHead", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/SnailHead%d.dds"))))
 		return E_FAIL;
 #pragma endregion
 
 #pragma region Component_Texture_YetiBody
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_YetiBody", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/Monster%d.dds"))))
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_YetiBody", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/YetiBody%d.dds"))))
 		return E_FAIL;
 #pragma endregion
 
 #pragma region Component_Texture_YetiHead
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_YetiHead", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/Monster%d.dds"))))
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_YetiHead", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/YetiHead%d.dds"))))
 		return E_FAIL;
 #pragma endregion
 
 #pragma region Component_Texture_YetiLeft
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_YetiLeft", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/Monster%d.dds"))))
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_YetiLeft", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/YetiPart%d.dds"))))
 		return E_FAIL;
 #pragma endregion
 
 #pragma region Component_Texture_YetiRight
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_YetiRight", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/Monster%d.dds"))))
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_YetiRight", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/YetiPart%d.dds"))))
 		return E_FAIL;
 #pragma endregion
 
 #pragma region Component_Texture_YetiLeftLeg
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_YetiLeftLeg", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/Monster%d.dds"))))
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_YetiLeftLeg", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/YetiPart%d.dds"))))
 		return E_FAIL;
 #pragma endregion
 
 #pragma region Component_Texture_YetiRightLeg
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_YetiRightLeg", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/Monster%d.dds"))))
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_YetiRightLeg", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/YetiPart%d.dds"))))
 		return E_FAIL;
 #pragma endregion
 

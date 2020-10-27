@@ -70,8 +70,8 @@ _int CSlime::Update_GameObject(_float _fDeltaTime)
 	if (FAILED(LookAtPlayer(_fDeltaTime)))
 		return GAMEOBJECT::WARN;
 
-	if (FAILED(Move(_fDeltaTime)))
-		return GAMEOBJECT::WARN;
+	//if (FAILED(Move(_fDeltaTime)))
+	//	return GAMEOBJECT::WARN;
 
 	if (FAILED(Setting_SlimeJelly()))
 		return GAMEOBJECT::WARN;

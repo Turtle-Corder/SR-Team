@@ -463,7 +463,7 @@ HRESULT CYeti::LookAtPlayer(float _fDeltaTime)
 	fRad = (float)acos(fDot);
 
 	_vec3 vMonRight = {};
-	D3DXVec3Cross(&vMonRight, &vMonLook, &_vec3(0.f, 1.f, 0.f));
+	D3DXVec3Cross(&vMonRight, &_vec3(0.f, 1.f, 0.f), &vMonLook);
 
 	D3DXVec3Dot(&vMonRight, &vMonToPlayer);
 

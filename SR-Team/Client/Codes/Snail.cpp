@@ -64,7 +64,6 @@ int CSnail::LateUpdate_GameObject(_float _fDeltaTime)
 	if (nullptr == pManagement)
 		return 0;
 
-
 	if (FAILED(pManagement->Add_RendererList(CRenderer::RENDER_NONEALPHA, this)))
 		return 0;
 
@@ -137,20 +136,23 @@ HRESULT CSnail::Add_Component()
 			tTransformDesc[SNAIL_HEAD].fSpeedPerSecond = 10.f;
 			tTransformDesc[SNAIL_HEAD].fRotatePerSecond = D3DXToRadian(90.f);
 			tTransformDesc[SNAIL_HEAD].vScale = { 0.5f , 0.5f , 0.5f };
-			vHeadPos = tTransformDesc[iAll].vPosition;
 		}
 		else if (iAll == SNAIL_BODY)
 		{
 			tTransformDesc[SNAIL_BODY].vPosition = { m_vStartPos.x , 0.f, m_vStartPos.z };
 			tTransformDesc[SNAIL_BODY].fSpeedPerSecond = 10.f;
 			tTransformDesc[SNAIL_BODY].fRotatePerSecond = D3DXToRadian(90.f);
+			tTransformDesc[SNAIL_HEAD].vScale = { 1.f , 1.f , 1.f };
 		}
+
+
 		StringCchPrintf(szName, sizeof(TCHAR) * MAX_PATH, L"Com_Transform%d", iAll);
 
 		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", szName, (CComponent**)&m_pTransformCom[iAll], &tTransformDesc[iAll]))) ////»ý¼º °¹¼ö
 			return E_FAIL;
 	}
 
+	
 	CStatus::STAT tStat;
 	tStat.iCriticalRate = 20;	tStat.iCriticalHit = 10;
 	tStat.iDef = 50;
@@ -187,6 +189,9 @@ HRESULT CSnail::Movement(_float _fDeltaTime)
 
 	if (GetAsyncKeyState(VK_NUMPAD4) & 0x8000)
 		m_bAttack = true;
+
+	if (GetAsyncKeyState(VK_NUMPAD7) & 0x8000)
+		m_pTransformCom[SNAIL_BODY]->Turn(CTransform::AXIS_Z, _fDeltaTime);
 
 	if (m_bAttack)
 	{
@@ -374,7 +379,7 @@ HRESULT CSnail::Take_Damage(const CComponent* _pDamageComp)
 	if (!_pDamageComp)
 		return S_OK;
 
-	PRINT_LOG(L"¾Æ¾æ", LOG::CLIENT);
+	//PRINT_LOG(L"¾Æ¾æ", LOG::CLIENT);
 
 	return S_OK;
 }
