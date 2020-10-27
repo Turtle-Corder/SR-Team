@@ -26,6 +26,9 @@ public:
 
 	//Get 높이 길이 인터벌 타일인포
 	//Set
+
+	TERRAININFO Get_TerrainInfo(_uint iIndex, _uint iFloor);
+	TERRAININFO Get_TerrainInfo(_vec3 iObjectPos, _uint iFloor);
 private:
 	HRESULT Add_Component();
 
