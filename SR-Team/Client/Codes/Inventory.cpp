@@ -177,8 +177,11 @@ _int CInventory::Update_GameObject(float DeltaTime)
 			return GAMEOBJECT::WARN;
 
 		// 퀵슬롯으로 이동
-		if (FAILED(Move_To_QuickSlot()))
-			return GAMEOBJECT::WARN;
+		if (!m_bSelect_SellItem)
+		{
+			if (FAILED(Move_To_QuickSlot()))
+				return GAMEOBJECT::WARN;
+		}
 
 		// 인벤 창 이동
 		if (!m_bSelect_SellItem && m_bMoveInvenWnd)
@@ -290,6 +293,10 @@ HRESULT CInventory::Check_SellButton()
 				m_iInsertOrder -= m_iDeleteCnt;
 				m_iDeleteCnt = 0;
 
+				// 이 때, 퀵슬롯에 있는 포션 아이템들은 바로 삭제되어야 한다
+				if (FAILED(Change_PotionCnt()))
+					return E_FAIL;
+
 				PRINT_LOG(L"아이템 판매 시작.", LOG::CLIENT);
 			}
 		}
@@ -337,7 +344,7 @@ HRESULT CInventory::Check_AutoSortButton()
 	int iItemListSize = m_pInvenList.size();
 
 	// 지금은 키입력으로 하는데 나중에 버튼 추가해야 함
-	if (CKeyManager::Get_Instance()->Key_Pressing('M'))
+	if (CKeyManager::Get_Instance()->Key_Down('M'))
 	{
 		auto& iter = m_pInvenList.begin();
 		_uint iSize = m_pInvenList.size();
@@ -481,6 +488,35 @@ HRESULT CInventory::Move_To_QuickSlot()
 		}
 	}
 
+	return S_OK;
+}
+
+HRESULT CInventory::Change_PotionCnt()
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (pManagement == nullptr)
+		return E_FAIL;
+	CMainUI* pMain = (CMainUI*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 0);
+	if (pMain == nullptr)
+		return E_FAIL;
+
+	auto& iter = m_pInvenList.begin();
+	_int iIndex = 0;
+
+	while (iter != m_pInvenList.end())
+	{
+		if (m_bSelectedSell[iIndex])
+		{
+			if ((*iter)->eSort == POTION)
+			{
+				// 포션 종류가 삭제되었으면 퀵슬롯에게 바로 알려준다
+				pMain->Delete_Potion(*iter);
+			}
+		}
+
+		++iter;
+		++iIndex;
+	}
 	return S_OK;
 }
 
