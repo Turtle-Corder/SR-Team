@@ -246,14 +246,8 @@
     <ClInclude Include="..\Headers\ItemManager.h">
       <Filter>04.Manager\01.ItemManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Headers\Slime.h">
-      <Filter>02.GameObject\05.Monster\01.Slime</Filter>
-    </ClInclude>
     <ClInclude Include="..\Headers\Snail.h">
       <Filter>02.GameObject\05.Monster\00.Snail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Headers\Yeti.h">
-      <Filter>02.GameObject\05.Monster\02.Yeti</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\Snow.h">
       <Filter>02.GameObject\06.Projectile\00.Snow</Filter>
@@ -315,6 +309,12 @@
     <ClInclude Include="..\Headers\Golem_Impact.h">
       <Filter>02.GameObject\11.Golem_Impact</Filter>
     </ClInclude>
+    <ClInclude Include="..\Headers\Yeti.h">
+      <Filter>02.GameObject\05.Monster\02.Yeti</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Slime.h">
+      <Filter>02.GameObject\05.Monster\01.Slime</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -373,9 +373,6 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Snail.cpp">
       <Filter>02.GameObject\05.Monster\00.Snail</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\Yeti.cpp">
-      <Filter>02.GameObject\05.Monster\02.Yeti</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Snow.cpp">
       <Filter>02.GameObject\06.Projectile\00.Snow</Filter>
@@ -436,6 +433,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Golem_Impact.cpp">
       <Filter>02.GameObject\11.Golem_Impact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Yeti.cpp">
+      <Filter>02.GameObject\05.Monster\02.Yeti</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
