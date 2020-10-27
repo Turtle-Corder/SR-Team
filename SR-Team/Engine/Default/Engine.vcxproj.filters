@@ -222,9 +222,6 @@
     <ClInclude Include="..\Headers\Raycast.h">
       <Filter>01.Utillity\05.Component\04.Raycast</Filter>
     </ClInclude>
-    <ClInclude Include="..\Headers\Collider.h">
-      <Filter>01.Utillity\05.Component\05.Collision\00.SphereCollider</Filter>
-    </ClInclude>
     <ClInclude Include="..\Headers\UIObject.h">
       <Filter>01.Utillity\04.GameObject\01.UIObject</Filter>
     </ClInclude>
@@ -242,6 +239,9 @@
     </ClInclude>
     <ClInclude Include="..\Headers\FrameManager.h">
       <Filter>01.Utillity\08.FrameManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\SphereCollider.h">
+      <Filter>01.Utillity\05.Component\05.Collision\00.SphereCollider</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -320,9 +320,6 @@
     <ClCompile Include="..\Codes\Raycast.cpp">
       <Filter>01.Utillity\05.Component\04.Raycast</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\Collider.cpp">
-      <Filter>01.Utillity\05.Component\05.Collision\00.SphereCollider</Filter>
-    </ClCompile>
     <ClCompile Include="..\Codes\UIObject.cpp">
       <Filter>01.Utillity\04.GameObject\01.UIObject</Filter>
     </ClCompile>
@@ -340,6 +337,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\FrameManager.cpp">
       <Filter>01.Utillity\08.FrameManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\SphereCollider.cpp">
+      <Filter>01.Utillity\05.Component\05.Collision\00.SphereCollider</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

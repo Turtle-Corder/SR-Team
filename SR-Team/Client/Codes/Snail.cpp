@@ -160,11 +160,11 @@ HRESULT CSnail::Add_Component()
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Status", L"Com_Stat", (CComponent**)&m_pStatusCom, &tStat)))
 		return E_FAIL;
 
-	CCollider::COLLIDER_DESC tColDesc;
+	CSphereCollider::COLLIDER_DESC tColDesc;
 	tColDesc.vPosition = tTransformDesc[SNAIL_BODY].vPosition;
 	tColDesc.fRadius = 0.5f ; /* * Scale*/
 
-	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Collider", L"Com_Collider", (CComponent**)&m_pColliderCom, &tColDesc)))
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Collider_Sphere", L"Com_Collider", (CComponent**)&m_pColliderCom, &tColDesc)))
 		return E_FAIL;
 
 	CDamageInfo::DAMAGE_DESC tDmgInfo;

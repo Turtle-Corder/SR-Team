@@ -37,12 +37,12 @@ public:
 
 
 private:
-	CVIBuffer*		m_pVIBufferCom = nullptr;
-	CTransform*		m_pTransformCom = nullptr;
-	CTexture*		m_pTextureCom = nullptr;
-	CCollider*		m_pColliderCom = nullptr;
-	CStatus*		m_pStatusComp = nullptr;
-	CDamageInfo*	m_pDmgInfoCom = nullptr;
+	CVIBuffer*			m_pVIBufferCom = nullptr;
+	CTransform*			m_pTransformCom = nullptr;
+	CTexture*			m_pTextureCom = nullptr;
+	CSphereCollider*	m_pColliderCom = nullptr;
+	CStatus*			m_pStatusComp = nullptr;
+	CDamageInfo*		m_pDmgInfoCom = nullptr;
 	
 	_bool  m_bDead = false;
 	_vec3 m_vPlayerPos = {};
