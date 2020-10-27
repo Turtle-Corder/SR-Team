@@ -55,6 +55,46 @@ HRESULT CMainUI::Get_QuickSlotItem(INVEN_ITEM * pItem)
 	return S_OK;
 }
 
+HRESULT CMainUI::Delete_Potion(INVEN_ITEM * pItem)
+{
+	for (_uint i = 0; i < 8; i++)
+	{
+		if (m_pRightSlotItem[i] != nullptr)
+		{
+			if (!wcscmp(pItem->szItemTag, m_pRightSlotItem[i]->szItemTag))
+			{
+				m_pRightSlotItem[i]->iCnt = 0;
+				return S_OK;
+			}
+		}
+	}
+
+	return S_OK;
+}
+
+HRESULT CMainUI::Get_QuickSlotSkill(_int iSkillID)
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (pManagement == nullptr)
+		return E_FAIL;
+	CItem* pItems = (CItem*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Item");
+
+	// 받아온 스킬 아이디로 아이템 클래스에서 스킬 아이콘 객체를 받아온다
+	m_pMovingItem = pItems->Get_ActiveSkillIcon(iSkillID);
+	if (m_pMovingItem == nullptr)
+		return E_FAIL;
+
+	m_bRender_GoingItem = true;
+
+	if (m_pTexture_GoingItem)
+		m_pTexture_GoingItem = nullptr;
+	m_pTexture_GoingItem = pItems->Get_ItemInfo_Texture(m_pMovingItem->szItemTag);
+	if (m_pTexture_GoingItem == nullptr)
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CMainUI::Setup_GameObject_Prototype()
 {
 	return S_OK;
@@ -92,6 +132,7 @@ HRESULT CMainUI::Setup_GameObject(void * pArg)
 	//m_vPos[MAINUI_QUICKSLOT_RIGHT] = _vec3(660.f, 500.f, 0.f);
 	m_pTransformCom[MAINUI_QUICKSLOT_RIGHT]->Set_Position(m_vRightSlotPos);
 
+	
 	// 왼쪽 퀵슬롯 충돌 렉트
 	for (_uint i = 0; i < 4; ++i)
 	{
@@ -102,7 +143,7 @@ HRESULT CMainUI::Setup_GameObject(void * pArg)
 		vPos.z = 0.f;
 
 		m_pTransformLeftSlot[i]->Set_Position(vPos);
-		
+
 		m_tLeftSlotCollRt[i].left = (LONG)(vPos.x - 16.f);
 		m_tLeftSlotCollRt[i].right = (LONG)(vPos.x + 16.f);
 		m_tLeftSlotCollRt[i].top = (LONG)(vPos.y - 16.f);
@@ -129,7 +170,7 @@ HRESULT CMainUI::Setup_GameObject(void * pArg)
 	{
 		_vec3 vPos = {};
 		//vPos.x = (i * 39.f) + 97.f;
-		vPos.x = (i * 39.f) + (m_vRightSlotPos.x - 73.f);
+		vPos.x = (i * 39.f) + (m_vRightSlotPos.x - 75.f);
 		vPos.y = 472.f;
 		vPos.z = 0.f;
 
@@ -144,7 +185,7 @@ HRESULT CMainUI::Setup_GameObject(void * pArg)
 	{
 		_vec3 vPos = {};
 		//vPos.x = (j * 39.f) + 110.f;
-		vPos.x = (j * 39.f) + (m_vRightSlotPos.x - 60.f);
+		vPos.x = (j * 39.f) + (m_vRightSlotPos.x - 48.f);
 		vPos.y = 510.f;
 		vPos.z = 0.f;
 
@@ -258,7 +299,7 @@ HRESULT CMainUI::Render_UI()
 
 		m_pSprite->SetTransform(&m_pTransformCom[i]->Get_Desc().matWorld);
 		m_pSprite->Draw(
-			(LPDIRECT3DTEXTURE9)m_pTextureCom[i]->GetTexture(0), 
+			(LPDIRECT3DTEXTURE9)m_pTextureCom[i]->GetTexture(0),
 			&m_tCollRt[i], &vCenter, nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
 	}
 
@@ -456,18 +497,9 @@ HRESULT CMainUI::Set_SlotItem_Count()
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	CInventory* pInven = (CInventory*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Inventory");
-	
+
 	for (_uint i = 0; i < 8; ++i)
 	{
-		if (m_pLeftSlotItem[i] != nullptr)
-		{
-			m_pLeftSlotItem[i]->iCnt = pInven->Get_ItemCount(m_pLeftSlotItem[i]->szItemTag);
-			if (m_pLeftSlotItem[i]->iCnt == 0 || m_pLeftSlotItem[i]->iCnt == -1)
-			{
-				m_pTextureLeftQuickSlot[i] = nullptr;
-				m_pLeftSlotItem[i] = nullptr;
-			}
-		}
 		if (m_pRightSlotItem[i] != nullptr)
 		{
 			m_pRightSlotItem[i]->iCnt = pInven->Get_ItemCount(m_pRightSlotItem[i]->szItemTag);
@@ -508,21 +540,24 @@ HRESULT CMainUI::Render_Item_GoingToQuickSlot()
 HRESULT CMainUI::Render_QuickSlot_Item()
 {
 	_int k = 0;
+	_vec3 vCenter = { 0.f, 0.f, 0.f };
+	_vec3 vPos = { 0.f, 0.f, 0.f };
+	D3DXMATRIX matTrans, matWorld;
+
 	for (_uint i = 0; i < 8; ++i)
 	{
 		if (m_pTextureLeftQuickSlot[i] != nullptr)
 		{
 			const D3DXIMAGE_INFO* pTexInfo = m_pTextureLeftQuickSlot[i]->Get_TexInfo(0);
-			_vec3 vCenter = { pTexInfo->Width * 0.5f, pTexInfo->Height * 0.5f, 0.f };
-			_vec3 vPos = m_pTransformLeftSlot[i]->Get_Desc().vPosition;
-			D3DXMATRIX matTrans, matWorld;
+			vCenter = { pTexInfo->Width * 0.5f, pTexInfo->Height * 0.5f, 0.f };
+			vPos = m_pTransformLeftSlot[i]->Get_Desc().vPosition;
 
 			m_tGoingItem_CollRt.left = (LONG)(vPos.x - vCenter.x);
 			m_tGoingItem_CollRt.right = (LONG)(vPos.x + vCenter.x);
 			m_tGoingItem_CollRt.top = (LONG)(vPos.y - vCenter.y);
 			m_tGoingItem_CollRt.bottom = (LONG)(vPos.y + vCenter.y);
 
-			D3DXMatrixTranslation(&matTrans, vPos.x, vPos.y, 0.f);
+			D3DXMatrixTranslation(&matTrans, vPos.x + 7.f, vPos.y + 10.f, 0.f);
 			matWorld = matTrans;
 
 			m_pSprite->SetTransform(&matWorld);
@@ -530,12 +565,12 @@ HRESULT CMainUI::Render_QuickSlot_Item()
 				(LPDIRECT3DTEXTURE9)m_pTextureLeftQuickSlot[i]->GetTexture(0),
 				nullptr, &vCenter, nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
 		}
+
 		if (m_pTextureRightQuickSlot[i] != nullptr)
 		{
 			const D3DXIMAGE_INFO* pTexInfo = m_pTextureRightQuickSlot[i]->Get_TexInfo(0);
-			_vec3 vCenter = { pTexInfo->Width * 0.5f, pTexInfo->Height * 0.5f, 0.f };
-			_vec3 vPos = m_pTransformRightSlot[i]->Get_Desc().vPosition;
-			D3DXMATRIX matTrans, matWorld;
+			vCenter = { pTexInfo->Width * 0.5f, pTexInfo->Height * 0.5f, 0.f };
+			vPos = m_pTransformRightSlot[i]->Get_Desc().vPosition;
 
 			m_tGoingItem_CollRt.left = (LONG)(vPos.x - vCenter.x);
 			m_tGoingItem_CollRt.right = (LONG)(vPos.x + vCenter.x);
@@ -562,7 +597,7 @@ HRESULT CMainUI::Render_QuickSlot_Item()
 
 			m_pSprite->SetTransform(&matWorld2);
 			m_pFont->DrawTextW(m_pSprite, szBuff, lstrlen(szBuff),
-				nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
+				nullptr, 0, D3DCOLOR_ARGB(255, 0, 0, 0));
 		}
 	}
 
@@ -634,7 +669,7 @@ HRESULT CMainUI::Add_Component()
 			, szTransform, (CComponent**)&m_pTransformLeftSlot[i])))
 			return E_FAIL;
 
-		TCHAR szRightTransform [MAX_PATH] = L"";
+		TCHAR szRightTransform[MAX_PATH] = L"";
 		StringCchPrintf(szRightTransform, sizeof(TCHAR) * MAX_PATH,
 			L"Com_RightTransform%d", i);
 		if (FAILED(CGameObject::Add_Component(
@@ -682,7 +717,7 @@ void CMainUI::Free()
 {
 	Safe_Release(m_pEmptyTexture);
 	Safe_Release(m_pTexture_GoingItem);
-	
+
 	for (_uint i = 0; i < MAINUI_END; ++i)
 	{
 		Safe_Release(m_pTextureCom[i]);

@@ -1,18 +1,19 @@
 #pragma once
-#ifndef __FLOOR_H__
-#define __FLOOR_H__
 
-#include "GameObject.h"
+#ifndef __BUNDLE_TERRAIN_H__
+#define __BUNDLE_TERRAIN_H__
 
-BEGIN(Client)
 USING(Engine)
+BEGIN(Client)
 
-class CFloor final : public CGameObject
+
+class CCubeTerrain;
+class CTerrainBundle final : public CGameObject
 {
 private:
-	explicit CFloor(LPDIRECT3DDEVICE9 _pDevice);
-	explicit CFloor(const CFloor& _rOther);
-	virtual ~CFloor() = default;
+	explicit CTerrainBundle(LPDIRECT3DDEVICE9 _pDevice);
+	explicit CTerrainBundle(const CTerrainBundle& _rOther);
+	virtual ~CTerrainBundle() = default;
 
 public:
 	virtual HRESULT Setup_GameObject_Prototype() override;
@@ -22,23 +23,26 @@ public:
 	virtual _int LateUpdate_GameObject(_float _fDeltaTime) override;
 	virtual HRESULT Render_NoneAlpha() override;
 
+
+	//Get 높이 길이 인터벌 타일인포
+	//Set
 private:
 	HRESULT Add_Component();
 
+
 public:
-	static CFloor* Create(LPDIRECT3DDEVICE9 _pDevice);
+	static CTerrainBundle* Create(LPDIRECT3DDEVICE9 _pDevice);
 	virtual CGameObject* Clone_GameObject(void* _pArg) override;
 	virtual void Free() override;
 
 
-
 private:
-	CVIBuffer*	m_pVIBufferCom = nullptr;
-	CTexture*	m_pTextureCom = nullptr;
-	CTransform* m_pTransformCom = nullptr;
-	_vec3		m_vPos = {};
+	//TerrainCube 인포
+	vector<TERRAININFO> m_TerrianList[15];
+
 };
 
 END
 
-#endif //__FLOOR_H__
+#endif
+

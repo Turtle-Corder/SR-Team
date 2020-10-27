@@ -424,8 +424,6 @@ void CYeti::Free()
 	}
 
 	Safe_Release(m_pStatusCom);
-	Safe_Release(m_pDmgInfoComp);
-
 
 	CGameObject::Free();
 }
@@ -465,7 +463,7 @@ HRESULT CYeti::LookAtPlayer(float _fDeltaTime)
 	fRad = (float)acos(fDot);
 
 	_vec3 vMonRight = {};
-	D3DXVec3Cross(&vMonRight, &vMonLook, &_vec3(0.f, 1.f, 0.f));
+	D3DXVec3Cross(&vMonRight, &_vec3(0.f, 1.f, 0.f), &vMonLook);
 
 	D3DXVec3Dot(&vMonRight, &vMonToPlayer);
 
@@ -510,10 +508,13 @@ HRESULT CYeti::Create_Snow(const wstring & LayerTag)
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	_vec3 vRightHand = m_pTransformCom[YETI_RIGHT]->Get_Desc().vPosition;
+	INSTANTIMPACT tImpact;
+	tImpact.pAttacker = this;
+	tImpact.pStatusComp = m_pStatusCom;
+	tImpact.vPosition = m_pTransformCom[YETI_RIGHT]->Get_Desc().vPosition;
 
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Snow",
-		SCENE_STAGE0, LayerTag , &vRightHand)))
+		SCENE_STAGE0, LayerTag , &tImpact)))
 		return E_FAIL;
 
 	return S_OK;

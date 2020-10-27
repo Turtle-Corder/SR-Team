@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "Status.h"
 #include "..\Headers\Snow.h"
 #include "DamageInfo.h"
 
@@ -23,7 +24,9 @@ HRESULT CSnow::Setup_GameObject_Prototype()
 HRESULT CSnow::Setup_GameObject(void * pArg)
 {
 	if (pArg)
-		m_vPos = *(_vec3*)pArg;
+	{
+		m_tInstant = *(INSTANTIMPACT*)pArg;
+	}
 
 	if (FAILED(Add_Component()))
 		return E_FAIL;
@@ -83,6 +86,23 @@ HRESULT CSnow::Render_NoneAlpha()
 
 HRESULT CSnow::Add_Component()
 {
+	//-------------------------------------------------------
+	// Transform Setting
+	//-------------------------------------------------------
+	CTransform::TRANSFORM_DESC tTransformDesc;
+	tTransformDesc.vPosition = m_tInstant.vPosition;
+	tTransformDesc.fSpeedPerSecond = 10.f;
+	tTransformDesc.fRotatePerSecond = D3DXToRadian(90.f);
+	tTransformDesc.vScale = { 0.5f , 0.5f , 0.5f };
+	//-------------------------------------------------------
+
+	//-------------------------------------------------------
+	// Collider Setting
+	//-------------------------------------------------------
+	CSphereCollider::COLLIDER_DESC tColDesc;
+	tColDesc.vPosition = tTransformDesc.vPosition;
+	tColDesc.fRadius = 0.7f;
+	//-------------------------------------------------------
 	// For.Com_VIBuffer
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", L"Com_VIBuffer", (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
@@ -92,25 +112,41 @@ HRESULT CSnow::Add_Component()
 		return E_FAIL;
 	
 	// For.Com_Transform
-	CTransform::TRANSFORM_DESC tTransformDesc;
-	tTransformDesc.vPosition = { m_vPos.x , m_vPos.y , m_vPos.z };
-	tTransformDesc.fSpeedPerSecond = 10.f;
-	tTransformDesc.fRotatePerSecond = D3DXToRadian(90.f);
-	tTransformDesc.vScale = { 0.5f , 0.5f , 0.5f };
 
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", L"Com_Transform", (CComponent**)&m_pTransformCom, &tTransformDesc)))
 		return E_FAIL;
 
-	CCollider::COLLIDER_DESC tColDesc;
-	tColDesc.vPosition = tTransformDesc.vPosition;
-	tColDesc.fRadius = 0.7f;
-
-	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Collider", L"Com_Collider", (CComponent**)&m_pColliderCom, &tColDesc)))
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Collider_Sphere", L"Com_Collider", (CComponent**)&m_pColliderCom, &tColDesc)))
 		return E_FAIL;
 
+	// TODO : m_pStatusComp 셋팅
+	CStatus::STAT tStat;
+	tStat.iCriticalRate = 0;	tStat.iCriticalHit = 0;
+	tStat.iMinAtt = 10;			tStat.iMaxAtt = 10;
+
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Status", L"Com_Stat", (CComponent**)&m_pStatusComp, &tStat)))
+		return E_FAIL;
+
+	CStatus* pOwnerStatusComp = (CStatus*)m_tInstant.pStatusComp;	
 	CDamageInfo::DAMAGE_DESC tDmgInfo;
-	tDmgInfo.iAttack = 10;
-	tDmgInfo.pOwner = this;
+	if (pOwnerStatusComp)
+	{
+		tDmgInfo.pOwner = m_tInstant.pAttacker;
+
+		// ex) yeti의 공격력 + 눈덩이 자체의 공격력 -> player의 기본 공격력 + 스태프의 공격력
+		tDmgInfo.iMinAtt = pOwnerStatusComp->Get_Status().iMinAtt + m_pStatusComp->Get_Status().iMinAtt;
+		tDmgInfo.iMaxAtt = pOwnerStatusComp->Get_Status().iMaxAtt + m_pStatusComp->Get_Status().iMaxAtt;
+		tDmgInfo.iCriticalHit = pOwnerStatusComp->Get_Status().iCriticalHit + m_pStatusComp->Get_Status().iCriticalHit;
+		tDmgInfo.iCriticalRate = pOwnerStatusComp->Get_Status().iCriticalRate + m_pStatusComp->Get_Status().iCriticalRate;
+	}
+	else
+	{
+		tDmgInfo.iMinAtt = m_pStatusComp->Get_Status().iMinAtt;
+		tDmgInfo.iMaxAtt = m_pStatusComp->Get_Status().iMaxAtt;
+		tDmgInfo.iCriticalHit = m_pStatusComp->Get_Status().iCriticalHit;
+		tDmgInfo.iCriticalRate = m_pStatusComp->Get_Status().iCriticalRate;
+	}
+
 
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_DamageInfo", L"Com_DmgInfo", (CComponent**)&m_pDmgInfoCom, &tDmgInfo)))
 		return E_FAIL;
@@ -193,6 +229,7 @@ void CSnow::Free()
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pColliderCom);
+	Safe_Release(m_pStatusComp);
 	Safe_Release(m_pDmgInfoCom);
 
 	CGameObject::Free();

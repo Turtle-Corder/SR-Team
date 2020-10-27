@@ -15,6 +15,8 @@ CItem::CItem(LPDIRECT3DDEVICE9 _pDevice)
 		m_pTextureCom[i] = nullptr;
 		m_pStatCom[i] = nullptr;
 	}
+	for (_uint i = 0; i < 9; i++)
+		m_pTextureSkillIcon[i] = nullptr;
 }
 
 CItem::CItem(const CItem & _rOther)
@@ -25,11 +27,20 @@ CItem::CItem(const CItem & _rOther)
 CTexture * CItem::Get_ItemInfo_Texture(const wstring & strItemTag)
 {
 	_int iIndex = 0;
+	_int iSkillIndex = 0;
+
 	for (auto& pItem : m_vItemList)
 	{
 		if (!wcscmp(pItem->szItemTag, strItemTag.c_str()))
 			return m_pTextureCom[iIndex];
 		++iIndex;
+	}
+
+	for (auto& pItem : m_vSkillIconList)
+	{
+		if (!wcscmp(pItem->szItemTag, strItemTag.c_str()))
+			return m_pTextureSkillIcon[iSkillIndex];
+		++iSkillIndex;
 	}
 
 	return nullptr;
@@ -79,6 +90,22 @@ CStatus * CItem::Get_ItemStat(const wstring & strItemTag)
 	return nullptr;
 }
 
+INVEN_ITEM* CItem::Get_ActiveSkillIcon(_int iSkillID)
+{
+	_int iIndex = 0;
+	for (auto& pItem : m_vSkillIconList)
+	{
+		if (pItem->eActiveID == iSkillID)
+		{
+			//memcpy_s(&tSkill, sizeof(INVEN_ITEM), pItem, sizeof(INVEN_ITEM));
+			return pItem;
+		}
+		++iIndex;
+	}
+
+	return nullptr;
+}
+
 HRESULT CItem::Setup_GameObject_Prototype()
 {
 	return S_OK;
@@ -89,6 +116,8 @@ HRESULT CItem::Setup_GameObject(void * pArg)
 	if (Add_Component())
 		return E_FAIL;
 	if (Add_Component_Item())
+		return E_FAIL;
+	if (Add_Component_SkillIcon())
 		return E_FAIL;
 
 	return S_OK;
@@ -299,6 +328,109 @@ HRESULT CItem::Add_Component_Item()
 	return S_OK;
 }
 
+HRESULT CItem::Add_Component_SkillIcon()
+{
+	for (_uint i = 0; i < 9; ++i)
+	{
+		// 3. Texture--------------------------------------------------------------
+		TCHAR szTexture[MAX_PATH] = L"";
+		TCHAR szTextureName[MAX_PATH] = L"";
+		if (i == 0)
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_SkillIcon_ElementalMaster");
+		else if (i == 1)
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_SkillIcon_EnergyExplotiation");
+		else if (i == 2)
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_SkillIcon_FlameWave");
+		else if (i == 3)
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_SkillIcon_IceSpear");
+		else if (i == 4)
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_SkillIcon_IceStrike");
+		else if (i == 5)
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_SkillIcon_LordOfCold");
+		else if (i == 6)
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_SkillIcon_LordOfFlames");
+		else if (i == 7)
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_SkillIcon_MagicArmor");
+		else if (i == 8)
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_SkillIcon_ManaDrift");
+
+		StringCchPrintf(szTexture, sizeof(TCHAR) * MAX_PATH,
+			L"Com_SkillIconTexture%d", i);
+
+		if (FAILED(CGameObject::Add_Component(
+			SCENE_STATIC, szTextureName,
+			szTexture, (CComponent**)&m_pTextureSkillIcon[i])))
+			return E_FAIL;
+
+
+		// 아이템 정보----------------------------------------------------------------
+		INVEN_ITEM* pItem = new INVEN_ITEM;
+		pItem->eSort = SKILL_ICON;
+		if (i == 0)
+		{
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"ElementalMaster");
+		}
+		if (i == 1)
+		{
+			pItem->eActiveID = ACTIVE_ENERGY_EXPLOTIATION;
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"EnergyExplotiation");
+		}
+		if (i == 2)
+		{
+			pItem->eActiveID = ACTIVE_FLAME_WAVE;
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"FlameWave");
+		}
+		if (i == 3)
+		{
+			pItem->eActiveID = ACTIVE_ICE_SPEAR;
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"IceSpear");
+		}
+		if (i == 4)
+		{
+			pItem->eActiveID = ACTIVE_ICE_STRIKE;
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"IceStrike");
+		}
+		if (i == 5)
+		{
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"LordOfCold");
+		}
+		if (i == 6)
+		{
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"LordOfFlames");
+		}
+		if (i == 7)
+		{
+			pItem->eActiveID = ACTIVE_MAGIC_ARMOR;
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"MagicArmor");
+		}
+		if (i == 8)
+		{
+			pItem->eActiveID = ACTIVE_MANA_DRIFT;
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"ManaDrift");
+		}
+		m_vSkillIconList.emplace_back(pItem);
+	}
+	return S_OK;
+}
+
 CItem * CItem::Create(LPDIRECT3DDEVICE9 pDevice)
 {
 	if (nullptr == pDevice)
@@ -339,6 +471,15 @@ void CItem::Free()
 		Safe_Delete(pItem);
 	}
 	m_vItemList.clear();
+
+	for (_uint i = 0; i < 9; i++)
+	{
+		Safe_Release(m_pTextureSkillIcon[i]);
+	}
+
+	for (auto& pSkill : m_vSkillIconList)
+		Safe_Delete(pSkill);
+	m_vSkillIconList.clear();
 
 	CGameObject::Free();
 }

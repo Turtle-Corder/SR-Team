@@ -38,23 +38,25 @@ public:
 
 
 private:
-	CVIBuffer*		m_pVIBufferCom = nullptr;
-	CTransform*		m_pTransformCom = nullptr;
-	CTexture*		m_pTextureCom = nullptr;
-	CCollider*		m_pColliderCom = nullptr;
-	CStatus*		m_pStatusCom = nullptr;
-	CDamageInfo*	m_pDmgInfoCom = nullptr;
-	bool			m_bDead = false;
-	bool			m_bJump = false;
-	float			m_fJumpPower = 1.1f;
-	float			m_fJumpTime = 0.f;
-	_vec3			m_vPos = {};
-	_vec3			m_vDir = {};
-	bool			m_bCheck = false;
-	bool			m_bFallDown = false;
-	bool			m_bGround = false;
-	float			m_fGravity = 0.f;
-	_float			m_fDeadTime = 0.f;
+	CVIBuffer*			m_pVIBufferCom = nullptr;
+	CTransform*			m_pTransformCom = nullptr;
+	CTexture*			m_pTextureCom = nullptr;
+	CSphereCollider*	m_pColliderCom = nullptr;
+	CStatus*			m_pStatusComp = nullptr;
+	CDamageInfo*		m_pDmgInfoCom = nullptr;
+	bool				m_bDead = false;
+	bool				m_bJump = false;
+	float				m_fJumpPower = 1.1f;
+	float				m_fJumpTime = 0.f;
+	_vec3				m_vPos = {};
+	_vec3				m_vDir = {};
+	bool				m_bCheck = false;
+	bool				m_bFallDown = false;
+	bool				m_bGround = false;
+	float				m_fGravity = 0.f;
+	_float				m_fDeadTime = 0.f;
+
+	INSTANTIMPACT		m_tInstant = {};
 };
 
 END

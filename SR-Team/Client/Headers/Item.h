@@ -36,6 +36,15 @@ public:
 	// ------------------------------------------------------------------
 	CStatus* Get_ItemStat(const wstring& strItemTag);
 
+
+public:
+	// ------------------------------------------------------------------
+	// 필요한 액티브 스킬아이콘의 객체를 반환하는 함수
+	// _int iSkillID : 반환받을 객체의 액티브 스킬 아이디
+	// ------------------------------------------------------------------
+	INVEN_ITEM* Get_ActiveSkillIcon(_int iSkillID);
+
+
 public:
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT Setup_GameObject_Prototype() override;
@@ -48,6 +57,7 @@ public:
 private:
 	HRESULT Add_Component();
 	HRESULT Add_Component_Item();
+	HRESULT Add_Component_SkillIcon();
 
 public:
 	static CItem* Create(LPDIRECT3DDEVICE9 pDevice);
@@ -61,11 +71,17 @@ private:
 	// Component-----------------------------------
 	//CItemManager*	m_pItmeMgrCom = nullptr;
 
-	// 아이템 이미지
+// 아이템
+private:
 	CTexture*				m_pTextureCom[10];
-	// 아이템 스탯 정보
 	CStatus*				m_pStatCom[10];
 	vector<INVEN_ITEM*>		m_vItemList;
+
+// 스킬 아이콘
+private:
+	CTexture*				m_pTextureSkillIcon[9];
+	vector<INVEN_ITEM*>		m_vSkillIconList;
+
 };	
 
 END

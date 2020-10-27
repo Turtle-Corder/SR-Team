@@ -20,6 +20,7 @@
 #include "ItemManager.h"
 #include "DamageInfo.h"
 #include "Equip.h"
+#include "Skill.h"
 #pragma endregion
 
 #pragma region Component_Headers
@@ -99,7 +100,7 @@ HRESULT CMainApp::Setup_MainApp()
 		return E_FAIL;
 	}
 
-	if (FAILED(Setup_SaveData()))
+	if (FAILED(Setup_ProtoTypeData()))
 	{
 		PRINT_LOG(L"Failed To Setup_SaveData", LOG::CLIENT);
 		return E_FAIL;
@@ -215,6 +216,11 @@ HRESULT CMainApp::Setup_StaticResources()
 		return E_FAIL;
 #pragma endregion
 
+#pragma region GameObject_Skill
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_Skill", CSkill::Create(m_pDevice, m_pSprite, m_pFont))))
+		return E_FAIL;
+#pragma endregion
+
 	//----------------------------------------------------------------------------------------------------
 	// Component
 	//----------------------------------------------------------------------------------------------------
@@ -253,8 +259,13 @@ HRESULT CMainApp::Setup_StaticResources()
 		return E_FAIL;
 #pragma endregion
 
-#pragma region Component_Collider
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Collider", CCollider::Create(m_pDevice))))
+#pragma region Component_Collider_Sphere
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Collider_Sphere", CSphereCollider::Create(m_pDevice))))
+		return E_FAIL;
+#pragma  endregion
+
+#pragma region Component_Collider_Box
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Collider_Box", CBoxCollider::Create(m_pDevice))))
 		return E_FAIL;
 #pragma  endregion
 	
@@ -350,6 +361,58 @@ HRESULT CMainApp::Setup_StaticResources()
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Equip_BackGround", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
 		L"../Resources/2DResource/Equip/back%d.png"))))
 		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Equip_Info", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Equip/info%d.png"))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Texture_Skill
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Skill_ActiveWnd", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Skill/active%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Skill_PassiveWnd", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Skill/passive%d.png"))))
+		return E_FAIL;
+#pragma endregion
+
+
+#pragma region Component_Textures_SkillIcon
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
+		L"Component_Texture_SkillIcon_ElementalMaster", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Skill_Icon/elemental_master%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
+		L"Component_Texture_SkillIcon_EnergyExplotiation", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Skill_Icon/energy_exploitation%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
+		L"Component_Texture_SkillIcon_FlameWave", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Skill_Icon/flame_wave%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
+		L"Component_Texture_SkillIcon_IceSpear", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Skill_Icon/ice_spear%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
+		L"Component_Texture_SkillIcon_IceStrike", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Skill_Icon/ice_strike%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
+		L"Component_Texture_SkillIcon_LordOfCold", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Skill_Icon/lord_of_cold%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
+		L"Component_Texture_SkillIcon_LordOfFlames", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Skill_Icon/lord_of_flames%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
+		L"Component_Texture_SkillIcon_MagicArmor", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Skill_Icon/magic_armor%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
+		L"Component_Texture_SkillIcon_ManaDrift", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Skill_Icon/mana_drift%d.png"))))
+		return E_FAIL;
 #pragma endregion
 
 
@@ -415,7 +478,7 @@ HRESULT CMainApp::Setup_StaticResources()
 	return S_OK;
 }
 
-HRESULT CMainApp::Setup_SaveData()
+HRESULT CMainApp::Setup_ProtoTypeData()
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)

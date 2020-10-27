@@ -7,6 +7,7 @@
 #include "Shop.h"
 #include "Equip.h"
 #include "PlaneSkill.h"
+#include "Skill.h"
 #include "..\Headers\Player.h"
 
 USING(Client)
@@ -110,6 +111,9 @@ _int CPlayer::Update_GameObject(_float _fDeltaTime)
 	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 1);
 	if (pEquip == nullptr)
 		return 0;
+	CSkill* pSkill = (CSkill*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 2);
+	if (pSkill == nullptr)
+		return 0;
 
 	if (m_bInitial)
 		Initial_Update_GameObject();
@@ -117,8 +121,9 @@ _int CPlayer::Update_GameObject(_float _fDeltaTime)
 	m_bRenderInven = pInven->Get_Render();
 	m_bRenderShop = pShop->Get_Render();
 	m_bRenderEquip = pEquip->Get_Render();
+	m_bRenderSkill = pSkill->Get_Render();
 
-	if (!m_bRenderInven && !m_bRenderShop && !m_bRenderEquip)
+	if (!m_bRenderInven && !m_bRenderShop && !m_bRenderEquip && !m_bRenderSkill)
 	{
 		if (FAILED(Movement(_fDeltaTime)))
 			return GAMEOBJECT::WARN;
@@ -175,10 +180,10 @@ HRESULT CPlayer::Take_Damage(const CComponent* _pDamageComp)
 	if (!_pDamageComp)
 		return S_OK;
 
-	m_pStatusCom->Set_HP(((CDamageInfo*)_pDamageComp)->Get_Desc().iAttack);
+	m_pStatusCom->Set_HP(((CDamageInfo*)_pDamageComp)->Get_Desc().iMinAtt);
 
-	if (0 >= m_pStatusCom->Get_Status().iHp)
-		PRINT_LOG(L"¾Æ¾æ", LOG::CLIENT);
+	//if (0 >= m_pStatusCom->Get_Status().iHp)
+	//	PRINT_LOG(L"¾Æ¾æ", LOG::CLIENT);
 
 	return S_OK;
 }
@@ -270,18 +275,18 @@ HRESULT CPlayer::Add_Component()
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_ItemManager", L"Com_ItemMgr", (CComponent**)&m_pItemMgrCom)))
 		return E_FAIL;
 
-	CCollider::COLLIDER_DESC tColDesc;
+	CSphereCollider::COLLIDER_DESC tColDesc;
 	tColDesc.vPosition = tTransformDesc.vPosition;
 	tColDesc.fRadius = 0.7f;
 
-	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Collider", L"Com_Collider", (CComponent**)&m_pColliderCom, &tColDesc)))
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Collider_Sphere", L"Com_Collider", (CComponent**)&m_pColliderCom, &tColDesc)))
 		return E_FAIL;
 
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Raycast", L"Com_Ray", (CComponent**)&m_pRaycastCom)))
 		return E_FAIL;
 
 	CDamageInfo::DAMAGE_DESC tDmgInfo;
-	tDmgInfo.iAttack = 10;
+	tDmgInfo.iMaxAtt = 99;
 	tDmgInfo.pOwner = this;
 
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_DamageInfo", L"Com_DmgInfo", (CComponent**)&m_pDmgInfoCom, &tDmgInfo)))
@@ -780,6 +785,7 @@ void CPlayer::Free()
 void CPlayer::Normal_Attack(_float fDeltaTime)
 {
 	int k = 0;
+
 	if (GetAsyncKeyState('Z') & 0x8000)
 	{
 		m_bUsingSkill = true;
@@ -805,19 +811,23 @@ void CPlayer::Normal_Attack(_float fDeltaTime)
 				m_bLeftAtt = true;
 			}
 
-			if (m_ePlayerDir == MOVING_UP || m_ePlayerDir == MOVING_DOWN)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Y, fDeltaTime * 5.f);
-			else if (m_ePlayerDir == MOVING_RIGHT)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
+			m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Y, fDeltaTime * 5.f);
+
+			//if (m_ePlayerDir == MOVING_UP || m_ePlayerDir == MOVING_DOWN)
+			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Y, fDeltaTime * 5.f);
+			//else if (m_ePlayerDir == MOVING_RIGHT)
+			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
 		}
 
 		else if (m_bLeftAtt)
 		{
 			m_fAttTime += fDeltaTime;
-			if (m_ePlayerDir == MOVING_UP || m_ePlayerDir == MOVING_DOWN)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Y, -fDeltaTime * 5.f);
-			else if (m_ePlayerDir == MOVING_RIGHT)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
+			m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Y, -fDeltaTime * 5.f);
+
+			//if (m_ePlayerDir == MOVING_UP || m_ePlayerDir == MOVING_DOWN)
+			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Y, -fDeltaTime * 5.f);
+			//else if (m_ePlayerDir == MOVING_RIGHT)
+			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
 
 			if (m_fAttTime >= 0.3f)
 			{
@@ -835,13 +845,14 @@ void CPlayer::Normal_Attack(_float fDeltaTime)
 		else
 		{
 			m_fAttTime += fDeltaTime;
-			if (m_ePlayerDir == MOVING_UP)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
-			else if (m_ePlayerDir == MOVING_DOWN)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
-			else if (m_ePlayerDir == MOVING_RIGHT)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Z, fDeltaTime * 5.f);
-			//m_pTransformCom[PLAYER_RIGHT_HAND]->Turn(CTransform::AXIS_Y, -fDeltaTime * 0.35f);
+			m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
+
+			//if (m_ePlayerDir == MOVING_UP)
+			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
+			//else if (m_ePlayerDir == MOVING_DOWN)
+			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
+			//else if (m_ePlayerDir == MOVING_RIGHT)
+			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Z, fDeltaTime * 5.f);
 
 			if (m_fAttTime >= 0.2f)
 			{
@@ -932,7 +943,7 @@ void CPlayer::Skill_ProjectileFall(_float fDeltaTime)
 		{
 			if (!m_bRenderInven && !m_bRenderShop)
 			{
-				if (FAILED(Ready_Layer_Meteor(L"Layer_Meteor", vGoalPos)))
+				if (FAILED(Ready_Layer_Meteor(L"Layer_Meteor" , vGoalPos)))
 					PRINT_LOG(L"Failed To Ready_Layer_Meteor in CPlayer", LOG::CLIENT);
 			}
 		}
@@ -998,13 +1009,18 @@ HRESULT CPlayer::Draw_HpBar()
 	return E_NOTIMPL;
 }
 
-HRESULT CPlayer::Ready_Layer_Meteor(const wstring& _strLayerTag, _vec3 _vGoalPos)
+HRESULT CPlayer::Ready_Layer_Meteor(const wstring& _strLayerTag , _vec3 vGoalPos)
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Meteor", SCENE_STAGE0, _strLayerTag, &_vGoalPos)))
+	INSTANTIMPACT tImpact;
+	tImpact.pAttacker = this;
+	tImpact.pStatusComp = m_pStatusCom;
+	tImpact.vPosition = vGoalPos;
+
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Meteor", SCENE_STAGE0, _strLayerTag , &tImpact)))
 		return E_FAIL;
 
 	return S_OK;

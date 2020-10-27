@@ -52,7 +52,7 @@ public:
 	virtual void Free() override;
 
 private:
-	_bool			m_bRender = false;
+	_bool					m_bRender = false;
 
 	// 현재 플레이어의 스탯
 	CStatus*				m_pStatCom = nullptr;

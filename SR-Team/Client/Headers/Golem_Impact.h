@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __INSTANT_IMPACT_H__
-#define __INSTANT_IMPACT_H__
+#ifndef __GOLEM_IMPACT_H__
+#define __GOLEM_IMPACT_H__
 
 #include "GameObject.h"
 
@@ -9,12 +9,12 @@ BEGIN(Client)
 
 class CDamageInfo;
 
-class CInstant_Impact final : public CGameObject
+class CGolem_Impact final : public CGameObject
 {
 private:
-	explicit CInstant_Impact(LPDIRECT3DDEVICE9 _pDevice);
-	explicit CInstant_Impact(const CInstant_Impact& _rOther);
-	virtual ~CInstant_Impact() = default;
+	explicit CGolem_Impact(LPDIRECT3DDEVICE9 _pDevice);
+	explicit CGolem_Impact(const CGolem_Impact& _rOther);
+	virtual ~CGolem_Impact() = default;
 public:
 	virtual HRESULT Setup_GameObject_Prototype() override;
 	virtual HRESULT Setup_GameObject(void * _pArg) override;
@@ -25,17 +25,22 @@ private:
 public:
 	virtual CGameObject * Clone_GameObject(void * _pArg) override;
 	virtual void Free() override;
-	static CInstant_Impact* Create(LPDIRECT3DDEVICE9 _pDevice);
+	static CGolem_Impact* Create(LPDIRECT3DDEVICE9 _pDevice);
 	virtual HRESULT Take_Damage(const CComponent* _pDamageComp) override;
+
+
+
 private:
-	CTransform*		m_pTransformCom = nullptr;
-	CCollider*		m_pColliderCom = nullptr;
-	CDamageInfo*	m_pDmgInfoCom = nullptr;
+	CTransform*			m_pTransformCom = nullptr;
+	CSphereCollider*	m_pColliderCom = nullptr;
+	CStatus*			m_pStatusCom = nullptr;
+	CDamageInfo*		m_pDmgInfoCom = nullptr;
 
+	_vec3			m_vPos = {};
+	_bool			m_bDead = false;
+	INSTANTIMPACT	m_tInstant = {};
 
-	_vec3				m_vPos = {};
-	_bool				m_bDead = false;
-	INSTANTIMPACT*    m_pInstant = nullptr;
+	_float			m_fDeadTime = 0.f;
 };
 
 END

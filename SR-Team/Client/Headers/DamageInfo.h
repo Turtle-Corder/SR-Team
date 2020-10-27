@@ -13,7 +13,10 @@ public:
 	typedef struct tagDamageDesc
 	{
 		CGameObject*	pOwner;
-		_int			iAttack;
+		_int			iMinAtt;
+		_int			iMaxAtt;
+		_int			iCriticalRate;
+		_int			iCriticalHit;
 	} DAMAGE_DESC;
 
 

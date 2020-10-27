@@ -9,6 +9,7 @@ typedef struct tagInvenItem
 {
 	WCHAR			szItemTag[MIN_STR];
 	eITEM_SORT		eSort = eITEM_SORT::ITEMSORT_END;
+	eActiveSkill_ID	eActiveID = eActiveSkill_ID::ACTIVE_SKILL_END;
 	int				iCnt = 0;
 	int				iPrice = 0;
 	int				iInvneInsertOrder = -1;
@@ -31,17 +32,17 @@ typedef struct tagTerrainInfo
 
 
 
-typedef struct tagDamageEvent
-{
-	_vec3			vPosition;
-	CComponent*		pDmgInfoComp;
-} DAMAGE_EVENT;
+//typedef struct tagDamageEvent
+//{
+//	_vec3			vPosition;
+//	CComponent*		pDmgInfoComp;
+//} DAMAGE_EVENT;
 
 typedef struct tagInstantImpact
 {
-	_vec3			vPosition;
 	CGameObject*	pAttacker;
-	_uint			iAttack;
+	CComponent*		pStatusComp;
+	_vec3			vPosition;
 }INSTANTIMPACT;
 
 typedef struct tagFileInfo

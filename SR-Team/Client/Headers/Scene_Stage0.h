@@ -37,6 +37,7 @@ private:
 	HRESULT Setup_Layer_Monster(const wstring& LayerTag);
 	HRESULT Setup_Layer_Golem(const wstring& LayerTag);
 	HRESULT Setup_Layer_Snow(const wstring& LayerTag);
+	HRESULT Setup_Layer_Meteor(const wstring& LayerTag);
 	HRESULT Setup_Layer_UI(const wstring& LayerTag);
 	HRESULT SetUp_Layer_Inventory(const wstring& LayerTag);
 	HRESULT SetUp_Layer_Shop(const wstring& LayerTag);

@@ -123,11 +123,11 @@ HRESULT CMonSub::Add_Component()
 		//--------------------------------------------------
 		if (iCnt == MONSUB_BASE)
 		{
-			StringCchPrintf(szPartName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_SnailBody");
+			StringCchPrintf(szPartName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_MonSub");
 		}
 		else if (iCnt == MONSUB_RIGHT)
 		{
-			StringCchPrintf(szPartName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_SnailBody");
+			StringCchPrintf(szPartName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_MonSub");
 		}
 
 		StringCchPrintf(szName, sizeof(TCHAR) * MAX_PATH, L"Com_Texture%d", iCnt);

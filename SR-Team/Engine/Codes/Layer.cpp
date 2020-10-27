@@ -1,5 +1,5 @@
 #include "GameObject.h"
-#include "Collider.h"
+#include "SphereCollider.h"
 #include "BoxCollider.h"
 #include "..\Headers\Layer.h"
 
@@ -112,13 +112,13 @@ HRESULT CLayer::CollisionSphere_Detection_Layers(CLayer* _pSrcLayer, const wstri
 
 	for (auto& pSrcObject : _pSrcLayer->m_GameObjects)
 	{
-		CCollider* pSrcCol = (CCollider*)pSrcObject->Get_Component(_strColliderTag);
+		CSphereCollider* pSrcCol = (CSphereCollider*)pSrcObject->Get_Component(_strColliderTag);
 		if (nullptr == pSrcCol)
 			continue;
 
 		for (auto& pDstObject : m_GameObjects)
 		{
-			CCollider* pDstCol = (CCollider*)pDstObject->Get_Component(_strColliderTag);
+			CSphereCollider* pDstCol = (CSphereCollider*)pDstObject->Get_Component(_strColliderTag);
 			if (nullptr == pDstCol)
 				continue;
 
@@ -198,13 +198,13 @@ HRESULT CLayer::CollisionSphere_Detection_Layers_Both(CLayer * _pSrcLayer, const
 
 	for (auto& pSrcObject : _pSrcLayer->m_GameObjects)
 	{
-		CCollider* pSrcCol = (CCollider*)pSrcObject->Get_Component(_strColliderTag);
+		CSphereCollider* pSrcCol = (CSphereCollider*)pSrcObject->Get_Component(_strColliderTag);
 		if (nullptr == pSrcCol)
 			continue;
 
 		for (auto& pDstObject : m_GameObjects)
 		{
-			CCollider* pDstCol = (CCollider*)pDstObject->Get_Component(_strColliderTag);
+			CSphereCollider* pDstCol = (CSphereCollider*)pDstObject->Get_Component(_strColliderTag);
 			if (nullptr == pDstCol)
 				continue;
 

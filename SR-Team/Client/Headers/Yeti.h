@@ -45,7 +45,6 @@ private:
 	CTransform*		m_pTransformCom[YETI_END];
 	CTexture*		m_pTextureCom[YETI_END];
 	CStatus*		m_pStatusCom = nullptr;
-	CDamageInfo*	m_pDmgInfoComp = nullptr;
 	
 
 	_bool		m_bJump = false;

@@ -10,7 +10,7 @@ USING(Engine)
 class CMainApp final : public CBase
 {
 private:
-	CMainApp();
+	CMainApp(); 
 	virtual ~CMainApp() = default;
 
 public:
@@ -24,14 +24,14 @@ public:
 private:
 	HRESULT Setup_DefaultSetting();
 	HRESULT Setup_StaticResources();
-	HRESULT Setup_SaveData();
+	HRESULT Setup_ProtoTypeData();
 
 
 public:
 	static CMainApp* Create();
 	virtual void Free() override;
 	
-private:
+private:;
 	CManagement*		m_pManagement	= nullptr;
 	LPDIRECT3DDEVICE9	m_pDevice		= nullptr;
 	LPD3DXSPRITE		m_pSprite		= nullptr;
