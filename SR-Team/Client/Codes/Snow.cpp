@@ -86,6 +86,23 @@ HRESULT CSnow::Render_NoneAlpha()
 
 HRESULT CSnow::Add_Component()
 {
+	//-------------------------------------------------------
+	// Transform Setting
+	//-------------------------------------------------------
+	CTransform::TRANSFORM_DESC tTransformDesc;
+	tTransformDesc.vPosition = m_tInstant.vPosition;
+	tTransformDesc.fSpeedPerSecond = 10.f;
+	tTransformDesc.fRotatePerSecond = D3DXToRadian(90.f);
+	tTransformDesc.vScale = { 0.5f , 0.5f , 0.5f };
+	//-------------------------------------------------------
+
+	//-------------------------------------------------------
+	// Collider Setting
+	//-------------------------------------------------------
+	CCollider::COLLIDER_DESC tColDesc;
+	tColDesc.vPosition = tTransformDesc.vPosition;
+	tColDesc.fRadius = 0.7f;
+	//-------------------------------------------------------
 	// For.Com_VIBuffer
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", L"Com_VIBuffer", (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
@@ -95,18 +112,9 @@ HRESULT CSnow::Add_Component()
 		return E_FAIL;
 	
 	// For.Com_Transform
-	CTransform::TRANSFORM_DESC tTransformDesc;
-	tTransformDesc.vPosition = m_tInstant.vPosition;
-	tTransformDesc.fSpeedPerSecond = 10.f;
-	tTransformDesc.fRotatePerSecond = D3DXToRadian(90.f);
-	tTransformDesc.vScale = { 0.5f , 0.5f , 0.5f };
 
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", L"Com_Transform", (CComponent**)&m_pTransformCom, &tTransformDesc)))
 		return E_FAIL;
-
-	CCollider::COLLIDER_DESC tColDesc;
-	tColDesc.vPosition = tTransformDesc.vPosition;
-	tColDesc.fRadius = 0.7f;
 
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Collider", L"Com_Collider", (CComponent**)&m_pColliderCom, &tColDesc)))
 		return E_FAIL;

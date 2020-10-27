@@ -932,7 +932,7 @@ void CPlayer::Skill_ProjectileFall(_float fDeltaTime)
 		{
 			if (!m_bRenderInven && !m_bRenderShop)
 			{
-				if (FAILED(Ready_Layer_Meteor(L"Layer_Meteor", vGoalPos)))
+				if (FAILED(Ready_Layer_Meteor(L"Layer_Meteor" , vGoalPos)))
 					PRINT_LOG(L"Failed To Ready_Layer_Meteor in CPlayer", LOG::CLIENT);
 			}
 		}
@@ -998,13 +998,18 @@ HRESULT CPlayer::Draw_HpBar()
 	return E_NOTIMPL;
 }
 
-HRESULT CPlayer::Ready_Layer_Meteor(const wstring& _strLayerTag, _vec3 _vGoalPos)
+HRESULT CPlayer::Ready_Layer_Meteor(const wstring& _strLayerTag , _vec3 vGoalPos)
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Meteor", SCENE_STAGE0, _strLayerTag, &_vGoalPos)))
+	INSTANTIMPACT tImpact;
+	tImpact.pAttacker = this;
+	tImpact.pStatusComp = m_pStatusCom;
+	tImpact.vPosition = vGoalPos;
+
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Meteor", SCENE_STAGE0, _strLayerTag , &tImpact)))
 		return E_FAIL;
 
 	return S_OK;

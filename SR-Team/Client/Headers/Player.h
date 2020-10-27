@@ -71,7 +71,7 @@ private:
 	// hp 바 지연 감소
 	HRESULT Draw_HpBar();
 
-	HRESULT Ready_Layer_Meteor(const wstring& _strLayerTag, _vec3 _vGoalPos);
+	HRESULT Ready_Layer_Meteor(const wstring& _strLayerTag, _vec3 vGoalPos);
 
 	HRESULT Setup_Layer_PlaneSkill(const wstring & LayerTag, _vec3 _vMouse);
 

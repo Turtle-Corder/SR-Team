@@ -363,6 +363,7 @@ HRESULT CSnail::Take_Damage(const CComponent* _pDamageComp)
 	if (!_pDamageComp)
 		return S_OK;
 
+	PRINT_LOG(L"¾Æ¾æ", LOG::CLIENT);
 
 	return S_OK;
 }
