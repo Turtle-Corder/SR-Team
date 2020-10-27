@@ -1,4 +1,4 @@
-# SR-Team  
+﻿# SR-Team  
   
 ** 반드시 Pull 이후 솔루션플랫폼 x86 확인!!  
   
@@ -9,3 +9,6 @@
 한겸 - 프레임 워크(충돌), 강화, 퀘스트  
 동수 - 맵, 레벨 디자인, 비상호작용 오브젝트  
   
+http://minecraft.novaskin.me/#
+
+http://minecraft.novaskin.me/skin/4344183420/yeti
