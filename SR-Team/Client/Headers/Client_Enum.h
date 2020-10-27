@@ -96,7 +96,35 @@ enum eEQUIP_ID
 	EQUIP_START,
 	EQUIP_WND = EQUIP_START, 
 	EQUIP_EQUIPMENT,
+	EQUIP_INFO,
 	EQUIP_END
+};
+
+
+//--------------------------------------------------
+// 스킬창 UI
+//--------------------------------------------------
+enum eSKILL_ID
+{
+	SKILL_START,
+	SKILL_ACTIVE_WND = SKILL_START,
+	SKILL_PASSIVE_WND,
+	SKILL_END
+};
+
+
+//--------------------------------------------------
+// 액티브 스킬 종류
+//--------------------------------------------------
+enum eActiveSkill_ID
+{
+	ACTIVE_ICE_STRIKE, 
+	ACTIVE_MANA_DRIFT, 
+	ACTIVE_ENERGY_EXPLOTIATION, 
+	ACTIVE_FLAME_WAVE,
+	ACTIVE_ICE_SPEAR,
+	ACTIVE_MAGIC_ARMOR, 
+	ACTIVE_SKILL_END
 };
 
 

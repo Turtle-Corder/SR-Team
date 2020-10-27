@@ -161,7 +161,12 @@
     <ClInclude Include="..\Headers\Bomb.h" />
     <ClInclude Include="..\Headers\Equip.h" />
     <ClInclude Include="..\Headers\Fire.h" />
+<<<<<<< HEAD
+    <ClInclude Include="..\Headers\Instant_Impact.h" />
+    <ClInclude Include="..\Headers\NormalAtt.h" />
+=======
     <ClInclude Include="..\Headers\Golem_Impact.h" />
+>>>>>>> 5d57801d15906455680524c76e6066146fed36d2
     <ClInclude Include="..\Headers\PinkBean.h" />
     <ClInclude Include="..\Headers\Client_Define.h" />
     <ClInclude Include="..\Headers\Client_Enum.h" />
@@ -182,10 +187,13 @@
     <ClInclude Include="..\Headers\MonSub.h" />
     <ClInclude Include="..\Headers\PlaneSkill.h" />
     <ClInclude Include="..\Headers\Player.h" />
+    <ClInclude Include="..\Headers\PlayerSkill.h" />
     <ClInclude Include="..\Headers\PreLoader.h" />
     <ClInclude Include="..\Headers\Scene_Logo.h" />
     <ClInclude Include="..\Headers\Scene_Stage0.h" />
     <ClInclude Include="..\Headers\Shop.h" />
+    <ClInclude Include="..\Headers\Skill.h" />
+    <ClInclude Include="..\Headers\SkillInventory.h" />
     <ClInclude Include="..\Headers\Skybox.h" />
     <ClInclude Include="..\Headers\Slime.h" />
     <ClInclude Include="..\Headers\Snail.h" />
@@ -208,7 +216,12 @@
     <ClCompile Include="..\Codes\Bomb.cpp" />
     <ClCompile Include="..\Codes\Equip.cpp" />
     <ClCompile Include="..\Codes\Fire.cpp" />
+<<<<<<< HEAD
+    <ClCompile Include="..\Codes\Instant_Impact.cpp" />
+    <ClCompile Include="..\Codes\NormalAtt.cpp" />
+=======
     <ClCompile Include="..\Codes\Golem_Impact.cpp" />
+>>>>>>> 5d57801d15906455680524c76e6066146fed36d2
     <ClCompile Include="..\Codes\PinkBean.cpp" />
     <ClCompile Include="..\Codes\CubeTerrain.cpp" />
     <ClCompile Include="..\Codes\DamageInfo.cpp" />
@@ -226,10 +239,13 @@
     <ClCompile Include="..\Codes\MonSub.cpp" />
     <ClCompile Include="..\Codes\PlaneSkill.cpp" />
     <ClCompile Include="..\Codes\Player.cpp" />
+    <ClCompile Include="..\Codes\PlayerSkill.cpp" />
     <ClCompile Include="..\Codes\PreLoader.cpp" />
     <ClCompile Include="..\Codes\Scene_Logo.cpp" />
     <ClCompile Include="..\Codes\Scene_Stage0.cpp" />
     <ClCompile Include="..\Codes\Shop.cpp" />
+    <ClCompile Include="..\Codes\Skill.cpp" />
+    <ClCompile Include="..\Codes\SkillInventory.cpp" />
     <ClCompile Include="..\Codes\Skybox.cpp" />
     <ClCompile Include="..\Codes\Slime.cpp" />
     <ClCompile Include="..\Codes\Snail.cpp" />

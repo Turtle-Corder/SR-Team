@@ -294,6 +294,8 @@ HRESULT CScene_Stage0::Setup_Layer_UI(const wstring & LayerTag)
 		return E_FAIL;
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_Equip", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_Skill", SCENE_STAGE0, LayerTag)))
+		return E_FAIL;
 
 	return S_OK;
 }

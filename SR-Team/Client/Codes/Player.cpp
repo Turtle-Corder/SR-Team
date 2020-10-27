@@ -7,6 +7,7 @@
 #include "Shop.h"
 #include "Equip.h"
 #include "PlaneSkill.h"
+#include "Skill.h"
 #include "..\Headers\Player.h"
 
 USING(Client)
@@ -110,6 +111,9 @@ _int CPlayer::Update_GameObject(_float _fDeltaTime)
 	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 1);
 	if (pEquip == nullptr)
 		return 0;
+	CSkill* pSkill = (CSkill*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 2);
+	if (pSkill == nullptr)
+		return 0;
 
 	if (m_bInitial)
 		Initial_Update_GameObject();
@@ -117,8 +121,9 @@ _int CPlayer::Update_GameObject(_float _fDeltaTime)
 	m_bRenderInven = pInven->Get_Render();
 	m_bRenderShop = pShop->Get_Render();
 	m_bRenderEquip = pEquip->Get_Render();
+	m_bRenderSkill = pSkill->Get_Render();
 
-	if (!m_bRenderInven && !m_bRenderShop && !m_bRenderEquip)
+	if (!m_bRenderInven && !m_bRenderShop && !m_bRenderEquip && !m_bRenderSkill)
 	{
 		if (FAILED(Movement(_fDeltaTime)))
 			return GAMEOBJECT::WARN;
@@ -780,6 +785,7 @@ void CPlayer::Free()
 void CPlayer::Normal_Attack(_float fDeltaTime)
 {
 	int k = 0;
+
 	if (GetAsyncKeyState('Z') & 0x8000)
 	{
 		m_bUsingSkill = true;
@@ -805,19 +811,23 @@ void CPlayer::Normal_Attack(_float fDeltaTime)
 				m_bLeftAtt = true;
 			}
 
-			if (m_ePlayerDir == MOVING_UP || m_ePlayerDir == MOVING_DOWN)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Y, fDeltaTime * 5.f);
-			else if (m_ePlayerDir == MOVING_RIGHT)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
+			m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Y, fDeltaTime * 5.f);
+
+			//if (m_ePlayerDir == MOVING_UP || m_ePlayerDir == MOVING_DOWN)
+			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Y, fDeltaTime * 5.f);
+			//else if (m_ePlayerDir == MOVING_RIGHT)
+			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
 		}
 
 		else if (m_bLeftAtt)
 		{
 			m_fAttTime += fDeltaTime;
-			if (m_ePlayerDir == MOVING_UP || m_ePlayerDir == MOVING_DOWN)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Y, -fDeltaTime * 5.f);
-			else if (m_ePlayerDir == MOVING_RIGHT)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
+			m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Y, -fDeltaTime * 5.f);
+
+			//if (m_ePlayerDir == MOVING_UP || m_ePlayerDir == MOVING_DOWN)
+			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Y, -fDeltaTime * 5.f);
+			//else if (m_ePlayerDir == MOVING_RIGHT)
+			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
 
 			if (m_fAttTime >= 0.3f)
 			{
@@ -835,13 +845,14 @@ void CPlayer::Normal_Attack(_float fDeltaTime)
 		else
 		{
 			m_fAttTime += fDeltaTime;
-			if (m_ePlayerDir == MOVING_UP)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
-			else if (m_ePlayerDir == MOVING_DOWN)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
-			else if (m_ePlayerDir == MOVING_RIGHT)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Z, fDeltaTime * 5.f);
-			//m_pTransformCom[PLAYER_RIGHT_HAND]->Turn(CTransform::AXIS_Y, -fDeltaTime * 0.35f);
+			m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
+
+			//if (m_ePlayerDir == MOVING_UP)
+			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
+			//else if (m_ePlayerDir == MOVING_DOWN)
+			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
+			//else if (m_ePlayerDir == MOVING_RIGHT)
+			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Z, fDeltaTime * 5.f);
 
 			if (m_fAttTime >= 0.2f)
 			{

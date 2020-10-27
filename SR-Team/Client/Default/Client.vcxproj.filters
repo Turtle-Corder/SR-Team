@@ -175,8 +175,22 @@
     <Filter Include="02.GameObject\00.Terrain\99.TerrainBundle">
       <UniqueIdentifier>{1c343f57-81c6-4993-9853-91c5861cc28c}</UniqueIdentifier>
     </Filter>
+<<<<<<< HEAD
+    <Filter Include="02.GameObject\07.UI\04. Skill">
+      <UniqueIdentifier>{2972e127-b047-429d-a9ac-6eaef2882535}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="12. SkillInventory">
+      <UniqueIdentifier>{da8eeec8-b224-45e6-80ce-0a6bf67c4ddb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\13. PlayerSkill">
+      <UniqueIdentifier>{e9a43fa0-b414-4dac-8bcd-cef58af142c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\13. PlayerSkill\00. Normal_Attack">
+      <UniqueIdentifier>{9891293b-36e7-4603-a600-2c6075aff553}</UniqueIdentifier>
+=======
     <Filter Include="02.GameObject\11.Golem_Impact">
       <UniqueIdentifier>{b3ed9e18-8920-43db-b876-047dc6c8b215}</UniqueIdentifier>
+>>>>>>> 5d57801d15906455680524c76e6066146fed36d2
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -306,6 +320,19 @@
     <ClInclude Include="..\Headers\TerrainBundle.h">
       <Filter>02.GameObject\00.Terrain\99.TerrainBundle</Filter>
     </ClInclude>
+<<<<<<< HEAD
+    <ClInclude Include="..\Headers\Skill.h">
+      <Filter>02.GameObject\07.UI\04. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\PlayerSkill.h">
+      <Filter>02.GameObject\13. PlayerSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\NormalAtt.h">
+      <Filter>02.GameObject\13. PlayerSkill\00. Normal_Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\SkillInventory.h">
+      <Filter>12. SkillInventory</Filter>
+=======
     <ClInclude Include="..\Headers\Golem_Impact.h">
       <Filter>02.GameObject\11.Golem_Impact</Filter>
     </ClInclude>
@@ -314,6 +341,7 @@
     </ClInclude>
     <ClInclude Include="..\Headers\Slime.h">
       <Filter>02.GameObject\05.Monster\01.Slime</Filter>
+>>>>>>> 5d57801d15906455680524c76e6066146fed36d2
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -431,11 +459,25 @@
     <ClCompile Include="..\Codes\TerrainBundle.cpp">
       <Filter>02.GameObject\00.Terrain\99.TerrainBundle</Filter>
     </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="..\Codes\Skill.cpp">
+      <Filter>02.GameObject\07.UI\04. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\PlayerSkill.cpp">
+      <Filter>02.GameObject\13. PlayerSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\NormalAtt.cpp">
+      <Filter>02.GameObject\13. PlayerSkill\00. Normal_Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\SkillInventory.cpp">
+      <Filter>12. SkillInventory</Filter>
+=======
     <ClCompile Include="..\Codes\Golem_Impact.cpp">
       <Filter>02.GameObject\11.Golem_Impact</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Yeti.cpp">
       <Filter>02.GameObject\05.Monster\02.Yeti</Filter>
+>>>>>>> 5d57801d15906455680524c76e6066146fed36d2
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
