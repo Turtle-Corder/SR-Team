@@ -178,6 +178,13 @@ _uint CManagement::Release_Engine()
 		return iRefCnt;
 	}
 
+	// frame
+	if (iRefCnt = CFrame_Manager::Get_Instance()->Destroy_Instance())
+	{
+		PRINT_LOG(L"Failed To Destroy CFrame_Manager", LOG::ENGINE);
+		return iRefCnt;
+	}
+
 	// device
 	if (iRefCnt = CDevice_Manager::Get_Instance()->Destroy_Instance())
 	{
