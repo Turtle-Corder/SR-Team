@@ -306,7 +306,7 @@ HRESULT CGolem::Movement(float _fDeltaTime)
 
 
 	LookAtPlayer(_fDeltaTime);
-	Move(_fDeltaTime);
+	//Move(_fDeltaTime);
 
 	if (m_bAttackDelay)
 	{

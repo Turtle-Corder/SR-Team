@@ -39,20 +39,23 @@ HRESULT CYeti::Setup_GameObject(void * pArg)
 
 int CYeti::Update_GameObject(float _fDeltaTime)
 {
-	if (FAILED(Movement(_fDeltaTime)))
+	if (FAILED(Update_State()))
 		return GAMEOBJECT::WARN;
 
-	if (FAILED(Setting_Part()))
+	if (FAILED(Movement(_fDeltaTime)))
 		return GAMEOBJECT::WARN;
 
 	if (FAILED(Attack(_fDeltaTime)))
 		return GAMEOBJECT::WARN;
 
-	for (int iAll = 0; iAll < YETI_END; ++iAll)
-	{
-		if (FAILED(m_pTransformCom[iAll]->Update_Transform()))
-			return GAMEOBJECT::WARN;
-	}
+	m_pTransformCom[YETI_BASE]->Update_Transform();
+
+	m_pTransformCom[YETI_CENTER]->Update_Transform();
+	m_pTransformCom[YETI_CENTER]->Set_WorldMatrix(m_pTransformCom[YETI_CENTER]->Get_Desc().matWorld * m_pTransformCom[YETI_BASE]->Get_Desc().matWorld);
+	
+	if (FAILED(Setting_Part()))
+		return GAMEOBJECT::WARN;
+
 
 	return GAMEOBJECT::NOEVENT;
 }
@@ -79,15 +82,15 @@ HRESULT CYeti::Render_NoneAlpha()
 	if (nullptr == pCamera)
 		return E_FAIL;
 
-	for (int iAll = 0; iAll < YETI_END; ++iAll)
+	for (int iCnt = YETI_BODY; iCnt < YETI_END; ++iCnt)
 	{
-		if (FAILED(m_pVIBufferCom[iAll]->Set_Transform(&m_pTransformCom[iAll]->Get_Desc().matWorld, pCamera)))
+		if (FAILED(m_pVIBufferCom[iCnt]->Set_Transform(&m_pTransformCom[iCnt]->Get_Desc().matWorld, pCamera)))
 			return E_FAIL;
 
-		if (FAILED(m_pTextureCom[iAll]->SetTexture(0)))
+		if (FAILED(m_pTextureCom[iCnt]->SetTexture(0)))
 			return E_FAIL;
 
-		if (FAILED(m_pVIBufferCom[iAll]->Render_VIBuffer()))
+		if (FAILED(m_pVIBufferCom[iCnt]->Render_VIBuffer()))
 			return E_FAIL;
 	}
 
@@ -99,95 +102,99 @@ HRESULT CYeti::Add_Component()
 	TCHAR szName[MAX_PATH] = L"";
 	TCHAR szPartName[MAX_PATH] = L"";
 	_vec3 vBodyPos = {};
+	CTransform::TRANSFORM_DESC tTransformDesc[YETI_END] = {};
 
 	// For.Com_Texture
-	for (int iAll = 0; iAll < YETI_END; ++iAll)
+	for (int iCnt = YETI_BASE; iCnt < YETI_END; ++iCnt)
 	{
-		StringCchPrintf(szName, sizeof(TCHAR) * MAX_PATH, L"Com_VIBuffer%d", iAll);
+		StringCchPrintf(szName, sizeof(TCHAR) * MAX_PATH, L"Com_VIBuffer%d", iCnt);
 
-		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", szName, (CComponent**)&m_pVIBufferCom[iAll]))) //생성 갯수
+		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", szName, (CComponent**)&m_pVIBufferCom[iCnt]))) //생성 갯수
 			return E_FAIL;
 
 		//경우마다 그거에 맞게 복사해서 최종적으로 문자열 들어가게만들기
-		if (iAll == YETI_BODY)
-		{
+		if(iCnt == YETI_BASE)
 			StringCchPrintf(szPartName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_YetiBody");
-		}
-		else if (iAll == YETI_HEAD)
-		{
+		else if (iCnt == YETI_CENTER)
+			StringCchPrintf(szPartName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_YetiBody");
+		else if (iCnt == YETI_BODY)
+			StringCchPrintf(szPartName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_YetiBody");
+		else if (iCnt == YETI_HEAD)
 			StringCchPrintf(szPartName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_YetiHead");
-		}
-		else if (iAll == YETI_LEFT)
-		{
+		else if (iCnt == YETI_LEFT)
 			StringCchPrintf(szPartName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_YetiLeft");
-		}
-		else if (iAll == YETI_RIGHT)
-		{
+		else if (iCnt == YETI_RIGHT)
 			StringCchPrintf(szPartName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_YetiRight");
-		}
-		else if (iAll == YETI_LEFTLEG)
-		{
+		else if (iCnt == YETI_LEFTLEG)
 			StringCchPrintf(szPartName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_YetiLeftLeg");
-		}
-		else if (iAll == YETI_RIGHTLEG)
-		{
+		else if (iCnt == YETI_RIGHTLEG)
 			StringCchPrintf(szPartName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_YetiRightLeg");
-		}
-		StringCchPrintf(szName, sizeof(TCHAR) * MAX_PATH, L"Com_Texture%d", iAll);
 
-		if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, szPartName, szName, (CComponent**)&m_pTextureCom[iAll]))) ////생성 갯수
+		StringCchPrintf(szName, sizeof(TCHAR) * MAX_PATH, L"Com_Texture%d", iCnt);
+
+		if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, szPartName, szName, (CComponent**)&m_pTextureCom[iCnt]))) ////생성 갯수
 			return E_FAIL;
 
-		CTransform::TRANSFORM_DESC tTransformDesc[YETI_END];
-
-		if (iAll == YETI_BODY)
+		if (iCnt == YETI_BASE)
 		{
-			tTransformDesc[YETI_BODY].vPosition = { m_vStartPos.x , 0.1f, m_vStartPos.z };
+			tTransformDesc[YETI_BASE].vPosition = { m_vStartPos.x , 0.f, m_vStartPos.z };
+			tTransformDesc[YETI_BASE].fSpeedPerSecond = 10.f;
+			tTransformDesc[YETI_BASE].fRotatePerSecond = D3DXToRadian(90.f);
+		}
+		else if (iCnt == YETI_CENTER)
+		{
+			tTransformDesc[YETI_CENTER].vPosition = { 0.f , 1.f, 0.f };
+			tTransformDesc[YETI_CENTER].fSpeedPerSecond = 10.f;
+			tTransformDesc[YETI_CENTER].fRotatePerSecond = D3DXToRadian(90.f);
+		}
+		else if (iCnt == YETI_BODY)
+		{
+			tTransformDesc[YETI_BODY].vPosition = { 0.f , 0.f, 0.f };
 			tTransformDesc[YETI_BODY].fSpeedPerSecond = 10.f;
 			tTransformDesc[YETI_BODY].fRotatePerSecond = D3DXToRadian(90.f);
 			tTransformDesc[YETI_BODY].vScale = { 1.0f , 1.0f , 1.0f };
 			vBodyPos = tTransformDesc[YETI_BODY].vPosition;
 		}
-		else if (iAll == YETI_HEAD)
+		else if (iCnt == YETI_HEAD)
 		{
-			tTransformDesc[YETI_HEAD].vPosition = { vBodyPos.x, vBodyPos.y - 1.f, vBodyPos.z };
+			tTransformDesc[YETI_HEAD].vPosition = { 0.f , 0.8f , -0.1f };
 			tTransformDesc[YETI_HEAD].fSpeedPerSecond = 10.f;
 			tTransformDesc[YETI_HEAD].fRotatePerSecond = D3DXToRadian(90.f);
-			tTransformDesc[YETI_HEAD].vScale = { 0.5f , 0.5f , 0.5f };
+			tTransformDesc[YETI_HEAD].vScale = { 0.8f , 0.8f , 0.8f };
 		}
-		else if (iAll == YETI_LEFT)
+		else if (iCnt == YETI_LEFT)
 		{
-			tTransformDesc[YETI_LEFT].vPosition = { vBodyPos.x - 1.f, vBodyPos.y, vBodyPos.z };
+			tTransformDesc[YETI_LEFT].vPosition = { 0.7f, 0.f, 0.f };
 			tTransformDesc[YETI_LEFT].fSpeedPerSecond = 10.f;
 			tTransformDesc[YETI_LEFT].fRotatePerSecond = D3DXToRadian(90.f);
-			tTransformDesc[YETI_LEFT].vScale = { 0.4f , 0.6f , 0.4f };
+			tTransformDesc[YETI_LEFT].vScale = { 0.3f , 0.8f , 0.4f };
 		}
-		else if (iAll == YETI_RIGHT)
+		else if (iCnt == YETI_RIGHT)
 		{
-			tTransformDesc[YETI_RIGHT].vPosition = { vBodyPos.x + 1.f, vBodyPos.y, vBodyPos.z };
+			tTransformDesc[YETI_RIGHT].vPosition = { -0.7f, 0.f, 0.f };
 			tTransformDesc[YETI_RIGHT].fSpeedPerSecond = 10.f;
 			tTransformDesc[YETI_RIGHT].fRotatePerSecond = D3DXToRadian(90.f);
-			tTransformDesc[YETI_RIGHT].vScale = { 0.4f , 0.6f , 0.4f };
+			tTransformDesc[YETI_RIGHT].vScale = { 0.3f , 0.8f , 0.4f };
 		}
-		else if (iAll == YETI_LEFTLEG)
+		else if (iCnt == YETI_LEFTLEG)
 		{
-			tTransformDesc[YETI_LEFTLEG].vPosition = { vBodyPos.x - 0.1f, vBodyPos.y, vBodyPos.z };
+			tTransformDesc[YETI_LEFTLEG].vPosition = { 0.5f, -1.f,0.f };
 			tTransformDesc[YETI_LEFTLEG].fSpeedPerSecond = 10.f;
 			tTransformDesc[YETI_LEFTLEG].fRotatePerSecond = D3DXToRadian(90.f);
-			tTransformDesc[YETI_LEFTLEG].vScale = { 0.3f , 0.7f , 0.3f };
+			tTransformDesc[YETI_LEFTLEG].vScale = { 0.3f , 1.f , 0.3f };
 		}
-		else if (iAll == YETI_RIGHTLEG)
+		else if (iCnt == YETI_RIGHTLEG)
 		{
-			tTransformDesc[YETI_RIGHTLEG].vPosition = { vBodyPos.x + 0.1f, vBodyPos.y, vBodyPos.z };
+			tTransformDesc[YETI_RIGHTLEG].vPosition = { -0.5f, -1.f,0.f };
 			tTransformDesc[YETI_RIGHTLEG].fSpeedPerSecond = 10.f;
 			tTransformDesc[YETI_RIGHTLEG].fRotatePerSecond = D3DXToRadian(90.f);
-			tTransformDesc[YETI_RIGHTLEG].vScale = { 0.3f , 0.7f , 0.3f };
+			tTransformDesc[YETI_RIGHTLEG].vScale = { 0.3f , 1.f , 0.3f };
 		}
 
 
-		StringCchPrintf(szName, sizeof(TCHAR) * MAX_PATH, L"Com_Transform%d", iAll);
+		StringCchPrintf(szName, sizeof(TCHAR) * MAX_PATH, L"Com_Transform%d", iCnt);
 
-		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", szName, (CComponent**)&m_pTransformCom[iAll], &tTransformDesc[iAll]))) ////생성 갯수
+		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", szName, (CComponent**)&m_pTransformCom[iCnt], &tTransformDesc[iCnt]))) ////생성 갯수
 			return E_FAIL;
 
 	}
@@ -224,18 +231,11 @@ HRESULT CYeti::IsOnTerrain()
 	if (nullptr == pTerrainBuffer)
 		return E_FAIL;
 
-	D3DXVECTOR3 vLeftLegPos = m_pTransformCom[YETI_LEFTLEG]->Get_Desc().vPosition;
+	D3DXVECTOR3 vBasePos = m_pTransformCom[YETI_BASE]->Get_Desc().vPosition;
 
-	if (true == pTerrainBuffer->IsOnTerrain(&vLeftLegPos))
+	if (true == pTerrainBuffer->IsOnTerrain(&vBasePos))
 	{
-		m_pTransformCom[YETI_LEFTLEG]->Set_Position(vLeftLegPos);
-	}
-
-	D3DXVECTOR3 vRightLegPos = m_pTransformCom[YETI_RIGHTLEG]->Get_Desc().vPosition;
-
-	if (true == pTerrainBuffer->IsOnTerrain(&vRightLegPos))
-	{
-		m_pTransformCom[YETI_RIGHTLEG]->Set_Position(vRightLegPos);
+		m_pTransformCom[YETI_BASE]->Set_Position(vBasePos);
 	}
 
 	return S_OK;
@@ -243,66 +243,11 @@ HRESULT CYeti::IsOnTerrain()
 
 HRESULT CYeti::Setting_Part()
 {
-	D3DXVECTOR3 vPosition[2];
 
-	_vec3 vBodyLook = {};
-	_vec3 vTransPos = {};
-	_vec3 vBodyPos = m_pTransformCom[YETI_BODY]->Get_Desc().vPosition;
-
-	float fLegY = m_pTransformCom[YETI_LEFTLEG]->Get_Desc().vPosition.y;
-
-	memcpy_s(&vBodyLook, sizeof(_vec3), &m_pTransformCom[YETI_BODY]->Get_Desc().matWorld._31, sizeof(_vec3));
-
-	_vec3 vMonRight = {};
-	_vec3 vMonLeft = {};
-	float fDis = 1.1f;
-	D3DXVec3Cross(&vMonRight, &_vec3(0.f, 1.f, 0.f), &vBodyLook);
-	D3DXVec3Cross(&vMonLeft, &vBodyLook, &_vec3(0.f, 1.f, 0.f));
-
-	for (int iAll = 0; iAll < YETI_END; ++iAll)
+	for (_uint iCnt = YETI_BODY; iCnt < YETI_END; ++iCnt)
 	{
-		if (iAll == YETI_BODY)
-		{
-			/*vTransPos = { vBodyPos.x , m_pTransformCom[YETI_LEFTLEG]->Get_Desc().vPosition.y + 0.6f , vBodyPos.z };*/
-			vTransPos = vBodyPos;
-			vTransPos.y = fLegY + 0.6f;
-			m_pTransformCom[iAll]->Set_Position(vTransPos);
-		}
-		else if (iAll == YETI_HEAD)
-		{
-			//vTransPos = { vBodyPos.x , m_pTransformCom[YETI_LEFTLEG]->Get_Desc().vPosition.y + 1.2f , vBodyPos.z };
-			vTransPos = vBodyPos;
-			vTransPos.y = fLegY + 1.2f;
-			m_pTransformCom[iAll]->Set_Position(vTransPos);
-		}
-		if (iAll == YETI_LEFT)
-		{
-			//vTransPos = { vBodyPos.x - 0.8f , m_pTransformCom[YETI_LEFTLEG]->Get_Desc().vPosition.y + 0.8f , vBodyPos.z };
-			vTransPos = vBodyPos + vMonLeft * fDis;
-			vTransPos.y = fLegY + 0.8f;
-			m_pTransformCom[iAll]->Set_Position(vTransPos);
-		}
-		else if (iAll == YETI_RIGHT)
-		{
-			/*	vTransPos = { vBodyPos.x + 0.8f, m_pTransformCom[YETI_LEFTLEG]->Get_Desc().vPosition.y + 0.8f , vBodyPos.z };*/
-			vTransPos = vBodyPos + vMonRight * fDis;
-			vTransPos.y = fLegY + 0.8f;
-			m_pTransformCom[iAll]->Set_Position(vTransPos);
-		}
-		else if (iAll == YETI_LEFTLEG)
-		{
-			//vTransPos = { vBodyPos.x - 0.4f, m_pTransformCom[YETI_LEFTLEG]->Get_Desc().vPosition.y , vBodyPos.z };
-			vTransPos = vBodyPos + vMonLeft * 0.4f;
-			vTransPos.y = fLegY;
-			m_pTransformCom[iAll]->Set_Position(vTransPos);
-		}
-		else if (iAll == YETI_RIGHTLEG)
-		{
-			//vTransPos = { vBodyPos.x + 0.4f, m_pTransformCom[YETI_LEFTLEG]->Get_Desc().vPosition.y , vBodyPos.z };
-			vTransPos = vBodyPos + vMonRight * 0.4f;
-			vTransPos.y = fLegY;
-			m_pTransformCom[iAll]->Set_Position(vTransPos);
-		}
+		m_pTransformCom[iCnt]->Update_Transform();
+		m_pTransformCom[iCnt]->Set_WorldMatrix(m_pTransformCom[iCnt]->Get_Desc().matWorld * m_pTransformCom[YETI_CENTER]->Get_Desc().matWorld);
 	}
 
 	return S_OK;
@@ -319,7 +264,7 @@ HRESULT CYeti::Moving(float _fDeltaTime)
 	if (nullptr == pPlayerTransform)
 		return E_FAIL;
 
-	_vec3 vMonsterPos = m_pTransformCom[YETI_BODY]->Get_Desc().vPosition;
+	_vec3 vMonsterPos = m_pTransformCom[YETI_BASE]->Get_Desc().vPosition;
 	_vec3 vPlayerPos = pPlayerTransform->Get_Desc().vPosition;
 
 	_vec3 vDir = vPlayerPos - vMonsterPos;
@@ -341,14 +286,12 @@ HRESULT CYeti::Moving(float _fDeltaTime)
 
 HRESULT CYeti::Attack(float _fDeltaTime)
 {
-	_vec3 vRot = m_pTransformCom[YETI_RIGHT]->Get_Desc().vRotate;
-
 	if (m_bAttack)
 	{
 		m_bAttackDelay = true;
 		m_fAttackTime += _fDeltaTime;
 
-		if (m_fAttackTime < 0.4f)
+		if (m_fAttackTime < 0.8f)
 		{
 			m_pTransformCom[YETI_RIGHT]->Turn(CTransform::AXIS_X, -_fDeltaTime * 3.f);
 			m_bRHandDown = true;
@@ -366,22 +309,24 @@ HRESULT CYeti::Attack(float _fDeltaTime)
 	{
 		m_fAttackTime += _fDeltaTime;
 
-		if (m_fAttackTime < 0.4f)
+		if (m_fAttackTime < 0.8f)
 		{
 			m_pTransformCom[YETI_RIGHT]->Turn(CTransform::AXIS_X, +_fDeltaTime * 3.f);
 		}
-		else if (m_fAttackTime > 0.4f)
+		else if (m_fAttackTime > 0.8f)
 		{
 			m_bAttackDelay = false;
 			m_bHighestCheck = false;
 			m_fAttackTime = 0.f;
 		}
 	}
-	//else if(!m_bAttack)
-	//{
-	//	m_pTransformCom[YETI_RIGHT]->Set_Rotate(vRot);
-	//}
+
 	// 최종적으로다끝나서 돌아오면 m_bAttackDelay = false;
+	return S_OK;
+}
+
+HRESULT CYeti::Update_State()
+{
 	return S_OK;
 }
 
@@ -442,14 +387,14 @@ HRESULT CYeti::LookAtPlayer(float _fDeltaTime)
 	// 플레이어와 this => Pos
 	//-------------------------------------------------- 
 	_vec3 vPlayerPos = pPlayerTransform->Get_Desc().vPosition;
-	_vec3 vMonPos = m_pTransformCom[YETI_BODY]->Get_Desc().vPosition;
+	_vec3 vMonPos = m_pTransformCom[YETI_BASE]->Get_Desc().vPosition;
 	_vec3 vMonLook = {};
 
 	////--------------------------------------------------
 	//// Look 과 목적지 - 출발지를 내적
 	////--------------------------------------------------
 
-	memcpy_s(&vMonLook, sizeof(_vec3), &m_pTransformCom[YETI_BODY]->Get_Desc().matWorld._31, sizeof(_vec3));
+	memcpy_s(&vMonLook, sizeof(_vec3), &m_pTransformCom[YETI_BASE]->Get_Desc().matWorld._31, sizeof(_vec3));
 
 	_vec3 vMonToPlayer = vPlayerPos - vMonPos;
 
@@ -474,19 +419,19 @@ HRESULT CYeti::LookAtPlayer(float _fDeltaTime)
 
 	if (fLimit > 0)
 	{
-		m_pTransformCom[YETI_BODY]->Turn(CTransform::AXIS_Y, -_fDeltaTime * fRad);
-		m_pTransformCom[YETI_HEAD]->Turn(CTransform::AXIS_Y, -_fDeltaTime * fRad);
-		m_pTransformCom[YETI_LEFT]->Turn(CTransform::AXIS_Y, -_fDeltaTime * fRad);
-		m_pTransformCom[YETI_RIGHT]->Turn(CTransform::AXIS_Y, -_fDeltaTime * fRad);
+		m_pTransformCom[YETI_BASE]->Turn(CTransform::AXIS_Y, -_fDeltaTime * fRad);
+		//m_pTransformCom[YETI_HEAD]->Turn(CTransform::AXIS_Y, -_fDeltaTime * fRad);
+		//m_pTransformCom[YETI_LEFT]->Turn(CTransform::AXIS_Y, -_fDeltaTime * fRad);
+		//m_pTransformCom[YETI_RIGHT]->Turn(CTransform::AXIS_Y, -_fDeltaTime * fRad);
 	}
 	else
 	{
 		/*for (int i = 0; i < YETI_END; ++i)
 		{*/
-		m_pTransformCom[YETI_BODY]->Turn(CTransform::AXIS_Y, _fDeltaTime * fRad);
-		m_pTransformCom[YETI_HEAD]->Turn(CTransform::AXIS_Y, _fDeltaTime * fRad);
-		m_pTransformCom[YETI_LEFT]->Turn(CTransform::AXIS_Y, _fDeltaTime * fRad);
-		m_pTransformCom[YETI_RIGHT]->Turn(CTransform::AXIS_Y, _fDeltaTime * fRad);
+		m_pTransformCom[YETI_BASE]->Turn(CTransform::AXIS_Y, _fDeltaTime * fRad);
+		//m_pTransformCom[YETI_HEAD]->Turn(CTransform::AXIS_Y, _fDeltaTime * fRad);
+		//m_pTransformCom[YETI_LEFT]->Turn(CTransform::AXIS_Y, _fDeltaTime * fRad);
+		//m_pTransformCom[YETI_RIGHT]->Turn(CTransform::AXIS_Y, _fDeltaTime * fRad);
 		//}
 
 	}
@@ -511,7 +456,9 @@ HRESULT CYeti::Create_Snow(const wstring & LayerTag)
 	INSTANTIMPACT tImpact;
 	tImpact.pAttacker = this;
 	tImpact.pStatusComp = m_pStatusCom;
-	tImpact.vPosition = m_pTransformCom[YETI_RIGHT]->Get_Desc().vPosition;
+	_vec3 vRightHandPos = {};
+	memcpy_s(&vRightHandPos, sizeof(_vec3), &m_pTransformCom[YETI_RIGHT]->Get_Desc().matWorld._41, sizeof(_vec3));
+	tImpact.vPosition = vRightHandPos;
 
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Snow",
 		SCENE_STAGE0, LayerTag , &tImpact)))

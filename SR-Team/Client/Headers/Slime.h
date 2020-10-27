@@ -17,6 +17,7 @@ class CSlime final : public CGameObject
 		SLIME_JELLY = SLIME_BASE,
 		SLIME_END
 	};
+
 private:
 	explicit CSlime(LPDIRECT3DDEVICE9 pDevice);
 	explicit CSlime(const CSlime& other);

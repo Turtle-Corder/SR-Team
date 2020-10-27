@@ -31,6 +31,12 @@ HRESULT CSnail::Setup_GameObject(void* pArg)
 	if (pArg)
 		m_vStartPos = *(_vec3*)pArg;
 
+	//----------------------------------
+	// 달팽이의 첫 상태는 IDLE
+	m_ePreState = STATE::IDLE;
+	m_eCurState = STATE::IDLE;
+	//----------------------------------
+
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
@@ -42,6 +48,8 @@ int CSnail::Update_GameObject(_float _fDeltaTime)
 	if (FAILED(Movement(_fDeltaTime)))
 		return GAMEOBJECT::WARN;
 
+	if(FAILED(Update_State()))
+		return GAMEOBJECT::ERR;
 
 	for (_int iAll = 0; iAll < SNAIL_END; ++iAll)
 	{
@@ -67,7 +75,8 @@ int CSnail::LateUpdate_GameObject(_float _fDeltaTime)
 	if (FAILED(pManagement->Add_RendererList(CRenderer::RENDER_NONEALPHA, this)))
 		return 0;
 
-	return 0;
+	return GAMEOBJECT::NOEVENT;
+
 }
 
 HRESULT CSnail::Render_NoneAlpha()
@@ -152,7 +161,9 @@ HRESULT CSnail::Add_Component()
 			return E_FAIL;
 	}
 
-	
+	//----------------------------------------
+	// 나중에 몬스터 데이터 불러올때 지정함
+	//----------------------------------------
 	CStatus::STAT tStat;
 	tStat.iCriticalRate = 20;	tStat.iCriticalHit = 10;
 	tStat.iDef = 50;
@@ -182,6 +193,28 @@ HRESULT CSnail::Add_Component()
 	return S_OK;
 }
 
+HRESULT CSnail::Update_State()
+{
+	if (m_ePreState != m_eCurState)
+	{
+		switch (m_eCurState)
+		{
+		case STATE::IDLE:
+			break;
+		case STATE::MOVE:
+			break;
+		case STATE::TURN:
+			break;
+		case STATE::HIT:
+			break;
+		case STATE::STATE_DEAD:
+			break;
+		}
+		m_ePreState = m_eCurState;
+	}
+	return S_OK;
+}
+
 HRESULT CSnail::Movement(_float _fDeltaTime)
 {
 	if (FAILED(IsOnTerrain()))
@@ -190,18 +223,12 @@ HRESULT CSnail::Movement(_float _fDeltaTime)
 	if (GetAsyncKeyState(VK_NUMPAD4) & 0x8000)
 		m_bAttack = true;
 
-	if (GetAsyncKeyState(VK_NUMPAD7) & 0x8000)
-		m_pTransformCom[SNAIL_BODY]->Turn(CTransform::AXIS_Z, _fDeltaTime);
-
-	if (m_bAttack)
-	{
-		if (FAILED(LookAtPlayer(_fDeltaTime)))
+	if (FAILED(LookAtPlayer(_fDeltaTime)))
 			return E_FAIL;
 
-		if (FAILED(Move(_fDeltaTime)))
-			return E_FAIL;
-	}
-
+	if (FAILED(Move(_fDeltaTime)))
+		return E_FAIL;
+	
 	return S_OK;
 }
 
@@ -304,6 +331,11 @@ HRESULT CSnail::LookAtPlayer(_float _fDeltaTime)
 		m_pTransformCom[SNAIL_BODY]->Turn(CTransform::AXIS_Y, _fDeltaTime * fRad);
 
 	return S_OK;
+}
+
+HRESULT CSnail::Attack(_float _fDeltaTime)
+{
+	return E_NOTIMPL;
 }
 
 HRESULT CSnail::Setting_Part()

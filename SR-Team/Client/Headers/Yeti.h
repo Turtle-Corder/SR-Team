@@ -11,8 +11,20 @@ class CStatus;
 class CDamageInfo;
 class CYeti final : public CGameObject
 {
-	enum YETI { YETI_BODY, YETI_HEAD, YETI_LEFT, YETI_RIGHT, YETI_LEFTLEG, YETI_RIGHTLEG, YETI_END };
-
+	enum YETI 
+	{ 
+		YETI_BASE,
+		YETI_ROOT = YETI_BASE,
+		YETI_CENTER,
+		YETI_BODY,
+		YETI_HEAD,
+		YETI_LEFT,
+		YETI_RIGHT,
+		YETI_LEFTLEG,
+		YETI_RIGHTLEG,
+		YETI_END 
+	};
+	enum STATE {IDLE , MOVE , ATTACK , DEAD};
 private:
 	explicit CYeti(LPDIRECT3DDEVICE9 pDevice);
 	explicit CYeti(const CYeti& other);
@@ -32,7 +44,7 @@ private:
 	HRESULT Setting_Part();
 	HRESULT Moving(float _fDeltaTime);
 	HRESULT Attack(float _fDeltaTime);
-
+	HRESULT Update_State();
 public:
 	static CYeti* Create(LPDIRECT3DDEVICE9 pDevice);
 	virtual CGameObject* Clone_GameObject(void * pArg) override;
@@ -57,6 +69,7 @@ private:
 	_bool		m_bHighestCheck = false;
 	_float		m_fAttackTime = 0.f;
 	_vec3		m_vStartPos = {};
+	INSTANTIMPACT*	m_pInstantImpact = nullptr;
 };
 
 END
