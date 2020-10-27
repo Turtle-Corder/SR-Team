@@ -257,8 +257,13 @@ HRESULT CMainApp::Setup_StaticResources()
 		return E_FAIL;
 #pragma endregion
 
-#pragma region Component_Collider
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Collider", CCollider::Create(m_pDevice))))
+#pragma region Component_Collider_Sphere
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Collider_Sphere", CSphereCollider::Create(m_pDevice))))
+		return E_FAIL;
+#pragma  endregion
+
+#pragma region Component_Collider_Box
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Collider_Box", CBoxCollider::Create(m_pDevice))))
 		return E_FAIL;
 #pragma  endregion
 	

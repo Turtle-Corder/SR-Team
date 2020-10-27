@@ -169,15 +169,13 @@
     <Filter Include="03.Component\00.VIBuffer\03.Pyramid">
       <UniqueIdentifier>{bb22c851-55c5-41c8-94b4-8494f5c5b615}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\11.Instant_Impact">
-      <UniqueIdentifier>{b3ed9e18-8920-43db-b876-047dc6c8b215}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\06.Projectile\03.Plane">
       <UniqueIdentifier>{f411ec74-1aa1-49db-aadd-6167aa9d7ef6}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\00.Terrain\99.TerrainBundle">
       <UniqueIdentifier>{1c343f57-81c6-4993-9853-91c5861cc28c}</UniqueIdentifier>
     </Filter>
+<<<<<<< HEAD
     <Filter Include="02.GameObject\07.UI\04. Skill">
       <UniqueIdentifier>{2972e127-b047-429d-a9ac-6eaef2882535}</UniqueIdentifier>
     </Filter>
@@ -189,6 +187,10 @@
     </Filter>
     <Filter Include="02.GameObject\13. PlayerSkill\00. Normal_Attack">
       <UniqueIdentifier>{9891293b-36e7-4603-a600-2c6075aff553}</UniqueIdentifier>
+=======
+    <Filter Include="02.GameObject\11.Golem_Impact">
+      <UniqueIdentifier>{b3ed9e18-8920-43db-b876-047dc6c8b215}</UniqueIdentifier>
+>>>>>>> 5d57801d15906455680524c76e6066146fed36d2
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -258,14 +260,8 @@
     <ClInclude Include="..\Headers\ItemManager.h">
       <Filter>04.Manager\01.ItemManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Headers\Slime.h">
-      <Filter>02.GameObject\05.Monster\01.Slime</Filter>
-    </ClInclude>
     <ClInclude Include="..\Headers\Snail.h">
       <Filter>02.GameObject\05.Monster\00.Snail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Headers\Yeti.h">
-      <Filter>02.GameObject\05.Monster\02.Yeti</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\Snow.h">
       <Filter>02.GameObject\06.Projectile\00.Snow</Filter>
@@ -318,15 +314,13 @@
     <ClInclude Include="..\Headers\VIBuffer_Pyramid.h">
       <Filter>03.Component\00.VIBuffer\03.Pyramid</Filter>
     </ClInclude>
-    <ClInclude Include="..\Headers\Instant_Impact.h">
-      <Filter>02.GameObject\11.Instant_Impact</Filter>
-    </ClInclude>
     <ClInclude Include="..\Headers\PlaneSkill.h">
       <Filter>02.GameObject\06.Projectile\03.Plane</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\TerrainBundle.h">
       <Filter>02.GameObject\00.Terrain\99.TerrainBundle</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="..\Headers\Skill.h">
       <Filter>02.GameObject\07.UI\04. Skill</Filter>
     </ClInclude>
@@ -338,6 +332,16 @@
     </ClInclude>
     <ClInclude Include="..\Headers\SkillInventory.h">
       <Filter>12. SkillInventory</Filter>
+=======
+    <ClInclude Include="..\Headers\Golem_Impact.h">
+      <Filter>02.GameObject\11.Golem_Impact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Yeti.h">
+      <Filter>02.GameObject\05.Monster\02.Yeti</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Slime.h">
+      <Filter>02.GameObject\05.Monster\01.Slime</Filter>
+>>>>>>> 5d57801d15906455680524c76e6066146fed36d2
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -398,9 +402,6 @@
     <ClCompile Include="..\Codes\Snail.cpp">
       <Filter>02.GameObject\05.Monster\00.Snail</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\Yeti.cpp">
-      <Filter>02.GameObject\05.Monster\02.Yeti</Filter>
-    </ClCompile>
     <ClCompile Include="..\Codes\Snow.cpp">
       <Filter>02.GameObject\06.Projectile\00.Snow</Filter>
     </ClCompile>
@@ -452,15 +453,13 @@
     <ClCompile Include="..\Codes\VIBuffer_Pyramid.cpp">
       <Filter>03.Component\00.VIBuffer\03.Pyramid</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\Instant_Impact.cpp">
-      <Filter>02.GameObject\11.Instant_Impact</Filter>
-    </ClCompile>
     <ClCompile Include="..\Codes\PlaneSkill.cpp">
       <Filter>02.GameObject\06.Projectile\03.Plane</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\TerrainBundle.cpp">
       <Filter>02.GameObject\00.Terrain\99.TerrainBundle</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="..\Codes\Skill.cpp">
       <Filter>02.GameObject\07.UI\04. Skill</Filter>
     </ClCompile>
@@ -472,6 +471,13 @@
     </ClCompile>
     <ClCompile Include="..\Codes\SkillInventory.cpp">
       <Filter>12. SkillInventory</Filter>
+=======
+    <ClCompile Include="..\Codes\Golem_Impact.cpp">
+      <Filter>02.GameObject\11.Golem_Impact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Yeti.cpp">
+      <Filter>02.GameObject\05.Monster\02.Yeti</Filter>
+>>>>>>> 5d57801d15906455680524c76e6066146fed36d2
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

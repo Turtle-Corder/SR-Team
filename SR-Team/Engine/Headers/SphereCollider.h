@@ -1,12 +1,12 @@
 #pragma once
-#ifndef __COLLIDER_H__
-#define __COLLIDER_H__
+#ifndef __SPHERE_COLLIDER_H__
+#define __SPHERE_COLLIDER_H__
 
 #include "Component.h"
 
 BEGIN(Engine)
 
-class ENGINE_DLL CCollider final : public CComponent
+class ENGINE_DLL CSphereCollider final : public CComponent
 {
 public:
 	typedef struct tagColliderDesc
@@ -16,9 +16,9 @@ public:
 	} COLLIDER_DESC;
 
 private:
-	explicit CCollider(LPDIRECT3DDEVICE9 _pDevice);
-	explicit CCollider(const CCollider& _rOther);
-	virtual ~CCollider() = default;
+	explicit CSphereCollider(LPDIRECT3DDEVICE9 _pDevice);
+	explicit CSphereCollider(const CSphereCollider& _rOther);
+	virtual ~CSphereCollider() = default;
 
 public:
 	const COLLIDER_DESC& Get_Desc() const;
@@ -31,7 +31,7 @@ public:
 	void Set_Radius(_float _fRadius);
 
 public:
-	static CCollider* Create(LPDIRECT3DDEVICE9 _pDevice);
+	static CSphereCollider* Create(LPDIRECT3DDEVICE9 _pDevice);
 	virtual CComponent* Clone_Component(void* _pArg) override;
 	virtual void Free() override;
 

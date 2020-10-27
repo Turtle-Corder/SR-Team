@@ -41,12 +41,12 @@ public:
 	virtual void Free() override;
 	virtual HRESULT Take_Damage(const CComponent* _pDamageComp) override;
 private:
-	CVIBuffer*		m_pVIBufferCom[SNAIL_END] = {};
-	CTransform*		m_pTransformCom[SNAIL_END] = {};
-	CTexture*		m_pTextureCom[SNAIL_END] = {};
-	CCollider*		m_pColliderCom = nullptr;
-	CStatus*		m_pStatusCom = nullptr;
-	CDamageInfo*	m_pDmgInfoCom = nullptr;
+	CVIBuffer*			m_pVIBufferCom[SNAIL_END] = {};
+	CTransform*			m_pTransformCom[SNAIL_END] = {};
+	CTexture*			m_pTextureCom[SNAIL_END] = {};
+	CSphereCollider*	m_pColliderCom = nullptr;
+	CStatus*			m_pStatusCom = nullptr;
+	CDamageInfo*		m_pDmgInfoCom = nullptr;
 private:
 	_vec3		m_vStartPos = {};
 	_bool		m_bAttack = false;
