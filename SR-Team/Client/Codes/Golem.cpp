@@ -243,13 +243,16 @@ HRESULT CGolem::Add_Component()
 			tTransformDesc[GOLEM_BODY].fSpeedPerSecond = 10.f;
 			tTransformDesc[GOLEM_BODY].fRotatePerSecond = D3DXToRadian(90.f);
 			tTransformDesc[GOLEM_BODY].vScale = { 3.0f , 1.7f , 1.f };
+			tTransformDesc[GOLEM_BODY].vScale = { 5.0f , 3.f , 3.f };
 		}
 		else if (iCnt == GOLEM_HEAD)
 		{
 			tTransformDesc[GOLEM_HEAD].vPosition = { 0.f , 0.f , -0.6f };
+			tTransformDesc[GOLEM_HEAD].vPosition = { 0.f , 0.f , -2.f };
 			tTransformDesc[GOLEM_HEAD].fSpeedPerSecond = 10.f;
 			tTransformDesc[GOLEM_HEAD].fRotatePerSecond = D3DXToRadian(90.f);
 			tTransformDesc[GOLEM_HEAD].vScale = { 1.f , 1.f , 0.5f };
+			tTransformDesc[GOLEM_HEAD].vScale = { 3.f , 2.f , 2.f };
 		}
 		else if (iCnt == GOLEM_LEFT_ARM)
 		{

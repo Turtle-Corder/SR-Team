@@ -353,6 +353,7 @@ void CSnail::Free()
 		Safe_Release(m_pTextureCom[iAll]);
 	}
 
+	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pStatusCom);
 
 	CGameObject::Free();
