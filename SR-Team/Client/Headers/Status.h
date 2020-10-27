@@ -23,6 +23,10 @@ public:
 		_int	iMp = 0;
 		_int	iSort = 0;
 
+		_int	iLevel = 0;
+		_int	iExp = 0;
+		_int	iMaxExp = 0;
+
 		//_bool	bShop = false;
 		//_int	iShopCnt = 0;
 		//_int	iPrice = 0;

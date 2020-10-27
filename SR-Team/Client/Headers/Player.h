@@ -173,6 +173,7 @@ private:
 	_bool				m_bRenderShop = false;
 	_bool				m_bRenderInven = false;
 	_bool				m_bRenderEquip = false;
+	_bool				m_bRenderSkill = false;
 	//--------------------------------------------
 };
 

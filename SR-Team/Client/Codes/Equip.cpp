@@ -67,6 +67,8 @@ HRESULT CEquip::Setup_GameObject(void * _pArg)
 	m_pTransformCom[EQUIP_WND]->Set_Position(m_vPos);
 	m_pTransformCom[EQUIP_EQUIPMENT]->Set_Position(
 		_vec3(m_vPos.x - 200.f, m_vPos.y, 0.f));
+	m_pTransformCom[EQUIP_INFO]->Set_Position(
+		_vec3(m_vPos.x - 130.f, m_vPos.y - 200.f, 0.f));
 
 	for (_uint i = 0; i < 6; ++i)
 	{
@@ -148,8 +150,11 @@ HRESULT CEquip::Render_UI()
 			m_tEquipWndCollRt[i].top = (LONG)(vPos.y - vCenter.y);
 			m_tEquipWndCollRt[i].bottom = (LONG)(vPos.y + vCenter.y);
 
+			if (i == EQUIP_INFO)
+				D3DXMatrixScaling(&matScale, 0.6f, 0.6f, 0.f);
+			else
+				D3DXMatrixScaling(&matScale, 0.7f, 0.7f, 0.f);
 			D3DXMatrixTranslation(&matTrans, vPos.x, vPos.y, 0.f);
-			D3DXMatrixScaling(&matScale, 0.7f, 0.7f, 0.f);
 			matWorld = matScale * matTrans;
 
 			m_pSprite->SetTransform(&matWorld);
@@ -323,6 +328,8 @@ HRESULT CEquip::Add_Component()
 			wsprintf(szTextureName, L"Component_Texture_Equip_Stat");
 		else if (i == EQUIP_EQUIPMENT)
 			wsprintf(szTextureName, L"Component_Texture_Equip_Equipment");
+		else if (i == EQUIP_INFO)
+			wsprintf(szTextureName, L"Component_Texture_Equip_Info");
 		wsprintf(szTexture, L"Com_Texture%d", i);
 		if (FAILED(CGameObject::Add_Component(
 			SCENE_STATIC, szTextureName,
