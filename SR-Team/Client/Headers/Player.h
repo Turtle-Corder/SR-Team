@@ -89,7 +89,7 @@ private:
 	CTransform*			m_pTransformCom[PART_END];
 	CTexture*			m_pTextureCom[PART_END];
 	CRaycast*			m_pRaycastCom	= nullptr;
-	CCollider*			m_pColliderCom	= nullptr;
+	CSphereCollider*	m_pColliderCom	= nullptr;
 	CStatus*			m_pStatusCom	= nullptr;
 	CItemManager*		m_pItemMgrCom	= nullptr;
 	CDamageInfo*		m_pDmgInfoCom	= nullptr;

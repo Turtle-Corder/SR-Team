@@ -31,10 +31,10 @@ public:
 
 
 private:
-	CTransform*		m_pTransformCom = nullptr;
-	CCollider*		m_pColliderCom = nullptr;
-	CStatus*		m_pStatusCom = nullptr;
-	CDamageInfo*	m_pDmgInfoCom = nullptr;
+	CTransform*			m_pTransformCom = nullptr;
+	CSphereCollider*	m_pColliderCom = nullptr;
+	CStatus*			m_pStatusCom = nullptr;
+	CDamageInfo*		m_pDmgInfoCom = nullptr;
 
 	_vec3			m_vPos = {};
 	_bool			m_bDead = false;

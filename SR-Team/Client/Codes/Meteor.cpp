@@ -94,7 +94,7 @@ HRESULT CMeteor::Add_Component()
 	tTransformDesc.fSpeedPerSecond = 10.f;
 	tTransformDesc.fRotatePerSecond = D3DXToRadian(90.f);
 
-	CCollider::COLLIDER_DESC tCollDesc;
+	CSphereCollider::COLLIDER_DESC tCollDesc;
 	tCollDesc.vPosition = tTransformDesc.vPosition;
 	tCollDesc.fRadius = 0.7f;
 
@@ -115,11 +115,11 @@ HRESULT CMeteor::Add_Component()
 		return E_FAIL;
 	
 	// For.Collider
-	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Collider", L"Com_Collider", (CComponent**)&m_pColliderCom, &tCollDesc)))
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Collider_Sphere", L"Com_Collider", (CComponent**)&m_pColliderCom, &tCollDesc)))
 		return E_FAIL;
 	
 	// For.Status
-	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Status", L"Com_Stat", (CComponent**)&m_pStatusComp), &tStat))
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Status", L"Com_Stat", (CComponent**)&m_pStatusComp, &tStat)))
 		return E_FAIL;
 
 	CStatus* pOwnerStatusComp = (CStatus*)m_tInstant.pStatusComp;

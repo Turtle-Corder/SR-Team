@@ -99,7 +99,7 @@ HRESULT CSnow::Add_Component()
 	//-------------------------------------------------------
 	// Collider Setting
 	//-------------------------------------------------------
-	CCollider::COLLIDER_DESC tColDesc;
+	CSphereCollider::COLLIDER_DESC tColDesc;
 	tColDesc.vPosition = tTransformDesc.vPosition;
 	tColDesc.fRadius = 0.7f;
 	//-------------------------------------------------------
@@ -116,7 +116,7 @@ HRESULT CSnow::Add_Component()
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", L"Com_Transform", (CComponent**)&m_pTransformCom, &tTransformDesc)))
 		return E_FAIL;
 
-	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Collider", L"Com_Collider", (CComponent**)&m_pColliderCom, &tColDesc)))
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Collider_Sphere", L"Com_Collider", (CComponent**)&m_pColliderCom, &tColDesc)))
 		return E_FAIL;
 
 	// TODO : m_pStatusComp ¼ÂÆÃ
