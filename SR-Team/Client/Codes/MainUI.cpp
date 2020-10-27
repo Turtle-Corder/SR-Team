@@ -55,6 +55,23 @@ HRESULT CMainUI::Get_QuickSlotItem(INVEN_ITEM * pItem)
 	return S_OK;
 }
 
+HRESULT CMainUI::Delete_Potion(INVEN_ITEM * pItem)
+{
+	for (_uint i = 0; i < 8; i++)
+	{
+		if (m_pRightSlotItem[i] != nullptr)
+		{
+			if (!wcscmp(pItem->szItemTag, m_pRightSlotItem[i]->szItemTag))
+			{
+				m_pRightSlotItem[i]->iCnt = 0;
+				return S_OK;
+			}
+		}
+	}
+
+	return S_OK;
+}
+
 HRESULT CMainUI::Setup_GameObject_Prototype()
 {
 	return S_OK;
@@ -102,7 +119,7 @@ HRESULT CMainUI::Setup_GameObject(void * pArg)
 		vPos.z = 0.f;
 
 		m_pTransformLeftSlot[i]->Set_Position(vPos);
-		
+
 		m_tLeftSlotCollRt[i].left = (LONG)(vPos.x - 16.f);
 		m_tLeftSlotCollRt[i].right = (LONG)(vPos.x + 16.f);
 		m_tLeftSlotCollRt[i].top = (LONG)(vPos.y - 16.f);
@@ -258,7 +275,7 @@ HRESULT CMainUI::Render_UI()
 
 		m_pSprite->SetTransform(&m_pTransformCom[i]->Get_Desc().matWorld);
 		m_pSprite->Draw(
-			(LPDIRECT3DTEXTURE9)m_pTextureCom[i]->GetTexture(0), 
+			(LPDIRECT3DTEXTURE9)m_pTextureCom[i]->GetTexture(0),
 			&m_tCollRt[i], &vCenter, nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
 	}
 
@@ -456,7 +473,7 @@ HRESULT CMainUI::Set_SlotItem_Count()
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	CInventory* pInven = (CInventory*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Inventory");
-	
+
 	for (_uint i = 0; i < 8; ++i)
 	{
 		if (m_pLeftSlotItem[i] != nullptr)
@@ -562,7 +579,7 @@ HRESULT CMainUI::Render_QuickSlot_Item()
 
 			m_pSprite->SetTransform(&matWorld2);
 			m_pFont->DrawTextW(m_pSprite, szBuff, lstrlen(szBuff),
-				nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
+				nullptr, 0, D3DCOLOR_ARGB(255, 0, 0, 0));
 		}
 	}
 
@@ -634,7 +651,7 @@ HRESULT CMainUI::Add_Component()
 			, szTransform, (CComponent**)&m_pTransformLeftSlot[i])))
 			return E_FAIL;
 
-		TCHAR szRightTransform [MAX_PATH] = L"";
+		TCHAR szRightTransform[MAX_PATH] = L"";
 		StringCchPrintf(szRightTransform, sizeof(TCHAR) * MAX_PATH,
 			L"Com_RightTransform%d", i);
 		if (FAILED(CGameObject::Add_Component(
@@ -682,7 +699,7 @@ void CMainUI::Free()
 {
 	Safe_Release(m_pEmptyTexture);
 	Safe_Release(m_pTexture_GoingItem);
-	
+
 	for (_uint i = 0; i < MAINUI_END; ++i)
 	{
 		Safe_Release(m_pTextureCom[i]);
