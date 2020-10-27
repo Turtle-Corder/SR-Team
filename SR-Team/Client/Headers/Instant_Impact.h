@@ -27,15 +27,18 @@ public:
 	virtual void Free() override;
 	static CInstant_Impact* Create(LPDIRECT3DDEVICE9 _pDevice);
 	virtual HRESULT Take_Damage(const CComponent* _pDamageComp) override;
+
+
+
 private:
 	CTransform*		m_pTransformCom = nullptr;
 	CCollider*		m_pColliderCom = nullptr;
 	CDamageInfo*	m_pDmgInfoCom = nullptr;
 
 
-	_vec3				m_vPos = {};
-	_bool				m_bDead = false;
-	INSTANTIMPACT*    m_pInstant = nullptr;
+	_vec3			m_vPos = {};
+	_bool			m_bDead = false;
+	INSTANTIMPACT	m_pInstant;
 };
 
 END

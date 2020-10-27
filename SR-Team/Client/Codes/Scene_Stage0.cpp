@@ -261,7 +261,7 @@ HRESULT CScene_Stage0::Setup_Layer_Snow(const wstring & LayerTag)
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Snow", SCENE_STAGE0, LayerTag, &_vec3(10.f, 100.f, 30.f))))/*여기 StartPos*/
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Snow", SCENE_STAGE0, LayerTag, nullptr)))/*여기 StartPos*/
 		return E_FAIL;
 
 	return S_OK;

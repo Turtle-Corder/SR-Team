@@ -22,7 +22,7 @@ HRESULT CInstant_Impact::Setup_GameObject_Prototype()
 HRESULT CInstant_Impact::Setup_GameObject(void* _pArg)
 {
 	if (_pArg)
-		m_pInstant = (INSTANTIMPACT*)_pArg;
+		m_pInstant = *(INSTANTIMPACT*)_pArg;
 
 	if (FAILED(Add_Component()))
 		return E_FAIL;
@@ -66,7 +66,7 @@ HRESULT CInstant_Impact::Add_Component()
 		return E_FAIL;
 
 	CDamageInfo::DAMAGE_DESC tDmgInfo;
-	tDmgInfo.iAttack = 10;
+	//tDmgInfo.iAttack = 10;
 	tDmgInfo.pOwner = this;
 
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_DamageInfo", L"Com_DmgInfo", (CComponent**)&m_pDmgInfoCom, &tDmgInfo)))

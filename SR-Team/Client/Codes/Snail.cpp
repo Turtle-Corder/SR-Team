@@ -307,7 +307,7 @@ HRESULT CSnail::SetUp_Layer_InstantImpact(const wstring & LayerTag)
 
 	m_pInstantImpact->vPosition = m_pTransformCom[SNAIL_BODY]->Get_Desc().vPosition;
 	m_pInstantImpact->pAttacker = this;
-	m_pInstantImpact->iAttack = m_pStatusCom->Get_Status().iMaxAtt;
+	//m_pInstantImpact->iAttack = m_pStatusCom->Get_Status().iMaxAtt;
 
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Instant_Impact", SCENE_STAGE0, LayerTag , m_pInstantImpact)))/*¿©±â StartPos*/
 		return E_FAIL;

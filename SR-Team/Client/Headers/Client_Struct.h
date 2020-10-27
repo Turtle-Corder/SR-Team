@@ -31,17 +31,17 @@ typedef struct tagTerrainInfo
 
 
 
-typedef struct tagDamageEvent
-{
-	_vec3			vPosition;
-	CComponent*		pDmgInfoComp;
-} DAMAGE_EVENT;
+//typedef struct tagDamageEvent
+//{
+//	_vec3			vPosition;
+//	CComponent*		pDmgInfoComp;
+//} DAMAGE_EVENT;
 
 typedef struct tagInstantImpact
 {
-	_vec3			vPosition;
 	CGameObject*	pAttacker;
-	_uint			iAttack;
+	CComponent*		pStatusComp;
+	_vec3			vPosition;
 }INSTANTIMPACT;
 
 typedef struct tagFileInfo

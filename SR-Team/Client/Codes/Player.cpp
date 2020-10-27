@@ -175,10 +175,10 @@ HRESULT CPlayer::Take_Damage(const CComponent* _pDamageComp)
 	if (!_pDamageComp)
 		return S_OK;
 
-	m_pStatusCom->Set_HP(((CDamageInfo*)_pDamageComp)->Get_Desc().iAttack);
+	m_pStatusCom->Set_HP(((CDamageInfo*)_pDamageComp)->Get_Desc().iMinAtt);
 
-	if (0 >= m_pStatusCom->Get_Status().iHp)
-		PRINT_LOG(L"¾Æ¾æ", LOG::CLIENT);
+	//if (0 >= m_pStatusCom->Get_Status().iHp)
+	//	PRINT_LOG(L"¾Æ¾æ", LOG::CLIENT);
 
 	return S_OK;
 }
@@ -281,7 +281,7 @@ HRESULT CPlayer::Add_Component()
 		return E_FAIL;
 
 	CDamageInfo::DAMAGE_DESC tDmgInfo;
-	tDmgInfo.iAttack = 10;
+	tDmgInfo.iMaxAtt = 99;
 	tDmgInfo.pOwner = this;
 
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_DamageInfo", L"Com_DmgInfo", (CComponent**)&m_pDmgInfoCom, &tDmgInfo)))

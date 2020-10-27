@@ -42,7 +42,7 @@ private:
 	CTransform*		m_pTransformCom = nullptr;
 	CTexture*		m_pTextureCom = nullptr;
 	CCollider*		m_pColliderCom = nullptr;
-	CStatus*		m_pStatusCom = nullptr;
+	CStatus*		m_pStatusComp = nullptr;
 	CDamageInfo*	m_pDmgInfoCom = nullptr;
 	bool			m_bDead = false;
 	bool			m_bJump = false;
@@ -55,6 +55,8 @@ private:
 	bool			m_bGround = false;
 	float			m_fGravity = 0.f;
 	_float			m_fDeadTime = 0.f;
+
+	INSTANTIMPACT	m_tInstant = {};
 };
 
 END
