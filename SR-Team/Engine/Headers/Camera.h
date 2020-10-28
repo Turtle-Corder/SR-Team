@@ -27,7 +27,7 @@ public:
 	const _matrix* Get_ViewMatrix() const;
 	const _matrix* Get_ProjMatrix() const;
 	const _vec3& Get_Position() const;
-
+	const CAMERA_DESC Get_Desc() { return m_tCameraDesc; }
 public:
 	virtual HRESULT Setup_GameObject_Prototype() = 0;
 	virtual HRESULT Setup_GameObject(void* _pArg) = 0;

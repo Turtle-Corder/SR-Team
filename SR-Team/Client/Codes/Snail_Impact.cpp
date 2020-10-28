@@ -1,24 +1,25 @@
 #include "stdafx.h"
-#include "..\Headers\Slime_Impact.h"
+#include "..\Headers\Snail_Impact.h"
 #include "DamageInfo.h"
+
 USING(Client)
 
-CSlime_Impact::CSlime_Impact(LPDIRECT3DDEVICE9 _pDevice)
+CSnail_Impact::CSnail_Impact(LPDIRECT3DDEVICE9 _pDevice)
 	:CGameObject(_pDevice)
 {
 }
 
-CSlime_Impact::CSlime_Impact(const CSlime_Impact & _rOther)
+CSnail_Impact::CSnail_Impact(const CSnail_Impact & _rOther)
 	:CGameObject(_rOther)
 {
 }
 
-HRESULT CSlime_Impact::Setup_GameObject_Prototype()
+HRESULT CSnail_Impact::Setup_GameObject_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CSlime_Impact::Setup_GameObject(void * _pArg)
+HRESULT CSnail_Impact::Setup_GameObject(void * _pArg)
 {
 	if (_pArg)
 	{
@@ -31,7 +32,7 @@ HRESULT CSlime_Impact::Setup_GameObject(void * _pArg)
 	return S_OK;
 }
 
-_int CSlime_Impact::Update_GameObject(_float _fDeltaTime)
+_int CSnail_Impact::Update_GameObject(_float _fDeltaTime)
 {
 	if (m_bDead)
 		return GAMEOBJECT::DEAD;
@@ -42,7 +43,7 @@ _int CSlime_Impact::Update_GameObject(_float _fDeltaTime)
 	return GAMEOBJECT::NOEVENT;
 }
 
-_int CSlime_Impact::LateUpdate_GameObject(_float _fDeltaTime)
+_int CSnail_Impact::LateUpdate_GameObject(_float _fDeltaTime)
 {
 	m_fDeadTime += _fDeltaTime;
 	if (m_fDeadTime >= 1.f)
@@ -51,7 +52,7 @@ _int CSlime_Impact::LateUpdate_GameObject(_float _fDeltaTime)
 	return GAMEOBJECT::NOEVENT;
 }
 
-HRESULT CSlime_Impact::Add_Component()
+HRESULT CSnail_Impact::Add_Component()
 {
 	CTransform::TRANSFORM_DESC tTransformDesc;
 	tTransformDesc.vPosition = { m_tInstant.vPosition };
@@ -100,28 +101,27 @@ HRESULT CSlime_Impact::Add_Component()
 	return S_OK;
 }
 
-CGameObject * CSlime_Impact::Clone_GameObject(void * _pArg)
+CGameObject * CSnail_Impact::Clone_GameObject(void * _pArg)
 {
-	CSlime_Impact* pInstance = new CSlime_Impact(*this);
-
+	CSnail_Impact* pInstance = new CSnail_Impact(*this);
 	if (FAILED(pInstance->Setup_GameObject(_pArg)))
 	{
-		PRINT_LOG(L"Failed To Create Slime_Impact Clone", LOG::CLIENT);
+		PRINT_LOG(L"Failed To Create Snail_Impact Clone", LOG::CLIENT);
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-HRESULT CSlime_Impact::Take_Damage(const CComponent * _pDamageComp)
+HRESULT CSnail_Impact::Take_Damage(const CComponent * _pDamageComp)
 {
-	if(!_pDamageComp)
-	return E_FAIL;
+	if (!_pDamageComp)
+		return E_FAIL;
 
 	return S_OK;
 }
 
-void CSlime_Impact::Free()
+void CSnail_Impact::Free()
 {
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pColliderCom);
@@ -129,15 +129,15 @@ void CSlime_Impact::Free()
 	Safe_Release(m_pDmgInfoCom);
 }
 
-CSlime_Impact * CSlime_Impact::Create(LPDIRECT3DDEVICE9 _pDevice)
+CSnail_Impact * CSnail_Impact::Create(LPDIRECT3DDEVICE9 _pDevice)
 {
 	if (nullptr == _pDevice)
 		return nullptr;
 
-	CSlime_Impact* pInstance = new CSlime_Impact(_pDevice);
+	CSnail_Impact* pInstance = new CSnail_Impact(_pDevice);
 	if (FAILED(pInstance->Setup_GameObject_Prototype()))
 	{
-		PRINT_LOG(L"Failed To Create Slime_Impact", LOG::CLIENT);
+		PRINT_LOG(L"Failed To Create Snail_Impact", LOG::CLIENT);
 		Safe_Release(pInstance);
 	}
 

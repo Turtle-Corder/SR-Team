@@ -202,6 +202,12 @@
     <Filter Include="02.GameObject\14.Mouse">
       <UniqueIdentifier>{93cb23d9-10f3-4818-b680-9a43b6ff7a82}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\11.Instant_Impact\02.Snail_Impact">
+      <UniqueIdentifier>{8f8feba1-5b6e-4b40-8795-83ca4fa74a36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\08.Item\00.Wand">
+      <UniqueIdentifier>{149baf85-c5c6-4663-82ea-218486cb2f67}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -360,6 +366,12 @@
     <ClInclude Include="..\Headers\Mouse.h">
       <Filter>02.GameObject\14.Mouse</Filter>
     </ClInclude>
+    <ClInclude Include="..\Headers\Snail_Impact.h">
+      <Filter>02.GameObject\11.Instant_Impact\02.Snail_Impact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Wand.h">
+      <Filter>02.GameObject\08.Item\00.Wand</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -502,6 +514,12 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Mouse.cpp">
       <Filter>02.GameObject\14.Mouse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Snail_Impact.cpp">
+      <Filter>02.GameObject\11.Instant_Impact\02.Snail_Impact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Wand.cpp">
+      <Filter>02.GameObject\08.Item\00.Wand</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

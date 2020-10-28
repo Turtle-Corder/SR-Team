@@ -172,12 +172,6 @@ HRESULT CMainApp::Setup_DefaultSetting()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE)))
-	{
-		PRINT_LOG(L"Failed To Backface Cull Off", LOG::CLIENT);
-		return E_FAIL;
-	}
-
 	return S_OK;
 }
 
@@ -228,6 +222,11 @@ HRESULT CMainApp::Setup_StaticResources()
 
 #pragma region GameObject_Skill
 	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_Skill", CSkill::Create(m_pDevice, m_pSprite, m_pFont))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region GameObject_TerrainBundle
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_TerrainBundle", CTerrainBundle::Create(m_pDevice))))
 		return E_FAIL;
 #pragma endregion
 
@@ -566,24 +565,17 @@ HRESULT CMainApp::Setup_ProtoTypeData()
 			//처리용 문자열 세팅
 			//---------------------------------------------------------------
 
-			for (_uint iCount = 0; iCount < pFileInfo.iCount; iCount++)
-			{
-
-				TCHAR szNowCount[10] = L"";
+		
 				wstring wstrCombine = L"";
 				wstring wstrObjKey = pFileInfo.wstrObjectKey;
 
-				wsprintf(szNowCount, _T("%d"), iCount);
+			
 
-				wchar_t *ptr = wcschr(pFileInfo.wstrObjectKey, L'_');
+				TCHAR *ptr = wcschr(pFileInfo.wstrObjectKey, L'_');
 				wprintf(L"%s\n", ptr);
 
 				wstrCombine = L"Component_Texture" + wstring(ptr) ;
 
-				if (1 != pFileInfo.iCount)
-				{
-					wstrCombine = wstrCombine + szNowCount;
-				}
 
 				ptr = nullptr;
 
@@ -599,12 +591,12 @@ HRESULT CMainApp::Setup_ProtoTypeData()
 
 				//---------------------------------------------------------------
 				//확장자 합성
-				//---------------------------------------------------------------
-				if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"DDS"))
-					wstrFullPath = wstrFullPath.substr(0, wstrFullPath.length() - 6) + szNowCount + L".dds";
+				////---------------------------------------------------------------
+				//if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"DDS"))
+				//	wstrFullPath = wstrFullPath.substr(0, wstrFullPath.length() - 6) + szNowCount + L".dds";
 
-				else if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"PNG"))
-					wstrFullPath = wstrFullPath.substr(0, wstrFullPath.length() - 6) + szNowCount + L".png";
+				//else if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"PNG"))
+				//	wstrFullPath = wstrFullPath.substr(0, wstrFullPath.length() - 6) + szNowCount + L".png";
 
 
 
@@ -616,22 +608,22 @@ HRESULT CMainApp::Setup_ProtoTypeData()
 				if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"DDS"))
 				{
 					if (FAILED(pManagement->Add_Component_Prototype(SCENE_STATIC, wstrCombine.c_str(), CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE,
-						wstrFullPath))))
+						wstrFullPath, pFileInfo.iCount))))
 						return E_FAIL;
 				}
 				else if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"PNG") && !wcscmp(pFileInfo.wstrDimenKey, L"3D"))
 				{
 					if (FAILED(pManagement->Add_Component_Prototype(SCENE_STATIC, wstrCombine.c_str(), CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL,
-						wstrFullPath))))
+						wstrFullPath, pFileInfo.iCount))))
 						return E_FAIL;
 				}
 				else if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"PNG") && !wcscmp(pFileInfo.wstrDimenKey, L"Sprite"))
 				{
 					if (FAILED(pManagement->Add_Component_Prototype(SCENE_STATIC, wstrCombine.c_str(), CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-						wstrFullPath.c_str()))))
+						wstrFullPath, pFileInfo.iCount))))
 						return E_FAIL;
 				}
-			}
+			
 		}
 	}
 	fin.close();

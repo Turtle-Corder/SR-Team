@@ -15,9 +15,14 @@ private:
 	virtual ~CMainCamera() = default;
 
 public:
-	enum CAMERA_MODE
+	enum CAMERA_EVNETMODE
 	{
-		CAMERA_NORMAL, CARERA_WIGGING, CAMERA_2D, CAMERA_DYNAMIC, MODE_END
+		CAMERA_NORMAL, CARERA_WIGGING, CAMERA_DYNAMIC, MODE_END
+	};
+
+	enum CAMERA_VIEWMODE
+	{
+		CAMERA_3D, CAMERA_2D_X, CAMERA_2D_Z, VIEWMODE_END
 	};
 
 	virtual HRESULT Setup_GameObject_Prototype() override;
@@ -48,7 +53,7 @@ public:
 	//MIXED : 구현안댐 ㅈㅅ
 	//-----------------------------------------------------------------------
 	HRESULT Set_Camera_Wigging(_float _Magnitude, _float _Frequency, _float _Time, WIG_TYPE Option = WIG_TYPE::DAMPED);
-
+	HRESULT Set_Camera_Mode(CAMERA_VIEWMODE _ModeOption, void* _Option = nullptr);
 public:
 	static CMainCamera* Create(LPDIRECT3DDEVICE9 _pDevice);
 	virtual CGameObject* Clone_GameObject(void* _pArg) override;
@@ -66,6 +71,9 @@ private:
 		WIG_TYPE m_eWigType = WIG_TYPE::DAMPED;
 	};
 
+	//-----------------------------------------------------------
+	//3D State값들
+	//-----------------------------------------------------------
 	_float m_fZoomInOutSpeedPerSecond = 10.f;
 	_float m_fCameraAngle = D3DXToRadian(45.f);
 	_float m_fUpDownSpeedPerSecond = D3DXToRadian(45.f);
@@ -73,7 +81,15 @@ private:
 	_float m_fStartDistance = 1.f;
 	_float m_fHeight = m_fStartHeight;
 	_float m_fDistance = m_fStartDistance;
-	CAMERA_MODE m_eMode = CAMERA_MODE::CAMERA_NORMAL;
+
+
+	//-----------------------------------------------------------
+	//2D State값들
+	//-----------------------------------------------------------
+	_float m_fDistanceOn2DView = 3.f;
+
+	CAMERA_EVNETMODE m_eEventMode = CAMERA_EVNETMODE::CAMERA_NORMAL;
+	CAMERA_VIEWMODE m_eViewMode = CAMERA_VIEWMODE::CAMERA_3D;
 	SHAKEINFO m_tShakeInfo;
 };
 
