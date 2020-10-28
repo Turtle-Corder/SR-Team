@@ -17,7 +17,7 @@ class CSlime final : public CGameObject
 		SLIME_JELLY = SLIME_BASE,
 		SLIME_END
 	};
-
+	enum STATE { STATE_IDLE , STATE_MOVE , STATE_ATTACK , STATE_DEAD };
 private:
 	explicit CSlime(LPDIRECT3DDEVICE9 pDevice);
 	explicit CSlime(const CSlime& other);
@@ -34,20 +34,30 @@ public:
 private:
 	HRESULT Add_Component();
 	HRESULT Movement(float _fDeltaTime);
+	//----------------------------------
 	HRESULT IsOnTerrain();
 	void	Jumping(float _fDeltaTime);
 	HRESULT LookAtPlayer(float _fDeltaTime);
+	//----------------------------------
+
 	HRESULT Divide_Cube(const wstring& LayerTag);
 public:
 	static CSlime* Create(LPDIRECT3DDEVICE9 pDevice);
 	virtual CGameObject* Clone_GameObject(void * pArg) override;
 	virtual void Free() override;
 	HRESULT Create_Item(const wstring& LayerTag);
+	HRESULT Create_Crack(const wstring& LayerTag);
 	HRESULT Setting_SlimeBody();
 	HRESULT Setting_SlimeJelly();
-
+	//----------------------------------
 	HRESULT Move(_float _fDeltaTime);
-
+	//----------------------------------
+	void    Update_State();
+	//----------------------------------
+	HRESULT	Stop_Move(_float _fDeltaTime);
+	//----------------------------------
+	HRESULT Attack(_float _fDeltaTime);
+	//----------------------------------
 private:
 	CVIBuffer*	m_pVIBufferCom[SLIME_END] = {};
 	CTransform*	m_pTransformCom[SLIME_END] = {};
@@ -59,9 +69,12 @@ private:
 	_bool		m_bJump = false;
 	_float		m_fJumpPower = 5.f;
 	_float		m_fJumpTime = 0.f;
-	_int			m_iMaxCount = 4;
-	_int			m_iCurCount = 1;
+	_int		m_iMaxCount = 4;
+	_int		m_iCurCount = 1;
 	_vec3		m_vStartPos = {};
+	STATE		m_ePreState;
+	STATE		m_eCurState;
+	_float		m_fDistance = 0.f;
 };
 
 END

@@ -17,6 +17,8 @@
 #include "MonSub.h"
 #include "Flower.h"
 #include "PlaneSkill.h"
+#include "EnergyBolt.h"
+#include "Crack.h"
 #pragma endregion
 
 USING(Client)
@@ -121,6 +123,16 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_PlanSkill", CPlaneSkill::Create(m_pDevice))))
 		return E_FAIL;
 #pragma endregion
+
+#pragma region GameObject_EnergyBolt
+	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_EnergyBolt", CEnergyBolt::Create(m_pDevice))))
+	return E_FAIL;
+#pragma endregion
+
+#pragma region GameObject_Crack
+	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Crack", CCrack::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
 	//----------------------------------------------------------------------------------------------------
 	// Component
 	//----------------------------------------------------------------------------------------------------
@@ -219,6 +231,8 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 		return E_FAIL;
 #pragma endregion
 
+
+
 	//projectile
 #pragma region GameObject_Snow
 	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Snow", CSnow::Create(m_pDevice))))
@@ -232,6 +246,11 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 
 #pragma region Component_Texture_SpellJin
 	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_SpellJin", CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL, L"../Resources/SpellJin%d.png"))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Texture_Crack
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_Crack", CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL, L"../Resources/Crack%d.png"))))
 		return E_FAIL;
 #pragma endregion
 	// player
@@ -251,6 +270,8 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 			L"../Resources/Player/PlayerFoot%d.dds"))))
 		return E_FAIL;
 #pragma endregion
+
+
 
 	// item
 #pragma region Component_Texture_Item

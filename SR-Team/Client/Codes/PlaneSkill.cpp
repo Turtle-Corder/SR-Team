@@ -28,7 +28,6 @@ HRESULT CPlaneSkill::Setup_GameObject(void * pArg)
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Turn(CTransform::AXIS_X, 45);
 	return S_OK;
 }
 
@@ -106,6 +105,8 @@ HRESULT CPlaneSkill::Add_Component()
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", L"Com_Transform", (CComponent**)&m_pTransformCom, &tTransformDesc)))
 		return E_FAIL;
 
+	m_pTransformCom->Turn(CTransform::AXIS_X, 45);
+
 	return S_OK;
 }
 
@@ -134,6 +135,7 @@ HRESULT CPlaneSkill::IsOnTerrain()
 	{
 		m_pTransformCom->Set_Position(vPosition);
 	}
+
 	return S_OK;
 }
 

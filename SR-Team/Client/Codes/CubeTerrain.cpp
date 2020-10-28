@@ -64,15 +64,22 @@ HRESULT CCubeTerrain::Render_NoneAlpha()
 	if (nullptr == pCamera)
 		return E_FAIL;
 
-	if (FAILED(m_pVIBufferCom->Set_Transform(&m_pTransformCom->Get_Desc().matWorld, pCamera)))
-		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->SetTexture(0)))
-		return E_FAIL;
+	_vec3 TestVec1, TestVec2;
+	D3DXVec3Normalize(&TestVec1, &(m_pTransformCom->Get_Desc().vPosition - pCamera->Get_Position()));
+	D3DXVec3Normalize(&TestVec2, &(pCamera->Get_Desc().vAt - pCamera->Get_Desc().vEye));
 
-	if (FAILED(m_pVIBufferCom->Render_VIBuffer()))
-		return E_FAIL;
+	if (cos(pCamera->Get_Desc().fFovY / 1.3f) < D3DXVec3Dot(&TestVec1, &TestVec2))
+	{
+		if (FAILED(m_pVIBufferCom->Set_Transform(&m_pTransformCom->Get_Desc().matWorld, pCamera)))
+			return E_FAIL;
 
+		if (FAILED(m_pTextureCom->SetTexture(m_tInfo.iTextureID)))
+			return E_FAIL;
+
+		if (FAILED(m_pVIBufferCom->Render_VIBuffer()))
+			return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -85,13 +92,11 @@ HRESULT CCubeTerrain::Add_Component()
 	tTransformDesc.fRotatePerSecond = 0.f;
 
 
-	TCHAR szTextureCom[MIN_STR] = L"";
-	StringCchPrintf(szTextureCom, sizeof(TCHAR) * MID_STR, _T("Component_Texture_TerrainBox%d"), m_tInfo.iTextureID);
 
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", L"Com_VIBuffer", (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
 
-	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, szTextureCom, L"Com_Texture", (CComponent**)&m_pTextureCom)))
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, _T("Component_Texture_TerrainBox"), L"Com_Texture", (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", L"Com_Transform", (CComponent**)&m_pTransformCom, &tTransformDesc)))

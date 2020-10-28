@@ -28,6 +28,7 @@
 #include "EnergyVoltSkill.h"
 #include "ItemInventory.h"
 #include "RedPotion.h"
+#include "Mouse.h"
 #pragma endregion
 
 #pragma region Component_Headers
@@ -107,11 +108,19 @@ HRESULT CMainApp::Setup_MainApp()
 		return E_FAIL;
 	}
 
+	if (FAILED(Setup_UIResources()))
+	{
+		PRINT_LOG(L"Failed To Setup_UIResources", LOG::CLIENT);
+		return E_FAIL;
+	}
+
 	if (FAILED(Setup_ProtoTypeData()))
 	{
 		PRINT_LOG(L"Failed To Setup_SaveData", LOG::CLIENT);
 		return E_FAIL;
 	}
+
+	ShowCursor(FALSE);
 
 	return S_OK;
 }
@@ -166,12 +175,6 @@ HRESULT CMainApp::Setup_DefaultSetting()
 	if (FAILED(m_pDevice->SetRenderState(D3DRS_LIGHTING, FALSE)))
 	{
 		PRINT_LOG(L"Failed To Light Off", LOG::CLIENT);
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE)))
-	{
-		PRINT_LOG(L"Failed To Backface Cull Off", LOG::CLIENT);
 		return E_FAIL;
 	}
 
@@ -246,6 +249,11 @@ HRESULT CMainApp::Setup_StaticResources()
 
 #pragma region GameObject_EnergyVoltSkill
 	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_EnergyVoltSkill", CEnergyVoltSkill::Create(m_pDevice, m_pSprite, m_pFont))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region GameObject_TerrainBundle
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_TerrainBundle", CTerrainBundle::Create(m_pDevice))))
 		return E_FAIL;
 #pragma endregion
 
@@ -502,6 +510,45 @@ HRESULT CMainApp::Setup_StaticResources()
 	return S_OK;
 }
 
+HRESULT CMainApp::Setup_UIResources()
+{
+#pragma region GameObject_Mouse
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_Mouse", CMouse::Create(m_pDevice, m_pSprite, m_pFont))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Textures_Mouse
+	
+	// idle
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Mouse_Idle", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Mouse/idle/idle%d.png"))))
+		return E_FAIL;
+
+	// grab
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Mouse_Grab", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Mouse/grab/grab%d.png"))))
+		return E_FAIL;
+
+	// help
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Mouse_Help", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Mouse/help/help%d.png"))))
+		return E_FAIL;
+
+	// click
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Mouse_Click", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Mouse/click/click%d.png", 2))))
+		return E_FAIL;
+
+	// work
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Mouse_Work", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Mouse/work/work%d.png", 4))))
+		return E_FAIL;
+
+#pragma endregion
+
+	return S_OK;
+}
+
 HRESULT CMainApp::Setup_ProtoTypeData()
 {
 	CManagement* pManagement = CManagement::Get_Instance();
@@ -541,24 +588,17 @@ HRESULT CMainApp::Setup_ProtoTypeData()
 			//처리용 문자열 세팅
 			//---------------------------------------------------------------
 
-			for (_uint iCount = 0; iCount < pFileInfo.iCount; iCount++)
-			{
-
-				TCHAR szNowCount[10] = L"";
+		
 				wstring wstrCombine = L"";
 				wstring wstrObjKey = pFileInfo.wstrObjectKey;
 
-				wsprintf(szNowCount, _T("%d"), iCount);
+			
 
-				wchar_t *ptr = wcschr(pFileInfo.wstrObjectKey, L'_');
+				TCHAR *ptr = wcschr(pFileInfo.wstrObjectKey, L'_');
 				wprintf(L"%s\n", ptr);
 
 				wstrCombine = L"Component_Texture" + wstring(ptr) ;
 
-				if (1 != pFileInfo.iCount)
-				{
-					wstrCombine = wstrCombine + szNowCount;
-				}
 
 				ptr = nullptr;
 
@@ -574,12 +614,12 @@ HRESULT CMainApp::Setup_ProtoTypeData()
 
 				//---------------------------------------------------------------
 				//확장자 합성
-				//---------------------------------------------------------------
-				if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"DDS"))
-					wstrFullPath = wstrFullPath.substr(0, wstrFullPath.length() - 6) + szNowCount + L".dds";
+				////---------------------------------------------------------------
+				//if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"DDS"))
+				//	wstrFullPath = wstrFullPath.substr(0, wstrFullPath.length() - 6) + szNowCount + L".dds";
 
-				else if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"PNG"))
-					wstrFullPath = wstrFullPath.substr(0, wstrFullPath.length() - 6) + szNowCount + L".png";
+				//else if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"PNG"))
+				//	wstrFullPath = wstrFullPath.substr(0, wstrFullPath.length() - 6) + szNowCount + L".png";
 
 
 
@@ -591,22 +631,22 @@ HRESULT CMainApp::Setup_ProtoTypeData()
 				if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"DDS"))
 				{
 					if (FAILED(pManagement->Add_Component_Prototype(SCENE_STATIC, wstrCombine.c_str(), CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE,
-						wstrFullPath))))
+						wstrFullPath, pFileInfo.iCount))))
 						return E_FAIL;
 				}
 				else if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"PNG") && !wcscmp(pFileInfo.wstrDimenKey, L"3D"))
 				{
 					if (FAILED(pManagement->Add_Component_Prototype(SCENE_STATIC, wstrCombine.c_str(), CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL,
-						wstrFullPath))))
+						wstrFullPath, pFileInfo.iCount))))
 						return E_FAIL;
 				}
 				else if (!wcscmp(pFileInfo.wstrSaveTypeKey, L"PNG") && !wcscmp(pFileInfo.wstrDimenKey, L"Sprite"))
 				{
 					if (FAILED(pManagement->Add_Component_Prototype(SCENE_STATIC, wstrCombine.c_str(), CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-						wstrFullPath.c_str()))))
+						wstrFullPath, pFileInfo.iCount))))
 						return E_FAIL;
 				}
-			}
+			
 		}
 	}
 	fin.close();
@@ -635,6 +675,8 @@ void CMainApp::Free()
 	Safe_Release(m_pSprite);
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pManagement);
+
+	ShowCursor(TRUE);
 
 	if (CManagement::Release_Engine())
 		PRINT_LOG(L"Failed To Release Engine", LOG::CLIENT);

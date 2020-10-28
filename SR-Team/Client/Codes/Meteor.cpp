@@ -43,10 +43,10 @@ int CMeteor::Update_GameObject(_float _fDeltaTime)
 		return GAMEOBJECT::WARN;
 
 	if (FAILED(m_pColliderCom->Update_Collider(m_pTransformCom->Get_Desc().vPosition)))
-		return E_FAIL;
+		return GAMEOBJECT::WARN;
 
 	if (FAILED(m_pTransformCom->Update_Transform()))
-		return 0;
+		return GAMEOBJECT::WARN;
 
 
 
@@ -148,6 +148,9 @@ HRESULT CMeteor::Add_Component()
 
 HRESULT CMeteor::Movement(_float _fDeltaTime)
 {
+	if (m_bDead)
+	return GAMEOBJECT::DEAD;
+
 	if (FAILED(FallDown_Meteor(_fDeltaTime)))
 		return E_FAIL;
 

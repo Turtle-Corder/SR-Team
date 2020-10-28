@@ -196,6 +196,7 @@
     <Filter Include="02.GameObject\13. PlayerSkill\00. Normal_Attack">
       <UniqueIdentifier>{9891293b-36e7-4603-a600-2c6075aff553}</UniqueIdentifier>
     </Filter>
+<<<<<<< HEAD
     <Filter Include="02.GameObject\13. PlayerSkill\02. Meteo">
       <UniqueIdentifier>{9da80b4c-8ee5-4ced-a1c2-54cefff23de2}</UniqueIdentifier>
     </Filter>
@@ -216,6 +217,31 @@
     </Filter>
     <Filter Include="02.GameObject\15. ItemInventory">
       <UniqueIdentifier>{b7f6ed01-4dc7-4de3-8ad3-9f5a43effd44}</UniqueIdentifier>
+=======
+    <Filter Include="02.GameObject\06.Projectile\04.EnergyBolt">
+      <UniqueIdentifier>{974fd06f-931e-4781-917e-200b1ba94ca7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\11.Instant_Impact">
+      <UniqueIdentifier>{b3ed9e18-8920-43db-b876-047dc6c8b215}</UniqueIdentifier>
+>>>>>>> aadba911a226f72435b0c8d56a6ee1ce5973b3cf
+    </Filter>
+    <Filter Include="02.GameObject\11.Instant_Impact\00.Golem_Impact">
+      <UniqueIdentifier>{5550b8ca-6566-4391-924b-59ae319f4274}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\11.Instant_Impact\01.Slime_Impact">
+      <UniqueIdentifier>{de864e84-c52f-401d-b7dc-c19f176d8c98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\14.Mouse">
+      <UniqueIdentifier>{93cb23d9-10f3-4818-b680-9a43b6ff7a82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\11.Instant_Impact\02.Snail_Impact">
+      <UniqueIdentifier>{8f8feba1-5b6e-4b40-8795-83ca4fa74a36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\08.Item\00.Wand">
+      <UniqueIdentifier>{149baf85-c5c6-4663-82ea-218486cb2f67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\06.Projectile\05.Crack">
+      <UniqueIdentifier>{6c0b2378-27a4-4201-a52e-4372862b8bb7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -348,8 +374,16 @@
     <ClInclude Include="..\Headers\PlayerSkill.h">
       <Filter>02.GameObject\13. PlayerSkill</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="..\Headers\Golem_Impact.h">
       <Filter>02.GameObject\11.Golem_Impact</Filter>
+=======
+    <ClInclude Include="..\Headers\NormalAtt.h">
+      <Filter>02.GameObject\13. PlayerSkill\00. Normal_Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\SkillInventory.h">
+      <Filter>12. SkillInventory</Filter>
+>>>>>>> aadba911a226f72435b0c8d56a6ee1ce5973b3cf
     </ClInclude>
     <ClInclude Include="..\Headers\Yeti.h">
       <Filter>02.GameObject\05.Monster\02.Yeti</Filter>
@@ -357,6 +391,7 @@
     <ClInclude Include="..\Headers\Slime.h">
       <Filter>02.GameObject\05.Monster\01.Slime</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="..\Headers\SkillManager.h">
       <Filter>04.Manager\02. SkillManager</Filter>
     </ClInclude>
@@ -386,6 +421,28 @@
     </ClInclude>
     <ClInclude Include="..\Headers\ItemInventory.h">
       <Filter>02.GameObject\15. ItemInventory</Filter>
+=======
+    <ClInclude Include="..\Headers\EnergyBolt.h">
+      <Filter>02.GameObject\06.Projectile\04.EnergyBolt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Golem_Impact.h">
+      <Filter>02.GameObject\11.Instant_Impact\00.Golem_Impact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Slime_Impact.h">
+      <Filter>02.GameObject\11.Instant_Impact\01.Slime_Impact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Mouse.h">
+      <Filter>02.GameObject\14.Mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Snail_Impact.h">
+      <Filter>02.GameObject\11.Instant_Impact\02.Snail_Impact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Wand.h">
+      <Filter>02.GameObject\08.Item\00.Wand</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Crack.h">
+      <Filter>02.GameObject\06.Projectile\05.Crack</Filter>
+>>>>>>> aadba911a226f72435b0c8d56a6ee1ce5973b3cf
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -506,12 +563,21 @@
     <ClCompile Include="..\Codes\PlayerSkill.cpp">
       <Filter>02.GameObject\13. PlayerSkill</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="..\Codes\Golem_Impact.cpp">
       <Filter>02.GameObject\11.Golem_Impact</Filter>
+=======
+    <ClCompile Include="..\Codes\NormalAtt.cpp">
+      <Filter>02.GameObject\13. PlayerSkill\00. Normal_Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\SkillInventory.cpp">
+      <Filter>12. SkillInventory</Filter>
+>>>>>>> aadba911a226f72435b0c8d56a6ee1ce5973b3cf
     </ClCompile>
     <ClCompile Include="..\Codes\Yeti.cpp">
       <Filter>02.GameObject\05.Monster\02.Yeti</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="..\Codes\SkillManager.cpp">
       <Filter>04.Manager\02. SkillManager</Filter>
     </ClCompile>
@@ -541,6 +607,28 @@
     </ClCompile>
     <ClCompile Include="..\Codes\ItemInventory.cpp">
       <Filter>02.GameObject\15. ItemInventory</Filter>
+=======
+    <ClCompile Include="..\Codes\EnergyBolt.cpp">
+      <Filter>02.GameObject\06.Projectile\04.EnergyBolt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Golem_Impact.cpp">
+      <Filter>02.GameObject\11.Instant_Impact\00.Golem_Impact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Slime_Impact.cpp">
+      <Filter>02.GameObject\11.Instant_Impact\01.Slime_Impact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Mouse.cpp">
+      <Filter>02.GameObject\14.Mouse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Snail_Impact.cpp">
+      <Filter>02.GameObject\11.Instant_Impact\02.Snail_Impact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Wand.cpp">
+      <Filter>02.GameObject\08.Item\00.Wand</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Crack.cpp">
+      <Filter>02.GameObject\06.Projectile\05.Crack</Filter>
+>>>>>>> aadba911a226f72435b0c8d56a6ee1ce5973b3cf
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

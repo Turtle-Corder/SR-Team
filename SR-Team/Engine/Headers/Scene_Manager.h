@@ -16,9 +16,13 @@ private:
 	virtual ~CScene_Manager() = default;
 
 public:
+	_int Get_CurrentSceneID();
+
+public:
 	HRESULT Change_CurrentScene(_int _iSceneID, CScene* pCurrentScene);
 	_int Update_Scene_Manager(_float _fDeltaTime);
 	_int LateUpdate_Scene_Manager(_float _fDeltaTime);
+
 
 public:
 	virtual void Free() override;

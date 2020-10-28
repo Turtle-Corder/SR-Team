@@ -83,10 +83,14 @@ public:
 	HRESULT CollisionBox_Detection_Layers(_int _iSceneID, const wstring& _strSrcLayerTag, const wstring& _strDstLayerTag, const wstring& _strColliderTag, const wstring& _strDmgInfoTag);
 	HRESULT CollisionBox_Detection_Layers_Both(_int _iSceneID, const wstring& _strSrcLayerTag, const wstring& _strDstLayerTag, const wstring& _strColliderTag, const wstring& _strDmgInfoTag);
 
+	HRESULT CollisionSphere_Impulse_Layers(_int _iSceneID, const wstring& _strSrcLayerTag, const wstring& _strDstLayerTag, const wstring& _strColliderTag, const wstring& _strTransformTag);
+	HRESULT CollisionBox_Impulse_Layers(_int _iSceneID, const wstring& _strSrcLayerTag, const wstring& _strDstLayerTag, const wstring& _strColliderTag, const wstring& _strTransformTag);
+
 	//--------------------------------------------------
 	// ¾À
 	//--------------------------------------------------
 	HRESULT Change_CurrentScene(_uint _iSceneID, CScene* pCurrentScene);
+	_int Get_CurrentSceneID();
 
 
 	//--------------------------------------------------
