@@ -163,6 +163,7 @@
     <ClInclude Include="..\Headers\EnergyBolt.h" />
     <ClInclude Include="..\Headers\Equip.h" />
     <ClInclude Include="..\Headers\Fire.h" />
+    <ClInclude Include="..\Headers\Mouse.h" />
     <ClInclude Include="..\Headers\NormalAtt.h" />
     <ClInclude Include="..\Headers\Golem_Impact.h" />
     <ClInclude Include="..\Headers\PinkBean.h" />
@@ -219,6 +220,7 @@
     <ClCompile Include="..\Codes\EnergyBolt.cpp" />
     <ClCompile Include="..\Codes\Equip.cpp" />
     <ClCompile Include="..\Codes\Fire.cpp" />
+    <ClCompile Include="..\Codes\Mouse.cpp" />
     <ClCompile Include="..\Codes\NormalAtt.cpp" />
     <ClCompile Include="..\Codes\Golem_Impact.cpp" />
     <ClCompile Include="..\Codes\PinkBean.cpp" />

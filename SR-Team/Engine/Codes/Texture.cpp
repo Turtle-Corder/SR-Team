@@ -114,6 +114,11 @@ HRESULT CTexture::Update_Frame(_float _fDeltaTime, _uint* _pCurFrame)
 	return S_OK;
 }
 
+_uint CTexture::Get_TextureCount()
+{
+	return (_uint)m_Textures.size();
+}
+
 HRESULT CTexture::SetTexture(_uint _iIndex)
 {
 	if (m_iMaxCount <= _iIndex)

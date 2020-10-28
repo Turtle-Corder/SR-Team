@@ -48,7 +48,7 @@ _int CTerrain::LateUpdate_GameObject(_float _fDeltaTime)
 
 HRESULT CTerrain::Render_NoneAlpha()
 {
-	CManagement* pManagement = CManagement::Get_Instance();
+	/*CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
 
@@ -64,7 +64,7 @@ HRESULT CTerrain::Render_NoneAlpha()
 
 	if (FAILED(m_pVIBufferCom->Render_VIBuffer()))
 		return E_FAIL;
-
+*/
 	return S_OK;
 }
 
