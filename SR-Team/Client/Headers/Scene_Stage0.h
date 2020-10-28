@@ -42,12 +42,8 @@ private:
 	HRESULT SetUp_Layer_Inventory(const wstring& LayerTag);
 	HRESULT SetUp_Layer_Shop(const wstring& LayerTag);
 	HRESULT SetUp_Layer_Item(const wstring& LayerTag);
-<<<<<<< HEAD
-
 	HRESULT SetUp_Layer_PlayerSkill(const wstring& LayerTag);
-=======
 	HRESULT Setup_Layer_Mouse(const wstring& LayerTag);
->>>>>>> aadba911a226f72435b0c8d56a6ee1ce5973b3cf
 	
 
 private:

@@ -345,34 +345,35 @@ HRESULT CScene_Stage0::SetUp_Layer_Item(const wstring & LayerTag)
 	return S_OK;
 }
 
-<<<<<<< HEAD
 HRESULT CScene_Stage0::SetUp_Layer_PlayerSkill(const wstring & LayerTag)
-=======
-HRESULT CScene_Stage0::Setup_Layer_Mouse(const wstring & LayerTag)
->>>>>>> aadba911a226f72435b0c8d56a6ee1ce5973b3cf
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-<<<<<<< HEAD
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_LaserSkill", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_MeteoSkill", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_EnergyVoltSkill", SCENE_STAGE0, LayerTag)))
-=======
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_Mouse", SCENE_STAGE0, LayerTag)))
->>>>>>> aadba911a226f72435b0c8d56a6ee1ce5973b3cf
 		return E_FAIL;
 
 	return S_OK;
 }
 
-<<<<<<< HEAD
+HRESULT CScene_Stage0::Setup_Layer_Mouse(const wstring & LayerTag)
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
 
-=======
->>>>>>> aadba911a226f72435b0c8d56a6ee1ce5973b3cf
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_Mouse", SCENE_STAGE0, LayerTag)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+
 HRESULT CScene_Stage0::Setup_Layer_Environment(const wstring & LayerTag)
 {
 	CManagement* pManagement = CManagement::Get_Instance();

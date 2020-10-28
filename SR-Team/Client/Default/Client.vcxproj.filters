@@ -196,7 +196,6 @@
     <Filter Include="02.GameObject\13. PlayerSkill\00. Normal_Attack">
       <UniqueIdentifier>{9891293b-36e7-4603-a600-2c6075aff553}</UniqueIdentifier>
     </Filter>
-<<<<<<< HEAD
     <Filter Include="02.GameObject\13. PlayerSkill\02. Meteo">
       <UniqueIdentifier>{9da80b4c-8ee5-4ced-a1c2-54cefff23de2}</UniqueIdentifier>
     </Filter>
@@ -217,13 +216,12 @@
     </Filter>
     <Filter Include="02.GameObject\15. ItemInventory">
       <UniqueIdentifier>{b7f6ed01-4dc7-4de3-8ad3-9f5a43effd44}</UniqueIdentifier>
-=======
+    </Filter>
     <Filter Include="02.GameObject\06.Projectile\04.EnergyBolt">
       <UniqueIdentifier>{974fd06f-931e-4781-917e-200b1ba94ca7}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\11.Instant_Impact">
       <UniqueIdentifier>{b3ed9e18-8920-43db-b876-047dc6c8b215}</UniqueIdentifier>
->>>>>>> aadba911a226f72435b0c8d56a6ee1ce5973b3cf
     </Filter>
     <Filter Include="02.GameObject\11.Instant_Impact\00.Golem_Impact">
       <UniqueIdentifier>{5550b8ca-6566-4391-924b-59ae319f4274}</UniqueIdentifier>
@@ -359,9 +357,6 @@
     <ClInclude Include="..\Headers\PinkBean.h">
       <Filter>02.GameObject\05.Monster\04.PinkBean%28Boss%29</Filter>
     </ClInclude>
-    <ClInclude Include="..\Headers\Fire.h">
-      <Filter>02.GameObject\05.Monster\04.PinkBean%28Boss%29\00.Fire</Filter>
-    </ClInclude>
     <ClInclude Include="..\Headers\Equip.h">
       <Filter>02.GameObject\07.UI\03. Equip</Filter>
     </ClInclude>
@@ -380,16 +375,8 @@
     <ClInclude Include="..\Headers\PlayerSkill.h">
       <Filter>02.GameObject\13. PlayerSkill</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="..\Headers\Golem_Impact.h">
       <Filter>02.GameObject\11.Golem_Impact</Filter>
-=======
-    <ClInclude Include="..\Headers\NormalAtt.h">
-      <Filter>02.GameObject\13. PlayerSkill\00. Normal_Attack</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Headers\SkillInventory.h">
-      <Filter>12. SkillInventory</Filter>
->>>>>>> aadba911a226f72435b0c8d56a6ee1ce5973b3cf
     </ClInclude>
     <ClInclude Include="..\Headers\Yeti.h">
       <Filter>02.GameObject\05.Monster\02.Yeti</Filter>
@@ -397,7 +384,6 @@
     <ClInclude Include="..\Headers\Slime.h">
       <Filter>02.GameObject\05.Monster\01.Slime</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="..\Headers\SkillManager.h">
       <Filter>04.Manager\02. SkillManager</Filter>
     </ClInclude>
@@ -427,7 +413,7 @@
     </ClInclude>
     <ClInclude Include="..\Headers\ItemInventory.h">
       <Filter>02.GameObject\15. ItemInventory</Filter>
-=======
+    </ClInclude>
     <ClInclude Include="..\Headers\EnergyBolt.h">
       <Filter>02.GameObject\06.Projectile\04.EnergyBolt</Filter>
     </ClInclude>
@@ -448,11 +434,11 @@
     </ClInclude>
     <ClInclude Include="..\Headers\Crack.h">
       <Filter>02.GameObject\06.Projectile\05.Crack</Filter>
->>>>>>> aadba911a226f72435b0c8d56a6ee1ce5973b3cf
     </ClInclude>
     <ClInclude Include="..\Headers\EventTrigger.h">
       <Filter>02.GameObject\15.ActiveObject\00.EventTrigger</Filter>
     </ClInclude>
+    <ClInclude Include="..\Headers\Fire.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -551,9 +537,6 @@
     <ClCompile Include="..\Codes\PinkBean.cpp">
       <Filter>02.GameObject\05.Monster\04.PinkBean%28Boss%29</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\Fire.cpp">
-      <Filter>02.GameObject\05.Monster\04.PinkBean%28Boss%29\00.Fire</Filter>
-    </ClCompile>
     <ClCompile Include="..\Codes\Equip.cpp">
       <Filter>02.GameObject\07.UI\03. Equip</Filter>
     </ClCompile>
@@ -572,21 +555,12 @@
     <ClCompile Include="..\Codes\PlayerSkill.cpp">
       <Filter>02.GameObject\13. PlayerSkill</Filter>
     </ClCompile>
-<<<<<<< HEAD
     <ClCompile Include="..\Codes\Golem_Impact.cpp">
       <Filter>02.GameObject\11.Golem_Impact</Filter>
-=======
-    <ClCompile Include="..\Codes\NormalAtt.cpp">
-      <Filter>02.GameObject\13. PlayerSkill\00. Normal_Attack</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\SkillInventory.cpp">
-      <Filter>12. SkillInventory</Filter>
->>>>>>> aadba911a226f72435b0c8d56a6ee1ce5973b3cf
     </ClCompile>
     <ClCompile Include="..\Codes\Yeti.cpp">
       <Filter>02.GameObject\05.Monster\02.Yeti</Filter>
     </ClCompile>
-<<<<<<< HEAD
     <ClCompile Include="..\Codes\SkillManager.cpp">
       <Filter>04.Manager\02. SkillManager</Filter>
     </ClCompile>
@@ -616,7 +590,7 @@
     </ClCompile>
     <ClCompile Include="..\Codes\ItemInventory.cpp">
       <Filter>02.GameObject\15. ItemInventory</Filter>
-=======
+    </ClCompile>
     <ClCompile Include="..\Codes\EnergyBolt.cpp">
       <Filter>02.GameObject\06.Projectile\04.EnergyBolt</Filter>
     </ClCompile>
@@ -637,11 +611,11 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Crack.cpp">
       <Filter>02.GameObject\06.Projectile\05.Crack</Filter>
->>>>>>> aadba911a226f72435b0c8d56a6ee1ce5973b3cf
     </ClCompile>
     <ClCompile Include="..\Codes\EventTrigger.cpp">
       <Filter>02.GameObject\15.ActiveObject\00.EventTrigger</Filter>
     </ClCompile>
+    <ClCompile Include="..\Codes\Fire.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
