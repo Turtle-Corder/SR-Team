@@ -115,6 +115,12 @@ _int CPlayer::Update_GameObject(_float _fDeltaTime)
 	if (pSkill == nullptr)
 		return 0;
 
+	if (GetAsyncKeyState(VK_F6) & 0x8000)
+	{
+		if (FAILED(Setup_Layer_EnergyBolt(L"Layer_EnergyBolt")))
+			return E_FAIL;
+	}
+
 	if (m_bInitial)
 		Initial_Update_GameObject();
 
@@ -1033,6 +1039,25 @@ HRESULT CPlayer::Setup_Layer_PlaneSkill(const wstring & LayerTag , _vec3 _vMouse
 		return E_FAIL;
 
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_PlanSkill", SCENE_STAGE0, LayerTag , &_vMouse)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CPlayer::Setup_Layer_EnergyBolt(const wstring & LayerTag)
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	INSTANTIMPACT tImpact;
+	tImpact.pAttacker = this;
+	tImpact.pStatusComp = m_pStatusCom;
+	_vec3 vRightHandPos = {};
+	memcpy_s(&vRightHandPos, sizeof(_vec3), &m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().matWorld._41, sizeof(_vec3));
+	tImpact.vPosition = vRightHandPos;
+
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_EnergyBolt", SCENE_STAGE0, LayerTag , &tImpact)))
 		return E_FAIL;
 
 	return S_OK;
