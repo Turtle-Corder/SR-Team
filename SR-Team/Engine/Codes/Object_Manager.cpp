@@ -243,6 +243,64 @@ HRESULT CObject_Manager::CollisionBox_Detection_Layers_Both(_int _iSceneID, cons
 	return S_OK;
 }
 
+HRESULT CObject_Manager::CollisionSphere_Impulse_Layers(_int _iSceneID, const wstring & _strSrcLayerTag, const wstring & _strDstLayerTag, const wstring & _strColliderTag, const wstring & _strTransformTag)
+{
+	// 존재하는 씬인지 확인
+	//--------------------------------------------------
+	if (0 > _iSceneID || m_iSceneCount <= _iSceneID)
+		return E_FAIL;
+
+
+	//--------------------------------------------------
+	// 존재하는 레이어인지 확인1
+	//--------------------------------------------------
+	auto iter_src = m_pLayers[_iSceneID].find(_strSrcLayerTag);
+	if (m_pLayers[_iSceneID].end() == iter_src)
+		return E_FAIL;
+
+
+	//--------------------------------------------------
+	// 존재하는 레이어인지 확인2
+	//--------------------------------------------------
+	auto iter_dst = m_pLayers[_iSceneID].find(_strDstLayerTag);
+	if (m_pLayers[_iSceneID].end() == iter_dst)
+		return E_FAIL;
+
+	if (FAILED(iter_dst->second->CollisionSphere_Impulse_Layers(iter_src->second, _strColliderTag, _strTransformTag)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CObject_Manager::CollisionBox_Impulse_Layers(_int _iSceneID, const wstring & _strSrcLayerTag, const wstring & _strDstLayerTag, const wstring & _strColliderTag, const wstring & _strTransformTag)
+{
+	// 존재하는 씬인지 확인
+	//--------------------------------------------------
+	if (0 > _iSceneID || m_iSceneCount <= _iSceneID)
+		return E_FAIL;
+
+
+	//--------------------------------------------------
+	// 존재하는 레이어인지 확인1
+	//--------------------------------------------------
+	auto iter_src = m_pLayers[_iSceneID].find(_strSrcLayerTag);
+	if (m_pLayers[_iSceneID].end() == iter_src)
+		return E_FAIL;
+
+
+	//--------------------------------------------------
+	// 존재하는 레이어인지 확인2
+	//--------------------------------------------------
+	auto iter_dst = m_pLayers[_iSceneID].find(_strDstLayerTag);
+	if (m_pLayers[_iSceneID].end() == iter_dst)
+		return E_FAIL;
+
+	if (FAILED(iter_dst->second->CollisionBox_Impulse_Layers(iter_src->second, _strColliderTag, _strTransformTag)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 _int CObject_Manager::Update_Object_Manger(_float _fDeltaTime)
 {
 	_int iBehaviour = 0;

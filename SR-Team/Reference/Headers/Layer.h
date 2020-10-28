@@ -30,6 +30,12 @@ public:
 	HRESULT CollisionBox_Detection_Layers(CLayer* _pSrcLayer, const wstring& _strColliderTag, const wstring& _strDmgInfoTag);
 	HRESULT CollisionBox_Detection_Layers_Both(CLayer* _pSrcLayer, const wstring& _strColliderTag, const wstring& _strDmgInfoTag);
 
+	// Src가 밀린다.
+	HRESULT CollisionSphere_Impulse_Layers(CLayer* _pSrcLayer, const wstring& _strColliderTag, const wstring& _strTransformTag);
+
+	// Src가 밀린다.
+	HRESULT CollisionBox_Impulse_Layers(CLayer* _pSrcLayer, const wstring& _strColliderTag, const wstring& _strTransformTag);
+
 
 public:
 	static CLayer* Create();

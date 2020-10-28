@@ -146,6 +146,9 @@ HRESULT CRenderer::Render_UI()
 {
 	m_pSprite->Begin(D3DXSPRITE_ALPHABLEND);
 
+	//--------------------------------------------------
+	// UI ·»´õÇÏ°í..
+	//--------------------------------------------------
 	for (auto& pObject : m_GameObjects[RENDER_UI])
 	{
 		pObject->Render_UI();
@@ -153,6 +156,18 @@ HRESULT CRenderer::Render_UI()
 	}
 
 	m_GameObjects[RENDER_UI].clear();
+
+
+	//--------------------------------------------------
+	// ¸¶¿ì½º ·»´õ / Sprite BeginÇÑ ±è¿¡..
+	//--------------------------------------------------
+	for (auto& pObject : m_GameObjects[RENDER_MOUSE])
+	{
+		pObject->Render_UI();
+		Safe_Release(pObject);
+	}
+
+	m_GameObjects[RENDER_MOUSE].clear();
 
 	m_pSprite->End();
 

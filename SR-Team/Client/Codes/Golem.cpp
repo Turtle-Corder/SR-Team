@@ -185,13 +185,13 @@ HRESULT CGolem::Add_Component()
 		else if (iCnt == GOLEM_HEAD)
 			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_CubeTexture");
 		else if (iCnt == GOLEM_LEFT_ARM)
-			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_TreeHead");
+			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_CubeTexture");
 		else if (iCnt == GOLEM_RIGHT_ARM)
-			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_TreeHead");
+			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_CubeTexture");
 		else if (iCnt == GOLEM_LEFT_LEG)
-			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_TreeHead");
+			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_CubeTexture");
 		else if (iCnt == GOLEM_RIGHT_LEG)
-			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_TreeHead");
+			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_CubeTexture");
 
 		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, szVIBuffer , szName, (CComponent**)&m_pVIBufferCom[iCnt]))) //»ý¼º °¹¼ö
 			return E_FAIL;
@@ -232,14 +232,14 @@ HRESULT CGolem::Add_Component()
 		}
 		else if (iCnt == GOLEM_CENTER)
 		{
-			tTransformDesc[GOLEM_CENTER].vPosition = { 0.f , 2.5f, 0.f };
+			tTransformDesc[GOLEM_CENTER].vPosition = { 0.f , 1.4f, 0.f };
 			tTransformDesc[GOLEM_CENTER].fSpeedPerSecond = 10.f;
 			tTransformDesc[GOLEM_CENTER].fRotatePerSecond = D3DXToRadian(90.f);
 			tTransformDesc[GOLEM_HEAD].vScale = { 1.f , 1.f , 1.f };
 		}
 		else if (iCnt == GOLEM_BODY)
 		{
-			tTransformDesc[GOLEM_BODY].vPosition = { 0.f , 1.4f, 0.f };
+			tTransformDesc[GOLEM_BODY].vPosition = { 0.f , 0.f, 0.f };
 			tTransformDesc[GOLEM_BODY].fSpeedPerSecond = 10.f;
 			tTransformDesc[GOLEM_BODY].fRotatePerSecond = D3DXToRadian(90.f);
 			tTransformDesc[GOLEM_BODY].vScale = { 3.0f , 1.7f , 1.f };

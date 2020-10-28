@@ -1,32 +1,29 @@
 #include "stdafx.h"
-#include "..\Headers\Meteor.h"
+#include "..\Headers\EnergyBolt.h"
 #include "Status.h"
 #include "DamageInfo.h"
 
 USING(Client)
 
-CMeteor::CMeteor(LPDIRECT3DDEVICE9 pDevice)
-	: CGameObject(pDevice)
-
+CEnergyBolt::CEnergyBolt(LPDIRECT3DDEVICE9 _pDevice)
+	:CGameObject(_pDevice)
 {
 }
 
-CMeteor::CMeteor(const CMeteor& other)
-	: CGameObject(other)
+CEnergyBolt::CEnergyBolt(const CEnergyBolt& _rOther)
+	:CGameObject(_rOther)
 {
 }
 
-HRESULT CMeteor::Setup_GameObject_Prototype()
+HRESULT CEnergyBolt::Setup_GameObject_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CMeteor::Setup_GameObject(void* _pArg)
+HRESULT CEnergyBolt::Setup_GameObject(void * _pArg)
 {
 	if (_pArg)
-	{
-		m_tInstant = *(INSTANTIMPACT*)_pArg;
-	}
+	m_tInstant = *(INSTANTIMPACT*)_pArg;
 
 	if (FAILED(Add_Component()))
 		return E_FAIL;
@@ -34,7 +31,7 @@ HRESULT CMeteor::Setup_GameObject(void* _pArg)
 	return S_OK;
 }
 
-int CMeteor::Update_GameObject(_float _fDeltaTime)
+_int CEnergyBolt::Update_GameObject(_float _fDeltaTime)
 {
 	if (m_bDead)
 		return GAMEOBJECT::DEAD;
@@ -48,12 +45,10 @@ int CMeteor::Update_GameObject(_float _fDeltaTime)
 	if (FAILED(m_pTransformCom->Update_Transform()))
 		return GAMEOBJECT::WARN;
 
-
-
 	return GAMEOBJECT::NOEVENT;
 }
 
-int CMeteor::LateUpdate_GameObject(_float _fDeltaTime)
+_int CEnergyBolt::LateUpdate_GameObject(_float _fDeltaTime)
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
@@ -65,13 +60,14 @@ int CMeteor::LateUpdate_GameObject(_float _fDeltaTime)
 	return GAMEOBJECT::NOEVENT;
 }
 
-HRESULT CMeteor::Render_NoneAlpha()
+HRESULT CEnergyBolt::Render_NoneAlpha()
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
 
 	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Camera");
+
 	if (nullptr == pCamera)
 		return E_FAIL;
 
@@ -87,10 +83,10 @@ HRESULT CMeteor::Render_NoneAlpha()
 	return S_OK;
 }
 
-HRESULT CMeteor::Add_Component()
+HRESULT CEnergyBolt::Add_Component()
 {
 	CTransform::TRANSFORM_DESC tTransformDesc;
-	tTransformDesc.vPosition = { _vec3(m_tInstant.vPosition.x - 10.f , m_tInstant.vPosition.y + 14.f , m_tInstant.vPosition.z + 10.f) };/*{ m_vGoalPos.x - 10.f, m_vGoalPos.y + 14.f, m_vGoalPos.z + 10.f };*/
+	tTransformDesc.vPosition = m_tInstant.vPosition;/*{ m_vGoalPos.x - 10.f, m_vGoalPos.y + 14.f, m_vGoalPos.z + 10.f };*/
 	tTransformDesc.fSpeedPerSecond = 10.f;
 	tTransformDesc.fRotatePerSecond = D3DXToRadian(90.f);
 
@@ -109,22 +105,22 @@ HRESULT CMeteor::Add_Component()
 	// For.Com_Texture
 	if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, L"Component_Texture_Meteor", L"Com_Texture", (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
-	
+
 	// For.Transform
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", L"Com_Transform", (CComponent**)&m_pTransformCom, &tTransformDesc)))
 		return E_FAIL;
-	
+
 	// For.Collider
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Collider_Sphere", L"Com_Collider", (CComponent**)&m_pColliderCom, &tCollDesc)))
 		return E_FAIL;
-	
+
 	// For.Status
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Status", L"Com_Stat", (CComponent**)&m_pStatusComp, &tStat)))
 		return E_FAIL;
 
 	CStatus* pOwnerStatusComp = (CStatus*)m_tInstant.pStatusComp;
 	CDamageInfo::DAMAGE_DESC tDmgInfo;
-	
+
 	if (pOwnerStatusComp)
 	{
 		tDmgInfo.pOwner = m_tInstant.pAttacker;
@@ -140,106 +136,66 @@ HRESULT CMeteor::Add_Component()
 		tDmgInfo.iCriticalHit = m_pStatusComp->Get_Status().iCriticalHit;
 		tDmgInfo.iCriticalRate = m_pStatusComp->Get_Status().iCriticalRate;
 	}
+
 	//For.DamageInfo
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_DamageInfo", L"Com_DmgInfo", (CComponent**)&m_pDmgInfoCom, &tDmgInfo)))
 		return E_FAIL;
+
 	return S_OK;
 }
 
-HRESULT CMeteor::Movement(_float _fDeltaTime)
+HRESULT CEnergyBolt::Movement(_float _fDeltaTime)
 {
-	if (m_bDead)
-	return GAMEOBJECT::DEAD;
-
-	if (FAILED(FallDown_Meteor(_fDeltaTime)))
+	if (FAILED(Move(_fDeltaTime)))
 		return E_FAIL;
 
-	if (FAILED(IsOnTerrain()))
-		return E_FAIL;
+	m_fTestDeadTime += _fDeltaTime;
 
-	m_fDeadTime += _fDeltaTime;
-
-	if (m_fDeadTime >= 3.f)
+	if (m_fTestDeadTime >= 3.f)
 		m_bDead = true;
 
 	return S_OK;
 }
 
-HRESULT CMeteor::FallDown_Meteor(_float _fDeltaTime)
+HRESULT CEnergyBolt::Move(_float _fDeltaTime)
 {
-	m_fDownTime += _fDeltaTime * 1.f;
-
-	_vec3 vPos = m_pTransformCom->Get_Desc().vPosition;
-
-	_vec3 vDir = m_tInstant.vPosition - vPos;
-	D3DXVec3Normalize(&vDir, &vDir);
-
-	CManagement* pManagement = CManagement::Get_Instance();
-	if (nullptr == pManagement)
-		return E_FAIL;
-
-	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Terrain", L"Com_VIBuffer");
-	if (nullptr == pTerrainBuffer)
-		return E_FAIL;
-
-
-	if (vPos.y < m_tInstant.vPosition.y)
+	if (!m_bOnece)
 	{
-		m_bDead = true;
+		CManagement* pManagement = CManagement::Get_Instance();
+		if (nullptr == pManagement)
+			return E_FAIL;
+
+		CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform0");
+
+		if (nullptr == pPlayerTransform)
+			return E_FAIL;
+
+		memcpy_s(&m_vPlayerLook, sizeof(_vec3), &pPlayerTransform->Get_Desc().matWorld._31, sizeof(_vec3));
+		D3DXVec3Normalize(&m_vPlayerLook, &m_vPlayerLook);
+		m_bOnece = true;
 	}
-	else
-	{
-		vPos += vDir * (m_fDownTime);
-		m_pTransformCom->Set_Position(vPos);
-	}
+
+	m_vMyPos = m_pTransformCom->Get_Desc().vPosition;
+	m_vMyPos += m_vPlayerLook * (_fDeltaTime * 3.f);
+	m_pTransformCom->Set_Position(m_vMyPos);
 
 	return S_OK;
 }
 
-HRESULT CMeteor::IsOnTerrain()
+CGameObject * CEnergyBolt::Clone_GameObject(void * _pArg)
 {
-	CManagement* pManagement = CManagement::Get_Instance();
-	if (nullptr == pManagement)
-		return E_FAIL;
+	CEnergyBolt* pInstance = new CEnergyBolt(*this);
 
-	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Terrain", L"Com_VIBuffer");
-	if (nullptr == pTerrainBuffer)
-		return E_FAIL;
-
-	D3DXVECTOR3 vPosition = m_pTransformCom->Get_Desc().vPosition;
-
-
-	return S_OK;
-}
-
-CMeteor * CMeteor::Create(LPDIRECT3DDEVICE9 pDevice)
-{
-	if (nullptr == pDevice)
-		return nullptr;
-
-	CMeteor* pInstance = new CMeteor(pDevice);
-	if (FAILED(pInstance->Setup_GameObject_Prototype()))
+	if (FAILED(pInstance->Setup_GameObject(_pArg)))
 	{
-		PRINT_LOG(L"Failed To Create CMeteor", LOG::CLIENT);
+		PRINT_LOG(L"Failed To Create EnergyBolt Clone", LOG::CLIENT);
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject * CMeteor::Clone_GameObject(void * pArg)
-{
-	CMeteor* pInstance = new CMeteor(*this);
-	if (FAILED(pInstance->Setup_GameObject(pArg)))
-	{
-		PRINT_LOG(L"Failed To Clone CMeteor", LOG::CLIENT);
-		Safe_Release(pInstance);
-	}
-
-	return pInstance;
-}
-
-void CMeteor::Free()
+void CEnergyBolt::Free()
 {
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pVIBufferCom);
@@ -251,12 +207,24 @@ void CMeteor::Free()
 	CGameObject::Free();
 }
 
-HRESULT CMeteor::Take_Damage(const CComponent * _pDamageComp)
+CEnergyBolt * CEnergyBolt::Create(LPDIRECT3DDEVICE9 _pDevice)
 {
-	if(!_pDamageComp)
-	return S_OK;
+	if(nullptr == _pDevice)
+		return nullptr;
 
+	CEnergyBolt* pInstance = new CEnergyBolt(_pDevice);
+	if (FAILED(pInstance->Setup_GameObject_Prototype()))
+	{
+		PRINT_LOG(L"Failed To Create EnergyBolt", LOG::CLIENT);
+		Safe_Release(pInstance);
+	}
 
+	return pInstance;
+}
+
+HRESULT CEnergyBolt::Take_Damage(const CComponent * _pDamageComp)
+{
+	m_bDead = true;
 
 	return S_OK;
 }

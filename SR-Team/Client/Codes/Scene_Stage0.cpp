@@ -242,7 +242,7 @@ HRESULT CScene_Stage0::Setup_Layer_Monster(const wstring & LayerTag)
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Slime", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Yeti", SCENE_STAGE0, LayerTag , &_vec3(10.f, 0.f, 20.f))))
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Yeti", SCENE_STAGE0, LayerTag , &_vec3(30.f, 0.f, 50.f))))
 		return E_FAIL;
 
 	return S_OK;
@@ -254,7 +254,7 @@ HRESULT CScene_Stage0::Setup_Layer_Golem(const wstring & LayerTag)
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Golem", SCENE_STAGE0, LayerTag, &_vec3(10.f, 0.f, 30.f))))/*여기 StartPos*/
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Golem", SCENE_STAGE0, LayerTag, &_vec3(10.f, 0.f, 50.f))))/*여기 StartPos*/
 		return E_FAIL;
 
 	return S_OK;

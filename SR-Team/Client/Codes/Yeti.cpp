@@ -53,7 +53,7 @@ int CYeti::Update_GameObject(float _fDeltaTime)
 	m_pTransformCom[YETI_CENTER]->Update_Transform();
 	m_pTransformCom[YETI_CENTER]->Set_WorldMatrix(m_pTransformCom[YETI_CENTER]->Get_Desc().matWorld * m_pTransformCom[YETI_BASE]->Get_Desc().matWorld);
 	
-	if (FAILED(Setting_Part()))
+	if (FAILED(Setting_Part(_fDeltaTime)))
 		return GAMEOBJECT::WARN;
 
 
@@ -241,9 +241,8 @@ HRESULT CYeti::IsOnTerrain()
 	return S_OK;
 }
 
-HRESULT CYeti::Setting_Part()
+HRESULT CYeti::Setting_Part(float _fDeltaTime)
 {
-
 	for (_uint iCnt = YETI_BODY; iCnt < YETI_END; ++iCnt)
 	{
 		m_pTransformCom[iCnt]->Update_Transform();
@@ -255,6 +254,8 @@ HRESULT CYeti::Setting_Part()
 
 HRESULT CYeti::Moving(float _fDeltaTime)
 {
+	m_fTime = _fDeltaTime;
+
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
@@ -279,6 +280,19 @@ HRESULT CYeti::Moving(float _fDeltaTime)
 		{
 			m_bAttack = true;
 		}
+		m_pTransformCom[YETI_LEFTLEG]->Set_Rotation(_vec3(0.f, 0.f, 0.f));
+		m_pTransformCom[YETI_RIGHTLEG]->Set_Rotation(_vec3(0.f, 0.f, 0.f));
+	}
+	else
+	{
+		LookAtPlayer(_fDeltaTime);
+
+		_vec3 vPos = m_pTransformCom[YETI_BASE]->Get_Desc().vPosition;
+		_vec3 vDir = pPlayerTransform->Get_Desc().vPosition - vPos;
+		D3DXVec3Normalize(&vDir, &vDir);
+		vPos += vDir * _fDeltaTime;
+		m_eCurState = CYeti::MOVE;
+		m_pTransformCom[YETI_BASE]->Set_Position(vPos);
 	}
 
 	return S_OK;
