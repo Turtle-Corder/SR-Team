@@ -321,12 +321,36 @@ HRESULT CManagement::CollisionBox_Detection_Layers_Both(_int _iSceneID, const ws
 	return m_pObject_Manager->CollisionBox_Detection_Layers_Both(_iSceneID, _strSrcLayerTag, _strDstLayerTag, _strColliderTag, _strDmgInfoTag);
 }
 
+HRESULT CManagement::CollisionSphere_Impulse_Layers(_int _iSceneID, const wstring & _strSrcLayerTag, const wstring & _strDstLayerTag, const wstring & _strColliderTag, const wstring & _strTransformTag)
+{
+	if (nullptr == m_pObject_Manager)
+		return E_FAIL;
+
+	return m_pObject_Manager->CollisionSphere_Impulse_Layers(_iSceneID, _strSrcLayerTag, _strDstLayerTag, _strColliderTag, _strTransformTag);
+}
+
+HRESULT CManagement::CollisionBox_Impulse_Layers(_int _iSceneID, const wstring & _strSrcLayerTag, const wstring & _strDstLayerTag, const wstring & _strColliderTag, const wstring & _strTransformTag)
+{
+	if (nullptr == m_pObject_Manager)
+		return E_FAIL;
+
+	return m_pObject_Manager->CollisionBox_Impulse_Layers(_iSceneID, _strSrcLayerTag, _strDstLayerTag, _strColliderTag, _strTransformTag);
+}
+
 HRESULT CManagement::Change_CurrentScene(_uint _iSceneID, CScene * pCurrentScene)
 {
 	if (nullptr == m_pScene_Manager)
 		return E_FAIL;
 
 	return m_pScene_Manager->Change_CurrentScene(_iSceneID, pCurrentScene);
+}
+
+_int CManagement::Get_CurrentSceneID()
+{
+	if (nullptr == m_pScene_Manager)
+		return -1;
+
+	return m_pScene_Manager->Get_CurrentSceneID();
 }
 
 CGameObject * CManagement::Get_GameObject(_int _iSceneID, const wstring & _strLayerTag, _uint _iIndex)
