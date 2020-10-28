@@ -1,29 +1,29 @@
 #include "stdafx.h"
-#include "..\Headers\PlaneSkill.h"
+#include "..\Headers\Crack.h"
 
 USING(Client)
 
-CPlaneSkill::CPlaneSkill(LPDIRECT3DDEVICE9 pDevice)
+CCrack::CCrack(LPDIRECT3DDEVICE9 pDevice)
 	: CGameObject(pDevice)
 
 {
 }
 
-CPlaneSkill::CPlaneSkill(const CPlaneSkill & other)
+CCrack::CCrack(const CCrack& other)
 	: CGameObject(other)
 
 {
 }
 
-HRESULT CPlaneSkill::Setup_GameObject_Prototype()
+HRESULT CCrack::Setup_GameObject_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CPlaneSkill::Setup_GameObject(void * pArg)
+HRESULT CCrack::Setup_GameObject(void * _pArg)
 {
-	if (pArg)
-		m_vGoalPos = *(_vec3*)pArg;
+	if (_pArg)
+		m_vGoalPos = *(_vec3*)_pArg;
 
 	if (FAILED(Add_Component()))
 		return E_FAIL;
@@ -31,7 +31,7 @@ HRESULT CPlaneSkill::Setup_GameObject(void * pArg)
 	return S_OK;
 }
 
-int CPlaneSkill::Update_GameObject(float _fDeltaTime)
+int CCrack::Update_GameObject(float _fDeltaTime)
 {
 	if (m_bDead)
 		return GAMEOBJECT::DEAD;
@@ -45,7 +45,7 @@ int CPlaneSkill::Update_GameObject(float _fDeltaTime)
 	return GAMEOBJECT::NOEVENT;
 }
 
-int CPlaneSkill::LateUpdate_GameObject(float _fDeltaTime)
+int CCrack::LateUpdate_GameObject(float _fDeltaTime)
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
@@ -54,10 +54,14 @@ int CPlaneSkill::LateUpdate_GameObject(float _fDeltaTime)
 	if (FAILED(pManagement->Add_RendererList(CRenderer::RENDER_ONLYALPHA, this)))
 		return  GAMEOBJECT::WARN;
 
+	m_fDeadTime += _fDeltaTime;
+	if (m_fDeadTime >= 1.f)
+		m_bDead = true;
+
 	return GAMEOBJECT::NOEVENT;
 }
 
-HRESULT CPlaneSkill::Render_OnlyAlpha()
+HRESULT CCrack::Render_OnlyAlpha()
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
@@ -79,14 +83,14 @@ HRESULT CPlaneSkill::Render_OnlyAlpha()
 	return S_OK;
 }
 
-HRESULT CPlaneSkill::Add_Component()
+HRESULT CCrack::Add_Component()
 {
 	// For.Com_VIBuffer
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_RectTexture", L"Com_VIBuffer", (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
 
 	// For.Com_Texture
-	if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, L"Component_Texture_SpellJin", L"Com_Texture", (CComponent**)&m_pTextureCom)))
+	if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, L"Component_Texture_Crack", L"Com_Texture", (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	CManagement* pManagement = CManagement::Get_Instance();
@@ -110,7 +114,7 @@ HRESULT CPlaneSkill::Add_Component()
 	return S_OK;
 }
 
-HRESULT CPlaneSkill::Movement(float _fDeltaTime)
+HRESULT CCrack::Movement(float _fDeltaTime)
 {
 	if (FAILED(IsOnTerrain()))
 		return E_FAIL;
@@ -119,7 +123,7 @@ HRESULT CPlaneSkill::Movement(float _fDeltaTime)
 }
 
 
-HRESULT CPlaneSkill::IsOnTerrain()
+HRESULT CCrack::IsOnTerrain()
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
@@ -139,12 +143,12 @@ HRESULT CPlaneSkill::IsOnTerrain()
 	return S_OK;
 }
 
-CPlaneSkill * CPlaneSkill::Create(LPDIRECT3DDEVICE9 pDevice)
+CCrack * CCrack::Create(LPDIRECT3DDEVICE9 pDevice)
 {
 	if (nullptr == pDevice)
 		return nullptr;
 
-	CPlaneSkill* pInstance = new CPlaneSkill(pDevice);
+	CCrack* pInstance = new CCrack(pDevice);
 	if (FAILED(pInstance->Setup_GameObject_Prototype()))
 	{
 		PRINT_LOG(L"Failed To Create CPlaneSkill", LOG::CLIENT);
@@ -154,9 +158,9 @@ CPlaneSkill * CPlaneSkill::Create(LPDIRECT3DDEVICE9 pDevice)
 	return pInstance;
 }
 
-CGameObject * CPlaneSkill::Clone_GameObject(void * pArg)
+CGameObject * CCrack::Clone_GameObject(void * pArg)
 {
-	CPlaneSkill* pInstance = new CPlaneSkill(*this);
+	CCrack* pInstance = new CCrack(*this);
 	if (FAILED(pInstance->Setup_GameObject(pArg)))
 	{
 		PRINT_LOG(L"Failed To Clone CPlaneSkill", LOG::CLIENT);
@@ -166,7 +170,7 @@ CGameObject * CPlaneSkill::Clone_GameObject(void * pArg)
 	return pInstance;
 }
 
-void CPlaneSkill::Free()
+void CCrack::Free()
 {
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pVIBufferCom);

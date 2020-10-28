@@ -48,4 +48,6 @@ private:
 
 };
 
+END
+
 #endif //__WAND_H__

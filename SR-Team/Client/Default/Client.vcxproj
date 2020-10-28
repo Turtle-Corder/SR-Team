@@ -159,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Headers\Bomb.h" />
+    <ClInclude Include="..\Headers\Crack.h" />
     <ClInclude Include="..\Headers\EnergyBolt.h" />
     <ClInclude Include="..\Headers\Equip.h" />
     <ClInclude Include="..\Headers\Fire.h" />
@@ -214,6 +215,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Codes\Bomb.cpp" />
+    <ClCompile Include="..\Codes\Crack.cpp" />
     <ClCompile Include="..\Codes\EnergyBolt.cpp" />
     <ClCompile Include="..\Codes\Equip.cpp" />
     <ClCompile Include="..\Codes\Fire.cpp" />

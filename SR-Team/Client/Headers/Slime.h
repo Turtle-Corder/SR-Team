@@ -34,21 +34,30 @@ public:
 private:
 	HRESULT Add_Component();
 	HRESULT Movement(float _fDeltaTime);
+	//----------------------------------
 	HRESULT IsOnTerrain();
 	void	Jumping(float _fDeltaTime);
 	HRESULT LookAtPlayer(float _fDeltaTime);
+	//----------------------------------
+
 	HRESULT Divide_Cube(const wstring& LayerTag);
 public:
 	static CSlime* Create(LPDIRECT3DDEVICE9 pDevice);
 	virtual CGameObject* Clone_GameObject(void * pArg) override;
 	virtual void Free() override;
 	HRESULT Create_Item(const wstring& LayerTag);
+	HRESULT Create_Crack(const wstring& LayerTag);
 	HRESULT Setting_SlimeBody();
 	HRESULT Setting_SlimeJelly();
+	//----------------------------------
 	HRESULT Move(_float _fDeltaTime);
+	//----------------------------------
 	void    Update_State();
+	//----------------------------------
 	HRESULT	Stop_Move(_float _fDeltaTime);
+	//----------------------------------
 	HRESULT Attack(_float _fDeltaTime);
+	//----------------------------------
 private:
 	CVIBuffer*	m_pVIBufferCom[SLIME_END] = {};
 	CTransform*	m_pTransformCom[SLIME_END] = {};
@@ -65,6 +74,7 @@ private:
 	_vec3		m_vStartPos = {};
 	STATE		m_ePreState;
 	STATE		m_eCurState;
+	_float		m_fDistance = 0.f;
 };
 
 END

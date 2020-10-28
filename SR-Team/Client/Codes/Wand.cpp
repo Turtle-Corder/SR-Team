@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\Headers\Wand.h"
+#include "DamageInfo.h"
 
 USING(Client)
 
