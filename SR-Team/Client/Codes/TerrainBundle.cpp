@@ -18,13 +18,15 @@ HRESULT CTerrainBundle::Setup_GameObject_Prototype()
 	return S_OK;
 }
 
+
+
 HRESULT CTerrainBundle::Setup_GameObject(void * _pArg)
 {
 	if (_pArg)
 	{
 		int VecSize = (*(int*)(_pArg));
 
-		for (size_t i = 0; i < 15; i++)
+		for (size_t i = 0; i < 16; i++)
 		{
 			m_TerrianList[i].resize(VecSize);
 		}
@@ -72,6 +74,28 @@ TERRAININFO CTerrainBundle::Get_TerrainInfo(_vec3 iObjectPos, _uint iFloor)
 
 	return m_TerrianList[iFloor][iIndex];
 }
+
+HRESULT CTerrainBundle::Set_TerrainInfo(_uint iIndex, _uint iFloor, const TERRAININFO & Input)
+{
+
+	//-----------------------------------------------------------
+	//실패조건
+	//-----------------------------------------------------------
+	if (iFloor > 15)
+		return E_FAIL;
+
+	if (iIndex > m_TerrianList[iFloor].size())
+		return E_FAIL;
+
+	//-----------------------------------------------------------
+	//성공시 Input
+	//-----------------------------------------------------------
+	m_TerrianList[iFloor][iIndex] = Input;
+
+
+	return S_OK;
+}
+
 
 HRESULT CTerrainBundle::Add_Component()
 {

@@ -40,21 +40,30 @@ _int CMainCamera::Update_GameObject(_float _fDeltaTime)
 	}
 
 
+	if (GetAsyncKeyState('K') & 0x8000)
+	{
+		int a = 4;
+		if(m_eViewMode == CAMERA_3D)
+			Set_Camera_Mode(CAMERA_2D_X, &a);
+
+		else if(m_eViewMode != CAMERA_3D)
+			Set_Camera_Mode(CAMERA_3D);
+	}
+
 	if (FAILED(Movement(_fDeltaTime)))
-		return GAMEOBJECT::WARN;
+			return GAMEOBJECT::WARN;
 
 	if (FAILED(ZoomInOut(_fDeltaTime)))
-		return GAMEOBJECT::WARN;
+			return GAMEOBJECT::WARN;
 
-	switch (m_eMode)
+
+	switch (m_eEventMode)
 	{
 	case Client::CMainCamera::CAMERA_NORMAL:
 		break;
 	case Client::CMainCamera::CARERA_WIGGING:
 		if (FAILED(Wigging(_fDeltaTime)))
 			return GAMEOBJECT::WARN;
-		break;
-	case Client::CMainCamera::CAMERA_2D:
 		break;
 	default:
 		break;
@@ -85,24 +94,7 @@ HRESULT CMainCamera::Movement(_float _fDeltaTime)
 		return E_FAIL;
 	}
 
-	m_tCameraDesc.vAt = pPlayerTransform->Get_Desc().vPosition;
 
-	//폐기코드
-	/*_vec3 vPlayerLook;
-	memcpy_s(&vPlayerLook, sizeof(_vec3), &pPlayerTransform->Get_Desc().matWorld.m[2][0], sizeof(_vec3));
-	D3DXVec3Normalize(&vPlayerLook, &vPlayerLook);
-
-	vPlayerLook *= -m_fDistanceToTarget;
-
-	_vec3 vPlayerRight;
-	memcpy_s(&vPlayerRight, sizeof(_vec3), &pPlayerTransform->Get_Desc().matWorld.m[0][0], sizeof(_vec3));
-	D3DXVec3Normalize(&vPlayerRight, &vPlayerRight);
-
-	_matrix matRotAxis;
-	D3DXMatrixRotationAxis(&matRotAxis, &vPlayerRight, m_fCameraAngle);
-	D3DXVec3TransformNormal(&vPlayerLook, &vPlayerLook, &matRotAxis);
-
-	m_tCameraDesc.vEye = m_tCameraDesc.vAt + vPlayerLook;*/
 
 	//마름모꼴 고정
 	_vec3 vXZDistanceNormal = { 0.7f, 0.f, 1.f };
@@ -110,7 +102,36 @@ HRESULT CMainCamera::Movement(_float _fDeltaTime)
 	_vec3 vSemiTopView = m_fHeight * vCameraHeight - m_fDistance * vXZDistanceNormal;
 
 
-	m_tCameraDesc.vEye = m_tCameraDesc.vAt + vSemiTopView;
+	switch (m_eViewMode)
+	{
+	case Client::CMainCamera::CAMERA_3D:
+
+
+		//시점은 플레이어로
+		m_tCameraDesc.vAt = pPlayerTransform->Get_Desc().vPosition;
+
+
+		m_tCameraDesc.vEye = m_tCameraDesc.vAt + vSemiTopView;
+
+		break;
+	case Client::CMainCamera::CAMERA_2D_X:
+
+		m_tCameraDesc.vAt = pPlayerTransform->Get_Desc().vPosition;
+
+		m_tCameraDesc.vEye = m_tCameraDesc.vAt + _vec3(1.f, 0.f, 0.f) * m_fDistanceOn2DView;
+
+		break;
+	case Client::CMainCamera::CAMERA_2D_Z:
+
+		m_tCameraDesc.vAt = pPlayerTransform->Get_Desc().vPosition;
+
+		m_tCameraDesc.vEye = m_tCameraDesc.vAt + _vec3(0.f, 0.f, 1.f) * m_fDistanceOn2DView;
+
+		break;
+	default:
+		break;
+	}
+
 
 	return S_OK;
 }
@@ -147,7 +168,7 @@ HRESULT CMainCamera::Wigging(_float _fDeltaTime)
 	{
 		m_tShakeInfo.m_fSettingTime = 0.f;
 		m_tShakeInfo.m_fTimeFlow = 0.f;
-		m_eMode = CAMERA_MODE::CAMERA_NORMAL;
+		m_eEventMode = CAMERA_EVNETMODE::CAMERA_NORMAL;
 	}
 	//시간 누적
 	m_tShakeInfo.m_fTimeFlow += _fDeltaTime;
@@ -185,11 +206,29 @@ HRESULT CMainCamera::Set_Camera_Wigging(_float _Magnitude, _float _Frequency, _f
 		return E_FAIL;
 	}
 
-	m_eMode = CAMERA_MODE::CARERA_WIGGING;
+	m_eEventMode = CAMERA_EVNETMODE::CARERA_WIGGING;
 	m_tShakeInfo.m_eWigType = _Option;
 	m_tShakeInfo.m_fMagnitude = _Magnitude;
 	m_tShakeInfo.m_fFrequency = _Frequency;
 	m_tShakeInfo.m_fSettingTime = _Time;
+
+	return S_OK;
+}
+
+HRESULT CMainCamera::Set_Camera_Mode(CAMERA_VIEWMODE _ModeOption,  void* _Option)
+{
+	if (_ModeOption >= VIEWMODE_END)
+	{
+		PRINT_LOG(L"Failed To Change ViewState, Check The Value", LOG::CLIENT);
+		return E_FAIL;
+	}
+
+	m_eViewMode = _ModeOption;
+
+	if (m_eViewMode != CAMERA_3D && _Option != nullptr)
+	{
+		m_fDistanceOn2DView = *((int*)_Option);
+	}
 
 	return S_OK;
 }
@@ -225,3 +264,23 @@ void CMainCamera::Free()
 {
 	CCamera::Free();
 }
+
+
+
+
+//폐기코드 Movement에 플레이어.
+/*_vec3 vPlayerLook;
+memcpy_s(&vPlayerLook, sizeof(_vec3), &pPlayerTransform->Get_Desc().matWorld.m[2][0], sizeof(_vec3));
+D3DXVec3Normalize(&vPlayerLook, &vPlayerLook);
+
+vPlayerLook *= -m_fDistanceToTarget;
+
+_vec3 vPlayerRight;
+memcpy_s(&vPlayerRight, sizeof(_vec3), &pPlayerTransform->Get_Desc().matWorld.m[0][0], sizeof(_vec3));
+D3DXVec3Normalize(&vPlayerRight, &vPlayerRight);
+
+_matrix matRotAxis;
+D3DXMatrixRotationAxis(&matRotAxis, &vPlayerRight, m_fCameraAngle);
+D3DXVec3TransformNormal(&vPlayerLook, &vPlayerLook, &matRotAxis);
+
+m_tCameraDesc.vEye = m_tCameraDesc.vAt + vPlayerLook;*/
