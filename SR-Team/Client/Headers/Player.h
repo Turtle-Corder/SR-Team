@@ -8,7 +8,6 @@ BEGIN(Client)
 USING(Engine)
 
 class CStatus;
-class CItemManager;
 class CDamageInfo;
 class CPlayer final : public CGameObject
 {
@@ -60,12 +59,16 @@ private:
 	HRESULT Universal_Key();
 
 private:
+	void Check_Skill(_float fDeltaTime);
+	void Move_SkillMotion(_float fDeltaTime, eActiveSkill_ID eSkillID);
+
 	// 일반 공격
 	void Normal_Attack(_float fDeltaTime);
 	// 스킬1 - 레이저
 	void Skill_Laser(_float fDeltaTime);
 	// 스킬2 - 투사체 낙하
 	void Skill_ProjectileFall(_float fDeltaTime);
+
 
 private:
 	// hp 바 지연 감소
@@ -91,7 +94,6 @@ private:
 	CRaycast*			m_pRaycastCom	= nullptr;
 	CSphereCollider*	m_pColliderCom	= nullptr;
 	CStatus*			m_pStatusCom	= nullptr;
-	CItemManager*		m_pItemMgrCom	= nullptr;
 	CDamageInfo*		m_pDmgInfoCom	= nullptr;
 
 
@@ -149,14 +151,14 @@ private:
 	//---------------------------------------------
 	// 스킬1 - 레이저
 	//---------------------------------------------
-	_bool				m_bStartLaser = false;
+	_bool				m_bStartLaser = true;
 	_bool				m_bUsingLaser = false;
 	_float				m_fLaserTime = 0.f;
 
 	//---------------------------------------------
 	// 스킬2 - 투사체 낙하
 	//---------------------------------------------
-	_bool				m_bStartFall = false;
+	_bool				m_bStartFall = true;
 	_bool				m_bIsFall = false;
 	_bool				m_bDownHand = false;
 	_float				m_fFallTime = 0.f;
@@ -174,6 +176,10 @@ private:
 	_bool				m_bRenderInven = false;
 	_bool				m_bRenderEquip = false;
 	_bool				m_bRenderSkill = false;
+
+	// 현재 사용중인 액티브 스킬ID
+	eActiveSkill_ID eSkillID = ACTIVE_SKILL_END;
+
 	//--------------------------------------------
 };
 

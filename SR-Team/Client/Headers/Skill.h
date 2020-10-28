@@ -70,7 +70,7 @@ private:
 	RECT					m_tSkillSortCollRt[2];	// 액티브/패시브 버튼 충돌 렉트
 
 private:
-	RECT					m_tActiveCollRt[eActiveSkill_ID::ACTIVE_SKILL_END];
+	RECT					m_tActiveCollRt[6];
 };
 
 END

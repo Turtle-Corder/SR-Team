@@ -3,6 +3,8 @@
 #include "KeyManager.h"
 #include "Item.h"
 #include "Inventory.h"
+#include "SkillInven.h"
+#include "ItemInventory.h"
 #include "..\Headers\MainUI.h"
 
 USING(Client)
@@ -369,6 +371,13 @@ HRESULT CMainUI::Move_To_QuickSlot()
 
 HRESULT CMainUI::Check_LeftQuickSlot_Item()
 {
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (pManagement == nullptr)
+		return E_FAIL;
+	CSkillInven* pSkillInven = (CSkillInven*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 3);
+	if (pSkillInven == nullptr)
+		return E_FAIL;
+
 	RECT rc = {};
 
 	for (_uint i = 0; i < 8; i++)
@@ -394,6 +403,10 @@ HRESULT CMainUI::Check_LeftQuickSlot_Item()
 						if (m_pLeftSlotItem[i])
 							m_pLeftSlotItem[i] = nullptr;
 						m_pLeftSlotItem[i] = m_pMovingItem;
+
+						if (FAILED(pSkillInven->Set_SkillIndex(i, m_pMovingItem->eActiveID)))
+							return E_FAIL;
+
 						m_pMovingItem = nullptr;
 					}
 					else
@@ -418,6 +431,13 @@ HRESULT CMainUI::Check_LeftQuickSlot_Item()
 
 HRESULT CMainUI::Check_RightQuickSlot_Item()
 {
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (pManagement == nullptr)
+		return E_FAIL;
+	CItemInventory* pItemInven = (CItemInventory*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 4);
+	if (pItemInven == nullptr)
+		return E_FAIL;
+
 	RECT rc = {};
 
 	for (_uint i = 0; i < 8; i++)
@@ -443,6 +463,9 @@ HRESULT CMainUI::Check_RightQuickSlot_Item()
 						if (m_pRightSlotItem[i])
 							m_pRightSlotItem[i] = nullptr;
 						m_pRightSlotItem[i] = m_pMovingItem;
+
+						// 아이템 인벤에 추가
+
 						m_pMovingItem = nullptr;
 					}
 					else

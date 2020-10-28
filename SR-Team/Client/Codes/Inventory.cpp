@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Item.h"
-#include "ItemManager.h"
 #include "UICamera.h"
 #include "KeyManager.h"
 #include "Equip.h"
@@ -429,7 +428,7 @@ HRESULT CInventory::Check_EquipItem()
 	{
 		for (_uint j = 0; j < 6; j++)
 		{
-			if (CKeyManager::Get_Instance()->Key_Down(VK_RBUTTON))
+			if (CKeyManager::Get_Instance()->Key_Pressing(VK_RBUTTON))
 			{
 				iIndex = i * 6 + j;
 				POINT ptMouse = {};

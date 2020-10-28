@@ -72,17 +72,6 @@ _int CSkill::Update_GameObject(_float _fDeltaTime)
 
 	if (m_bRender)
 	{
-		if (CKeyManager::Get_Instance()->Key_Pressing(VK_LBUTTON))
-		{
-			POINT ptMouse = {};
-			TCHAR szBuff[MAX_PATH] = L"";
-			GetCursorPos(&ptMouse);
-			ScreenToClient(g_hWnd, &ptMouse);
-
-			wsprintf(szBuff, L"X : %d, Y : %d", ptMouse.x, ptMouse.y);
-			//PRINT_LOG(szBuff, LOG::CLIENT);
-		}
-
 		if (FAILED(Set_SkillSort()))
 			return GAMEOBJECT::WARN;
 		if (FAILED(Show_ActiveSkill_Info()))

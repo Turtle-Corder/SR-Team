@@ -19,6 +19,10 @@ public:
 	void Equip_Item(eITEM_SORT eSort, const wstring& strItemTag);
 
 public:
+	void Set_PlayerHp(_int iHP);
+	void Set_PlayerMP(_int iMP);
+
+public:
 	_bool Get_Render() { return m_bRender; }
 
 public:

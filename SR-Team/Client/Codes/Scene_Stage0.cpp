@@ -52,6 +52,9 @@ HRESULT CScene_Stage0::Setup_Scene()
 	if (FAILED(Setup_Layer_Environment(L"Layer_Environment")))
 		return E_FAIL;
 
+	if (FAILED(SetUp_Layer_PlayerSkill(L"Layer_PlayerSkill")))
+		return E_FAIL;
+
 	//m_pPreLoader = CPreLoader::Create(m_pDevice, SCENE_STAGE1);
 	//if (nullptr == m_pPreLoader)
 	//{
@@ -296,6 +299,8 @@ HRESULT CScene_Stage0::Setup_Layer_UI(const wstring & LayerTag)
 		return E_FAIL;
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_Skill", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_SkillInven", SCENE_STAGE0, LayerTag)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -335,6 +340,23 @@ HRESULT CScene_Stage0::SetUp_Layer_Item(const wstring & LayerTag)
 
 	return S_OK;
 }
+
+HRESULT CScene_Stage0::SetUp_Layer_PlayerSkill(const wstring & LayerTag)
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_LaserSkill", SCENE_STAGE0, LayerTag)))
+		return E_FAIL;
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_MeteoSkill", SCENE_STAGE0, LayerTag)))
+		return E_FAIL;
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_EnergyVoltSkill", SCENE_STAGE0, LayerTag)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 
 HRESULT CScene_Stage0::Setup_Layer_Environment(const wstring & LayerTag)
 {

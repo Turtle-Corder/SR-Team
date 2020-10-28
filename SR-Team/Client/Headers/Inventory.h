@@ -7,7 +7,6 @@
 USING(Engine)
 BEGIN(Client)
 
-class CItemManager;
 class CInventory : public CUIObject
 {
 private:
@@ -131,7 +130,7 @@ private:
 	// true : 인벤을 그린다 / false : 인벤을 그리지 않는다
 	bool				m_bRender = false;
 	// 인벤 윈도우 위치
-	_vec3 vWndPos =		{ 500.f, 200.f, 0.f };
+	_vec3 vWndPos =		{ 600.f, 200.f, 0.f };
 	_int				m_iDeleteCnt = 0;
 
 // 아이템--------------------------------------------------------------------------------

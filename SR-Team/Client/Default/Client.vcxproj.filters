@@ -178,17 +178,44 @@
     <Filter Include="02.GameObject\07.UI\04. Skill">
       <UniqueIdentifier>{2972e127-b047-429d-a9ac-6eaef2882535}</UniqueIdentifier>
     </Filter>
-    <Filter Include="12. SkillInventory">
-      <UniqueIdentifier>{da8eeec8-b224-45e6-80ce-0a6bf67c4ddb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\13. PlayerSkill">
       <UniqueIdentifier>{e9a43fa0-b414-4dac-8bcd-cef58af142c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\11.Golem_Impact">
+      <UniqueIdentifier>{b3ed9e18-8920-43db-b876-047dc6c8b215}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\12. SkillInventory">
+      <UniqueIdentifier>{da8eeec8-b224-45e6-80ce-0a6bf67c4ddb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\13. PlayerSkill\01. Laser">
+      <UniqueIdentifier>{31d64684-435f-4b92-9e48-37f6d621d3fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Manager\02. SkillManager">
+      <UniqueIdentifier>{81c88648-7211-46b1-a895-0c25f4db764f}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\13. PlayerSkill\00. Normal_Attack">
       <UniqueIdentifier>{9891293b-36e7-4603-a600-2c6075aff553}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\11.Golem_Impact">
-      <UniqueIdentifier>{b3ed9e18-8920-43db-b876-047dc6c8b215}</UniqueIdentifier>
+    <Filter Include="02.GameObject\13. PlayerSkill\02. Meteo">
+      <UniqueIdentifier>{9da80b4c-8ee5-4ced-a1c2-54cefff23de2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\13. PlayerSkill\03. EnergyVolt">
+      <UniqueIdentifier>{a4b9ad97-d5d5-47a1-b9c6-d9af3e9a4666}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Observer">
+      <UniqueIdentifier>{801fa6de-3d10-4233-b24c-a934f0895018}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\14. PlayerItem">
+      <UniqueIdentifier>{d64ea46b-9ce2-4c21-ae5a-4c6cf09487eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\14. PlayerItem\00. RedPotion">
+      <UniqueIdentifier>{79d73647-27f9-44bf-a055-6a3e673c20e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\14. PlayerItem\01. BluePotion">
+      <UniqueIdentifier>{f74fb169-5a85-4b24-ab1c-1dee21bc4f93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\15. ItemInventory">
+      <UniqueIdentifier>{b7f6ed01-4dc7-4de3-8ad3-9f5a43effd44}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -254,9 +281,6 @@
     </ClInclude>
     <ClInclude Include="..\Headers\KeyManager.h">
       <Filter>04.Manager\00.KeyManager</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Headers\ItemManager.h">
-      <Filter>04.Manager\01.ItemManager</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\Snail.h">
       <Filter>02.GameObject\05.Monster\00.Snail</Filter>
@@ -324,12 +348,6 @@
     <ClInclude Include="..\Headers\PlayerSkill.h">
       <Filter>02.GameObject\13. PlayerSkill</Filter>
     </ClInclude>
-    <ClInclude Include="..\Headers\NormalAtt.h">
-      <Filter>02.GameObject\13. PlayerSkill\00. Normal_Attack</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Headers\SkillInventory.h">
-      <Filter>12. SkillInventory</Filter>
-    </ClInclude>
     <ClInclude Include="..\Headers\Golem_Impact.h">
       <Filter>02.GameObject\11.Golem_Impact</Filter>
     </ClInclude>
@@ -338,6 +356,36 @@
     </ClInclude>
     <ClInclude Include="..\Headers\Slime.h">
       <Filter>02.GameObject\05.Monster\01.Slime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\SkillManager.h">
+      <Filter>04.Manager\02. SkillManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\SkillInven.h">
+      <Filter>02.GameObject\12. SkillInventory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\LaserSkill.h">
+      <Filter>02.GameObject\13. PlayerSkill\01. Laser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\MeteoSkill.h">
+      <Filter>02.GameObject\13. PlayerSkill\02. Meteo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\EnergyVoltSkill.h">
+      <Filter>02.GameObject\13. PlayerSkill\03. EnergyVolt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\PlayerItem.h">
+      <Filter>02.GameObject\14. PlayerItem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\ItemManager.h">
+      <Filter>04.Manager\01.ItemManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\RedPotion.h">
+      <Filter>02.GameObject\14. PlayerItem\00. RedPotion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\BluePotion.h">
+      <Filter>02.GameObject\14. PlayerItem\01. BluePotion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\ItemInventory.h">
+      <Filter>02.GameObject\15. ItemInventory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -388,9 +436,6 @@
     </ClCompile>
     <ClCompile Include="..\Codes\KeyManager.cpp">
       <Filter>04.Manager\00.KeyManager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\ItemManager.cpp">
-      <Filter>04.Manager\01.ItemManager</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Slime.cpp">
       <Filter>02.GameObject\05.Monster\01.Slime</Filter>
@@ -461,17 +506,41 @@
     <ClCompile Include="..\Codes\PlayerSkill.cpp">
       <Filter>02.GameObject\13. PlayerSkill</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\NormalAtt.cpp">
-      <Filter>02.GameObject\13. PlayerSkill\00. Normal_Attack</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\SkillInventory.cpp">
-      <Filter>12. SkillInventory</Filter>
-	</ClCompile>
     <ClCompile Include="..\Codes\Golem_Impact.cpp">
       <Filter>02.GameObject\11.Golem_Impact</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Yeti.cpp">
       <Filter>02.GameObject\05.Monster\02.Yeti</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\SkillManager.cpp">
+      <Filter>04.Manager\02. SkillManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\SkillInven.cpp">
+      <Filter>02.GameObject\12. SkillInventory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\LaserSkill.cpp">
+      <Filter>02.GameObject\13. PlayerSkill\01. Laser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\MeteoSkill.cpp">
+      <Filter>02.GameObject\13. PlayerSkill\02. Meteo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\EnergyVoltSkill.cpp">
+      <Filter>02.GameObject\13. PlayerSkill\03. EnergyVolt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\PlayerItem.cpp">
+      <Filter>02.GameObject\14. PlayerItem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\ItemManager.cpp">
+      <Filter>04.Manager\01.ItemManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\RedPotion.cpp">
+      <Filter>02.GameObject\14. PlayerItem\00. RedPotion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\BluePotion.cpp">
+      <Filter>02.GameObject\14. PlayerItem\01. BluePotion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\ItemInventory.cpp">
+      <Filter>02.GameObject\15. ItemInventory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

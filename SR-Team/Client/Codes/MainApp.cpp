@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Scene_Logo.h"
 #include "KeyManager.h"
+#include "SkillManager.h"
 #include "..\Headers\MainApp.h"
 
 
@@ -17,11 +18,16 @@
 #include "Shop.h"
 #include "Item.h"
 #include "Inventory.h"
-#include "ItemManager.h"
 #include "DamageInfo.h"
 #include "Equip.h"
 #include "Skill.h"
 #include "TerrainBundle.h"
+#include "SkillInven.h"
+#include "LaserSkill.h"
+#include "MeteoSkill.h"
+#include "EnergyVoltSkill.h"
+#include "ItemInventory.h"
+#include "RedPotion.h"
 #pragma endregion
 
 #pragma region Component_Headers
@@ -222,6 +228,28 @@ HRESULT CMainApp::Setup_StaticResources()
 		return E_FAIL;
 #pragma endregion
 
+#pragma region GameObject_SkillInven
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_SkillInven", CSkillInven::Create(m_pDevice, m_pSprite, m_pFont))))
+		return E_FAIL;
+#pragma endregion
+
+// 플레이어 스킬 객체
+#pragma region GameObject_LaserSkill
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_LaserSkill", CLaserSkill::Create(m_pDevice, m_pSprite, m_pFont))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region GameObject_MeteoSkill
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_MeteoSkill", CMeteoSkill::Create(m_pDevice, m_pSprite, m_pFont))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region GameObject_EnergyVoltSkill
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_EnergyVoltSkill", CEnergyVoltSkill::Create(m_pDevice, m_pSprite, m_pFont))))
+		return E_FAIL;
+#pragma endregion
+
+
 	//----------------------------------------------------------------------------------------------------
 	// Component
 	//----------------------------------------------------------------------------------------------------
@@ -272,11 +300,6 @@ HRESULT CMainApp::Setup_StaticResources()
 	
 #pragma region Component_Status
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Status", CStatus::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region Component_ItemManager
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_ItemManager", CItemManager::Create(m_pDevice))))
 		return E_FAIL;
 #pragma endregion
 
@@ -606,6 +629,7 @@ CMainApp * CMainApp::Create()
 void CMainApp::Free()
 {
 	CKeyManager::Destroy_Instance();
+	CSkillManager::Destroy_Instance();
 
 	Safe_Release(m_pFont);
 	Safe_Release(m_pSprite);

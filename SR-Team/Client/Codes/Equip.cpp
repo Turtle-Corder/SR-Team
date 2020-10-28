@@ -48,7 +48,19 @@ void CEquip::Equip_Item(eITEM_SORT eSort, const wstring& strItemTag/*INVEN_ITEM 
 	m_bEquip[eSort] = true;
 }
 
+void CEquip::Set_PlayerHp(_int iHP)
+{
+	m_pStatCom->Set_HP(iHP);
+	if (m_pStatCom->Get_Status().iHp >= m_pStatCom->Get_Status().iMaxHp)
+		m_pStatCom->Set_HP(m_pStatCom->Get_Status().iHp - m_pStatCom->Get_Status().iMaxHp);
+}
 
+void CEquip::Set_PlayerMP(_int iMP)
+{
+	m_pStatCom->Set_HP(iMP);
+	if (m_pStatCom->Get_Status().iMp >= m_pStatCom->Get_Status().iMaxMp)
+		m_pStatCom->Set_HP(m_pStatCom->Get_Status().iMp - m_pStatCom->Get_Status().iMaxMp);
+}
 
 HRESULT CEquip::Setup_GameObject_Prototype()
 {
@@ -257,6 +269,30 @@ HRESULT CEquip::Render_Stat()
 	m_pFont->DrawTextW(m_pSprite, szBuff2, lstrlen(szBuff2),
 		nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
 
+	// HP
+	StringCchPrintf(szBuff2, sizeof(TCHAR) * MAX_PATH, L"%d / %d",
+		m_pStatCom->Get_Status().iHp, m_pStatCom->Get_Status().iMaxHp);
+
+	D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
+	D3DXMatrixTranslation(&matTrans, vPos.x + 160.f, vPos.y + 65.f, 0.f);
+	matWorld = matScale * matTrans;
+
+	m_pSprite->SetTransform(&matWorld);
+	m_pFont->DrawTextW(m_pSprite, szBuff2, lstrlen(szBuff2),
+		nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
+
+	// MP
+	StringCchPrintf(szBuff2, sizeof(TCHAR) * MAX_PATH, L"%d / %d",
+		m_pStatCom->Get_Status().iMp, m_pStatCom->Get_Status().iMaxMp);
+
+	D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
+	D3DXMatrixTranslation(&matTrans, vPos.x + 160.f, vPos.y + 105.f, 0.f);
+	matWorld = matScale * matTrans;
+
+	m_pSprite->SetTransform(&matWorld);
+	m_pFont->DrawTextW(m_pSprite, szBuff2, lstrlen(szBuff2),
+		nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
+
 	return S_OK;
 }
 
@@ -281,6 +317,11 @@ HRESULT CEquip::Count_Stat()
 	tStat.iDef = iDef;
 	tStat.iCriticalRate = iCirRate;
 	tStat.iCriticalHit = iCriHit;
+
+	tStat.iHp = m_pStatCom->Get_Status().iHp;
+	tStat.iMp = m_pStatCom->Get_Status().iMp;
+	tStat.iMaxHp = m_pStatCom->Get_Status().iMaxHp;
+	tStat.iMaxMp = m_pStatCom->Get_Status().iMaxMp;
 
 	m_pStatCom->Set_Status(tStat);
 
@@ -339,22 +380,6 @@ HRESULT CEquip::Add_Component()
 
 	for (_uint i = 0; i < ITEMSORT_END; i++)
 	{
-		//// 2. Stat
-		//TCHAR szStat[MAX_STR] = L"";
-		//wsprintf(szStat, L"Com_ItemStat%d", i);
-		//if (FAILED(CGameObject::Add_Component(
-		//	SCENE_STATIC, L"Component_Status"
-		//	, szStat, (CComponent**)&m_pStatItem[i])))
-		//	return E_FAIL;
-
-		//// 2. Texture
-		//TCHAR szStat1[MAX_STR] = L"";
-		//wsprintf(szStat1, L"Com_ItemTexture%d", i);
-		//if (FAILED(CGameObject::Add_Component(
-		//	SCENE_STATIC, L"Component_Texture_Equip_BackGround"
-		//	, szStat1, (CComponent**)&m_pTextureItem[i])))
-		//	return E_FAIL;
-
 		// 2. Transform
 		TCHAR szStat2[MAX_STR] = L"";
 		CTransform::TRANSFORM_DESC tTransform;
@@ -366,18 +391,16 @@ HRESULT CEquip::Add_Component()
 			return E_FAIL;
 	}
 
+	CStatus::STAT	tStat;
+	tStat.iMaxHp = 100;
+	tStat.iMaxMp = 100;
+	tStat.iHp = 100;
+	tStat.iMp = 100;
+
 	if (FAILED(CGameObject::Add_Component(
 		SCENE_STATIC, L"Component_Status",
-		L"Com_PlayerStat", (CComponent**)&m_pStatCom)))
+		L"Com_PlayerStat", (CComponent**)&m_pStatCom, &tStat)))
 		return E_FAIL;
-
-	//CTransform::TRANSFORM_DESC tTransform;
-	//tTransform.vPosition = { m_vPos.x + 200.f, m_vPos.y - 110.f, 0.f };
-
-	//if (FAILED(CGameObject::Add_Component(
-	//	SCENE_STATIC, L"Component_Transform",
-	//	L"Com_PlayerStatTransform", (CComponent**)&m_pTransformFont, &tt)))
-	//	return E_FAIL;
 
 	return S_OK;
 }

@@ -17,6 +17,7 @@ public:
 		_int	iCriticalRate = 0;
 		_int	iCriticalHit = 0;
 		_int	iDef = 0;
+
 		_int	iMaxHp = 0;
 		_int	iMaxMp = 0;
 		_int	iHp = 0;

@@ -8,6 +8,7 @@ USING(Engine)
 typedef struct tagInvenItem
 {
 	WCHAR			szItemTag[MIN_STR];
+	WCHAR			szShopTag[MIN_STR];
 	eITEM_SORT		eSort = eITEM_SORT::ITEMSORT_END;
 	eActiveSkill_ID	eActiveID = eActiveSkill_ID::ACTIVE_SKILL_END;
 	int				iCnt = 0;

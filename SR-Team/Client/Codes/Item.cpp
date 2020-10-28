@@ -2,7 +2,6 @@
 #include "Status.h"
 #include "UICamera.h"
 #include "Inventory.h"
-#include "ItemManager.h"
 #include "..\Headers\Item.h"
 
 USING(Client)
@@ -208,6 +207,8 @@ HRESULT CItem::Add_Component_Item()
 			pItem->iPrice = 200;
 			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
 				L"%s", L"GoldSword");
+			StringCchPrintf(pItem->szShopTag, _countof(pItem->szShopTag),
+				L"금색 검");
 		}
 		if (i == 1)
 		{
@@ -215,6 +216,8 @@ HRESULT CItem::Add_Component_Item()
 			pItem->iPrice = 100;
 			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
 				L"%s", L"IronSword");
+			StringCchPrintf(pItem->szShopTag, _countof(pItem->szShopTag),
+				L"철 검");
 		}
 		if (i == 2)
 		{
@@ -222,6 +225,8 @@ HRESULT CItem::Add_Component_Item()
 			pItem->eSort = eITEM_SORT::STAFF1;
 			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
 				L"%s", L"DiaSword");
+			StringCchPrintf(pItem->szShopTag, _countof(pItem->szShopTag),
+				L"다이아 검");
 		}
 		if (i == 3)
 		{
@@ -229,6 +234,8 @@ HRESULT CItem::Add_Component_Item()
 			pItem->eSort = eITEM_SORT::SUIT;
 			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
 				L"%s", L"BlackDress");
+			StringCchPrintf(pItem->szShopTag, _countof(pItem->szShopTag),
+				L"양복");
 		}
 		if (i == 4)
 		{
@@ -236,6 +243,8 @@ HRESULT CItem::Add_Component_Item()
 			pItem->eSort = eITEM_SORT::SUIT;
 			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
 				L"%s", L"PupleDress");
+			StringCchPrintf(pItem->szShopTag, _countof(pItem->szShopTag),
+				L"초급 마법사 옷");
 		}
 		if (i == 5)
 		{
@@ -243,6 +252,8 @@ HRESULT CItem::Add_Component_Item()
 			pItem->eSort = eITEM_SORT::SHOES;
 			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
 				L"%s", L"ScholarShoes");
+			StringCchPrintf(pItem->szShopTag, _countof(pItem->szShopTag),
+				L"학자의 신발");
 		}
 		if (i == 6)
 		{
@@ -250,6 +261,8 @@ HRESULT CItem::Add_Component_Item()
 			pItem->eSort = eITEM_SORT::SHOES;
 			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
 				L"%s", L"ArcaneShoes");
+			StringCchPrintf(pItem->szShopTag, _countof(pItem->szShopTag),
+				L"신비한 신발");
 		}
 		if (i == 7)
 		{
@@ -257,6 +270,8 @@ HRESULT CItem::Add_Component_Item()
 			pItem->eSort = eITEM_SORT::POTION;
 			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
 				L"%s", L"RedPotion");
+			StringCchPrintf(pItem->szShopTag, _countof(pItem->szShopTag),
+				L"빨간 포션");
 		}
 		if (i == 8)
 		{
@@ -264,6 +279,8 @@ HRESULT CItem::Add_Component_Item()
 			pItem->eSort = eITEM_SORT::POTION;
 			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
 				L"%s", L"OrangePotion");
+			StringCchPrintf(pItem->szShopTag, _countof(pItem->szShopTag),
+				L"주황 포션");
 		}
 		if (i == 9)
 		{
@@ -271,6 +288,8 @@ HRESULT CItem::Add_Component_Item()
 			pItem->eSort = eITEM_SORT::POTION;
 			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
 				L"%s", L"WhitePotion");
+			StringCchPrintf(pItem->szShopTag, _countof(pItem->szShopTag),
+				L"하얀 포션");
 		}
 		m_vItemList.emplace_back(pItem);
 

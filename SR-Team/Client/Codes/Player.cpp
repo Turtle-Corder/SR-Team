@@ -2,12 +2,12 @@
 #include "Status.h"
 #include "KeyManager.h"
 #include "Inventory.h"
-#include "ItemManager.h"
 #include "DamageInfo.h"
 #include "Shop.h"
 #include "Equip.h"
 #include "PlaneSkill.h"
 #include "Skill.h"
+#include "SkillInven.h"
 #include "..\Headers\Player.h"
 
 USING(Client)
@@ -66,7 +66,7 @@ HRESULT CPlayer::Setup_GameObject(void * _pArg)
 	// 스킬1 - 레이저
 	//---------------------------------------------
 	m_bStartLaser = false;
-	m_bUsingLaser = true;
+	m_bUsingLaser = false;
 	m_fLaserTime = 0.f;
 
 	//---------------------------------------------
@@ -76,6 +76,9 @@ HRESULT CPlayer::Setup_GameObject(void * _pArg)
 	m_bIsFall = false;
 	m_bDownHand = false;
 	m_fFallTime = 0.f;
+
+	// 현재 사용중인 액티브 스킬ID
+	eSkillID = ACTIVE_SKILL_END;
 
 	_vec3 vRight = { 1.f, 0.f, 0.f };
 
@@ -266,13 +269,10 @@ HRESULT CPlayer::Add_Component()
 	tStat.iCriticalRate = 20;	tStat.iCriticalHit = 10;
 	tStat.iDef = 50;
 	tStat.iHp = 100;			tStat.iMp = 100;
+	tStat.iMaxHp = 100;			tStat.iMaxMp = 100;
 	tStat.iMinAtt = 10;			tStat.iMaxAtt = 50;
 
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Status", L"Com_Stat", (CComponent**)&m_pStatusCom, &tStat)))
-		return E_FAIL;
-
-	// For.ItemMgr
-	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_ItemManager", L"Com_ItemMgr", (CComponent**)&m_pItemMgrCom)))
 		return E_FAIL;
 
 	CSphereCollider::COLLIDER_DESC tColDesc;
@@ -301,33 +301,12 @@ HRESULT CPlayer::Movement(_float _fDeltaTime)
 	if (!m_bUsingSkill)
 	{
 		Move_Vertical(_fDeltaTime);
-		//Move_Horizontal(_fDeltaTime);
 		Turn(_fDeltaTime);
-
-		Normal_Attack(_fDeltaTime);
-		Skill_Laser(_fDeltaTime);
-		Skill_ProjectileFall(_fDeltaTime);
 
 		MoveMotion(_fDeltaTime);
 	}
 
-	else
-	{
-		switch (m_ePlayerSkillID)
-		{
-		case PLAYER_NORMAL_ATTACK:
-			Normal_Attack(_fDeltaTime);
-			break;
-		case PLAYER_SKILL_LASER:
-			Skill_Laser(_fDeltaTime);
-			break;
-		case PLAYER_SKILL_FALL:
-			Skill_ProjectileFall(_fDeltaTime);
-			break;
-		case PLAYER_SKILL_END:
-			break;
-		}
-	}
+	Check_Skill(_fDeltaTime);
 
 	if (FAILED(IsOnTerrain()))
 		return E_FAIL;
@@ -445,7 +424,7 @@ void CPlayer::Move_Vertical(_float _fDeltaTime)
 			{
 				_vec3 vRot = m_pTransformCom[i]->Get_Desc().vRotate;
 				vRot.y = 0.f;
-				m_pTransformCom[i]->Set_Rotation(vRot);
+				//m_pTransformCom[i]->Set_Rotation(vRot);
 			}
 			m_bUpTurn = true;
 		}
@@ -470,13 +449,6 @@ void CPlayer::Move_Vertical(_float _fDeltaTime)
 		m_ePlayerDir = MOVING_DOWN;
 		if (!m_bDownTurn)
 		{
-			/*for (_uint i = 0; i < 2; ++i)
-			{
-
-				_vec3 vRot = m_pTransformCom[i]->Get_Desc().vRotate;
-				vRot.y = -3.f;
-				m_pTransformCom[i]->Set_Rotation(vRot);
-			}*/
 			m_bDownTurn = true;
 		}
 
@@ -667,7 +639,7 @@ void CPlayer::Jump(_float fDeltaTime)
 	{
 		// 시간 더해주기
 		m_fJumpTime += fDeltaTime;
-		for (_uint i = 0; i < PART_END; ++i)
+		for (_uint i = 0; i < 2; ++i)
 		{
 			// 점프
 			vCurPos[i].y += (m_fJumpPower * m_fJumpTime - 9.8f * m_fJumpTime * m_fJumpTime * 0.5f);
@@ -773,7 +745,6 @@ void CPlayer::Free()
 		Safe_Release(m_pVIBufferCom[i]);
 	}
 
-	Safe_Release(m_pItemMgrCom);
 	Safe_Release(m_pStatusCom);
 	Safe_Release(m_pRaycastCom);
 	Safe_Release(m_pColliderCom);
@@ -782,11 +753,170 @@ void CPlayer::Free()
 	CGameObject::Free();
 }
 
+void CPlayer::Check_Skill(_float fDeltaTime)
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (pManagement == nullptr)
+		return;
+	CSkillInven* pSkillInven = (CSkillInven*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 3);
+	if (pSkillInven == nullptr)
+		return;
+
+	if (CKeyManager::Get_Instance()->Key_Pressing('Q'))
+	{
+		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
+		m_bUsingSkill = true;
+
+		// 공격체 생성
+		if (FAILED(pSkillInven->Use_Skill(0, fDeltaTime)))
+		{
+			m_bUsingSkill = false;
+			return;
+		}
+			
+
+		// 모션
+		eSkillID = pSkillInven->Get_SkillID(0);
+	}
+	else if (CKeyManager::Get_Instance()->Key_Pressing('W'))
+	{
+		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
+		m_bUsingSkill = true;
+
+		if (FAILED(pSkillInven->Use_Skill(1, fDeltaTime)))
+		{
+			m_bUsingSkill = false;
+			return;
+		}
+
+		// 모션
+		eSkillID = pSkillInven->Get_SkillID(0);
+	}
+	else if (CKeyManager::Get_Instance()->Key_Pressing('E'))
+	{
+		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
+		m_bUsingSkill = true;
+
+		if (FAILED(pSkillInven->Use_Skill(2, fDeltaTime)))
+		{
+			m_bUsingSkill = false;
+			return;
+		}
+
+		// 모션
+		eSkillID = pSkillInven->Get_SkillID(2);
+	}
+	else if (CKeyManager::Get_Instance()->Key_Pressing('R'))
+	{
+		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
+		m_bUsingSkill = true;
+
+		if (FAILED(pSkillInven->Use_Skill(3, fDeltaTime)))
+		{
+			m_bUsingSkill = false;
+			return;
+		}
+
+		// 모션
+		eSkillID = pSkillInven->Get_SkillID(3);
+	}
+	else if (CKeyManager::Get_Instance()->Key_Pressing('A'))
+	{
+		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
+		m_bUsingSkill = true;
+
+		if (FAILED(pSkillInven->Use_Skill(4, fDeltaTime)))
+		{
+			m_bUsingSkill = false;
+			return;
+		}
+
+		// 모션
+		eSkillID = pSkillInven->Get_SkillID(4);
+	}
+	else if (CKeyManager::Get_Instance()->Key_Pressing('S'))
+	{
+		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
+		m_bUsingSkill = true;
+
+		if (FAILED(pSkillInven->Use_Skill(5, fDeltaTime)))
+		{
+			m_bUsingSkill = false;
+			return;
+		}
+
+		// 모션
+		eSkillID = pSkillInven->Get_SkillID(5);
+	}
+	else if (CKeyManager::Get_Instance()->Key_Pressing('D'))
+	{
+		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
+		m_bUsingSkill = true;
+
+		if (FAILED(pSkillInven->Use_Skill(6, fDeltaTime)))
+		{
+			m_bUsingSkill = false;
+			return;
+		}
+
+		// 모션
+		eSkillID = pSkillInven->Get_SkillID(6);
+	}
+	else if (CKeyManager::Get_Instance()->Key_Pressing('F'))
+	{
+		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
+		m_bUsingSkill = true;
+
+		if (FAILED(pSkillInven->Use_Skill(7, fDeltaTime)))
+		{
+			m_bUsingSkill = false;
+			return;
+		}
+
+		// 모션
+		eSkillID = pSkillInven->Get_SkillID(7);
+	}
+
+	if (m_bUsingSkill)
+		Move_SkillMotion(fDeltaTime, eSkillID);
+	else
+		eSkillID = ACTIVE_SKILL_END;
+}
+
+void CPlayer::Move_SkillMotion(_float fDeltaTime, eActiveSkill_ID eSkillID)
+{
+	switch (eSkillID)
+	{
+	case ACTIVE_ICE_STRIKE:	// 에너지 볼트
+		Skill_Laser(fDeltaTime);
+		break;
+	case ACTIVE_MANA_DRIFT:
+		break;
+	case ACTIVE_ENERGY_EXPLOTIATION:
+		break;
+	case ACTIVE_FLAME_WAVE:	// 투사체
+		Skill_ProjectileFall(fDeltaTime);
+		break;
+	case ACTIVE_ICE_SPEAR: // 레이저
+		Skill_Laser(fDeltaTime);
+		break;
+	case ACTIVE_MAGIC_ARMOR:
+		break;
+	case ACTIVE_NORMAL_ATTACK:
+		break;
+	case ACTIVE_SKILL_END:
+		break;
+	default:
+		break;
+	}
+}
+
 void CPlayer::Normal_Attack(_float fDeltaTime)
 {
 	int k = 0;
 
-	if (GetAsyncKeyState('Z') & 0x8000)
+	//if (GetAsyncKeyState('Z') & 0x8000)
+	if (CKeyManager::Get_Instance()->Key_Pressing('Z'))
 	{
 		m_bUsingSkill = true;
 		m_ePlayerSkillID = PLAYER_NORMAL_ATTACK;
@@ -876,8 +1006,8 @@ void CPlayer::Skill_Laser(_float fDeltaTime)
 		m_ePlayerSkillID = PLAYER_SKILL_LASER;
 	}
 
-	else if (m_bStartLaser)
-	{
+	/*else if (m_bStartLaser)
+	{*/
 		if (m_bUsingLaser)
 		{
 			m_fAttTime += fDeltaTime;
@@ -896,12 +1026,13 @@ void CPlayer::Skill_Laser(_float fDeltaTime)
 		else
 		{
 			m_fAttTime += fDeltaTime;
-			if (m_ePlayerDir == MOVING_UP)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
-			else if (m_ePlayerDir == MOVING_DOWN)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
-			else if (m_ePlayerDir == MOVING_RIGHT)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Z, fDeltaTime * 5.f);
+			m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
+			//if (m_ePlayerDir == MOVING_UP)
+			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
+			//else if (m_ePlayerDir == MOVING_DOWN)
+			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
+			//else if (m_ePlayerDir == MOVING_RIGHT)
+			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Z, fDeltaTime * 5.f);
 
 			if (m_fAttTime >= 0.2f)
 			{
@@ -909,12 +1040,12 @@ void CPlayer::Skill_Laser(_float fDeltaTime)
 				m_bUsingLaser = true;
 			}
 		}
-	}
+	//}
 }
 
 void CPlayer::Skill_ProjectileFall(_float fDeltaTime)
 {
-	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
 	{
 		m_bStartFall = true;
 		m_bIsFall = false;
@@ -949,59 +1080,60 @@ void CPlayer::Skill_ProjectileFall(_float fDeltaTime)
 		}
 	}
 
-	else if (m_bStartFall)
+
+	if (m_bIsFall)
 	{
-		if (m_bIsFall)
+		m_fAttTime += fDeltaTime;
+
+		if (m_fAttTime >= 1.f)
 		{
-			m_fAttTime += fDeltaTime;
-
-			if (m_fAttTime >= 1.f)
-			{
-				m_fAttTime = 0.f;
-				m_bIsFall = false;
-				m_bDownHand = true;
-			}
-		}
-
-		else if (m_bDownHand)
-		{
-			m_fAttTime += fDeltaTime;
-			if (m_ePlayerDir == MOVING_UP)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
-			else if (m_ePlayerDir == MOVING_DOWN)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
-			else if (m_ePlayerDir == MOVING_RIGHT)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Z, -fDeltaTime * 5.f);
-
-			if (m_fAttTime >= 0.2f)
-			{
-				m_bStartFall = false;
-				m_bIsFall = false;
-				m_bDownHand = false;
-				m_fAttTime = 0.f;
-
-				m_pTransformCom[PART_HAND_RIGHT]->Set_Rotation(m_vInitialRot);
-				m_bUsingSkill = false;
-				m_ePlayerSkillID = PLAYER_SKILL_END;
-			}
-		}
-		else
-		{
-			m_fAttTime += fDeltaTime;
-			if (m_ePlayerDir == MOVING_UP)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
-			else if (m_ePlayerDir == MOVING_DOWN)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
-			else if (m_ePlayerDir == MOVING_RIGHT)
-				m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Z, fDeltaTime * 5.f);
-
-			if (m_fAttTime >= 0.4f)
-			{
-				m_bIsFall = true;
-				m_fAttTime = 0.f;
-			}
+			m_fAttTime = 0.f;
+			m_bIsFall = false;
+			m_bDownHand = true;
 		}
 	}
+
+	else if (m_bDownHand)
+	{
+		m_fAttTime += fDeltaTime;
+		m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
+		//if (m_ePlayerDir == MOVING_UP)
+		//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
+		//else if (m_ePlayerDir == MOVING_DOWN)
+		//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
+		//else if (m_ePlayerDir == MOVING_RIGHT)
+		//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Z, -fDeltaTime * 5.f);
+
+		if (m_fAttTime >= 0.2f)
+		{
+			m_bStartFall = false;
+			m_bIsFall = false;
+			m_bDownHand = false;
+			m_fAttTime = 0.f;
+
+			m_pTransformCom[PART_HAND_RIGHT]->Set_Rotation(m_vInitialRot);
+			m_bUsingSkill = false;
+			m_ePlayerSkillID = PLAYER_SKILL_END;
+		}
+	}
+	else
+	{
+		m_fAttTime += fDeltaTime;
+		m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
+		//if (m_ePlayerDir == MOVING_UP)
+		//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
+		//else if (m_ePlayerDir == MOVING_DOWN)
+		//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
+		//else if (m_ePlayerDir == MOVING_RIGHT)
+		//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Z, fDeltaTime * 5.f);
+
+		if (m_fAttTime >= 0.4f)
+		{
+			m_bIsFall = true;
+			m_fAttTime = 0.f;
+		}
+	}
+	
 }
 
 HRESULT CPlayer::Draw_HpBar()

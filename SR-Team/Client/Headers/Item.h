@@ -8,7 +8,6 @@ USING(Engine)
 BEGIN(Client)
 
 class CStatus;
-class CItemManager;
 class CItem : public CGameObject
 {
 private:
@@ -67,9 +66,6 @@ public:
 private:
 	bool			m_bRenderShopItem = false;
 	bool			m_bRenderInvenItem = false;
-
-	// Component-----------------------------------
-	//CItemManager*	m_pItmeMgrCom = nullptr;
 
 // æ∆¿Ã≈€
 private:

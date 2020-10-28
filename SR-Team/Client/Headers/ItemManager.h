@@ -1,47 +1,33 @@
 #pragma once
-#ifndef __ITEM_MANAGER_H__
-#define __ITEM_MANAGER_H__
 
-#include "Component.h"
+#ifndef __ITEMMANAGER_H__
+#define __ITEMMANAGER_H__
 
-USING(Engine)
 BEGIN(Client)
+USING(Engine)
 
-class CItemManager final : public CComponent
+class CItemManager
 {
 private:
-	explicit CItemManager(LPDIRECT3DDEVICE9 pDevice);
-	explicit CItemManager(const CItemManager& other);
+	CItemManager();
 	virtual ~CItemManager() = default;
 
 public:
-	list<INVEN_ITEM*> Get_InvenList();
-	list<INVEN_ITEM*> Get_ShopList();
-
-public:
-	list<INVEN_ITEM*>& Get_DropItem(wstring wstrItemName, int iSort, int iPrice);
-
-public:
-	// CComponent을(를) 통해 상속됨
-	virtual HRESULT Setup_Component_Prototype() override;
-	virtual HRESULT Setup_Component(void * pArg) override;
-
-public:
-	static CItemManager* Create(LPDIRECT3DDEVICE9 pDevice);
-	virtual CComponent * Clone_Component(void * pArg) override;
-	virtual void Free() override;
-	
-
+	static CItemManager* Get_Instance()
+	{
+		if (!m_pInstance)
+			m_pInstance = new CItemManager;
+		return m_pInstance;
+	}
+	static void Destroy_Instance()
+	{
+		delete m_pInstance;
+		m_pInstance = nullptr;
+	}
 
 private:
-	list<INVEN_ITEM*>		m_pInvenList;
-	// 인벤 삽입 순서
-	int				m_iInvenInsertOrder = 0;
-
-	list<INVEN_ITEM*>		m_pShopList;
-
+	static CItemManager*	m_pInstance;
 };
 
 END
-
-#endif // !__ITEM_MANAGER_H__
+#endif

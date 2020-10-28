@@ -408,10 +408,10 @@ HRESULT CShop::Render_ShopItem()
 			TCHAR		szBuff[MAX_PATH] = L"";
 			D3DXMATRIX	matScale, matTrans, matWorld;
 			D3DXMatrixIdentity(&matWorld);
-			StringCchPrintf(szBuff, sizeof(TCHAR) * MAX_PATH, L"%s", m_vShopItem[iIndex]->szItemTag);
+			StringCchPrintf(szBuff, sizeof(TCHAR) * MAX_PATH, L"%s", m_vShopItem[iIndex]->szShopTag);
 
 			D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
-			D3DXMatrixTranslation(&matTrans, vPos.x - 68.f, vPos.y + 30.f, 0.f);
+			D3DXMatrixTranslation(&matTrans, vPos.x - 65.f, vPos.y + 30.f, 0.f);
 			matWorld = matScale * matTrans;
 
 			m_pSprite->SetTransform(&matWorld);
