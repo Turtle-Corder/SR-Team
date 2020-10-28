@@ -168,6 +168,7 @@
     <ClInclude Include="..\Headers\Crack.h" />
     <ClInclude Include="..\Headers\EnergyBolt.h" />
     <ClInclude Include="..\Headers\Equip.h" />
+    <ClInclude Include="..\Headers\EventTrigger.h" />
     <ClInclude Include="..\Headers\Fire.h" />
     <ClInclude Include="..\Headers\Mouse.h" />
     <ClInclude Include="..\Headers\NormalAtt.h" />
@@ -238,6 +239,7 @@
     <ClCompile Include="..\Codes\Crack.cpp" />
     <ClCompile Include="..\Codes\EnergyBolt.cpp" />
     <ClCompile Include="..\Codes\Equip.cpp" />
+    <ClCompile Include="..\Codes\EventTrigger.cpp" />
     <ClCompile Include="..\Codes\Fire.cpp" />
     <ClCompile Include="..\Codes\Mouse.cpp" />
     <ClCompile Include="..\Codes\NormalAtt.cpp" />

@@ -65,11 +65,11 @@ HRESULT CCubeTerrain::Render_NoneAlpha()
 		return E_FAIL;
 
 
-	_vec3 TestVec1, TestVec2;
-	D3DXVec3Normalize(&TestVec1, &(m_pTransformCom->Get_Desc().vPosition - pCamera->Get_Position()));
-	D3DXVec3Normalize(&TestVec2, &(pCamera->Get_Desc().vAt - pCamera->Get_Desc().vEye));
+	_vec3 VecCameraToPos, VecCamera;
+	D3DXVec3Normalize(&VecCameraToPos, &(m_pTransformCom->Get_Desc().vPosition - pCamera->Get_Position()));
+	D3DXVec3Normalize(&VecCamera, &(pCamera->Get_Desc().vAt - pCamera->Get_Desc().vEye));
 
-	if (cos(pCamera->Get_Desc().fFovY / 1.3f) < D3DXVec3Dot(&TestVec1, &TestVec2))
+	if (cos(pCamera->Get_Desc().fFovY / 1.3f) < D3DXVec3Dot(&VecCameraToPos, &VecCamera))
 	{
 		if (FAILED(m_pVIBufferCom->Set_Transform(&m_pTransformCom->Get_Desc().matWorld, pCamera)))
 			return E_FAIL;
