@@ -208,6 +208,9 @@
     <Filter Include="02.GameObject\08.Item\00.Wand">
       <UniqueIdentifier>{149baf85-c5c6-4663-82ea-218486cb2f67}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\06.Projectile\05.Crack">
+      <UniqueIdentifier>{6c0b2378-27a4-4201-a52e-4372862b8bb7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -372,6 +375,9 @@
     <ClInclude Include="..\Headers\Wand.h">
       <Filter>02.GameObject\08.Item\00.Wand</Filter>
     </ClInclude>
+    <ClInclude Include="..\Headers\Crack.h">
+      <Filter>02.GameObject\06.Projectile\05.Crack</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -520,6 +526,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Wand.cpp">
       <Filter>02.GameObject\08.Item\00.Wand</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Crack.cpp">
+      <Filter>02.GameObject\06.Projectile\05.Crack</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
