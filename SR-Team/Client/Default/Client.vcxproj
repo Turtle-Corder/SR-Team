@@ -195,6 +195,7 @@
     <ClInclude Include="..\Headers\Slime.h" />
     <ClInclude Include="..\Headers\Slime_Impact.h" />
     <ClInclude Include="..\Headers\Snail.h" />
+    <ClInclude Include="..\Headers\Snail_Impact.h" />
     <ClInclude Include="..\Headers\Snow.h" />
     <ClInclude Include="..\Headers\Status.h" />
     <ClInclude Include="..\Headers\Terrain.h" />
@@ -204,6 +205,7 @@
     <ClInclude Include="..\Headers\VIBuffer_Pyramid.h" />
     <ClInclude Include="..\Headers\VIBuffer_TreeHead.h" />
     <ClInclude Include="..\Headers\UICamera.h" />
+    <ClInclude Include="..\Headers\Wand.h" />
     <ClInclude Include="..\Headers\Yeti.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
@@ -245,6 +247,7 @@
     <ClCompile Include="..\Codes\Slime.cpp" />
     <ClCompile Include="..\Codes\Slime_Impact.cpp" />
     <ClCompile Include="..\Codes\Snail.cpp" />
+    <ClCompile Include="..\Codes\Snail_Impact.cpp" />
     <ClCompile Include="..\Codes\Snow.cpp" />
     <ClCompile Include="..\Codes\Status.cpp" />
     <ClCompile Include="..\Codes\Terrain.cpp" />
@@ -254,6 +257,7 @@
     <ClCompile Include="..\Codes\VIBuffer_Pyramid.cpp" />
     <ClCompile Include="..\Codes\VIBuffer_TreeHead.cpp" />
     <ClCompile Include="..\Codes\UICamera.cpp" />
+    <ClCompile Include="..\Codes\Wand.cpp" />
     <ClCompile Include="..\Codes\Yeti.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
