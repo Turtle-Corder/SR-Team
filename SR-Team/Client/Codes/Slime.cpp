@@ -66,17 +66,17 @@ _int CSlime::Update_GameObject(_float _fDeltaTime)
 	if (CKeyManager::Get_Instance()->Key_Down(VK_F4))
 		m_bDead = true;
 
-	if (CKeyManager::Get_Instance()->Key_Down(VK_F8))
-		m_eCurState = CSlime::STATE_MOVE;
-
 	if (FAILED(Movement(_fDeltaTime)))
 		return GAMEOBJECT::WARN;
 
-	if (FAILED(LookAtPlayer(_fDeltaTime)))
-		return GAMEOBJECT::WARN;
-
+	Jumping(_fDeltaTime);
+	
 	if (FAILED(Move(_fDeltaTime)))
 		return GAMEOBJECT::WARN;
+
+
+	if (CKeyManager::Get_Instance()->Key_Down(VK_F8))
+		m_eCurState = CSlime::STATE_MOVE;
 
 	//if (FAILED(Attack(_fDeltaTime)))
 		//return GAMEOBJECT::WARN;
@@ -202,7 +202,8 @@ HRESULT CSlime::Movement(float _fDeltaTime)
 	if (FAILED(IsOnTerrain()))
 		return E_FAIL;
 
-	Jumping(_fDeltaTime);
+	if (FAILED(LookAtPlayer(_fDeltaTime)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -230,9 +231,8 @@ HRESULT CSlime::IsOnTerrain()
 
 void CSlime::Jumping(float _fDeltaTime)
 {
-	if (m_eCurState == CSlime::STATE_ATTACK || m_eCurState == CSlime::STATE_MOVE)
+	if (m_eCurState == CSlime::STATE_IDLE || m_eCurState == CSlime::STATE_MOVE)
 	{
-
 		D3DXVECTOR3 vPos = m_pTransformCom[SLIME_BASE]->Get_Desc().vPosition;
 
 		if (m_bJump)
@@ -242,24 +242,12 @@ void CSlime::Jumping(float _fDeltaTime)
 
 			if (vPos.y < m_pTransformCom[SLIME_BASE]->Get_Desc().vPosition.y)
 			{
-				vPos.y = m_pTransformCom[SLIME_BASE]->Get_Desc().vPosition.y;
 				m_bJump = false;
 				m_fJumpTime = 0.f;
-
-				if (m_eCurState == CSlime::STATE_ATTACK)
-				{
-					if (FAILED(Create_Crack(L"Layer_Crack")))
-						return;
-				}
-
-				m_eCurState = CSlime::STATE_MOVE;
 			}
-
 			m_pTransformCom[SLIME_BASE]->Set_Position(vPos);
 		}
 	}
-	else 
-		return;
 }
 
 HRESULT CSlime::LookAtPlayer(float _fDeltaTime)
@@ -314,6 +302,7 @@ HRESULT CSlime::LookAtPlayer(float _fDeltaTime)
 	{
 		m_pTransformCom[SLIME_BASE]->Turn(CTransform::AXIS_Y, _fDeltaTime * fRad);
 	}
+
 	//------------------------------------------
 	// 공전 구현 순서생각하기 LateUpdate안에 월드구성하고 나서
 	//------------------------------------------
@@ -448,32 +437,33 @@ HRESULT CSlime::Move(_float _fDeltaTime)
 
 	if (1.f <= m_fDistance)
 	{
-		m_vPos += vDir * _fDeltaTime;
+		m_vPos += vDir * _fDeltaTime * 5.f;
 		m_pTransformCom[SLIME_BASE]->Set_Position(m_vPos);
 	}
-		else 
+
+	m_bJump;
+
+
+	if(false == m_bJump && 1.f >= m_fDistance)
+	{
 		m_eCurState = CSlime::STATE_ATTACK;
+	}
 	
 	return S_OK;
 }
 
 void CSlime::Update_State()
 {
-	if (m_ePreState != m_eCurState)
+	switch (m_eCurState)
 	{
-		switch (m_eCurState)
-		{
-		case Client::CSlime::STATE_IDLE:
-			break;
-		case Client::CSlime::STATE_MOVE:
-			break;
-		case Client::CSlime::STATE_ATTACK:
-			break;
-		case Client::CSlime::STATE_DEAD:
-			break;
-		}
-
-		m_ePreState = m_eCurState;
+	case Client::CSlime::STATE_IDLE:
+		break;
+	case Client::CSlime::STATE_MOVE:
+		break;
+	case Client::CSlime::STATE_ATTACK:
+		break;
+	case Client::CSlime::STATE_DEAD:
+		break;
 	}
 }
 
@@ -511,8 +501,6 @@ HRESULT CSlime::Attack(_float _fDeltaTime)
 
 			m_pTransformCom[SLIME_BASE]->Set_Position(vPos);
 		}
-
-
 
 	}
 
