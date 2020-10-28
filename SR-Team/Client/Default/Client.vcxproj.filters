@@ -199,6 +199,9 @@
     <Filter Include="02.GameObject\11.Instant_Impact\01.Slime_Impact">
       <UniqueIdentifier>{de864e84-c52f-401d-b7dc-c19f176d8c98}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\14.Mouse">
+      <UniqueIdentifier>{93cb23d9-10f3-4818-b680-9a43b6ff7a82}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -354,6 +357,9 @@
     <ClInclude Include="..\Headers\Slime_Impact.h">
       <Filter>02.GameObject\11.Instant_Impact\01.Slime_Impact</Filter>
     </ClInclude>
+    <ClInclude Include="..\Headers\Mouse.h">
+      <Filter>02.GameObject\14.Mouse</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -493,6 +499,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Slime_Impact.cpp">
       <Filter>02.GameObject\11.Instant_Impact\01.Slime_Impact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Mouse.cpp">
+      <Filter>02.GameObject\14.Mouse</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

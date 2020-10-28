@@ -32,6 +32,9 @@ HRESULT CScene_Stage0::Setup_Scene()
 	if (FAILED(Setup_Layer_CubeTerrain(L"Layer_CubeTerrain")))
 		return E_FAIL;
 
+	if (FAILED(Setup_Layer_Mouse(L"Layer_Mouse")))
+		return E_FAIL;
+
 	if (FAILED(Setup_Layer_UI(L"Layer_MainUI")))
 		return E_FAIL;
 	if (FAILED(SetUp_Layer_Inventory(L"Layer_Inventory")))
@@ -331,6 +334,18 @@ HRESULT CScene_Stage0::SetUp_Layer_Item(const wstring & LayerTag)
 		return E_FAIL;
 
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_Item", SCENE_STAGE0, LayerTag)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CScene_Stage0::Setup_Layer_Mouse(const wstring & LayerTag)
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_Mouse", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
 
 	return S_OK;

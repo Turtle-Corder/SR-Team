@@ -22,6 +22,7 @@
 #include "Equip.h"
 #include "Skill.h"
 #include "TerrainBundle.h"
+#include "Mouse.h"
 #pragma endregion
 
 #pragma region Component_Headers
@@ -101,11 +102,19 @@ HRESULT CMainApp::Setup_MainApp()
 		return E_FAIL;
 	}
 
+	if (FAILED(Setup_UIResources()))
+	{
+		PRINT_LOG(L"Failed To Setup_UIResources", LOG::CLIENT);
+		return E_FAIL;
+	}
+
 	if (FAILED(Setup_ProtoTypeData()))
 	{
 		PRINT_LOG(L"Failed To Setup_SaveData", LOG::CLIENT);
 		return E_FAIL;
 	}
+
+	ShowCursor(FALSE);
 
 	return S_OK;
 }
@@ -479,6 +488,45 @@ HRESULT CMainApp::Setup_StaticResources()
 	return S_OK;
 }
 
+HRESULT CMainApp::Setup_UIResources()
+{
+#pragma region GameObject_Mouse
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_Mouse", CMouse::Create(m_pDevice, m_pSprite, m_pFont))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Textures_Mouse
+	
+	// idle
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Mouse_Idle", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Mouse/idle/idle%d.png"))))
+		return E_FAIL;
+
+	// grab
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Mouse_Grab", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Mouse/grab/grab%d.png"))))
+		return E_FAIL;
+
+	// help
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Mouse_Help", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Mouse/help/help%d.png"))))
+		return E_FAIL;
+
+	// click
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Mouse_Click", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Mouse/click/click%d.png", 2))))
+		return E_FAIL;
+
+	// work
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Mouse_Work", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Mouse/work/work%d.png", 4))))
+		return E_FAIL;
+
+#pragma endregion
+
+	return S_OK;
+}
+
 HRESULT CMainApp::Setup_ProtoTypeData()
 {
 	CManagement* pManagement = CManagement::Get_Instance();
@@ -611,6 +659,8 @@ void CMainApp::Free()
 	Safe_Release(m_pSprite);
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pManagement);
+
+	ShowCursor(TRUE);
 
 	if (CManagement::Release_Engine())
 		PRINT_LOG(L"Failed To Release Engine", LOG::CLIENT);

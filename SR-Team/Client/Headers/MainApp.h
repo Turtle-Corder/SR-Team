@@ -23,9 +23,10 @@ public:
 
 private:
 	HRESULT Setup_DefaultSetting();
-	HRESULT Setup_StaticResources();
 	HRESULT Setup_ProtoTypeData();
 
+	HRESULT Setup_StaticResources();
+	HRESULT Setup_UIResources();
 
 public:
 	static CMainApp* Create();

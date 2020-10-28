@@ -27,6 +27,7 @@ public:
 
 	HRESULT Update_Frame(_float _fDeltaTime, _uint* _pCurFrame);
 
+	_uint	Get_TextureCount();
 	HRESULT SetTexture(_uint _iIndex);
 	HRESULT SetFrameRange(_uint _iFrameBegin, _uint _iFrameEnd, _float _fFrameSpeed = 1.f);
 
