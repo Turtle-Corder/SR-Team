@@ -70,7 +70,7 @@ TERRAININFO CTerrainBundle::Get_TerrainInfo(_uint iIndex, _uint iFloor)
 
 TERRAININFO CTerrainBundle::Get_TerrainInfo(_vec3 iObjectPos, _uint iFloor)
 {
-	int iIndex = iObjectPos.x / (float)(m_TerrianList[0][0].iInterval) + (iObjectPos.z / (float)(m_TerrianList[0][0].iInterval)) * m_TerrianList[0][0].iMaxX;
+	int iIndex = (int)(iObjectPos.x / (float)(m_TerrianList[0][0].iInterval) + (iObjectPos.z / (float)(m_TerrianList[0][0].iInterval)) * m_TerrianList[0][0].iMaxX);
 
 	return m_TerrianList[iFloor][iIndex];
 }

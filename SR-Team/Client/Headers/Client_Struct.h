@@ -24,7 +24,7 @@ typedef struct tagTerrainInfo
 	_int iTextureID;
 	_int iX_Index;
 	_int iZ_Index;
-	_int iInterval;
+	_float iInterval;
 	_int iMaxX;
 	_int iMaxZ;
 

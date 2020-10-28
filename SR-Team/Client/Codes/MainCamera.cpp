@@ -42,7 +42,7 @@ _int CMainCamera::Update_GameObject(_float _fDeltaTime)
 
 	if (GetAsyncKeyState('K') & 0x8000)
 	{
-		int a = 4;
+		float a = 4.f;
 		if(m_eViewMode == CAMERA_3D)
 			Set_Camera_Mode(CAMERA_2D_X, &a);
 
@@ -227,7 +227,7 @@ HRESULT CMainCamera::Set_Camera_Mode(CAMERA_VIEWMODE _ModeOption,  void* _Option
 
 	if (m_eViewMode != CAMERA_3D && _Option != nullptr)
 	{
-		m_fDistanceOn2DView = *((int*)_Option);
+		m_fDistanceOn2DView = *((_float*)_Option);
 	}
 
 	return S_OK;
