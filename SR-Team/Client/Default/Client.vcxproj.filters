@@ -211,6 +211,12 @@
     <Filter Include="02.GameObject\06.Projectile\05.Crack">
       <UniqueIdentifier>{6c0b2378-27a4-4201-a52e-4372862b8bb7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\15.ActiveObject">
+      <UniqueIdentifier>{c5c8283b-71e9-4826-b340-f4397d7a75ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\15.ActiveObject\00.EventTrigger">
+      <UniqueIdentifier>{eb7ff482-11ce-43d1-b8a3-4e97ce4f97a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -378,6 +384,9 @@
     <ClInclude Include="..\Headers\Crack.h">
       <Filter>02.GameObject\06.Projectile\05.Crack</Filter>
     </ClInclude>
+    <ClInclude Include="..\Headers\EventTrigger.h">
+      <Filter>02.GameObject\15.ActiveObject\00.EventTrigger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -529,6 +538,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Crack.cpp">
       <Filter>02.GameObject\06.Projectile\05.Crack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\EventTrigger.cpp">
+      <Filter>02.GameObject\15.ActiveObject\00.EventTrigger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
