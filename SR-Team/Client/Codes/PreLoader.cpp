@@ -17,6 +17,7 @@
 #include "MonSub.h"
 #include "Flower.h"
 #include "PlaneSkill.h"
+#include "EnergyBolt.h"
 #pragma endregion
 
 USING(Client)
@@ -120,6 +121,11 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 #pragma region GameObject_PlanSkill
 	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_PlanSkill", CPlaneSkill::Create(m_pDevice))))
 		return E_FAIL;
+#pragma endregion
+
+#pragma region GameObject_EnergyBolt
+	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_EnergyBolt", CEnergyBolt::Create(m_pDevice))))
+	return E_FAIL;
 #pragma endregion
 	//----------------------------------------------------------------------------------------------------
 	// Component

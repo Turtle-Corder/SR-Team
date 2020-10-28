@@ -187,8 +187,17 @@
     <Filter Include="02.GameObject\13. PlayerSkill\00. Normal_Attack">
       <UniqueIdentifier>{9891293b-36e7-4603-a600-2c6075aff553}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\11.Golem_Impact">
+    <Filter Include="02.GameObject\06.Projectile\04.EnergyBolt">
+      <UniqueIdentifier>{974fd06f-931e-4781-917e-200b1ba94ca7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\11.Instant_Impact">
       <UniqueIdentifier>{b3ed9e18-8920-43db-b876-047dc6c8b215}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\11.Instant_Impact\00.Golem_Impact">
+      <UniqueIdentifier>{5550b8ca-6566-4391-924b-59ae319f4274}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\11.Instant_Impact\01.Slime_Impact">
+      <UniqueIdentifier>{de864e84-c52f-401d-b7dc-c19f176d8c98}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -330,14 +339,20 @@
     <ClInclude Include="..\Headers\SkillInventory.h">
       <Filter>12. SkillInventory</Filter>
     </ClInclude>
-    <ClInclude Include="..\Headers\Golem_Impact.h">
-      <Filter>02.GameObject\11.Golem_Impact</Filter>
-    </ClInclude>
     <ClInclude Include="..\Headers\Yeti.h">
       <Filter>02.GameObject\05.Monster\02.Yeti</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\Slime.h">
       <Filter>02.GameObject\05.Monster\01.Slime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\EnergyBolt.h">
+      <Filter>02.GameObject\06.Projectile\04.EnergyBolt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Golem_Impact.h">
+      <Filter>02.GameObject\11.Instant_Impact\00.Golem_Impact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Slime_Impact.h">
+      <Filter>02.GameObject\11.Instant_Impact\01.Slime_Impact</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -466,12 +481,18 @@
     </ClCompile>
     <ClCompile Include="..\Codes\SkillInventory.cpp">
       <Filter>12. SkillInventory</Filter>
-	</ClCompile>
-    <ClCompile Include="..\Codes\Golem_Impact.cpp">
-      <Filter>02.GameObject\11.Golem_Impact</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Yeti.cpp">
       <Filter>02.GameObject\05.Monster\02.Yeti</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\EnergyBolt.cpp">
+      <Filter>02.GameObject\06.Projectile\04.EnergyBolt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Golem_Impact.cpp">
+      <Filter>02.GameObject\11.Instant_Impact\00.Golem_Impact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Slime_Impact.cpp">
+      <Filter>02.GameObject\11.Instant_Impact\01.Slime_Impact</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

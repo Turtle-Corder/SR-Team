@@ -10,6 +10,7 @@ USING(Engine)
 class CStatus;
 class CItemManager;
 class CDamageInfo;
+
 class CPlayer final : public CGameObject
 {
 public:
@@ -75,7 +76,7 @@ private:
 
 	HRESULT Setup_Layer_PlaneSkill(const wstring & LayerTag, _vec3 _vMouse);
 
-
+	HRESULT Setup_Layer_EnergyBolt(const wstring & LayerTag);
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 _pDevice);

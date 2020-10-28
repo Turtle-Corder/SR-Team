@@ -159,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Headers\Bomb.h" />
+    <ClInclude Include="..\Headers\EnergyBolt.h" />
     <ClInclude Include="..\Headers\Equip.h" />
     <ClInclude Include="..\Headers\Fire.h" />
     <ClInclude Include="..\Headers\NormalAtt.h" />
@@ -192,6 +193,7 @@
     <ClInclude Include="..\Headers\SkillInventory.h" />
     <ClInclude Include="..\Headers\Skybox.h" />
     <ClInclude Include="..\Headers\Slime.h" />
+    <ClInclude Include="..\Headers\Slime_Impact.h" />
     <ClInclude Include="..\Headers\Snail.h" />
     <ClInclude Include="..\Headers\Snow.h" />
     <ClInclude Include="..\Headers\Status.h" />
@@ -210,6 +212,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Codes\Bomb.cpp" />
+    <ClCompile Include="..\Codes\EnergyBolt.cpp" />
     <ClCompile Include="..\Codes\Equip.cpp" />
     <ClCompile Include="..\Codes\Fire.cpp" />
     <ClCompile Include="..\Codes\NormalAtt.cpp" />
@@ -240,6 +243,7 @@
     <ClCompile Include="..\Codes\SkillInventory.cpp" />
     <ClCompile Include="..\Codes\Skybox.cpp" />
     <ClCompile Include="..\Codes\Slime.cpp" />
+    <ClCompile Include="..\Codes\Slime_Impact.cpp" />
     <ClCompile Include="..\Codes\Snail.cpp" />
     <ClCompile Include="..\Codes\Snow.cpp" />
     <ClCompile Include="..\Codes\Status.cpp" />

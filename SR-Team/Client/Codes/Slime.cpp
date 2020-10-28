@@ -61,6 +61,8 @@ _int CSlime::Update_GameObject(_float _fDeltaTime)
 		return GAMEOBJECT::DEAD;
 	}
 
+	Update_State();
+
 	if (CKeyManager::Get_Instance()->Key_Down(VK_F4))
 		m_bDead = true;
 
@@ -70,8 +72,8 @@ _int CSlime::Update_GameObject(_float _fDeltaTime)
 	if (FAILED(LookAtPlayer(_fDeltaTime)))
 		return GAMEOBJECT::WARN;
 
-	//if (FAILED(Move(_fDeltaTime)))
-	//	return GAMEOBJECT::WARN;
+	if (FAILED(Move(_fDeltaTime)))
+		return GAMEOBJECT::WARN;
 
 	if (FAILED(Setting_SlimeJelly()))
 		return GAMEOBJECT::WARN;
@@ -152,7 +154,7 @@ HRESULT CSlime::Add_Component()
 	tTransformDesc[SLIME_BODY].fRotatePerSecond = D3DXToRadian(90.f);
 	tTransformDesc[SLIME_BODY].vScale = { 1.0f / (float)m_iCurCount , 1.0f / (float)m_iCurCount, 1.0f / (float)m_iCurCount };
 
-	tTransformDesc[SLIME_JELLY].vPosition = { 25.f, 1.f, 10.f };
+	tTransformDesc[SLIME_JELLY].vPosition = { 35.f, 0.f, 10.f };
 	tTransformDesc[SLIME_JELLY].fSpeedPerSecond = 10.f;
 	tTransformDesc[SLIME_JELLY].fRotatePerSecond = D3DXToRadian(90.f);
 	tTransformDesc[SLIME_JELLY].vScale = { 1.4f / (float)m_iCurCount , 1.4f / (float)m_iCurCount , 1.4f / (float)m_iCurCount };
@@ -390,6 +392,9 @@ HRESULT CSlime::Setting_SlimeJelly()
 
 HRESULT CSlime::Move(_float _fDeltaTime)
 {
+	if (m_eCurState != CSlime::STATE_MOVE)
+		return S_OK;
+
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
@@ -410,5 +415,36 @@ HRESULT CSlime::Move(_float _fDeltaTime)
 		m_vPos += vDir * _fDeltaTime;
 		m_pTransformCom[SLIME_BASE]->Set_Position(m_vPos);
 	}
+
 	return S_OK;
+}
+
+void CSlime::Update_State()
+{
+	if (m_ePreState != m_eCurState)
+	{
+		switch (m_eCurState)
+		{
+		case Client::CSlime::STATE_IDLE:
+			break;
+		case Client::CSlime::STATE_MOVE:
+			break;
+		case Client::CSlime::STATE_ATTACK:
+			break;
+		case Client::CSlime::STATE_DEAD:
+			break;
+		}
+
+		m_ePreState = m_eCurState;
+	}
+}
+
+HRESULT CSlime::Stop_Move(_float _fDeltaTime)
+{
+	return E_NOTIMPL;
+}
+
+HRESULT CSlime::Attack(_float _fDeltaTime)
+{
+	return E_NOTIMPL;
 }

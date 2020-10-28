@@ -41,7 +41,7 @@ private:
 	HRESULT Add_Component();
 	HRESULT Movement(float _fDeltaTime);
 	HRESULT IsOnTerrain();
-	HRESULT Setting_Part();
+	HRESULT Setting_Part(float _fDeltaTime);
 	HRESULT Moving(float _fDeltaTime);
 	HRESULT Attack(float _fDeltaTime);
 	HRESULT Update_State();
@@ -69,7 +69,11 @@ private:
 	_bool		m_bHighestCheck = false;
 	_float		m_fAttackTime = 0.f;
 	_vec3		m_vStartPos = {};
+	_float		m_fWalkTime = 0.f;
+	_float		m_fTime = 0.f;
 	INSTANTIMPACT*	m_pInstantImpact = nullptr;
+	STATE		m_ePreState;
+	STATE		m_eCurState;
 };
 
 END
