@@ -244,6 +244,12 @@
     <Filter Include="02.GameObject\15.ActiveObject\00.EventTrigger">
       <UniqueIdentifier>{eb7ff482-11ce-43d1-b8a3-4e97ce4f97a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\14. PlayerItem\02. RedElixir">
+      <UniqueIdentifier>{9b69d7c4-ea42-482f-95b4-eeef6909b35a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\14. PlayerItem\03. BlueElixir">
+      <UniqueIdentifier>{5d669d84-2c8c-4a02-9aca-637bba1407e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -433,6 +439,12 @@
       <Filter>02.GameObject\15.ActiveObject\00.EventTrigger</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\Fire.h" />
+    <ClInclude Include="..\Headers\RedElixir.h">
+      <Filter>02.GameObject\14. PlayerItem\02. RedElixir</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\BlueElixir.h">
+      <Filter>02.GameObject\14. PlayerItem\03. BlueElixir</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -607,6 +619,12 @@
       <Filter>02.GameObject\15.ActiveObject\00.EventTrigger</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Fire.cpp" />
+    <ClCompile Include="..\Codes\RedElixir.cpp">
+      <Filter>02.GameObject\14. PlayerItem\02. RedElixir</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\BlueElixir.cpp">
+      <Filter>02.GameObject\14. PlayerItem\03. BlueElixir</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

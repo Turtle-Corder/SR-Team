@@ -158,6 +158,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Headers\BlueElixir.h" />
     <ClInclude Include="..\Headers\BluePotion.h" />
     <ClInclude Include="..\Headers\Bomb.h" />
     <ClInclude Include="..\Headers\EnergyVoltSkill.h" />
@@ -193,6 +194,7 @@
     <ClInclude Include="..\Headers\PlayerItem.h" />
     <ClInclude Include="..\Headers\PlayerSkill.h" />
     <ClInclude Include="..\Headers\PreLoader.h" />
+    <ClInclude Include="..\Headers\RedElixir.h" />
     <ClInclude Include="..\Headers\RedPotion.h" />
     <ClInclude Include="..\Headers\Scene_Logo.h" />
     <ClInclude Include="..\Headers\Scene_Stage0.h" />
@@ -222,6 +224,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Codes\BlueElixir.cpp" />
     <ClCompile Include="..\Codes\BluePotion.cpp" />
     <ClCompile Include="..\Codes\Bomb.cpp" />
     <ClCompile Include="..\Codes\EnergyVoltSkill.cpp" />
@@ -254,6 +257,7 @@
     <ClCompile Include="..\Codes\PlayerItem.cpp" />
     <ClCompile Include="..\Codes\PlayerSkill.cpp" />
     <ClCompile Include="..\Codes\PreLoader.cpp" />
+    <ClCompile Include="..\Codes\RedElixir.cpp" />
     <ClCompile Include="..\Codes\RedPotion.cpp" />
     <ClCompile Include="..\Codes\Scene_Logo.cpp" />
     <ClCompile Include="..\Codes\Scene_Stage0.cpp" />
