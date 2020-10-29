@@ -57,6 +57,10 @@ private:
 	STATE		m_ePreState;
 	STATE		m_eCurState;
 	_bool		m_bHit = false;
+	_vec3		m_vLook = {};
+	_bool		m_bCheck = false;
+	_bool		m_bCrash = false;
+	_vec3		m_vPrePos = {};
 };
 
 END

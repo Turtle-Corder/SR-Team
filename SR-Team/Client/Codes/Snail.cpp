@@ -271,7 +271,7 @@ HRESULT CSnail::Move(_float _fDeltaTime)
 	_float m_fLength = D3DXVec3Length(&m_vDir);
 	D3DXVec3Normalize(&m_vDir, &m_vDir);
 
-	if (2.f <= m_fLength)
+	if (3.f <= m_fLength)
 	{
 		m_vPos += m_vDir * _fDeltaTime;
 		m_pTransformCom[SNAIL_BODY]->Set_Position(m_vPos);
@@ -297,27 +297,25 @@ HRESULT CSnail::LookAtPlayer(_float _fDeltaTime)
 	//-------------------------------------------------- 
 	_vec3 vPlayerPos = pPlayerTransform->Get_Desc().vPosition;
 	_vec3 vMonPos = m_pTransformCom[SNAIL_BODY]->Get_Desc().vPosition;
-	_vec3 vMonLook = {};
-
 	////--------------------------------------------------
 	//// Look 과 목적지 - 출발지를 내적
 	////--------------------------------------------------
 
-	memcpy_s(&vMonLook, sizeof(_vec3), &m_pTransformCom[SNAIL_BODY]->Get_Desc().matWorld._31, sizeof(_vec3));
+	memcpy_s(&m_vLook, sizeof(_vec3), &m_pTransformCom[SNAIL_BODY]->Get_Desc().matWorld._31, sizeof(_vec3));
 
 	_vec3 vMonToPlayer = vPlayerPos - vMonPos;
 
-	D3DXVec3Normalize(&vMonLook, &vMonLook);
+	D3DXVec3Normalize(&m_vLook, &m_vLook);
 	D3DXVec3Normalize(&vMonToPlayer, &vMonToPlayer);
 
 	_float fDot = 0.f;
 	_float fRad = 0.f;
 
-	fDot = D3DXVec3Dot(&vMonLook, &vMonToPlayer);
+	fDot = D3DXVec3Dot(&m_vLook, &vMonToPlayer);
 	fRad = (_float)acos(fDot);
 
 	_vec3 vMonRight = {};
-	D3DXVec3Cross(&vMonRight, &vMonLook, &_vec3(0.f, 1.f, 0.f));
+	D3DXVec3Cross(&vMonRight, &m_vLook, &_vec3(0.f, 1.f, 0.f));
 
 	D3DXVec3Dot(&vMonRight, &vMonToPlayer);
 
@@ -339,7 +337,54 @@ HRESULT CSnail::Attack(_float _fDeltaTime)
 	if (m_eCurState != CSnail::ATTACK)
 		return S_OK;
 
-	//const _vec3 vPos = m_pTransformCom[SNA]->Get_Desc().vPosition;
+	if (!m_bCheck)
+	{
+		m_vPrePos = m_pTransformCom[SNAIL_BODY]->Get_Desc().vPosition;
+		m_bCheck = true;
+	}
+
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform0");
+
+	if (nullptr == pPlayerTransform)
+		return E_FAIL;
+
+	_vec3 vPlayerPos = pPlayerTransform->Get_Desc().vPosition;
+	_vec3 m_vPos = m_pTransformCom[SNAIL_BODY]->Get_Desc().vPosition;
+	m_vDir = vPlayerPos - m_vPos;
+	_float m_fLength = D3DXVec3Length(&m_vDir);
+	D3DXVec3Normalize(&m_vDir, &m_vDir);
+
+	if (0.1f <= m_fLength && !m_bCrash)
+	{
+		m_vPos += m_vDir * (_fDeltaTime * 8.f);
+		m_pTransformCom[SNAIL_BODY]->Set_Position(m_vPos);
+	}
+	else if (m_bCrash)
+	{
+		if (m_fLength <= 3.f)
+		{
+			m_vDir = m_vPos - vPlayerPos;
+			_float m_fLength = D3DXVec3Length(&m_vDir);
+			D3DXVec3Normalize(&m_vDir, &m_vDir);
+			m_vPos += m_vDir * _fDeltaTime * 2.f;
+			m_pTransformCom[SNAIL_BODY]->Set_Position(m_vPos);
+			//_vec3 vDir = m_vPrePos - m_pTransformCom[SNAIL_BODY]->Get_Desc().vPosition;
+			//D3DXVec3Normalize(&vDir, &vDir);
+			//m_vPos += m_vDir * _fDeltaTime;
+			//m_pTransformCom[SNAIL_BODY]->Set_Position(m_vPos);
+		}
+		else
+		{
+			m_eCurState = CSnail::MOVE;
+			m_bCrash = false;
+			m_bCheck = false;
+			return S_OK;
+		}
+	}
 
 
 	return S_OK;
@@ -419,7 +464,7 @@ HRESULT CSnail::Take_Damage(const CComponent* _pDamageComp)
 	if (!_pDamageComp)
 		return S_OK;
 
-	m_bHit = true;
+	m_bCrash = true;
 	//PRINT_LOG(L"아얏", LOG::CLIENT);
 
 	return S_OK;

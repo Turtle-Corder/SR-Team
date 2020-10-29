@@ -27,17 +27,12 @@ HRESULT CWand::Setup_GameObject(void * _pArg)
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
+	
 	return S_OK;
 }
 
 _int CWand::Update_GameObject(_float _fDeltaTime)
 {
-	return GAMEOBJECT::NOEVENT;
-}
-
-_int CWand::LateUpdate_GameObject(_float _fDeltaTime)
-{
-	
 	if (FAILED(Movement(_fDeltaTime)))
 		return E_FAIL;
 
@@ -46,6 +41,13 @@ _int CWand::LateUpdate_GameObject(_float _fDeltaTime)
 
 	if (FAILED(Setting_Head()))
 		return E_FAIL;
+
+	return GAMEOBJECT::NOEVENT;
+}
+
+_int CWand::LateUpdate_GameObject(_float _fDeltaTime)
+{
+	
 
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
@@ -150,22 +152,20 @@ HRESULT CWand::Add_Component()
 HRESULT CWand::Movement(_float _fDeltaTime)
 {
 
+
+
+
+
+
+
+
+
+
 	m_pTransformCom[WAND_BASE]->Update_Transform();
 
-	CManagement* pManagement = CManagement::Get_Instance();
-	if (nullptr == pManagement)
-		return E_FAIL;
-
-	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform3");
-
-	if (nullptr == pPlayerTransform)
-		return E_FAIL;
-
-	_matrix vPlayer_RightHand_Pos = pPlayerTransform->Get_Desc().matWorld;
-
-	m_pTransformCom[WAND_BASE]->Set_WorldMatrix(m_pTransformCom[WAND_BASE]->Get_Desc().matWorld * vPlayer_RightHand_Pos);
-
+	
 	return S_OK;
+
 }
 
 HRESULT CWand::Setting_Handle()
