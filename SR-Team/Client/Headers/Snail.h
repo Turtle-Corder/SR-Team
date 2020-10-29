@@ -13,7 +13,7 @@ class CDamageInfo;
 class CSnail final : public CGameObject
 {
 	enum SNAIL { SNAIL_HEAD, SNAIL_BODY, SNAIL_END };
-	enum STATE {IDLE , MOVE , TURN , ATTACK , HIT ,  STATE_DEAD};
+	enum STATE {IDLE , MOVE , ATTACK , STATE_DEAD};
 private:
 	explicit CSnail(LPDIRECT3DDEVICE9 _pDevice);
 	explicit CSnail(const CSnail& _rOther);
@@ -56,6 +56,7 @@ private:
 	INSTANTIMPACT*	m_pInstantImpact = nullptr;
 	STATE		m_ePreState;
 	STATE		m_eCurState;
+	_bool		m_bHit = false;
 };
 
 END

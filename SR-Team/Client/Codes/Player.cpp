@@ -1045,7 +1045,7 @@ void CPlayer::Normal_Attack(_float fDeltaTime)
 		else
 		{
 			m_fAttTime += fDeltaTime;
-			m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
+			m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
 
 			//if (m_ePlayerDir == MOVING_UP)
 			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);

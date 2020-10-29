@@ -81,6 +81,7 @@ HRESULT CWand::Render_NoneAlpha()
 
 	}
 
+	
 	return S_OK;
 }
 
@@ -117,21 +118,21 @@ HRESULT CWand::Add_Component()
 
 		if (iCnt == WAND_BASE)
 		{
-			tTransformDesc[WAND_BASE].vPosition = { 0.f , 0.5f , 0.f };
+			tTransformDesc[WAND_BASE].vPosition = { 0.f , -0.5f , 1.f };
 			tTransformDesc[WAND_BASE].fSpeedPerSecond = 10.f;
 			tTransformDesc[WAND_BASE].fRotatePerSecond = D3DXToRadian(90.f);
 			tTransformDesc[WAND_BASE].vScale = { 1.f , 1.f , 1.f };
 		}
 		if (iCnt == WAND_HANDLE)
 		{
-			tTransformDesc[WAND_HANDLE].vPosition = { 0.f , 0.f , -0.5f };
+			tTransformDesc[WAND_HANDLE].vPosition = { 0.f , 0.f , 0.5f };
 			tTransformDesc[WAND_HANDLE].fSpeedPerSecond = 10.f;
 			tTransformDesc[WAND_HANDLE].fRotatePerSecond = D3DXToRadian(90.f);
 			tTransformDesc[WAND_HANDLE].vScale = { 0.4f , 1.f , 0.4f };
 		}
 		else if (iCnt == WAND_HEAD)
 		{
-			tTransformDesc[WAND_HEAD].vPosition = { 0.f , 0.5f , -0.5f };
+			tTransformDesc[WAND_HEAD].vPosition = { 0.f , -0.5f , 0.5f };
 			tTransformDesc[WAND_HEAD].fSpeedPerSecond = 10.f;
 			tTransformDesc[WAND_HEAD].fRotatePerSecond = D3DXToRadian(90.f);
 			tTransformDesc[WAND_HEAD].vScale = { 1.f , 0.4f , 1.f };
@@ -142,12 +143,13 @@ HRESULT CWand::Add_Component()
 		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", szCombine, (CComponent**)&m_pTransformCom[iCnt], &tTransformDesc[iCnt]))) ////»ý¼º °¹¼ö
 			return E_FAIL;
 	}
-
+	
 	return S_OK;
 }
 
 HRESULT CWand::Movement(_float _fDeltaTime)
 {
+
 	m_pTransformCom[WAND_BASE]->Update_Transform();
 
 	CManagement* pManagement = CManagement::Get_Instance();
