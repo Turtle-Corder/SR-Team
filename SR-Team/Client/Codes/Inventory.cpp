@@ -343,6 +343,7 @@ HRESULT CInventory::Select_SellItem()
 				{
 					_int k = 0;
 					// 아이템이 있는 칸들만 선택 할 수 있음
+					// 장착하고 있으면 판매할 수 없음
 					if (m_bIsItemHere[iIndex] && !m_bSelectedSell[iIndex])
 					{
 						m_bSelectedSell[iIndex] = true;
