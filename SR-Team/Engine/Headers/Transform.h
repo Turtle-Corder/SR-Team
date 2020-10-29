@@ -35,6 +35,9 @@ private:
 
 public:
 	const TRANSFORM_DESC& Get_Desc() const;
+	const _vec3 Get_Look() const;
+	const _vec3 Get_Up() const;
+	const _vec3 Get_Right() const;
 
 public:
 	void Set_Transform(const TRANSFORM_DESC& _rTransform);

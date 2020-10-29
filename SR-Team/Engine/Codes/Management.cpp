@@ -210,7 +210,7 @@ _uint CManagement::Release_Engine()
 	return iRefCnt;
 }
 
-HRESULT CManagement::Clear_ForScene(_uint _iSceneID)
+HRESULT CManagement::ClearScene_All(_uint _iSceneID)
 {
 	if (nullptr == m_pComponent_Manager || nullptr == m_pObject_Manager)
 		return E_FAIL;
@@ -222,6 +222,44 @@ HRESULT CManagement::Clear_ForScene(_uint _iSceneID)
 		return E_FAIL;
 
 	return S_OK;
+}
+
+HRESULT CManagement::ClearScene_Component_All(_uint _iSceneID)
+{
+	if (nullptr == m_pComponent_Manager)
+		return E_FAIL;
+
+	if (FAILED(m_pComponent_Manager->Clear_ForScene(_iSceneID)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CManagement::ClearScene_Object_All(_uint _iSceneID)
+{
+	if (nullptr == m_pObject_Manager)
+		return E_FAIL;
+
+	if (FAILED(m_pObject_Manager->Clear_ForScene(_iSceneID)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CManagement::ClearScene_Object_RegisterTag(_uint _iSceneID, const wstring & _strLayerTag)
+{
+	if (nullptr == m_pObject_Manager)
+		return E_FAIL;
+
+	return m_pObject_Manager->Register_ExceptTag(_iSceneID, _strLayerTag);
+}
+
+HRESULT CManagement::Clear_Except(_uint _iSceneID)
+{
+	if (nullptr == m_pObject_Manager)
+		return E_FAIL;
+
+	return m_pObject_Manager->Clear_Except(_iSceneID);
 }
 
 LPDIRECT3DDEVICE9 CManagement::Get_Device(void) const
