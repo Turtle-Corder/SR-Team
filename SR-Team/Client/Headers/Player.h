@@ -87,6 +87,7 @@ private:
 
 	HRESULT Setup_Layer_EnergyBolt(const wstring & LayerTag);
 
+	HRESULT Setup_Layer_Wand(const wstring & LayerTag);
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 _pDevice);
 	virtual CGameObject* Clone_GameObject(void* _pArg) override;

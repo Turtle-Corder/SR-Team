@@ -38,6 +38,10 @@ HRESULT CPlayer::Setup_GameObject(void * _pArg)
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
+
+	if (FAILED(Setup_Layer_Wand(L"Layer_Wand")))
+		return E_FAIL;
+
 	//---------------------------------------------
 	// HP바 지연 감소
 	//---------------------------------------------
@@ -313,6 +317,7 @@ HRESULT CPlayer::Movement(_float _fDeltaTime)
 		MoveMotion(_fDeltaTime);
 	}
 
+	Normal_Attack(_fDeltaTime);
 	Check_Skill(_fDeltaTime);
 	Check_QuickSlotItem();
 
@@ -1249,6 +1254,20 @@ HRESULT CPlayer::Setup_Layer_EnergyBolt(const wstring & LayerTag)
 	tImpact.vPosition = vRightHandPos;
 
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_EnergyBolt", SCENE_STAGE0, LayerTag , &tImpact)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CPlayer::Setup_Layer_Wand(const wstring & LayerTag)
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	_vec3 vPlayer_RightHand_Pos = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vPosition;
+
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Wand", SCENE_STAGE0, LayerTag , &vPlayer_RightHand_Pos)))
 		return E_FAIL;
 
 	return S_OK;
