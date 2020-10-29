@@ -19,7 +19,11 @@
 #include "PlaneSkill.h"
 #include "EnergyBolt.h"
 #include "Crack.h"
+<<<<<<< HEAD
+#include "TerrainBundle.h"
+=======
 #include "Wand.h"
+>>>>>>> fd3b14ef2ef2d35787d7e875e369e97d3a1affd0
 #pragma endregion
 
 USING(Client)
@@ -55,7 +59,6 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
-
 
 	//----------------------------------------------------------------------------------------------------
 	// GameObject
@@ -305,11 +308,19 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 
 	//타일 데이터 불러오기
 
+
+
+	Setup_Stage_CubeTerrain(_T("Layer_CubeTerrain"));
+
+
 	return S_OK;
 }
 
 HRESULT CPreLoader::Load_Resources_Stage1()
 {
+
+	
+
 	return S_OK;
 }
 
@@ -407,4 +418,110 @@ void CPreLoader::Free()
 	CloseHandle(m_hLoadThread);
 
 	Safe_Release(m_pDevice);
+}
+
+
+
+
+
+HRESULT CPreLoader::Setup_Stage_CubeTerrain(const wstring & LayerTag)
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	//로딩파츠
+
+	wifstream fin;
+	wstring wstrFilePath = _T("../DataPath/MapSource/Stage2.txt");
+	fin.open(wstrFilePath.c_str());
+	if (!fin.fail())
+	{
+		//변수
+		TCHAR szXVerCount[MAX_PATH] = L"";
+		TCHAR szZVerCount[MAX_PATH] = L"";
+		TCHAR szFloor[MAX_PATH] = L"";
+		TCHAR szIndex[MAX_PATH] = L"";
+		TCHAR szOnOff[MAX_PATH] = L"";
+		TCHAR szTextureID[MAX_PATH] = L"";
+		TCHAR szMovePossible[10] = L"";
+
+		//X, Z 축갯수
+		fin.getline(szXVerCount, MAX_PATH, L'|');
+		fin.getline(szZVerCount, MAX_PATH);
+
+		_int XNumber = _ttoi(szXVerCount) - 1;
+		_int ZNumber = _ttoi(szZVerCount) - 1;
+
+		TILEINFO* tTileInfo = new TILEINFO[XNumber * ZNumber];
+
+		int iFloorMax = XNumber*ZNumber;
+
+		if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_TerrainBundle", m_eNextSceneID, _T("Layer_TerrainBundle"), &iFloorMax)))
+			return E_FAIL;
+
+		while (true)
+		{
+
+
+			//Cube Info 받기
+			fin.getline(szFloor, MAX_PATH, L'|');
+			fin.getline(szIndex, MAX_PATH, L'|');
+			fin.getline(szOnOff, MAX_PATH, L'|');
+			fin.getline(szTextureID, MAX_PATH, L'|');
+			fin.getline(szMovePossible, MAX_PATH);
+			_uint iFloor = _ttoi(szFloor);
+			_uint iIndex = _ttoi(szIndex);
+			_bool bOnOff = 1 && (_ttoi(szOnOff));
+			_uint iTextureID = _ttoi(szTextureID);
+
+			//Index 구하기
+			_uint iXIndex = iIndex % XNumber;
+			_uint iZIndex = iIndex / XNumber;
+
+			//넘겨줄 TerrainInfo
+			TERRAININFO Temp_Info;
+			Temp_Info.iFloor = iFloor;
+			Temp_Info.iIndex = iIndex;
+			Temp_Info.iTextureID = iTextureID;
+			Temp_Info.iX_Index = iXIndex;
+			Temp_Info.iZ_Index = iZIndex;
+			Temp_Info.iInterval = 2.f;
+			Temp_Info.iMaxX = XNumber;
+			Temp_Info.iMaxZ = ZNumber;
+
+
+			tTileInfo[iIndex].iOpt = 0;
+			tTileInfo[iIndex].iX = iXIndex;
+			tTileInfo[iIndex].iZ = iZIndex;
+
+
+
+			if (fin.eof())
+				break;
+
+
+			((CTerrainBundle*)pManagement->Get_GameObject(m_eNextSceneID, _T("Layer_TerrainBundle")))->Set_TerrainInfo(iIndex, iFloor, Temp_Info);
+
+
+			if (true == bOnOff)
+			{
+				if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_CubeTerrain", m_eNextSceneID, LayerTag, &Temp_Info)))
+					return E_FAIL;
+
+			}
+
+		}
+
+		pManagement->Set_TileInfo(tTileInfo, XNumber, ZNumber);
+
+
+	}
+
+	else
+		return E_FAIL;
+
+
+	fin.close();
+	return S_OK;
 }

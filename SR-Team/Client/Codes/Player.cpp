@@ -123,6 +123,10 @@ _int CPlayer::Update_GameObject(_float _fDeltaTime)
 	if (pSkill == nullptr)
 		return 0;
 
+	// 에너지 익스플로전 사용중이면 공격력 증가
+	if (m_bActiveBuff[BUFF_ATT])
+		pEquip->Set_PlayerAtt(m_iAttBuff);
+
 	if (GetAsyncKeyState(VK_F6) & 0x8000)
 	{
 		if (FAILED(Setup_Layer_EnergyBolt(L"Layer_EnergyBolt")))
@@ -320,6 +324,11 @@ HRESULT CPlayer::Movement(_float _fDeltaTime)
 	Normal_Attack(_fDeltaTime);
 	Check_Skill(_fDeltaTime);
 	Check_QuickSlotItem();
+
+	if (m_bActiveBuff[BUFF_MANA])
+		Buff_ManaDrift(_fDeltaTime);
+	if (m_bActiveBuff[BUFF_ATT])
+		Buff_EnergyExploitation(_fDeltaTime);
 
 	if (FAILED(IsOnTerrain()))
 		return E_FAIL;
@@ -808,7 +817,6 @@ void CPlayer::Check_Skill(_float fDeltaTime)
 			m_bUsingSkill = false;
 			return;
 		}
-			
 
 		// 모션
 		eSkillID = pSkillInven->Get_SkillID(0);
@@ -920,19 +928,44 @@ void CPlayer::Check_Skill(_float fDeltaTime)
 
 void CPlayer::Move_SkillMotion(_float fDeltaTime, eActiveSkill_ID eSkillID)
 {
+	// MP 감소
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (pManagement == nullptr)
+		return;
+	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 1);
+	if (pEquip == nullptr)
+		return;
+	_bool bUseMp = true;
+
+	// 마나 드리프트 버프 사용중이면 mp감소 X
+	if (m_bActiveBuff[BUFF_MANA])
+		bUseMp = false;
+
 	switch (eSkillID)
 	{
 	case ACTIVE_ICE_STRIKE:	// 에너지 볼트
+		if (bUseMp)
+			pEquip->Set_PlayerMP(-10);
 		Skill_Laser(fDeltaTime);
 		break;
-	case ACTIVE_MANA_DRIFT:
+	case ACTIVE_MANA_DRIFT:	// 마나 드리프트
+		if (bUseMp)
+			pEquip->Set_PlayerMP(-20);
+		m_bActiveBuff[BUFF_MANA] = true;
 		break;
-	case ACTIVE_ENERGY_EXPLOTIATION:
+	case ACTIVE_ENERGY_EXPLOTIATION:	// 에너지 익스플로전
+		if (bUseMp)
+			pEquip->Set_PlayerMP(-30);
+		m_bActiveBuff[BUFF_ATT] = true;
 		break;
 	case ACTIVE_FLAME_WAVE:	// 투사체
+		if (bUseMp)
+			pEquip->Set_PlayerMP(-30);
 		Skill_ProjectileFall(fDeltaTime);
 		break;
 	case ACTIVE_ICE_SPEAR: // 레이저
+		if (bUseMp)
+			pEquip->Set_PlayerMP(-20);
 		Skill_Laser(fDeltaTime);
 		break;
 	case ACTIVE_MAGIC_ARMOR:
@@ -1124,32 +1157,31 @@ void CPlayer::Skill_ProjectileFall(_float fDeltaTime)
 		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
 		m_bUsingSkill = true;
 		m_ePlayerSkillID = PLAYER_SKILL_FALL;
-
-		CManagement* pManagement = CManagement::Get_Instance();
-		if (nullptr == pManagement)
-			return;
-
-		CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Terrain", L"Com_VIBuffer");
-		if (nullptr == pTerrainBuffer)
-			return;
-
-		CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Camera");
-
-		_matrix mat;
-		D3DXMatrixIdentity(&mat);
-		_vec3 vGoalPos = {};
-
-		if (true == m_pRaycastCom->IsSimulate<VTX_TEXTURE, INDEX16>(
-			g_hWnd, WINCX, WINCY, pTerrainBuffer, &mat, pCamera, &vGoalPos))
-		{
-			if (!m_bRenderInven && !m_bRenderShop)
-			{
-				if (FAILED(Ready_Layer_Meteor(L"Layer_Meteor" , vGoalPos)))
-					PRINT_LOG(L"Failed To Ready_Layer_Meteor in CPlayer", LOG::CLIENT);
-			}
-		}
 	}
 
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return;
+
+	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Terrain", L"Com_VIBuffer");
+	if (nullptr == pTerrainBuffer)
+		return;
+
+	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Camera");
+
+	_matrix mat;
+	D3DXMatrixIdentity(&mat);
+	_vec3 vGoalPos = {};
+
+	if (true == m_pRaycastCom->IsSimulate<VTX_TEXTURE, INDEX16>(
+		g_hWnd, WINCX, WINCY, pTerrainBuffer, &mat, pCamera, &vGoalPos))
+	{
+		if (!m_bRenderInven && !m_bRenderShop)
+		{
+			if (FAILED(Ready_Layer_Meteor(L"Layer_Meteor", vGoalPos)))
+				PRINT_LOG(L"Failed To Ready_Layer_Meteor in CPlayer", LOG::CLIENT);
+		}
+	}
 
 	if (m_bIsFall)
 	{
@@ -1206,9 +1238,37 @@ void CPlayer::Skill_ProjectileFall(_float fDeltaTime)
 	
 }
 
-HRESULT CPlayer::Draw_HpBar()
+void CPlayer::Buff_ManaDrift(_float fDeltaTime)
 {
-	return E_NOTIMPL;
+	m_fManaDriftTime += fDeltaTime;
+	if (m_fManaDriftTime >= 60.f)
+	{
+		m_fManaDriftTime = 0.f;
+		m_bActiveBuff[BUFF_MANA] = false;
+		PRINT_LOG(L"마나 드리프트 끝", LOG::CLIENT);
+		eSkillID = ACTIVE_SKILL_END;
+	}
+}
+
+void CPlayer::Buff_EnergyExploitation(_float fDeltaTime)
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (pManagement == nullptr)
+		return;
+	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 1);
+	if (pEquip == nullptr)
+		return;
+
+	m_fEnergyExploitationSkill += fDeltaTime;
+
+	if (m_fEnergyExploitationSkill >= 10.f)
+	{
+		m_fEnergyExploitationSkill = 0.f;
+		m_bActiveBuff[BUFF_ATT] = false;
+		pEquip->Set_PlayerAtt(-m_iAttBuff);
+		PRINT_LOG(L"에너지 익스플로전 끝", LOG::CLIENT);
+		eSkillID = ACTIVE_SKILL_END;
+	}
 }
 
 HRESULT CPlayer::Ready_Layer_Meteor(const wstring& _strLayerTag , _vec3 vGoalPos)

@@ -32,6 +32,8 @@
 #include "BluePotion.h"
 #include "RedElixir.h"
 #include "BlueElixir.h"
+#include "ManaDriftSkill.h"
+#include "EnergyExploitationSkill.h"
 #pragma endregion
 
 #pragma region Component_Headers
@@ -135,7 +137,7 @@ _int CMainApp::Update_MainApp()
 
 	_int iBehaviour = m_pManagement->Update_Engine();
 
-	_crtBreakAlloc = 18;
+	//_crtBreakAlloc = 18;
 	return iBehaviour;
 }
 
@@ -245,18 +247,16 @@ HRESULT CMainApp::Setup_StaticResources()
 #pragma endregion
 
 // 플레이어 스킬 객체
-#pragma region GameObject_LaserSkill
+#pragma region GameObject_PlayerSkill
 	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_LaserSkill", CLaserSkill::Create(m_pDevice, m_pSprite, m_pFont))))
 		return E_FAIL;
-#pragma endregion
-
-#pragma region GameObject_MeteoSkill
 	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_MeteoSkill", CMeteoSkill::Create(m_pDevice, m_pSprite, m_pFont))))
 		return E_FAIL;
-#pragma endregion
-
-#pragma region GameObject_EnergyVoltSkill
 	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_EnergyVoltSkill", CEnergyVoltSkill::Create(m_pDevice, m_pSprite, m_pFont))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_ManaDriftSkill", CManaDriftSkill::Create(m_pDevice, m_pSprite, m_pFont))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_EnergyExploitationSkill", CEnergyExploitationSkill::Create(m_pDevice, m_pSprite, m_pFont))))
 		return E_FAIL;
 #pragma endregion
 

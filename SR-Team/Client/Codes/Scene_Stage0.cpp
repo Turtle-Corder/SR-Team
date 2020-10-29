@@ -29,18 +29,21 @@ HRESULT CScene_Stage0::Setup_Scene()
 	if (FAILED(Setup_Layer_Monster(L"Layer_Monster")))
 		return E_FAIL;
 
-	if (FAILED(Setup_Layer_CubeTerrain(L"Layer_CubeTerrain")))
-		return E_FAIL;
+	/*if (FAILED(Setup_Layer_CubeTerrain(L"Layer_CubeTerrain")))
+		return E_FAIL;*/
 
 	if (FAILED(Setup_Layer_Mouse(L"Layer_Mouse")))
 		return E_FAIL;
 
 	if (FAILED(Setup_Layer_UI(L"Layer_MainUI")))
 		return E_FAIL;
+
 	if (FAILED(SetUp_Layer_Inventory(L"Layer_Inventory")))
 		return E_FAIL;
+
 	if (FAILED(SetUp_Layer_Item(L"Layer_Item")))
 		return E_FAIL;
+
 	if (FAILED(SetUp_Layer_Shop(L"Layer_Shop")))
 		return E_FAIL;
 
@@ -363,6 +366,10 @@ HRESULT CScene_Stage0::SetUp_Layer_PlayerSkill(const wstring & LayerTag)
 		return E_FAIL;
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_EnergyVoltSkill", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_ManaDriftSkill", SCENE_STAGE0, LayerTag)))
+		return E_FAIL;
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_EnergyExploitationSkill", SCENE_STAGE0, LayerTag)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -433,7 +440,7 @@ HRESULT CScene_Stage0::Setup_Layer_CubeTerrain(const wstring & LayerTag)
 	//·ÎµùÆÄÃ÷
 
 	wifstream fin;
-	wstring wstrFilePath = _T("../DataPath/MapSource/Stage0.txt");
+	wstring wstrFilePath = _T("../DataPath/MapSource/Stage2.txt");
 	fin.open(wstrFilePath.c_str());
 	if (!fin.fail())
 	{

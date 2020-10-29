@@ -23,6 +23,12 @@ void CStatus::Set_Status(const STAT & _rStatus)
 	m_tStat = _rStatus;
 }
 
+void CStatus::Set_Att(_int iAtt)
+{
+	m_tStat.iMinAtt += iAtt;
+	m_tStat.iMaxAtt += iAtt;
+}
+
 void CStatus::Set_HP(_int _iAtt)
 {
 	m_tStat.iHp -= _iAtt;

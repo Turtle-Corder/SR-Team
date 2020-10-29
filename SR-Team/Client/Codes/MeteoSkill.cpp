@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "..\Headers\MeteoSkill.h"
 
-
 USING(Client)
 
 CMeteoSkill::CMeteoSkill(LPDIRECT3DDEVICE9 _pDevice, LPD3DXSPRITE _pSprite, LPD3DXFONT _pFont)
