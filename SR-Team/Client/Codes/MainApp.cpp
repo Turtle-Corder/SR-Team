@@ -495,6 +495,25 @@ HRESULT CMainApp::Setup_StaticResources()
 		return E_FAIL;
 #pragma endregion
 
+#pragma region Belt, Gloves, Wing
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
+		L"Component_Texture_Item_AbsoluteBelt", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+			L"../Resources/Sprite/Layer_Item/absolute_belt%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
+		L"Component_Texture_Item_AquaGloves", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+			L"../Resources/Sprite/Layer_Item/aqua_gloves%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
+		L"Component_Texture_Item_BalrogWings", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+			L"../Resources/Sprite/Layer_Item/balrog_wings%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
+		L"Component_Texture_Item_SorcererGloves", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+			L"../Resources/Sprite/Layer_Item/high_sorcerer_gloves%d.png"))))
+		return E_FAIL;
+#pragma endregion
+
 #pragma region Potion
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_RedPotion", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
 		L"../Resources/2DResource/new_Item/red_potion%d.png"))))

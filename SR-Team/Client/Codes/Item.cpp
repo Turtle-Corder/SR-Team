@@ -9,7 +9,7 @@ USING(Client)
 CItem::CItem(LPDIRECT3DDEVICE9 _pDevice)
 	: CGameObject(_pDevice)
 {
-	for (_uint i = 0; i < 13; ++i)
+	for (_uint i = 0; i < 17; ++i)
 	{
 		m_pTextureCom[i] = nullptr;
 		m_pStatCom[i] = nullptr;
@@ -154,7 +154,7 @@ HRESULT CItem::Add_Component()
 
 HRESULT CItem::Add_Component_Item()
 {
-	for (_uint i = 0; i < 13; ++i)
+	for (_uint i = 0; i < 17; ++i)
 	{
 		// 3. Texture--------------------------------------------------------------
 		TCHAR szTexture[MAX_PATH] = L"";
@@ -198,6 +198,18 @@ HRESULT CItem::Add_Component_Item()
 		else if (i == 12)
 			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
 				L"Component_Texture_Item_BlueElixir");
+		else if (i == 13)
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_Item_AbsoluteBelt");
+		else if (i == 14)
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_Item_AquaGloves");
+		else if (i == 15)
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_Item_BalrogWings");
+		else if (i == 16)
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_Item_SorcererGloves");
 		
 		StringCchPrintf(szTexture, sizeof(TCHAR) * MAX_PATH,
 			L"Com_Texture%d", i);
@@ -331,6 +343,42 @@ HRESULT CItem::Add_Component_Item()
 			StringCchPrintf(pItem->szShopTag, _countof(pItem->szShopTag),
 				L"파란 엘릭서");
 		}
+		if (i == 13)
+		{
+			pItem->iPrice = 400;
+			pItem->eSort = eITEM_SORT::NECKLACE2;
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"AbsoluteBelt");
+			StringCchPrintf(pItem->szShopTag, _countof(pItem->szShopTag),
+				L"순수한 벨트");
+		}
+		if (i == 14)
+		{
+			pItem->iPrice = 350;
+			pItem->eSort = eITEM_SORT::GLOVES;
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"AquaGloves");
+			StringCchPrintf(pItem->szShopTag, _countof(pItem->szShopTag),
+				L"아쿠아 장갑");
+		}
+		if (i == 15)
+		{
+			pItem->iPrice = 500;
+			pItem->eSort = eITEM_SORT::CLOAK;
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"BalrogWings");
+			StringCchPrintf(pItem->szShopTag, _countof(pItem->szShopTag),
+				L"발록의 날개");
+		}
+		if (i == 16)
+		{
+			pItem->iPrice = 180;
+			pItem->eSort = eITEM_SORT::GLOVES;
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"SorcererGloves");
+			StringCchPrintf(pItem->szShopTag, _countof(pItem->szShopTag),
+				L"마법사장갑");
+		}
 		m_vItemList.emplace_back(pItem);
 
 
@@ -373,6 +421,29 @@ HRESULT CItem::Add_Component_Item()
 			tStat.iHp = 100;
 		else if (i == 9)
 			tStat.iHp = 150;
+		else if (i == 10)
+			tStat.iMp = 50;
+		else if (i == 11)
+			tStat.iHp = 100;
+		else if (i == 12)
+			tStat.iMp = 100;
+		else if (i == 13)
+		{
+			tStat.iCriticalRate = 20;
+		}
+		else if (i == 14)
+		{
+			tStat.iCriticalHit = 30;
+		}
+		else if (i == 15)
+		{
+			tStat.iMaxAtt = 100;
+			tStat.iCriticalHit = 50;
+		}
+		else if (i == 16)
+		{
+			tStat.iCriticalRate = 20;
+		}
 
 		TCHAR szStat[MAX_PATH] = L"";
 		StringCchPrintf(szStat, sizeof(TCHAR) * MAX_PATH,
@@ -519,7 +590,7 @@ CGameObject * CItem::Clone_GameObject(void * pArg)
 
 void CItem::Free()
 {
-	for (_uint i = 0; i < 13; ++i)
+	for (_uint i = 0; i < 17; ++i)
 	{
 		Safe_Release(m_pTextureCom[i]);
 		Safe_Release(m_pStatCom[i]);
