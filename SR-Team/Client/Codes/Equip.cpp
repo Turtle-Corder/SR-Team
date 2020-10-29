@@ -57,9 +57,9 @@ void CEquip::Set_PlayerHp(_int iHP)
 
 void CEquip::Set_PlayerMP(_int iMP)
 {
-	m_pStatCom->Set_HP(iMP);
+	m_pStatCom->Set_MP(-iMP);
 	if (m_pStatCom->Get_Status().iMp >= m_pStatCom->Get_Status().iMaxMp)
-		m_pStatCom->Set_HP(m_pStatCom->Get_Status().iMp - m_pStatCom->Get_Status().iMaxMp);
+		m_pStatCom->Set_MP(m_pStatCom->Get_Status().iMp - m_pStatCom->Get_Status().iMaxMp);
 }
 
 HRESULT CEquip::Setup_GameObject_Prototype()
@@ -404,7 +404,7 @@ HRESULT CEquip::Add_Component()
 	tStat.iMaxHp = 100;
 	tStat.iMaxMp = 100;
 	tStat.iHp = 50;
-	tStat.iMp = 100;
+	tStat.iMp = 50;
 
 	if (FAILED(CGameObject::Add_Component(
 		SCENE_STATIC, L"Component_Status",

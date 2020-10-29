@@ -33,6 +33,9 @@ private:
 	static CItemManager*	m_pInstance;
 
 	CPlayerItem*			m_pRedPotion = nullptr;
+	CPlayerItem*			m_pBluePotion = nullptr;
+	CPlayerItem*			m_pRedElixir = nullptr;
+	CPlayerItem*			m_pBlueElixir = nullptr;
 };
 
 END

@@ -33,7 +33,7 @@ HRESULT CItemInventory::Use_Item(_int iIndex)
 	if (m_pPlayerItem[iIndex])
 		return m_pPlayerItem[iIndex]->Use_Item();
 
-	return S_OK;
+	return E_FAIL;
 }
 
 HRESULT CItemInventory::Setup_GameObject_Prototype()

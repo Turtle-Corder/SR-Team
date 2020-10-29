@@ -29,6 +29,9 @@
 #include "ItemInventory.h"
 #include "RedPotion.h"
 #include "Mouse.h"
+#include "BluePotion.h"
+#include "RedElixir.h"
+#include "BlueElixir.h"
 #pragma endregion
 
 #pragma region Component_Headers
@@ -263,8 +266,14 @@ HRESULT CMainApp::Setup_StaticResources()
 #pragma endregion
 
 // 플레이어 아이템 객체
-#pragma region GameObject_RedPotion
+#pragma region GameObject_PlayerItem
 	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_RedPotion", CRedPotion::Create(m_pDevice, m_pSprite, m_pFont))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_BluePotion", CBluePotion::Create(m_pDevice, m_pSprite, m_pFont))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_RedElixir", CRedElixir::Create(m_pDevice, m_pSprite, m_pFont))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_BlueElixir", CBlueElixir::Create(m_pDevice, m_pSprite, m_pFont))))
 		return E_FAIL;
 #pragma endregion
 
