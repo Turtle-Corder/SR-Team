@@ -182,7 +182,7 @@ HRESULT CEnergyBolt::Move(_float _fDeltaTime)
 	m_vMyPos += m_tInstant.vDirection * (_fDeltaTime * 3.f);
 	m_pTransformCom->Set_Position(m_vMyPos);
 
-	m_pTransformCom->Update_Transform();
+	//m_pTransformCom->Update_Transform();
 	return S_OK;
 }
 

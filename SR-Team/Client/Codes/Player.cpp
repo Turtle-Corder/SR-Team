@@ -1323,7 +1323,7 @@ HRESULT CPlayer::Setup_Layer_EnergyBolt(const wstring & LayerTag)
 	//CTransform* pWandTransform = (CTransform*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Wand", L"Com_Transform2");
 	_vec3 vWandPos = {};
 	memcpy_s(&vWandPos , sizeof(_vec3),&m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().matWorld._41,sizeof(_vec3));
-	_vec3 vPlayerLook = m_pTransformCom[PART_BODY]->Get_Look();
+	_vec3 vPlayerLook = m_pTransformCom[PART_HEAD]->Get_Look();
 	D3DXVec3Normalize(&vPlayerLook, &vPlayerLook);
 	
 	tImpact.vPosition = vWandPos;

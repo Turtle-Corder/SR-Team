@@ -55,6 +55,8 @@ private:
 	STATE				m_eState = IDLE;
 	_vec3				m_vPlayer_RightHand_Pos = {};
 	_float				m_fAngle = 45.f;
+	vector<_matrix>		m_Test = {};
+	vector<_vec3>		m_vTest = {};
 };
 
 END
