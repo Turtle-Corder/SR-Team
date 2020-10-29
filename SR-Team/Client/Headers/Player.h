@@ -60,9 +60,15 @@ private:
 	HRESULT Universal_Key();
 
 private:
+	// 퀵슬롯에 있는 스킬 사용
 	void Check_Skill(_float fDeltaTime);
+	// 스킬에 따른 모션
 	void Move_SkillMotion(_float fDeltaTime, eActiveSkill_ID eSkillID);
 
+	// 퀵슬롯에 있는 아이템 사용
+	void Check_QuickSlotItem();
+
+private:
 	// 일반 공격
 	void Normal_Attack(_float fDeltaTime);
 	// 스킬1 - 레이저

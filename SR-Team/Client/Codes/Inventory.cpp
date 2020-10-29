@@ -28,6 +28,18 @@ void CInventory::Set_Render(bool bRender)
 	m_bRender = bRender;
 }
 
+void CInventory::Use_Potion(ePotion_ID ePotionID)
+{
+	for (auto& pItem : m_pInvenList)
+	{
+		if (pItem->ePotionID == ePotionID)
+		{
+			--pItem->iCnt;
+			return;
+		}
+	}
+}
+
 HRESULT CInventory::Get_ShopItem(const wstring & strItemName)
 {
 	CManagement* pManagement = CManagement::Get_Instance();

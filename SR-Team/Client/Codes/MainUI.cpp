@@ -465,6 +465,9 @@ HRESULT CMainUI::Check_RightQuickSlot_Item()
 						m_pRightSlotItem[i] = m_pMovingItem;
 
 						// 아이템 인벤에 추가
+						if (m_pMovingItem->ePotionID != POTION_END && i <= 3)
+							if (FAILED(pItemInven->Set_ItemIndex(i, m_pMovingItem->ePotionID)))
+								return E_FAIL;
 
 						m_pMovingItem = nullptr;
 					}

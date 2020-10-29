@@ -8,6 +8,7 @@
 #include "PlaneSkill.h"
 #include "Skill.h"
 #include "SkillInven.h"
+#include "ItemInventory.h"
 #include "..\Headers\Player.h"
 
 USING(Client)
@@ -313,6 +314,7 @@ HRESULT CPlayer::Movement(_float _fDeltaTime)
 	}
 
 	Check_Skill(_fDeltaTime);
+	Check_QuickSlotItem();
 
 	if (FAILED(IsOnTerrain()))
 		return E_FAIL;
@@ -684,6 +686,7 @@ void CPlayer::MoveMotion(_float fDeltaTime)
 		{
 			m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime);
 			m_pTransformCom[PART_HAND_LEFT]->Turn(CTransform::AXIS_X, fDeltaTime);
+
 			m_pTransformCom[PART_FOOT_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime);
 			m_pTransformCom[PART_FOOT_LEFT]->Turn(CTransform::AXIS_X, -fDeltaTime);
 		}
@@ -692,6 +695,7 @@ void CPlayer::MoveMotion(_float fDeltaTime)
 		{	
 			m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime);
 			m_pTransformCom[PART_HAND_LEFT]->Turn(CTransform::AXIS_X, -fDeltaTime);
+
 			m_pTransformCom[PART_FOOT_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime);
 			m_pTransformCom[PART_FOOT_LEFT]->Turn(CTransform::AXIS_X, fDeltaTime);
 		}
@@ -918,6 +922,37 @@ void CPlayer::Move_SkillMotion(_float fDeltaTime, eActiveSkill_ID eSkillID)
 		break;
 	default:
 		break;
+	}
+}
+
+void CPlayer::Check_QuickSlotItem()
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (pManagement == nullptr)
+		return;
+	CItemInventory* pItemInven = (CItemInventory*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 4);
+	if (pItemInven == nullptr)
+		return;
+
+	if (CKeyManager::Get_Instance()->Key_Down('1'))
+	{
+		if (FAILED(pItemInven->Use_Item(0)))
+			return;
+	}
+	else if (CKeyManager::Get_Instance()->Key_Down('2'))
+	{
+		if (FAILED(pItemInven->Use_Item(1)))
+			return;
+	}
+	else if (CKeyManager::Get_Instance()->Key_Down('3'))
+	{
+		if (FAILED(pItemInven->Use_Item(2)))
+			return;
+	}
+	else if (CKeyManager::Get_Instance()->Key_Down('4'))
+	{
+		if (FAILED(pItemInven->Use_Item(3)))
+			return;
 	}
 }
 
