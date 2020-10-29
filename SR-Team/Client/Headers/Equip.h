@@ -15,11 +15,25 @@ public:
 	virtual ~CEquip() = default;
 
 public:
-	//void Equip_Item(INVEN_ITEM& _tItem);
+	// ------------------------------------------------------------------
+	// 아이템을 착용하는 함수
+	// eITEM_SORT eSort : 착용할 아이템 종류
+	// const wstring& strItemTag : 착용할 아이템Tag
+	// ------------------------------------------------------------------
 	void Equip_Item(eITEM_SORT eSort, const wstring& strItemTag);
+	// ------------------------------------------------------------------
+	// 아이템을 착용하고 있는지 검사하는 함수
+	// const wstring& strItemTag : 검사할 아이템Tag
+	// return true : 현재 착용하고 있다
+	// return false : 착용하고 있지 않다
+	// ------------------------------------------------------------------
+	_bool Check_IsItemEquip(const wstring& strItemTag);
+
+public:
 	CStatus::STAT Get_PlayerStat() { return m_pStatCom->Get_Status(); }
 
 public:
+	void Set_PlayerAtt(_int iAtt);
 	void Set_PlayerHp(_int iHP);
 	void Set_PlayerMP(_int iMP);
 
@@ -71,12 +85,13 @@ private:
 	RECT					m_tEquipWndCollRt[EQUIP_END];
 
 	// 착용하고 있는 장비 정보
-	INVEN_ITEM*				m_pEquipItem[ITEMSORT_END];
 	CStatus*				m_pStatItem[ITEMSORT_END];
 	CTexture*				m_pTextureItem[ITEMSORT_END];
 	vector<CTransform*>		m_pTransformItem;
 	RECT					m_tEquipItemCollRt[ITEMSORT_END] = {};
 	_bool					m_bEquip[ITEMSORT_END] = { false, };
+	// 현재 착용하고 있는 아이템Tag
+	TCHAR					szEquipItemTag[ITEMSORT_END][MAX_PATH] = { L"", };
 };
 
 

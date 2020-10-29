@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "..\Headers\LaserSkill.h"
-
 USING(Client)
 
 
@@ -23,6 +22,7 @@ HRESULT CLaserSkill::Setup_GameObject(void * _pArg)
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	m_fStartTime = 0.f;
+	// 쿨타임 끝나는 시간
 	m_fEndTime = 5.f;
 
 	if (pManagement == nullptr)
@@ -37,7 +37,12 @@ HRESULT CLaserSkill::Setup_GameObject(void * _pArg)
 _int CLaserSkill::Update_GameObject(_float _fDeltaTime)
 {
 	if (!m_bInitial)
+	{
 		m_fStartTime += _fDeltaTime;
+		++m_iProjectileCnt;
+		if (m_iProjectileCnt >= 10.f)
+			_int k = 0;
+	}
 
 	return GAMEOBJECT::NOEVENT;
 }
@@ -78,6 +83,7 @@ HRESULT CLaserSkill::Use_Skill(float fDeltaTime)
 {
 	if (m_bInitial)
 	{
+		m_iProjectileCnt = 0;
 		PRINT_LOG(L"레이저 스킬 사용", LOG::CLIENT);
 		m_bInitial = false;
 	}
@@ -89,6 +95,7 @@ HRESULT CLaserSkill::Use_Skill(float fDeltaTime)
 	else if (m_fStartTime >= m_fEndTime)
 	{
 		m_fStartTime = 0.f;
+		m_iProjectileCnt = 0;
 		PRINT_LOG(L"쿨타임 끝 / 레이저 스킬 사용", LOG::CLIENT);
 	}
 

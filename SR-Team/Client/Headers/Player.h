@@ -72,16 +72,17 @@ private:
 private:
 	// 일반 공격
 	void Normal_Attack(_float fDeltaTime);
-	// 스킬1 - 레이저
+	// 스킬1 - 레이저, 에너지 볼트
 	void Skill_Laser(_float fDeltaTime);
 	// 스킬2 - 투사체 낙하
 	void Skill_ProjectileFall(_float fDeltaTime);
+	// 버프1 - 마나 드리프트(일정 시간 동안 마나 감소 X)
+	void Buff_ManaDrift(_float fDeltaTime);
+	// 버프2 - 에너지 익스플로전(일정 시간 동안 공격력 증가)
+	void Buff_EnergyExploitation(_float fDeltaTime);
 
 
 private:
-	// hp 바 지연 감소
-	HRESULT Draw_HpBar();
-
 	HRESULT Ready_Layer_Meteor(const wstring& _strLayerTag, _vec3 vGoalPos);
 
 	HRESULT Setup_Layer_PlaneSkill(const wstring & LayerTag, _vec3 _vMouse);
@@ -89,6 +90,8 @@ private:
 	HRESULT Setup_Layer_EnergyBolt(const wstring & LayerTag);
 
 	HRESULT Setup_Layer_Wand(const wstring & LayerTag);
+
+
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 _pDevice);
 	virtual CGameObject* Clone_GameObject(void* _pArg) override;
@@ -173,6 +176,12 @@ private:
 	_float				m_fFallTime = 0.f;
 
 	//---------------------------------------------
+	// 버프 스킬들 사용 시간 체크
+	//---------------------------------------------
+	_float				m_fManaDriftTime = 0.f;
+	_float				m_fEnergyExploitationSkill = 0.f;
+
+	//---------------------------------------------
 	// 상하좌우 이동할 때 마다 큐브들 자전
 	//---------------------------------------------
 	_bool				m_bLeftTurn = false;
@@ -180,7 +189,7 @@ private:
 	_bool				m_bUpTurn = false;
 	_bool				m_bDownTurn = false;
 
-	// 상점, 인벤, 장비창이 출력되어 있으면 
+	// 상점, 인벤, 장비창이 출력되어 있으면 true
 	_bool				m_bRenderShop = false;
 	_bool				m_bRenderInven = false;
 	_bool				m_bRenderEquip = false;
@@ -189,8 +198,11 @@ private:
 	// 현재 사용중인 액티브 스킬ID
 	eActiveSkill_ID eSkillID = ACTIVE_SKILL_END;
 
-	// 현재 플레이어가 사용하고 있는 버프
-	ACTIVE_BUFF		eActiveBuff = BUFF_END;
+	// 현재 플레이어가 사용하고 있는 버프들
+	// 사용중 -> true
+	_bool			m_bActiveBuff[BUFF_END] = { false, };
+
+	_int			m_iAttBuff = 100;
 
 	//--------------------------------------------
 };

@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "..\Headers\EnergyVoltSkill.h"
 
-
 USING(Client)
 
 CEnergyVoltSkill::CEnergyVoltSkill(LPDIRECT3DDEVICE9 _pDevice, LPD3DXSPRITE _pSprite, LPD3DXFONT _pFont)
@@ -69,6 +68,7 @@ CGameObject * CEnergyVoltSkill::Clone_GameObject(void * _pArg)
 
 HRESULT CEnergyVoltSkill::Use_Skill(float fDeltaTime)
 {
+	// 쿨타임 검사
 	if (m_bInitial)
 	{
 		PRINT_LOG(L"에너지 볼트 스킬 사용", LOG::CLIENT);

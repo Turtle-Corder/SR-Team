@@ -93,13 +93,13 @@ HRESULT CCubeTerrain::Add_Component()
 
 
 
-	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", L"Com_VIBuffer", (CComponent**)&m_pVIBufferCom)))
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, _T("Component_VIBuffer_CubeTexture"), L"Com_VIBuffer", (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
 
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, _T("Component_Texture_TerrainBox"), L"Com_Texture", (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
-	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", L"Com_Transform", (CComponent**)&m_pTransformCom, &tTransformDesc)))
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, _T("Component_Transform"), L"Com_Transform", (CComponent**)&m_pTransformCom, &tTransformDesc)))
 		return E_FAIL;
 
 	return S_OK;
