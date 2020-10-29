@@ -218,15 +218,15 @@ HRESULT CShop::Move_ScrollBar()
 
 	if (pManagement->Key_Pressing(VK_LBUTTON))
 	{
-		POINT ptMouse = {};
-		GetCursorPos(&ptMouse);
-		ScreenToClient(g_hWnd, &ptMouse);
+		CMouse* pMouse = (CMouse*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Mouse");
+		if (nullptr == pMouse)
+			return S_OK;
 
 		_vec3 vScrollBarPos = m_pTransformCom[SHOP_SCROLLBAR]->Get_Desc().vPosition;
 
-		if (PtInRect(&m_tShopWndCollRt[SHOP_SCROLLBAR], ptMouse))
+		if (PtInRect(&m_tShopWndCollRt[SHOP_SCROLLBAR], pMouse->Get_Point()))
 		{
-			vScrollBarPos.y = (_float)ptMouse.y;
+			vScrollBarPos.y = (_float)pMouse->Get_Point().y;
 
 			if (vScrollBarPos.y >= 470.f)
 			{

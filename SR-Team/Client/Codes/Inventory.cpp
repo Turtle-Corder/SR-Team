@@ -3,6 +3,7 @@
 #include "UICamera.h"
 #include "Equip.h"
 #include "MainUI.h"
+#include "Mouse.h"
 #include "..\Headers\Inventory.h"
 
 USING(Client)
@@ -271,11 +272,11 @@ HRESULT CInventory::Check_SellButton()
 
 	if (pManagement->Key_Pressing(VK_LBUTTON))
 	{
-		POINT ptMouse = {};
-		GetCursorPos(&ptMouse);
-		ScreenToClient(g_hWnd, &ptMouse);
+		CMouse* pMouse = (CMouse*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Mouse");
+		if (nullptr == pMouse)
+			return E_FAIL;
 
-		if (PtInRect(&m_tInvenWndCollRt[INVEN_SELL_BUTTON], ptMouse))
+		if (PtInRect(&m_tInvenWndCollRt[INVEN_SELL_BUTTON], pMouse->Get_Point()))
 		{
 			if (!m_bSelect_SellItem)
 			{
@@ -312,6 +313,10 @@ HRESULT CInventory::Select_SellItem()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
+	CMouse* pMouse = (CMouse*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Mouse");
+	if (nullptr == pMouse)
+		return E_FAIL;
+
 	int iIndex = 0;
 
 	for (_uint i = 0; i < 6; i++)
@@ -321,10 +326,8 @@ HRESULT CInventory::Select_SellItem()
 			if (pManagement->Key_Pressing(VK_LBUTTON))
 			{
 				iIndex = i * 6 + j;
-				POINT ptMouse = {};
-				GetCursorPos(&ptMouse);
-				ScreenToClient(g_hWnd, &ptMouse);
-				if (PtInRect(&m_tItemCollRt[i][j], ptMouse))
+		
+				if (PtInRect(&m_tItemCollRt[i][j], pMouse->Get_Point()))
 				{
 					_int k = 0;
 					// 아이템이 있는 칸들만 선택 할 수 있음
@@ -348,9 +351,6 @@ HRESULT CInventory::Check_AutoSortButton()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	POINT ptMouse = {};
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
 	int iItemListSize = m_pInvenList.size();
 
 	// 지금은 키입력으로 하는데 나중에 버튼 추가해야 함
@@ -435,6 +435,10 @@ HRESULT CInventory::Check_EquipItem()
 		return E_FAIL;
 	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 1);
 
+	CMouse* pMouse = (CMouse*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Mouse");
+	if (nullptr == pMouse)
+		return E_FAIL;
+
 	for (_uint i = 0; i < 6; i++)
 	{
 		for (_uint j = 0; j < 6; j++)
@@ -442,10 +446,8 @@ HRESULT CInventory::Check_EquipItem()
 			if (pManagement->Key_Pressing(VK_RBUTTON))
 			{
 				iIndex = i * 6 + j;
-				POINT ptMouse = {};
-				GetCursorPos(&ptMouse);
-				ScreenToClient(g_hWnd, &ptMouse);
-				if (PtInRect(&m_tItemCollRt[i][j], ptMouse))
+		
+				if (PtInRect(&m_tItemCollRt[i][j], pMouse->Get_Point()))
 				{
 					_int k = 0;
 					// 아이템이 있는 칸들만 선택 할 수 있음
@@ -472,6 +474,10 @@ HRESULT CInventory::Move_To_QuickSlot()
 		return E_FAIL;
 	CMainUI* pMainUI = (CMainUI*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 0);
 
+	CMouse* pMouse = (CMouse*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Mouse");
+	if (nullptr == pMouse)
+		return E_FAIL;
+
 	for (_uint i = 0; i < 6; i++)
 	{
 		for (_uint j = 0; j < 6; j++)
@@ -479,10 +485,8 @@ HRESULT CInventory::Move_To_QuickSlot()
 			if (pManagement->Key_Pressing(VK_LBUTTON))
 			{
 				iIndex = i * 6 + j;
-				POINT ptMouse = {};
-				GetCursorPos(&ptMouse);
-				ScreenToClient(g_hWnd, &ptMouse);
-				if (PtInRect(&m_tItemCollRt[i][j], ptMouse))
+			
+				if (PtInRect(&m_tItemCollRt[i][j], pMouse->Get_Point()))
 				{
 					_int k = 0;
 					m_bMoveInvenWnd = false;
@@ -649,10 +653,11 @@ HRESULT CInventory::Move_InventoryWnd()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	POINT ptMouse = {};
+	CMouse* pMouse = (CMouse*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Mouse");
+	if (nullptr == pMouse)
+		return E_FAIL;
+
 	_int iIndex = 0;
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
 
 	// 아이템 가리키고 있을 땐 인벤창 움직이면 안됨
 	for (_uint i = 0; i < 6; i++)
@@ -661,10 +666,8 @@ HRESULT CInventory::Move_InventoryWnd()
 		{
 			
 			iIndex = i * 6 + j;
-			POINT ptMouse = {};
-			GetCursorPos(&ptMouse);
-			ScreenToClient(g_hWnd, &ptMouse);
-			if (PtInRect(&m_tItemCollRt[i][j], ptMouse))
+		
+			if (PtInRect(&m_tItemCollRt[i][j], pMouse->Get_Point()))
 			{
 				m_bMoveInvenWnd = false;
 				return S_OK;
@@ -675,10 +678,10 @@ HRESULT CInventory::Move_InventoryWnd()
 
 	if (pManagement->Key_Pressing(VK_LBUTTON))
 	{
-		if (PtInRect(&m_tInvenWndCollRt[INVEN_WND], ptMouse))
+		if (PtInRect(&m_tInvenWndCollRt[INVEN_WND], pMouse->Get_Point()))
 		{
-			vWndPos.x = (_float)ptMouse.x;
-			vWndPos.y = (_float)ptMouse.y;
+			vWndPos.x = (_float)pMouse->Get_Point().x;
+			vWndPos.y = (_float)pMouse->Get_Point().y;
 			m_pTransformCom[INVEN_WND]->Set_Position(vWndPos);
 
 			if (Change_AllPos())

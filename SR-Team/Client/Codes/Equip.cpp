@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "Mouse.h"
 #include "..\Headers\Equip.h"
 
 #include "Item.h"
@@ -337,16 +338,17 @@ HRESULT CEquip::UnEquip_Item()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
+	CMouse* pMouse = (CMouse*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Mouse");
+	if (nullptr == pMouse)
+		return E_FAIL;
+
 	for (_uint i = 0; i < ITEMSORT_END; ++i)
 	{
 		if (m_bEquip[i])
 		{
 			if (pManagement->Key_Down(VK_LBUTTON))
 			{
-				POINT ptMouse = {};
-				GetCursorPos(&ptMouse);
-				ScreenToClient(g_hWnd, &ptMouse);
-				if (PtInRect(&m_tEquipItemCollRt[i], ptMouse))
+				if (PtInRect(&m_tEquipItemCollRt[i], pMouse->Get_Point()))
 				{
 					m_bEquip[i] = false;
 				}

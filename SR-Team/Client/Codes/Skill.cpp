@@ -183,14 +183,15 @@ HRESULT CSkill::Move_To_QuickSlot()
 		return E_FAIL;
 	CMainUI* pMainUI = (CMainUI*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 0);
 
+	CMouse* pMouse = (CMouse*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Mouse");
+	if (nullptr == pMouse)
+		return E_FAIL;
+
 	for (_uint i = 0; i < 6; i++)
 	{
 		if (pManagement->Key_Pressing(VK_LBUTTON))
 		{
-			POINT ptMouse = {};
-			GetCursorPos(&ptMouse);
-			ScreenToClient(g_hWnd, &ptMouse);
-			if (PtInRect(&m_tActiveCollRt[i], ptMouse))
+			if (PtInRect(&m_tActiveCollRt[i], pMouse->Get_Point()))
 			{
 				_int k = 0;
 				if (FAILED(pMainUI->Get_QuickSlotSkill(i)))

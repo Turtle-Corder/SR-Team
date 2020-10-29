@@ -5,6 +5,7 @@
 #include "SkillInven.h"
 #include "ItemInventory.h"
 #include "..\Headers\MainUI.h"
+#include "Mouse.h"
 
 USING(Client)
 
@@ -207,15 +208,16 @@ int CMainUI::Update_GameObject(float DeltaTime)
 	if (nullptr == pManagement)
 		return GAMEOBJECT::ERR;
 
+	CMouse* pMouse = (CMouse*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Mouse");
+	if (nullptr == pMouse)
+		return GAMEOBJECT::NOEVENT;
+
 	if (pManagement->Key_Down(VK_LBUTTON))
 	{
-		POINT ptMouse = {};
-		GetCursorPos(&ptMouse);
-		ScreenToClient(g_hWnd, &ptMouse);
 
 		TCHAR szBuff[MAX_PATH] = L"";
 		StringCchPrintf(szBuff, sizeof(TCHAR) * MAX_PATH,
-			L"X : %d, Y : %d", ptMouse.x, ptMouse.y);
+			L"X : %d, Y : %d", pMouse->Get_Point().x, pMouse->Get_Point().y);
 		//PRINT_LOG(szBuff, LOG::CLIENT);
 	}
 
@@ -355,12 +357,16 @@ HRESULT CMainUI::Render_UI()
 
 HRESULT CMainUI::Move_To_QuickSlot()
 {
-	POINT ptMouse = {};
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;;
 
-	m_vGoingItem_Pos.x = (_float)ptMouse.x;
-	m_vGoingItem_Pos.y = (_float)ptMouse.y;
+	CMouse* pMouse = (CMouse*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Mouse");
+	if (nullptr == pMouse)
+		return E_FAIL;
+
+	m_vGoingItem_Pos.x = (_float)pMouse->Get_Point().x;
+	m_vGoingItem_Pos.y = (_float)pMouse->Get_Point().y;
 	m_vGoingItem_Pos.z = 0.f;
 
 	m_tGoingItem_CollRt.left = (LONG)(m_vGoingItem_Pos.x - 20.f);
