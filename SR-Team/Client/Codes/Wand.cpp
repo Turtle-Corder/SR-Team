@@ -22,18 +22,31 @@ HRESULT CWand::Setup_GameObject_Prototype()
 
 HRESULT CWand::Setup_GameObject(void * _pArg)
 {
+	m_vPlayer_RightHand_Pos = *(_vec3*)_pArg;
+
+	if (FAILED(Add_Component()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
 _int CWand::Update_GameObject(_float _fDeltaTime)
 {
-	
-
 	return GAMEOBJECT::NOEVENT;
 }
 
 _int CWand::LateUpdate_GameObject(_float _fDeltaTime)
 {
+	
+	if (FAILED(Movement(_fDeltaTime)))
+		return E_FAIL;
+
+	if (FAILED(Setting_Handle()))
+		return E_FAIL;
+
+	if (FAILED(Setting_Head()))
+		return E_FAIL;
+
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return GAMEOBJECT::ERR;
@@ -55,7 +68,7 @@ HRESULT CWand::Render_NoneAlpha()
 	if (nullptr == pCamera)
 		return E_FAIL;
 
-	for (_uint iCnt = WAND_HEAD; iCnt < WAND_END; ++iCnt)
+	for (_uint iCnt = WAND_HANDLE; iCnt < WAND_END; ++iCnt)
 	{
 		if (FAILED(m_pVIBufferCom[iCnt]->Set_Transform(&m_pTransformCom[iCnt]->Get_Desc().matWorld, pCamera)))
 			return E_FAIL;
@@ -73,11 +86,99 @@ HRESULT CWand::Render_NoneAlpha()
 
 HRESULT CWand::Add_Component()
 {
+	TCHAR szVIBuffer[MIN_STR] = L"Com_VIBuffer%d";
+	TCHAR szTexture[MIN_STR] = L"Com_Texture%d";
+	TCHAR szTransform[MIN_STR] = L"Com_Transform%d";
+	TCHAR szPartName[MIN_STR] = L"";
+	TCHAR szCombine[MIN_STR] = L"";
+	_vec3 vHeadPos = {};
+	CTransform::TRANSFORM_DESC tTransformDesc[WAND_END] = {};
+
+	// For.Com_Texture
+	for (_int iCnt = 0; iCnt < WAND_END; ++iCnt)
+	{
+		StringCchPrintf(szCombine, _countof(szCombine), szVIBuffer , iCnt);
+
+		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", szCombine, (CComponent**)&m_pVIBufferCom[iCnt]))) //생성 갯수
+			return E_FAIL;
+
+		//경우마다 그거에 맞게 복사해서 최종적으로 문자열 들어가게만들기
+		if (iCnt == WAND_BASE)
+			StringCchPrintf(szPartName, _countof(szPartName), L"Component_Texture_SnailHead");
+		else if (iCnt == WAND_HANDLE)
+			StringCchPrintf(szPartName, _countof(szPartName), L"Component_Texture_SnailHead");
+		else if (iCnt == WAND_HEAD)
+			StringCchPrintf(szPartName, _countof(szPartName), L"Component_Texture_SnailBody");
+
+		StringCchPrintf(szCombine, _countof(szCombine), szTexture, iCnt);
+
+		if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, szPartName, szCombine, (CComponent**)&m_pTextureCom[iCnt]))) ////생성 갯수
+			return E_FAIL;
+
+		if (iCnt == WAND_BASE)
+		{
+			tTransformDesc[WAND_BASE].vPosition = { 0.f , 0.5f , 0.f };
+			tTransformDesc[WAND_BASE].fSpeedPerSecond = 10.f;
+			tTransformDesc[WAND_BASE].fRotatePerSecond = D3DXToRadian(90.f);
+			tTransformDesc[WAND_BASE].vScale = { 1.f , 1.f , 1.f };
+		}
+		if (iCnt == WAND_HANDLE)
+		{
+			tTransformDesc[WAND_HANDLE].vPosition = { 0.f , 0.f , -0.5f };
+			tTransformDesc[WAND_HANDLE].fSpeedPerSecond = 10.f;
+			tTransformDesc[WAND_HANDLE].fRotatePerSecond = D3DXToRadian(90.f);
+			tTransformDesc[WAND_HANDLE].vScale = { 0.4f , 1.f , 0.4f };
+		}
+		else if (iCnt == WAND_HEAD)
+		{
+			tTransformDesc[WAND_HEAD].vPosition = { 0.f , 0.5f , -0.5f };
+			tTransformDesc[WAND_HEAD].fSpeedPerSecond = 10.f;
+			tTransformDesc[WAND_HEAD].fRotatePerSecond = D3DXToRadian(90.f);
+			tTransformDesc[WAND_HEAD].vScale = { 1.f , 0.4f , 1.f };
+		}
+
+		StringCchPrintf(szCombine, _countof(szCombine), szTransform , iCnt);
+
+		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", szCombine, (CComponent**)&m_pTransformCom[iCnt], &tTransformDesc[iCnt]))) ////생성 갯수
+			return E_FAIL;
+	}
+
 	return S_OK;
 }
 
 HRESULT CWand::Movement(_float _fDeltaTime)
 {
+	m_pTransformCom[WAND_BASE]->Update_Transform();
+
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform3");
+
+	if (nullptr == pPlayerTransform)
+		return E_FAIL;
+
+	_matrix vPlayer_RightHand_Pos = pPlayerTransform->Get_Desc().matWorld;
+
+	m_pTransformCom[WAND_BASE]->Set_WorldMatrix(m_pTransformCom[WAND_BASE]->Get_Desc().matWorld * vPlayer_RightHand_Pos);
+
+	return S_OK;
+}
+
+HRESULT CWand::Setting_Handle()
+{
+	m_pTransformCom[WAND_HANDLE]->Update_Transform();
+
+	m_pTransformCom[WAND_HANDLE]->Set_WorldMatrix(m_pTransformCom[WAND_HANDLE]->Get_Desc().matWorld * m_pTransformCom[WAND_BASE]->Get_Desc().matWorld);
+	return S_OK;
+}
+
+HRESULT CWand::Setting_Head()
+{
+	m_pTransformCom[WAND_HEAD]->Update_Transform();
+
+	m_pTransformCom[WAND_HEAD]->Set_WorldMatrix(m_pTransformCom[WAND_HEAD]->Get_Desc().matWorld * m_pTransformCom[WAND_BASE]->Get_Desc().matWorld);
 	return S_OK;
 }
 
@@ -134,6 +235,21 @@ HRESULT CWand::Take_Damage(const CComponent * _pDamageComp)
 
 HRESULT CWand::Change_State(STATE _eState)
 {
-	return E_NOTIMPL;
+	if (m_eState == _eState)
+		return S_OK;
+
+	switch (m_eState)
+	{
+	case Client::CWand::IDLE:
+		break;
+	case Client::CWand::NORMAL_ATTACK:
+		break;
+	case Client::CWand::SKILL_ATTACK:
+		break;
+	default:
+		break;
+	}
+
+	return S_OK;
 }
 
