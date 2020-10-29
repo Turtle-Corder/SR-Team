@@ -8,6 +8,7 @@
 #include "Skill.h"
 #include "SkillInven.h"
 #include "ItemInventory.h"
+#include "Wand.h"
 #include "..\Headers\Player.h"
 
 USING(Client)
@@ -101,7 +102,7 @@ HRESULT CPlayer::Setup_GameObject(void * _pArg)
 	_vec3 vLeftFoot = (-vRight * 0.3f);
 	vLeftFoot.y = -0.7f;
 	m_pTransformCom[PART_FOOT_LEFT]->Set_Position(vLeftFoot);
-
+	
 	return S_OK;
 }
 
@@ -1092,9 +1093,18 @@ void CPlayer::Normal_Attack(_float fDeltaTime)
 				m_fAttTime = 0.f;
 				m_bRightAtt = true;
 				m_bIsNormalAtt = true;
+
+				if (FAILED(Setup_Layer_EnergyBolt(L"Layer_EnergyBolt")))
+					return;
+
+				// »ý¼ºÇØ¼­ ½î¸é µÊ
 			}
 		}
 	}
+
+
+
+
 }
 
 void CPlayer::Skill_Laser(_float fDeltaTime)
@@ -1309,10 +1319,15 @@ HRESULT CPlayer::Setup_Layer_EnergyBolt(const wstring & LayerTag)
 	INSTANTIMPACT tImpact;
 	tImpact.pAttacker = this;
 	tImpact.pStatusComp = m_pStatusCom;
-	_vec3 vRightHandPos = {};
-	memcpy_s(&vRightHandPos, sizeof(_vec3), &m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().matWorld._41, sizeof(_vec3));
-	tImpact.vPosition = vRightHandPos;
 
+	//CTransform* pWandTransform = (CTransform*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Wand", L"Com_Transform2");
+	_vec3 vWandPos = {};
+	memcpy_s(&vWandPos , sizeof(_vec3),&m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().matWorld._41,sizeof(_vec3));
+	_vec3 vPlayerLook = m_pTransformCom[PART_BODY]->Get_Look();
+	D3DXVec3Normalize(&vPlayerLook, &vPlayerLook);
+	
+	tImpact.vPosition = vWandPos;
+	tImpact.vDirection = vPlayerLook;
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_EnergyBolt", SCENE_STAGE0, LayerTag , &tImpact)))
 		return E_FAIL;
 

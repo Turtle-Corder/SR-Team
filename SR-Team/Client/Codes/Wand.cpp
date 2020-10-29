@@ -176,6 +176,7 @@ HRESULT CWand::Movement(_float _fDeltaTime)
 	m_pTransformCom[WAND_BASE]->Set_WorldMatrix(MyMat * m_pTransformCom[WAND_BASE]->Get_Desc().matWorld);
 
 	//m_pTransformCom[WAND_BASE]->Update_Transform();
+	// 절대 좌표 와 상대 좌표 잘나눠서 할것
 
 	
 	return S_OK;

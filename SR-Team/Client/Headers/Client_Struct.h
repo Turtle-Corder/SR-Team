@@ -42,9 +42,10 @@ typedef struct tagTerrainInfo
 
 typedef struct tagInstantImpact
 {
-	CGameObject*	pAttacker;
-	CComponent*		pStatusComp;
-	_vec3			vPosition;
+	CGameObject*	pAttacker = nullptr;
+	CComponent*		pStatusComp = nullptr;
+	_vec3			vPosition = {};
+	_vec3			vDirection = {};
 }INSTANTIMPACT;
 
 typedef struct tagFileInfo

@@ -9,6 +9,7 @@ USING(Engine)
 
 class CStatus;
 class CDamageInfo;
+class CWand;
 
 class CPlayer final : public CGameObject
 {
@@ -203,7 +204,7 @@ private:
 	_bool			m_bActiveBuff[BUFF_END] = { false, };
 
 	_int			m_iAttBuff = 100;
-
+	CWand*			m_pWand = nullptr;
 	//--------------------------------------------
 };
 
