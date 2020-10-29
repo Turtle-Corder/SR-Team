@@ -56,7 +56,7 @@ HRESULT CNav_Manager::PathFind(CNavAgent* _pAgent, _int _iStartX, _int _iStartZ,
 	//--------------------------------------------------
 	// 처음 하나 만들어서 넣어준다.
 	//--------------------------------------------------
-	NAV_NODE* pNewNode = new NAV_NODE;
+	NAV_NODE* pNewNode = &m_arryNodes[m_iCurFindCount++];
 	pNewNode->pParent = nullptr;
 	pNewNode->iX = _iStartX;
 	pNewNode->iZ= _iStartZ;
@@ -100,7 +100,6 @@ HRESULT CNav_Manager::FindProcess()
 	if (0 >= (int)m_OpenList.size())
 		return S_OK;
 
-	++m_iCurFindCount;
 	NAV_NODE* pOldNode = m_OpenList.front();
 	m_OpenList.pop_front();
 	m_CloseList.push_back(pOldNode);
@@ -194,6 +193,9 @@ bool CNav_Manager::ValidateExpand(_int _iNextX, _int _iNextZ)
 
 void CNav_Manager::CreateNode(NAV_NODE * _pParent, _int _iNextX, _int _iNextZ, _bool _bDiagonal)
 {
+	if (m_iCurFindCount >= m_iMaxFindCount)
+		return;
+
 	_int iWeight = 0;
 	if (!_pParent)
 		return;
@@ -307,6 +309,8 @@ void CNav_Manager::CreateNode(NAV_NODE * _pParent, _int _iNextX, _int _iNextZ, _
 		}
 		return false;
 	});
+
+	++m_iCurFindCount;
 }
 
 void CNav_Manager::Clear_FindInfo()
