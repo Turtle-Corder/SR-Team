@@ -17,6 +17,7 @@ CEquip::CEquip(LPDIRECT3DDEVICE9 _pDevice, LPD3DXSPRITE _pSprite, LPD3DXFONT _pF
 
 	for (_uint i = 0; i < ITEMSORT_END; ++i)
 	{
+		m_pEquipItem[i] = nullptr;
 		m_pStatItem[i] = nullptr;
 		m_pTextureItem[i] = nullptr;
 	}
@@ -41,6 +42,9 @@ void CEquip::Equip_Item(eITEM_SORT eSort, const wstring& strItemTag/*INVEN_ITEM 
 		m_pStatItem[eSort] = nullptr;
 	if (m_pTextureItem[eSort])
 		m_pTextureItem[eSort] = nullptr;
+	if (m_pEquipItem[eSort])
+		if (FAILED(pItem->Get_ItemInfo(strItemTag, *m_pEquipItem[eSort])))
+			return;
 
 	m_pStatItem[eSort] = pItem->Get_ItemStat(strItemTag);
 	m_pTextureItem[eSort] = pItem->Get_ItemInfo_Texture(strItemTag);
@@ -57,9 +61,9 @@ void CEquip::Set_PlayerHp(_int iHP)
 
 void CEquip::Set_PlayerMP(_int iMP)
 {
-	m_pStatCom->Set_HP(iMP);
+	m_pStatCom->Set_MP(-iMP);
 	if (m_pStatCom->Get_Status().iMp >= m_pStatCom->Get_Status().iMaxMp)
-		m_pStatCom->Set_HP(m_pStatCom->Get_Status().iMp - m_pStatCom->Get_Status().iMaxMp);
+		m_pStatCom->Set_MP(m_pStatCom->Get_Status().iMp - m_pStatCom->Get_Status().iMaxMp);
 }
 
 HRESULT CEquip::Setup_GameObject_Prototype()
@@ -297,6 +301,18 @@ HRESULT CEquip::Render_Stat()
 	m_pFont->DrawTextW(m_pSprite, szBuff2, lstrlen(szBuff2),
 		nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
 
+	// ·¹º§
+	StringCchPrintf(szBuff2, sizeof(TCHAR) * MAX_PATH, L"%d",
+		m_pStatCom->Get_Status().iLevel);
+
+	D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
+	D3DXMatrixTranslation(&matTrans, vPos.x + 25.f, vPos.y - 220.f, 0.f);
+	matWorld = matScale * matTrans;
+
+	m_pSprite->SetTransform(&matWorld);
+	m_pFont->DrawTextW(m_pSprite, szBuff2, lstrlen(szBuff2),
+		nullptr, 0, D3DCOLOR_ARGB(255, 0, 0, 0));
+
 	return S_OK;
 }
 
@@ -404,7 +420,8 @@ HRESULT CEquip::Add_Component()
 	tStat.iMaxHp = 100;
 	tStat.iMaxMp = 100;
 	tStat.iHp = 50;
-	tStat.iMp = 100;
+	tStat.iMp = 50;
+	tStat.iLevel = 1;
 
 	if (FAILED(CGameObject::Add_Component(
 		SCENE_STATIC, L"Component_Status",

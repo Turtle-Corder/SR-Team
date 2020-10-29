@@ -13,9 +13,9 @@ class CWand final : public CGameObject
 {
 	enum WAND
 	{ 
-		WAND_BASE ,
-		WAND_HEAD,
+		WAND_BASE , 
 		WAND_HANDLE,
+		WAND_HEAD,
 		WAND_END
 	};
 	enum STATE
@@ -35,6 +35,8 @@ public:
 private:
 	HRESULT Add_Component();
 	HRESULT Movement(_float _fDeltaTime);
+	HRESULT	Setting_Handle();
+	HRESULT Setting_Head();
 public:
 	virtual CGameObject * Clone_GameObject(void * _pArg) override;
 	virtual void Free() override;
@@ -51,6 +53,7 @@ private:
 
 	INSTANTIMPACT		m_tInstant = {};
 	STATE				m_eState = IDLE;
+	_vec3				m_vPlayer_RightHand_Pos = {};
 };
 
 END

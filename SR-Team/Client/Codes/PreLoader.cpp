@@ -19,6 +19,7 @@
 #include "PlaneSkill.h"
 #include "EnergyBolt.h"
 #include "Crack.h"
+#include "Wand.h"
 #pragma endregion
 
 USING(Client)
@@ -91,6 +92,11 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 
 #pragma region GameObject_Item
 	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_DropItem", CDropItem::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region GameObject_Wand
+	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Wand", CWand::Create(m_pDevice))))
 		return E_FAIL;
 #pragma endregion
 
