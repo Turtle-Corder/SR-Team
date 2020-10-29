@@ -29,7 +29,7 @@ public:
 	static CSnail_Impact* Create(LPDIRECT3DDEVICE9 _pDevice);
 private:
 	CVIBuffer*			m_pVIBufferCom = nullptr;
-	CTransform*			m_pTransformCom = nullptr;
+	CTexture*			m_pTextureCom = nullptr;
 	CTransform*			m_pTransformCom = nullptr;
 	CSphereCollider*	m_pColliderCom = nullptr;
 	CStatus*			m_pStatusCom = nullptr;

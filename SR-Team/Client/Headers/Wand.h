@@ -20,7 +20,7 @@ class CWand final : public CGameObject
 	};
 	enum STATE
 	{
-		IDLE , NORMAL_ATTACK , SKILL_ATTACK , WAND_END 
+		IDLE , NORMAL_ATTACK , SKILL_ATTACK 
 	};
 private:
 	explicit CWand(LPDIRECT3DDEVICE9 _pDevice);
