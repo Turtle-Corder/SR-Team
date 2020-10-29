@@ -91,6 +91,7 @@ HRESULT CPlayer::Setup_GameObject(void * _pArg)
 	// 오른쪽 발
 	_vec3 vRightFoot = (vRight * 0.3f);
 	vRightFoot.y = -0.7f;
+
 	m_pTransformCom[PART_FOOT_RIGHT]->Set_Position(vRightFoot);
 	// 왼쪽 발
 	_vec3 vLeftFoot = (-vRight * 0.3f);

@@ -25,6 +25,7 @@ class CYeti final : public CGameObject
 		YETI_END 
 	};
 	enum STATE {IDLE , MOVE , ATTACK , DEAD};
+	enum CHANGE {CHANGE_LEFT , CHANGE_RIGHT , CHANGE_END };
 private:
 	explicit CYeti(LPDIRECT3DDEVICE9 pDevice);
 	explicit CYeti(const CYeti& other);
@@ -45,6 +46,7 @@ private:
 	HRESULT Moving(float _fDeltaTime);
 	HRESULT Attack(float _fDeltaTime);
 	HRESULT Update_State();
+	HRESULT MoveMotion(_float _fDeltaTime);
 public:
 	static CYeti* Create(LPDIRECT3DDEVICE9 pDevice);
 	virtual CGameObject* Clone_GameObject(void * pArg) override;
@@ -74,6 +76,8 @@ private:
 	INSTANTIMPACT*	m_pInstantImpact = nullptr;
 	STATE		m_ePreState;
 	STATE		m_eCurState;
+	_float		m_fMoveTime = 0.f;
+	CHANGE		m_eMove = CHANGE_LEFT;
 };
 
 END

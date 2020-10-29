@@ -18,6 +18,10 @@ class CWand final : public CGameObject
 		WAND_HANDLE,
 		WAND_END
 	};
+	enum STATE
+	{
+		IDLE , NORMAL_ATTACK , SKILL_ATTACK , WAND_END 
+	};
 private:
 	explicit CWand(LPDIRECT3DDEVICE9 _pDevice);
 	explicit CWand(const CWand& _rOther);
@@ -36,6 +40,7 @@ public:
 	virtual void Free() override;
 	static CWand* Create(LPDIRECT3DDEVICE9 _pDevice);
 	virtual HRESULT Take_Damage(const CComponent* _pDamageComp);
+	HRESULT	Change_State(STATE _eState);
 private:
 	CVIBuffer*			m_pVIBufferCom[WAND_END] = {};
 	CTransform*			m_pTransformCom[WAND_END] = {};
@@ -45,7 +50,7 @@ private:
 	CDamageInfo*		m_pDmgInfoCom = nullptr;
 
 	INSTANTIMPACT		m_tInstant = {};
-
+	STATE				m_eState = IDLE;
 };
 
 END

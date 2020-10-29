@@ -75,6 +75,7 @@ _int CSlime::Update_GameObject(_float _fDeltaTime)
 		return GAMEOBJECT::WARN;
 
 
+
 	if (CKeyManager::Get_Instance()->Key_Down(VK_F8))
 		m_eCurState = CSlime::STATE_MOVE;
 
