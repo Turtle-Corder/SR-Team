@@ -49,7 +49,10 @@ private:
 	_vec3 m_vGoalPos = {};
 	_float m_fDownTime = 0.f;
 	_float m_fDeadTime = 0.f;
+	_float  m_iRand[3] = {};
 	INSTANTIMPACT m_tInstant = {};
+	_bool	m_bOnece = false;
+	_vec3	m_vRand = {};
 };
 
 END

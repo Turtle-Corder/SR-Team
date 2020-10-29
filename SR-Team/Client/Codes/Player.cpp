@@ -821,6 +821,7 @@ void CPlayer::Check_Skill(_float fDeltaTime)
 
 		// ¸ð¼Ç
 		eSkillID = pSkillInven->Get_SkillID(0);
+		m_bOnece = true;
 	}
 	else if (pManagement->Key_Pressing('W'))
 	{
@@ -1187,9 +1188,16 @@ void CPlayer::Skill_ProjectileFall(_float fDeltaTime)
 		g_hWnd, WINCX, WINCY, pTerrainBuffer, &mat, pCamera, &vGoalPos))
 	{
 		if (!m_bRenderInven && !m_bRenderShop)
-		{
-			if (FAILED(Ready_Layer_Meteor(L"Layer_Meteor", vGoalPos)))
-				PRINT_LOG(L"Failed To Ready_Layer_Meteor in CPlayer", LOG::CLIENT);
+		{	
+			if (m_bOnece)
+			{
+				for (_uint iCnt = 0; iCnt < 5; ++iCnt)
+				{
+					if (FAILED(Ready_Layer_Meteor(L"Layer_Meteor", vGoalPos)))
+						PRINT_LOG(L"Failed To Ready_Layer_Meteor in CPlayer", LOG::CLIENT);
+				}
+				m_bOnece = false;
+			}
 		}
 	}
 
@@ -1287,10 +1295,12 @@ HRESULT CPlayer::Ready_Layer_Meteor(const wstring& _strLayerTag , _vec3 vGoalPos
 	if (nullptr == pManagement)
 		return E_FAIL;
 
+	m_fRand[0] = (_float)(rand() % 2 - 4);
+	m_fRand[1] = (_float)(rand() % 2 - 4);
 	INSTANTIMPACT tImpact;
 	tImpact.pAttacker = this;
 	tImpact.pStatusComp = m_pStatusCom;
-	tImpact.vPosition = vGoalPos;
+	tImpact.vPosition = vGoalPos + _vec3(m_fRand[0] , 0.f , m_fRand[1]);
 
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Meteor", SCENE_STAGE0, _strLayerTag , &tImpact)))
 		return E_FAIL;

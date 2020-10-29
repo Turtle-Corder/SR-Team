@@ -110,7 +110,7 @@ private:
 	CDamageInfo*		m_pDmgInfoCom	= nullptr;
 
 
-
+	_float				m_fMeteor_Create_Time = 0.f;
 	_bool				m_bIsTagetMove = false;
 	_vec3				m_vTargetPos = {};
 	_bool				m_bCheck = false;
@@ -123,7 +123,7 @@ private:
 	_float				m_fDisY = 2.5f;
 	_float				m_fHandDis = 0.8f;
 	_float				m_fFootDis = 0.2f;
-
+	_float				m_fRand[2] = {};
 	//---------------------------------------------
 	// 이동 모션
 	//---------------------------------------------

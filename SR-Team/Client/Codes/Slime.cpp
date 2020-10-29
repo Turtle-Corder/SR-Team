@@ -81,8 +81,8 @@ _int CSlime::Update_GameObject(_float _fDeltaTime)
 	if (pManagement->Key_Down(VK_F8))
 		m_eCurState = CSlime::STATE_MOVE;
 
-	//if (FAILED(Attack(_fDeltaTime)))
-		//return GAMEOBJECT::WARN;
+	if (FAILED(Attack(_fDeltaTime)))
+		return GAMEOBJECT::WARN;
 
 	if (FAILED(Setting_SlimeJelly()))
 		return GAMEOBJECT::WARN;
@@ -443,11 +443,7 @@ HRESULT CSlime::Move(_float _fDeltaTime)
 		m_vPos += vDir * _fDeltaTime * 5.f;
 		m_pTransformCom[SLIME_BASE]->Set_Position(m_vPos);
 	}
-
-	m_bJump;
-
-
-	if(false == m_bJump && 1.f >= m_fDistance)
+	else if(1.f >= m_fDistance)
 	{
 		m_eCurState = CSlime::STATE_ATTACK;
 	}
@@ -468,6 +464,8 @@ void CSlime::Update_State()
 	case Client::CSlime::STATE_DEAD:
 		break;
 	}
+
+	
 }
 
 HRESULT CSlime::Stop_Move(_float _fDeltaTime)
