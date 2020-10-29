@@ -26,6 +26,8 @@ protected:
 	_float				m_fAttTime = 0.f;
 	_float				m_fStartTime = 0.f;
 	_float				m_fEndTime = 0.f;
+
+	_int				m_iProjectileCnt = 0;
 };
 
 END

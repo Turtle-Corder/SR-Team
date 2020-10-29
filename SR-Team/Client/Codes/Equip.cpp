@@ -17,7 +17,6 @@ CEquip::CEquip(LPDIRECT3DDEVICE9 _pDevice, LPD3DXSPRITE _pSprite, LPD3DXFONT _pF
 
 	for (_uint i = 0; i < ITEMSORT_END; ++i)
 	{
-		m_pEquipItem[i] = nullptr;
 		m_pStatItem[i] = nullptr;
 		m_pTextureItem[i] = nullptr;
 	}
@@ -42,21 +41,42 @@ void CEquip::Equip_Item(eITEM_SORT eSort, const wstring& strItemTag/*INVEN_ITEM 
 		m_pStatItem[eSort] = nullptr;
 	if (m_pTextureItem[eSort])
 		m_pTextureItem[eSort] = nullptr;
-	if (m_pEquipItem[eSort])
-		if (FAILED(pItem->Get_ItemInfo(strItemTag, *m_pEquipItem[eSort])))
-			return;
 
 	m_pStatItem[eSort] = pItem->Get_ItemStat(strItemTag);
 	m_pTextureItem[eSort] = pItem->Get_ItemInfo_Texture(strItemTag);
 
 	m_bEquip[eSort] = true;
+	StringCchPrintf(szEquipItemTag[eSort], _countof(szEquipItemTag[eSort]), strItemTag.c_str());
+}
+
+_bool CEquip::Check_IsItemEquip(const wstring & strItemTag)
+{
+	for (_int i = 0; i < ITEMSORT_END; i++)
+	{
+		if (m_bEquip[i])
+		{
+			if (!wcscmp(szEquipItemTag[i], strItemTag.c_str()))
+				return true;
+		}
+	}
+
+	return false;
+}
+
+void CEquip::Set_PlayerAtt(_int iAtt)
+{
+	m_pStatCom->Set_Att(iAtt);
 }
 
 void CEquip::Set_PlayerHp(_int iHP)
 {
 	m_pStatCom->Set_HP(-iHP);
+	// iHp > iMaxHp 이면 iHp = iMaxHp 고정
 	if (m_pStatCom->Get_Status().iHp >= m_pStatCom->Get_Status().iMaxHp)
 		m_pStatCom->Set_HP(m_pStatCom->Get_Status().iHp - m_pStatCom->Get_Status().iMaxHp);
+	if (m_pStatCom->Get_Status().iHp <= 0)
+	{
+	}
 }
 
 void CEquip::Set_PlayerMP(_int iMP)

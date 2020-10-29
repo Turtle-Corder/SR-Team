@@ -184,20 +184,8 @@
     <Filter Include="02.GameObject\12. SkillInventory">
       <UniqueIdentifier>{da8eeec8-b224-45e6-80ce-0a6bf67c4ddb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\13. PlayerSkill\01. Laser">
-      <UniqueIdentifier>{31d64684-435f-4b92-9e48-37f6d621d3fc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04.Manager\02. SkillManager">
       <UniqueIdentifier>{81c88648-7211-46b1-a895-0c25f4db764f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\13. PlayerSkill\00. Normal_Attack">
-      <UniqueIdentifier>{9891293b-36e7-4603-a600-2c6075aff553}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\13. PlayerSkill\02. Meteo">
-      <UniqueIdentifier>{9da80b4c-8ee5-4ced-a1c2-54cefff23de2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\13. PlayerSkill\03. EnergyVolt">
-      <UniqueIdentifier>{a4b9ad97-d5d5-47a1-b9c6-d9af3e9a4666}</UniqueIdentifier>
     </Filter>
     <Filter Include="05. Observer">
       <UniqueIdentifier>{801fa6de-3d10-4233-b24c-a934f0895018}</UniqueIdentifier>
@@ -249,6 +237,21 @@
     </Filter>
     <Filter Include="02.GameObject\14. PlayerItem\03. BlueElixir">
       <UniqueIdentifier>{5d669d84-2c8c-4a02-9aca-637bba1407e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\13. PlayerSkill\00. Laser">
+      <UniqueIdentifier>{31d64684-435f-4b92-9e48-37f6d621d3fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\13. PlayerSkill\01. Meteo">
+      <UniqueIdentifier>{9da80b4c-8ee5-4ced-a1c2-54cefff23de2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\13. PlayerSkill\02. EnergyVolt">
+      <UniqueIdentifier>{a4b9ad97-d5d5-47a1-b9c6-d9af3e9a4666}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\13. PlayerSkill\03. ManaDirft">
+      <UniqueIdentifier>{d4508580-6c5e-4cd4-924c-7803e8320082}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\13. PlayerSkill\04. EnergyExploitation">
+      <UniqueIdentifier>{746da5d1-79bd-419c-b91b-7349a130b680}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -391,13 +394,13 @@
       <Filter>02.GameObject\12. SkillInventory</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\LaserSkill.h">
-      <Filter>02.GameObject\13. PlayerSkill\01. Laser</Filter>
+      <Filter>02.GameObject\13. PlayerSkill\00. Laser</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\MeteoSkill.h">
-      <Filter>02.GameObject\13. PlayerSkill\02. Meteo</Filter>
+      <Filter>02.GameObject\13. PlayerSkill\01. Meteo</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\EnergyVoltSkill.h">
-      <Filter>02.GameObject\13. PlayerSkill\03. EnergyVolt</Filter>
+      <Filter>02.GameObject\13. PlayerSkill\02. EnergyVolt</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\PlayerItem.h">
       <Filter>02.GameObject\14. PlayerItem</Filter>
@@ -444,6 +447,12 @@
     </ClInclude>
     <ClInclude Include="..\Headers\BlueElixir.h">
       <Filter>02.GameObject\14. PlayerItem\03. BlueElixir</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\ManaDriftSkill.h">
+      <Filter>02.GameObject\13. PlayerSkill\03. ManaDirft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\EnergyExploitationSkill.h">
+      <Filter>02.GameObject\13. PlayerSkill\04. EnergyExploitation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -571,13 +580,13 @@
       <Filter>02.GameObject\12. SkillInventory</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\LaserSkill.cpp">
-      <Filter>02.GameObject\13. PlayerSkill\01. Laser</Filter>
+      <Filter>02.GameObject\13. PlayerSkill\00. Laser</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\MeteoSkill.cpp">
-      <Filter>02.GameObject\13. PlayerSkill\02. Meteo</Filter>
+      <Filter>02.GameObject\13. PlayerSkill\01. Meteo</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\EnergyVoltSkill.cpp">
-      <Filter>02.GameObject\13. PlayerSkill\03. EnergyVolt</Filter>
+      <Filter>02.GameObject\13. PlayerSkill\02. EnergyVolt</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\PlayerItem.cpp">
       <Filter>02.GameObject\14. PlayerItem</Filter>
@@ -624,6 +633,12 @@
     </ClCompile>
     <ClCompile Include="..\Codes\BlueElixir.cpp">
       <Filter>02.GameObject\14. PlayerItem\03. BlueElixir</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\ManaDriftSkill.cpp">
+      <Filter>02.GameObject\13. PlayerSkill\03. ManaDirft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\EnergyExploitationSkill.cpp">
+      <Filter>02.GameObject\13. PlayerSkill\04. EnergyExploitation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
