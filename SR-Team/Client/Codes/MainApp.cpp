@@ -263,7 +263,7 @@ HRESULT CMainApp::Setup_StaticResources()
 #pragma endregion
 
 // 플레이어 아이템 객체
-#pragma regeion GameObject_RedPotion
+#pragma region GameObject_RedPotion
 	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_RedPotion", CRedPotion::Create(m_pDevice, m_pSprite, m_pFont))))
 		return E_FAIL;
 #pragma endregion

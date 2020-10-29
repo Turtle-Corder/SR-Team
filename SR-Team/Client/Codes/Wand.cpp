@@ -103,6 +103,7 @@ void CWand::Free()
 		Safe_Release(m_pTextureCom[iCnt]);
 	}
 
+	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pStatusComp);
 	Safe_Release(m_pDmgInfoCom);
 
