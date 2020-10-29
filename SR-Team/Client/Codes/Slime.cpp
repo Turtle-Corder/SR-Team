@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "KeyManager.h"
 #include "..\Headers\Slime.h"
 
 USING(Client)
@@ -37,6 +36,10 @@ HRESULT CSlime::Setup_GameObject(void * pArg)
 
 _int CSlime::Update_GameObject(_float _fDeltaTime)
 {
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return GAMEOBJECT::ERR;
+
 	if (m_bDead)
 	{
 		////-------------------------------------------------
@@ -63,7 +66,7 @@ _int CSlime::Update_GameObject(_float _fDeltaTime)
 
 	Update_State();
 
-	if (CKeyManager::Get_Instance()->Key_Down(VK_F4))
+	if (pManagement->Key_Down(VK_F4))
 		m_bDead = true;
 
 	if (FAILED(Movement(_fDeltaTime)))
@@ -75,7 +78,7 @@ _int CSlime::Update_GameObject(_float _fDeltaTime)
 		return GAMEOBJECT::WARN;
 
 
-	if (CKeyManager::Get_Instance()->Key_Down(VK_F8))
+	if (pManagement->Key_Down(VK_F8))
 		m_eCurState = CSlime::STATE_MOVE;
 
 	//if (FAILED(Attack(_fDeltaTime)))

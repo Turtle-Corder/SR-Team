@@ -27,6 +27,8 @@ HRESULT CWand::Setup_GameObject(void * _pArg)
 
 _int CWand::Update_GameObject(_float _fDeltaTime)
 {
+	
+
 	return GAMEOBJECT::NOEVENT;
 }
 
@@ -127,5 +129,10 @@ HRESULT CWand::Take_Damage(const CComponent * _pDamageComp)
 {
 
 	return S_OK;
+}
+
+HRESULT CWand::Change_State(STATE _eState)
+{
+	return E_NOTIMPL;
 }
 

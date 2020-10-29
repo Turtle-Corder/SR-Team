@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "PreLoader.h"
-#include "KeyManager.h"
 #include "TerrainBundle.h"
 #include "..\Headers\Scene_Stage0.h"
 
@@ -93,7 +92,6 @@ _int CScene_Stage0::LateUpdate_Scene(_float _fDeltaTime)
 	if (FAILED(pManagement->CollisionSphere_Detection_Layers(SCENE_STAGE0, L"Layer_Meteor" , L"Layer_Monster", L"Com_Collider", L"Com_DmgInfo")))
 		return -1;
 
-	CKeyManager::Get_Instance()->Key_Update();
 	return 0;
 }
 

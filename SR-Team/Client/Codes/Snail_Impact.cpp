@@ -124,6 +124,8 @@ HRESULT CSnail_Impact::Take_Damage(const CComponent * _pDamageComp)
 void CSnail_Impact::Free()
 {
 	Safe_Release(m_pTransformCom);
+	Safe_Release(m_pVIBufferCom);
+	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pStatusCom);
 	Safe_Release(m_pDmgInfoCom);

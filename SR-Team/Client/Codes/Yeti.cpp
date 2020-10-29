@@ -218,6 +218,9 @@ HRESULT CYeti::Movement(float _fDeltaTime)
 	if (FAILED(Moving(_fDeltaTime)))
 		return E_FAIL;
 
+	if (FAILED(MoveMotion(_fDeltaTime)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -307,11 +310,12 @@ HRESULT CYeti::Attack(float _fDeltaTime)
 
 		if (m_fAttackTime < 0.8f)
 		{
-			m_pTransformCom[YETI_RIGHT]->Turn(CTransform::AXIS_X, -_fDeltaTime * 3.f);
+			m_pTransformCom[YETI_RIGHT]->Turn(CTransform::AXIS_X, +_fDeltaTime * 3.f);
 			m_bRHandDown = true;
 		}
 		else if (m_fAttackTime > 0.4f && m_bRHandDown)
 		{
+
 			if (FAILED(Create_Snow(L"Layer_Snow")))
 				return E_FAIL;
 			m_fAttackTime = 0.f;
@@ -325,7 +329,8 @@ HRESULT CYeti::Attack(float _fDeltaTime)
 
 		if (m_fAttackTime < 0.8f)
 		{
-			m_pTransformCom[YETI_RIGHT]->Turn(CTransform::AXIS_X, +_fDeltaTime * 3.f);
+
+			m_pTransformCom[YETI_RIGHT]->Turn(CTransform::AXIS_X, -_fDeltaTime * 3.f);
 		}
 		else if (m_fAttackTime > 0.8f)
 		{
@@ -341,6 +346,46 @@ HRESULT CYeti::Attack(float _fDeltaTime)
 
 HRESULT CYeti::Update_State()
 {
+	return S_OK;
+}
+
+HRESULT CYeti::MoveMotion(_float _fDeltaTime)
+{
+	if (m_eCurState == CYeti::MOVE)
+	{
+		m_fMoveTime += _fDeltaTime;
+
+		if (m_fMoveTime >= 0.5f)
+		{
+			if (m_eMove == CYeti::CHANGE_LEFT)
+				m_eMove = CYeti::CHANGE_RIGHT;
+			else if (m_eMove == CYeti::CHANGE_RIGHT)
+				m_eMove = CYeti::CHANGE_LEFT;
+
+			m_fMoveTime = 0.f;
+			m_pTransformCom[YETI_LEFTLEG]->Set_Rotation(_vec3(0.f, 0.f, 0.f));
+			m_pTransformCom[YETI_RIGHTLEG]->Set_Rotation(_vec3(0.f, 0.f, 0.f));
+
+		}
+
+		if (m_eMove == CYeti::CHANGE_LEFT)
+		{
+			m_pTransformCom[YETI_LEFTLEG]->Turn(CTransform::AXIS_X, -_fDeltaTime);
+			m_pTransformCom[YETI_RIGHTLEG]->Turn(CTransform::AXIS_X , _fDeltaTime);
+		}
+		else if (m_eMove == CYeti::CHANGE_RIGHT)
+		{
+			m_pTransformCom[YETI_LEFTLEG]->Turn(CTransform::AXIS_X, _fDeltaTime);
+			m_pTransformCom[YETI_RIGHTLEG]->Turn(CTransform::AXIS_X, -_fDeltaTime);
+		}
+	}
+	else
+	{
+		m_pTransformCom[YETI_LEFTLEG]->Set_Rotation(_vec3(0.f, 0.f, 0.f));
+		m_pTransformCom[YETI_RIGHTLEG]->Set_Rotation(_vec3(0.f, 0.f, 0.f));
+	}
+
+
 	return S_OK;
 }
 

@@ -73,9 +73,6 @@
     <Filter Include="04.Manager">
       <UniqueIdentifier>{65b1e6b3-5070-48fe-a08c-4d1ff7a771b0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Manager\00.KeyManager">
-      <UniqueIdentifier>{e75aeea8-d5b3-4f7f-8a09-86768087c6d7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04.Manager\01.ItemManager">
       <UniqueIdentifier>{57c1bb8e-a4af-4d56-a388-64674d238658}</UniqueIdentifier>
     </Filter>
@@ -309,9 +306,6 @@
     <ClInclude Include="..\Headers\Shop.h">
       <Filter>02.GameObject\07.UI\02.Shop</Filter>
     </ClInclude>
-    <ClInclude Include="..\Headers\KeyManager.h">
-      <Filter>04.Manager\00.KeyManager</Filter>
-    </ClInclude>
     <ClInclude Include="..\Headers\Snail.h">
       <Filter>02.GameObject\05.Monster\00.Snail</Filter>
     </ClInclude>
@@ -485,9 +479,6 @@
     </ClCompile>
     <ClCompile Include="..\Codes\Shop.cpp">
       <Filter>02.GameObject\07.UI\02.Shop</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\KeyManager.cpp">
-      <Filter>04.Manager\00.KeyManager</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Slime.cpp">
       <Filter>02.GameObject\05.Monster\01.Slime</Filter>
