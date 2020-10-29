@@ -11,6 +11,7 @@ CManagement::CManagement()
 	, m_pComponent_Manager(CComponent_Manager::Get_Instance())
 	, m_pObject_Manager(CObject_Manager::Get_Instance())
 	, m_pNav_Manager(CNav_Manager::Get_Instance())
+	, m_pKey_Manager(CKey_Manager::Get_Instance())
 {
 	Safe_AddRef(m_pFrame_Manager);
 	Safe_AddRef(m_pDevice_Manager);
@@ -19,6 +20,7 @@ CManagement::CManagement()
 	Safe_AddRef(m_pComponent_Manager);
 	Safe_AddRef(m_pObject_Manager);
 	Safe_AddRef(m_pNav_Manager);
+	Safe_AddRef(m_pKey_Manager);
 }
 
 void CManagement::Free()
@@ -31,17 +33,22 @@ void CManagement::Free()
 	Safe_Release(m_pTimer_Manager);
 	Safe_Release(m_pDevice_Manager);
 	Safe_Release(m_pFrame_Manager);
+	Safe_Release(m_pKey_Manager);
 }
 
 HRESULT CManagement::Setup_Engine(HWND _hWnd, _uint _iFramePerSec, _uint _iWinCX, _uint _iWinCY, CDevice_Manager::DISPLAY_MODE _eDisplayMode, _uint _iSceneCnt, const wstring & _strAppTimerTag)
 {
-	if (nullptr == m_pFrame_Manager		||
+	if (nullptr == m_pKey_Manager		||
+		nullptr == m_pFrame_Manager		||
 		nullptr == m_pDevice_Manager	||
 		nullptr == m_pScene_Manager		||
 		nullptr == m_pTimer_Manager		||
 		nullptr == m_pComponent_Manager ||
 		nullptr == m_pObject_Manager	||
 		nullptr == m_pNav_Manager)
+		return E_FAIL;
+
+	if (FAILED(m_pKey_Manager->Setup_KeyManager()))
 		return E_FAIL;
 
 	if (FAILED(m_pFrame_Manager->Setup_FrameManager(_hWnd, _iFramePerSec)))
@@ -110,6 +117,8 @@ _int CManagement::Update_Engine(void)
 
 	if (m_iUpdate_Result = m_pObject_Manager->LateUpdate_Object_Manager(fDeltaTime))
 		return 0;
+
+	m_pKey_Manager->Key_Update();
 
 	return 0;
 }
@@ -415,4 +424,28 @@ HRESULT CManagement::PathFind(CNavAgent * _pAgent, _int _iStartX, _int _iStartZ,
 		return E_FAIL;
 
 	return m_pNav_Manager->PathFind(_pAgent, _iStartX, _iStartZ, _iGoalX, _iGoalZ);
+}
+
+_bool CManagement::Key_Pressing(_int _key)
+{
+	if (nullptr == m_pKey_Manager)
+		return false;
+
+	return m_pKey_Manager->Key_Pressing(_key);
+}
+
+_bool CManagement::Key_Down(_int _key)
+{
+	if (nullptr == m_pKey_Manager)
+		return false;
+
+	return m_pKey_Manager->Key_Down(_key);
+}
+
+_bool CManagement::Key_Up(_int _key)
+{
+	if (nullptr == m_pKey_Manager)
+		return false;
+
+	return m_pKey_Manager->Key_Up(_key);
 }
