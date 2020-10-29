@@ -389,6 +389,10 @@ HRESULT CInventory::Select_SellItem()
 	if (nullptr == pMouse)
 		return E_FAIL;
 
+	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 1);
+	if (pEquip == nullptr)
+		return E_FAIL;
+
 	int iIndex = 0;
 
 	for (_uint i = 0; i < 6; i++)
@@ -403,12 +407,17 @@ HRESULT CInventory::Select_SellItem()
 				{
 					_int k = 0;
 					// 아이템이 있는 칸들만 선택 할 수 있음
-					// 장착하고 있으면 판매할 수 없음
 					if (m_bIsItemHere[iIndex] && !m_bSelectedSell[iIndex])
 					{
-						m_bSelectedSell[iIndex] = true;
-						++m_iDeleteCnt;
-						m_iSellGold += (m_pInvenList[iIndex]->iPrice * m_pInvenList[iIndex]->iCnt);
+						// 장착하고 있으면 판매할 수 없음
+						if (!pEquip->Check_IsItemEquip(m_pInvenList[iIndex]->szItemTag))
+						{
+							m_bSelectedSell[iIndex] = true;
+							++m_iDeleteCnt;
+							m_iSellGold += (m_pInvenList[iIndex]->iPrice * m_pInvenList[iIndex]->iCnt);
+						}
+						else
+							PRINT_LOG(L"현재 장착하고 있는 아이템은 판매 못함", LOG::CLIENT);
 					}
 
 				}

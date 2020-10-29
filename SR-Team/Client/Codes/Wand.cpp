@@ -27,17 +27,12 @@ HRESULT CWand::Setup_GameObject(void * _pArg)
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
+	
 	return S_OK;
 }
 
 _int CWand::Update_GameObject(_float _fDeltaTime)
 {
-	return GAMEOBJECT::NOEVENT;
-}
-
-_int CWand::LateUpdate_GameObject(_float _fDeltaTime)
-{
-	
 	if (FAILED(Movement(_fDeltaTime)))
 		return E_FAIL;
 
@@ -47,6 +42,11 @@ _int CWand::LateUpdate_GameObject(_float _fDeltaTime)
 	if (FAILED(Setting_Head()))
 		return E_FAIL;
 
+	return GAMEOBJECT::NOEVENT;
+}
+
+_int CWand::LateUpdate_GameObject(_float _fDeltaTime)
+{
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return GAMEOBJECT::ERR;
@@ -78,7 +78,6 @@ HRESULT CWand::Render_NoneAlpha()
 
 		if (FAILED(m_pVIBufferCom[iCnt]->Render_VIBuffer()))
 			return E_FAIL;
-
 	}
 
 	return S_OK;
@@ -117,24 +116,24 @@ HRESULT CWand::Add_Component()
 
 		if (iCnt == WAND_BASE)
 		{
-			tTransformDesc[WAND_BASE].vPosition = { 0.f , 0.5f , 0.f };
+			tTransformDesc[WAND_BASE].vPosition = { 0.f , 0.f , 0.f };
 			tTransformDesc[WAND_BASE].fSpeedPerSecond = 10.f;
 			tTransformDesc[WAND_BASE].fRotatePerSecond = D3DXToRadian(90.f);
 			tTransformDesc[WAND_BASE].vScale = { 1.f , 1.f , 1.f };
 		}
 		if (iCnt == WAND_HANDLE)
 		{
-			tTransformDesc[WAND_HANDLE].vPosition = { 0.f , 0.f , -0.5f };
+			tTransformDesc[WAND_HANDLE].vPosition = { 0.f , -0.5f , 0.5f };
 			tTransformDesc[WAND_HANDLE].fSpeedPerSecond = 10.f;
 			tTransformDesc[WAND_HANDLE].fRotatePerSecond = D3DXToRadian(90.f);
 			tTransformDesc[WAND_HANDLE].vScale = { 0.4f , 1.f , 0.4f };
 		}
 		else if (iCnt == WAND_HEAD)
 		{
-			tTransformDesc[WAND_HEAD].vPosition = { 0.f , 0.5f , -0.5f };
+			tTransformDesc[WAND_HEAD].vPosition = { 0.f , -1.f , 0.5f };
 			tTransformDesc[WAND_HEAD].fSpeedPerSecond = 10.f;
 			tTransformDesc[WAND_HEAD].fRotatePerSecond = D3DXToRadian(90.f);
-			tTransformDesc[WAND_HEAD].vScale = { 1.f , 0.4f , 1.f };
+			tTransformDesc[WAND_HEAD].vScale = { 0.5f , 0.4f , 0.5f };
 		}
 
 		StringCchPrintf(szCombine, _countof(szCombine), szTransform , iCnt);
@@ -142,28 +141,45 @@ HRESULT CWand::Add_Component()
 		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", szCombine, (CComponent**)&m_pTransformCom[iCnt], &tTransformDesc[iCnt]))) ////생성 갯수
 			return E_FAIL;
 	}
-
+	
 	return S_OK;
 }
 
 HRESULT CWand::Movement(_float _fDeltaTime)
 {
-	m_pTransformCom[WAND_BASE]->Update_Transform();
-
+	// 1.player의 look을 구해온다.
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform3");
-
-	if (nullptr == pPlayerTransform)
+	CTransform* pPlayerRH = (CTransform*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Player", L"Com_Transform3");
+	if (nullptr == pPlayerRH)
 		return E_FAIL;
 
-	_matrix vPlayer_RightHand_Pos = pPlayerTransform->Get_Desc().matWorld;
+	_vec3 vPlayerPos ={};
+	_vec3 vPlayerLook = pPlayerRH->Get_Look();
 
-	m_pTransformCom[WAND_BASE]->Set_WorldMatrix(m_pTransformCom[WAND_BASE]->Get_Desc().matWorld * vPlayer_RightHand_Pos);
+	_matrix matWOrld = pPlayerRH->Get_Desc().matWorld;
+	_vec3 vUp = { 0.f , 1.f , 0.f };
+	_vec3 vRight = pPlayerRH->Get_Right();
 
+	//이 위의 과정은 사전세팅
+	memcpy_s(vPlayerPos, sizeof(_vec3), &pPlayerRH->Get_Desc().matWorld._41, sizeof(_vec3));
+	m_pTransformCom[WAND_BASE]->Set_Position(vPlayerPos);
+
+	m_pTransformCom[WAND_BASE]->Update_Transform();
+
+	_matrix MyMat = m_pTransformCom[WAND_BASE]->Get_Desc().matWorld;
+
+	D3DXMatrixRotationAxis(&MyMat, &vRight, D3DXToRadian(60.f));
+
+	m_pTransformCom[WAND_BASE]->Set_WorldMatrix(MyMat * m_pTransformCom[WAND_BASE]->Get_Desc().matWorld);
+
+	//m_pTransformCom[WAND_BASE]->Update_Transform();
+
+	
 	return S_OK;
+
 }
 
 HRESULT CWand::Setting_Handle()

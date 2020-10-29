@@ -89,6 +89,9 @@ _int CScene_Stage0::LateUpdate_Scene(_float _fDeltaTime)
 	if (FAILED(pManagement->CollisionSphere_Detection_Layers(SCENE_STAGE0, L"Layer_Player", L"Layer_Monster", L"Com_Collider", L"Com_DmgInfo")))
 		return -1;
 
+	if (FAILED(pManagement->CollisionSphere_Detection_Layers(SCENE_STAGE0, L"Layer_Monster", L"Layer_Player", L"Com_Collider", L"Com_DmgInfo")))
+		return -1;
+
 	if (FAILED(pManagement->CollisionSphere_Detection_Layers_Both(SCENE_STAGE0, L"Layer_Snow", L"Layer_Player", L"Com_Collider", L"Com_DmgInfo")))
 		return -1;
 
@@ -362,6 +365,10 @@ HRESULT CScene_Stage0::SetUp_Layer_PlayerSkill(const wstring & LayerTag)
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_MeteoSkill", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_EnergyVoltSkill", SCENE_STAGE0, LayerTag)))
+		return E_FAIL;
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_ManaDriftSkill", SCENE_STAGE0, LayerTag)))
+		return E_FAIL;
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_EnergyExploitationSkill", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
 
 	return S_OK;
