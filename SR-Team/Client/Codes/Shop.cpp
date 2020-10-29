@@ -2,7 +2,7 @@
 #include "Item.h"
 #include "UICamera.h"
 #include "Inventory.h"
-#include "KeyManager.h"
+#include "Mouse.h"
 #include "..\Headers\Shop.h"
 
 USING(Client)
@@ -99,12 +99,12 @@ HRESULT CShop::Setup_GameObject(void * pArg)
 
 int CShop::Update_GameObject(float DeltaTime)
 {
-	if ((CKeyManager::Get_Instance()->Key_Down('O')))
-		m_bRender = !m_bRender;
-
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return GAMEOBJECT::ERR;
+
+	if ((pManagement->Key_Down('O')))
+		m_bRender = !m_bRender;
 
 	if (m_bRender)
 	{
@@ -175,17 +175,21 @@ HRESULT CShop::Render_UI()
 
 HRESULT CShop::Check_BuyItem()
 {
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return GAMEOBJECT::ERR;
+
+	CMouse* pMouse = (CMouse*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Mouse");
+	if (nullptr == pMouse)
+		return GAMEOBJECT::NOEVENT;
+
 	for (_uint j = m_iStartIndex; j < 3; ++j)
 	{
 		for (_uint i = 0; i < 4; ++i)
 		{
-			POINT ptMouse = {};
-			GetCursorPos(&ptMouse);
-			ScreenToClient(g_hWnd, &ptMouse);
-
-			if (CKeyManager::Get_Instance()->Key_Pressing(VK_LBUTTON))
+			if (pManagement->Key_Pressing(VK_LBUTTON))
 			{
-				if (PtInRect(&m_tItemTextureRt[j][i], ptMouse))
+				if (PtInRect(&m_tItemTextureRt[j][i], pMouse->Get_Point()))
 					Buy_Item(j, i);
 			}
 		}
@@ -208,7 +212,11 @@ HRESULT CShop::Buy_Item(_uint iIndexJ, _uint iIndexI)
 
 HRESULT CShop::Move_ScrollBar()
 {
-	if (CKeyManager::Get_Instance()->Key_Pressing(VK_LBUTTON))
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	if (pManagement->Key_Pressing(VK_LBUTTON))
 	{
 		POINT ptMouse = {};
 		GetCursorPos(&ptMouse);

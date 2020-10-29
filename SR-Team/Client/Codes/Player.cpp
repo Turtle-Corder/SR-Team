@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Status.h"
-#include "KeyManager.h"
 #include "Inventory.h"
 #include "DamageInfo.h"
 #include "Shop.h"
@@ -421,7 +420,11 @@ HRESULT CPlayer::RaycastOnTerrain()
 
 void CPlayer::Move_Vertical(_float _fDeltaTime)
 {
-	if (CKeyManager::Get_Instance()->Key_Pressing(VK_UP))
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return;
+
+	if (pManagement->Key_Pressing(VK_UP))
 	{
 		m_ePlayerDir = MOVING_UP;
 		if (!m_bUpTurn)
@@ -450,7 +453,7 @@ void CPlayer::Move_Vertical(_float _fDeltaTime)
 		m_bMove = true;
 	}
 
-	else if (CKeyManager::Get_Instance()->Key_Pressing(VK_DOWN))
+	else if (pManagement->Key_Pressing(VK_DOWN))
 	{
 		m_ePlayerDir = MOVING_DOWN;
 		if (!m_bDownTurn)
@@ -473,7 +476,11 @@ void CPlayer::Move_Vertical(_float _fDeltaTime)
 
 void CPlayer::Move_Horizontal(_float _fDeltaTime)
 {
-	if (CKeyManager::Get_Instance()->Key_Pressing(VK_LEFT))
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return;
+
+	if (pManagement->Key_Pressing(VK_LEFT))
 	{
 		m_ePlayerDir = MOVING_LEFT;
 		if (!m_bLeftTurn)
@@ -500,7 +507,7 @@ void CPlayer::Move_Horizontal(_float _fDeltaTime)
 			m_bUpTurn = false;
 	}
 
-	else if (CKeyManager::Get_Instance()->Key_Pressing(VK_RIGHT))
+	else if (pManagement->Key_Pressing(VK_RIGHT))
 	{
 		m_ePlayerDir = MOVING_RIGHT;
 		if (!m_bRightTurn)
@@ -529,13 +536,17 @@ void CPlayer::Move_Horizontal(_float _fDeltaTime)
 
 void CPlayer::Turn(_float _fDeltaTime)
 {
-	if (CKeyManager::Get_Instance()->Key_Pressing(VK_LEFT))
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return;
+
+	if (pManagement->Key_Pressing(VK_LEFT))
 	{
 		for (_uint i = 0; i < 2; ++i)
 			m_pTransformCom[i]->Turn(CTransform::AXIS_Y, -_fDeltaTime);
 	}
 
-	if (CKeyManager::Get_Instance()->Key_Pressing(VK_RIGHT))
+	if (pManagement->Key_Pressing(VK_RIGHT))
 	{
 		for (_uint i = 0; i < 2; ++i)
 			m_pTransformCom[i]->Turn(CTransform::AXIS_Y, _fDeltaTime);
@@ -630,8 +641,12 @@ _int CPlayer::Update_Parts()
 
 void CPlayer::Jump(_float fDeltaTime)
 {
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return;
+
 	int k = 0;
-	if (CKeyManager::Get_Instance()->Key_Pressing(VK_SPACE))
+	if (pManagement->Key_Pressing(VK_SPACE))
 	{
 		m_bJump = true;
 	}
@@ -712,7 +727,7 @@ HRESULT CPlayer::Universal_Key()
 	if (nullptr == pManagement)
 		E_FAIL;
 
-	if (CKeyManager::Get_Instance()->Key_Pressing('G'))
+	if (pManagement->Key_Pressing('G'))
 	{
 	}
 
@@ -772,7 +787,7 @@ void CPlayer::Check_Skill(_float fDeltaTime)
 	if (pSkillInven == nullptr)
 		return;
 
-	if (CKeyManager::Get_Instance()->Key_Pressing('Q'))
+	if (pManagement->Key_Pressing('Q'))
 	{
 		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
 		m_bUsingSkill = true;
@@ -788,7 +803,7 @@ void CPlayer::Check_Skill(_float fDeltaTime)
 		// 葛记
 		eSkillID = pSkillInven->Get_SkillID(0);
 	}
-	else if (CKeyManager::Get_Instance()->Key_Pressing('W'))
+	else if (pManagement->Key_Pressing('W'))
 	{
 		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
 		m_bUsingSkill = true;
@@ -802,7 +817,7 @@ void CPlayer::Check_Skill(_float fDeltaTime)
 		// 葛记
 		eSkillID = pSkillInven->Get_SkillID(0);
 	}
-	else if (CKeyManager::Get_Instance()->Key_Pressing('E'))
+	else if (pManagement->Key_Pressing('E'))
 	{
 		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
 		m_bUsingSkill = true;
@@ -816,7 +831,7 @@ void CPlayer::Check_Skill(_float fDeltaTime)
 		// 葛记
 		eSkillID = pSkillInven->Get_SkillID(2);
 	}
-	else if (CKeyManager::Get_Instance()->Key_Pressing('R'))
+	else if (pManagement->Key_Pressing('R'))
 	{
 		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
 		m_bUsingSkill = true;
@@ -830,7 +845,7 @@ void CPlayer::Check_Skill(_float fDeltaTime)
 		// 葛记
 		eSkillID = pSkillInven->Get_SkillID(3);
 	}
-	else if (CKeyManager::Get_Instance()->Key_Pressing('A'))
+	else if (pManagement->Key_Pressing('A'))
 	{
 		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
 		m_bUsingSkill = true;
@@ -844,7 +859,7 @@ void CPlayer::Check_Skill(_float fDeltaTime)
 		// 葛记
 		eSkillID = pSkillInven->Get_SkillID(4);
 	}
-	else if (CKeyManager::Get_Instance()->Key_Pressing('S'))
+	else if (pManagement->Key_Pressing('S'))
 	{
 		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
 		m_bUsingSkill = true;
@@ -858,7 +873,7 @@ void CPlayer::Check_Skill(_float fDeltaTime)
 		// 葛记
 		eSkillID = pSkillInven->Get_SkillID(5);
 	}
-	else if (CKeyManager::Get_Instance()->Key_Pressing('D'))
+	else if (pManagement->Key_Pressing('D'))
 	{
 		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
 		m_bUsingSkill = true;
@@ -872,7 +887,7 @@ void CPlayer::Check_Skill(_float fDeltaTime)
 		// 葛记
 		eSkillID = pSkillInven->Get_SkillID(6);
 	}
-	else if (CKeyManager::Get_Instance()->Key_Pressing('F'))
+	else if (pManagement->Key_Pressing('F'))
 	{
 		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
 		m_bUsingSkill = true;
@@ -923,10 +938,14 @@ void CPlayer::Move_SkillMotion(_float fDeltaTime, eActiveSkill_ID eSkillID)
 
 void CPlayer::Normal_Attack(_float fDeltaTime)
 {
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return;
+
 	int k = 0;
 
 	//if (GetAsyncKeyState('Z') & 0x8000)
-	if (CKeyManager::Get_Instance()->Key_Pressing('Z'))
+	if (pManagement->Key_Pressing('Z'))
 	{
 		m_bUsingSkill = true;
 		m_ePlayerSkillID = PLAYER_NORMAL_ATTACK;

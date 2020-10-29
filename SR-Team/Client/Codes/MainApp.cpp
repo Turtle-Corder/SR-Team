@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Scene_Logo.h"
-#include "KeyManager.h"
 #include "SkillManager.h"
 #include "..\Headers\MainApp.h"
 
@@ -668,7 +667,6 @@ CMainApp * CMainApp::Create()
 
 void CMainApp::Free()
 {
-	CKeyManager::Destroy_Instance();
 	CSkillManager::Destroy_Instance();
 
 	Safe_Release(m_pFont);

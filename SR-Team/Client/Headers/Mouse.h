@@ -38,6 +38,8 @@ private:
 public:
 	HRESULT Change_State(CMouse::STATE _eState);
 
+	const POINT& Get_Point();
+
 public:
 	virtual HRESULT Setup_GameObject_Prototype() override;
 	virtual HRESULT Setup_GameObject(void * _pArg) override;
@@ -56,6 +58,7 @@ private:
 
 
 private:
+	POINT			m_tPoint = {};
 	CTransform*		m_pTransformComp[KIND_END] = {};
 	CTexture*		m_pTextrueComp[STATE_END] = {};
 

@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Item.h"
 #include "UICamera.h"
-#include "KeyManager.h"
 #include "Equip.h"
 #include "MainUI.h"
 #include "..\Headers\Inventory.h"
@@ -151,7 +150,7 @@ _int CInventory::Update_GameObject(float DeltaTime)
 
 
 	// 인벤 on/off
-	if ((CKeyManager::Get_Instance()->Key_Down('I')))
+	if ((pManagement->Key_Down('I')))
 		m_bRender = !m_bRender;
 
 	if (m_bRender)
@@ -266,7 +265,11 @@ HRESULT CInventory::Render_UI()
 
 HRESULT CInventory::Check_SellButton()
 {
-	if (CKeyManager::Get_Instance()->Key_Pressing(VK_LBUTTON))
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	if (pManagement->Key_Pressing(VK_LBUTTON))
 	{
 		POINT ptMouse = {};
 		GetCursorPos(&ptMouse);
@@ -305,13 +308,17 @@ HRESULT CInventory::Check_SellButton()
 
 HRESULT CInventory::Select_SellItem()
 {
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
 	int iIndex = 0;
 
 	for (_uint i = 0; i < 6; i++)
 	{
 		for (_uint j = 0; j < 6; j++)
 		{
-			if (CKeyManager::Get_Instance()->Key_Pressing(VK_LBUTTON))
+			if (pManagement->Key_Pressing(VK_LBUTTON))
 			{
 				iIndex = i * 6 + j;
 				POINT ptMouse = {};
@@ -337,13 +344,17 @@ HRESULT CInventory::Select_SellItem()
 
 HRESULT CInventory::Check_AutoSortButton()
 {
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
 	POINT ptMouse = {};
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 	int iItemListSize = m_pInvenList.size();
 
 	// 지금은 키입력으로 하는데 나중에 버튼 추가해야 함
-	if (CKeyManager::Get_Instance()->Key_Down('M'))
+	if (pManagement->Key_Down('M'))
 	{
 		auto& iter = m_pInvenList.begin();
 		_uint iSize = m_pInvenList.size();
@@ -428,7 +439,7 @@ HRESULT CInventory::Check_EquipItem()
 	{
 		for (_uint j = 0; j < 6; j++)
 		{
-			if (CKeyManager::Get_Instance()->Key_Pressing(VK_RBUTTON))
+			if (pManagement->Key_Pressing(VK_RBUTTON))
 			{
 				iIndex = i * 6 + j;
 				POINT ptMouse = {};
@@ -465,7 +476,7 @@ HRESULT CInventory::Move_To_QuickSlot()
 	{
 		for (_uint j = 0; j < 6; j++)
 		{
-			if (CKeyManager::Get_Instance()->Key_Pressing(VK_LBUTTON))
+			if (pManagement->Key_Pressing(VK_LBUTTON))
 			{
 				iIndex = i * 6 + j;
 				POINT ptMouse = {};
@@ -634,6 +645,10 @@ HRESULT CInventory::Render_Item()
 
 HRESULT CInventory::Move_InventoryWnd()
 {
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
 	POINT ptMouse = {};
 	_int iIndex = 0;
 	GetCursorPos(&ptMouse);
@@ -658,7 +673,7 @@ HRESULT CInventory::Move_InventoryWnd()
 		}
 	}
 
-	if (CKeyManager::Get_Instance()->Key_Pressing(VK_LBUTTON))
+	if (pManagement->Key_Pressing(VK_LBUTTON))
 	{
 		if (PtInRect(&m_tInvenWndCollRt[INVEN_WND], ptMouse))
 		{

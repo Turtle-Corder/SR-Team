@@ -1,7 +1,7 @@
 #include "stdafx.h"
+#include "Mouse.h"
 #include "..\Headers\Skill.h"
 
-#include "KeyManager.h"
 #include "MainUI.h"
 USING(Client)
 
@@ -67,7 +67,11 @@ HRESULT CSkill::Setup_GameObject(void * _pArg)
 
 _int CSkill::Update_GameObject(_float _fDeltaTime)
 {
-	if (CKeyManager::Get_Instance()->Key_Down('Y'))
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return GAMEOBJECT::ERR;
+
+	if (pManagement->Key_Down('Y'))
 		m_bRender = !m_bRender;
 
 	if (m_bRender)
@@ -134,16 +138,18 @@ HRESULT CSkill::Render_UI()
 
 HRESULT CSkill::Set_SkillSort()
 {
-	POINT ptMouse = {};
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return GAMEOBJECT::ERR;
 
-	if (CKeyManager::Get_Instance()->Key_Pressing(VK_LBUTTON))
+	if (pManagement->Key_Pressing(VK_LBUTTON))
 	{
+		CMouse* pMouse = (CMouse*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Mouse");
+
 		_int k = 0;
-		if (PtInRect(&m_tSkillSortCollRt[ACTIVE], ptMouse))
+		if (PtInRect(&m_tSkillSortCollRt[ACTIVE], pMouse->Get_Point()))
 			m_eSkillSort = ACTIVE;
-		else if (PtInRect(&m_tSkillSortCollRt[PASSIVE], ptMouse))
+		else if (PtInRect(&m_tSkillSortCollRt[PASSIVE], pMouse->Get_Point()))
 			m_eSkillSort = PASSIVE;
 	}
 
@@ -152,13 +158,15 @@ HRESULT CSkill::Set_SkillSort()
 
 HRESULT CSkill::Show_ActiveSkill_Info()
 {
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return GAMEOBJECT::ERR;
+
+	CMouse* pMouse = (CMouse*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Mouse");
+
 	for (_uint i = 0; i < 6; i++)
 	{
-		POINT ptMouse = {};
-		GetCursorPos(&ptMouse);
-		ScreenToClient(g_hWnd, &ptMouse);
-
-		if (PtInRect(&m_tActiveCollRt[i], ptMouse))
+		if (PtInRect(&m_tActiveCollRt[i], pMouse->Get_Point()))
 		{
 			//PRINT_LOG(L"스킬 아이콘 선택함", LOG::CLIENT);
 		}
@@ -177,7 +185,7 @@ HRESULT CSkill::Move_To_QuickSlot()
 
 	for (_uint i = 0; i < 6; i++)
 	{
-		if (CKeyManager::Get_Instance()->Key_Pressing(VK_LBUTTON))
+		if (pManagement->Key_Pressing(VK_LBUTTON))
 		{
 			POINT ptMouse = {};
 			GetCursorPos(&ptMouse);

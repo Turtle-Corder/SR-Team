@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "UICamera.h"
-#include "KeyManager.h"
 #include "Item.h"
 #include "Inventory.h"
 #include "SkillInven.h"
@@ -204,7 +203,11 @@ HRESULT CMainUI::Setup_GameObject(void * pArg)
 
 int CMainUI::Update_GameObject(float DeltaTime)
 {
-	if (CKeyManager::Get_Instance()->Key_Down(VK_LBUTTON))
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return GAMEOBJECT::ERR;
+
+	if (pManagement->Key_Down(VK_LBUTTON))
 	{
 		POINT ptMouse = {};
 		GetCursorPos(&ptMouse);
@@ -385,7 +388,7 @@ HRESULT CMainUI::Check_LeftQuickSlot_Item()
 		// ¿ÞÂÊ
 		if (IntersectRect(&rc, &m_tLeftSlotCollRt[i], &m_tGoingItem_CollRt))
 		{
-			if (CKeyManager::Get_Instance()->Key_Up(VK_LBUTTON))
+			if (pManagement->Key_Up(VK_LBUTTON))
 			{
 				// ½ºÅ³ Àü¿ë ½½·Ô
 				if (m_pMovingItem->eSort == SKILL_ICON)
@@ -445,7 +448,7 @@ HRESULT CMainUI::Check_RightQuickSlot_Item()
 		// ¿ÞÂÊ
 		if (IntersectRect(&rc, &m_tRightSlotCollRt[i], &m_tGoingItem_CollRt))
 		{
-			if (CKeyManager::Get_Instance()->Key_Up(VK_LBUTTON))
+			if (pManagement->Key_Up(VK_LBUTTON))
 			{
 				// ½ºÅ³ Àü¿ë ½½·Ô
 				if (m_pMovingItem->eSort == POTION)
