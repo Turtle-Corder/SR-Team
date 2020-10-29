@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "..\Headers\ItemInventory.h"
 #include "PlayerItem.h"
-
+#include "ItemManager.h"
 USING(Client)
 
 CItemInventory::CItemInventory(LPDIRECT3DDEVICE9 _pDevice, LPD3DXSPRITE _pSprite, LPD3DXFONT _pFont)
@@ -20,6 +20,12 @@ CItemInventory::CItemInventory(const CItemInventory & _rOther)
 
 CItemInventory::~CItemInventory()
 {
+}
+
+HRESULT CItemInventory::Set_ItemIndex(_int iIndex, ePotion_ID ePOTION)
+{
+	m_pPlayerItem[iIndex] = CItemManager::Get_Instance()->Get_PlayerItem(ePOTION);
+	return S_OK;
 }
 
 HRESULT CItemInventory::Use_Item(_int iIndex)

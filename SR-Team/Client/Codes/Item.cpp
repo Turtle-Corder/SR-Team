@@ -9,7 +9,7 @@ USING(Client)
 CItem::CItem(LPDIRECT3DDEVICE9 _pDevice)
 	: CGameObject(_pDevice)
 {
-	for (_uint i = 0; i < 10; ++i)
+	for (_uint i = 0; i < 13; ++i)
 	{
 		m_pTextureCom[i] = nullptr;
 		m_pStatCom[i] = nullptr;
@@ -154,7 +154,7 @@ HRESULT CItem::Add_Component()
 
 HRESULT CItem::Add_Component_Item()
 {
-	for (_uint i = 0; i < 10; ++i)
+	for (_uint i = 0; i < 13; ++i)
 	{
 		// 3. Texture--------------------------------------------------------------
 		TCHAR szTexture[MAX_PATH] = L"";
@@ -189,6 +189,15 @@ HRESULT CItem::Add_Component_Item()
 		else if (i == 9)
 			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
 				L"Component_Texture_Item_WhitePotion");
+		else if (i == 10)
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_Item_BluePotion");
+		else if (i == 11)
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_Item_RedElixir");
+		else if (i == 12)
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_Item_BlueElixir");
 		
 		StringCchPrintf(szTexture, sizeof(TCHAR) * MAX_PATH,
 			L"Com_Texture%d", i);
@@ -272,6 +281,7 @@ HRESULT CItem::Add_Component_Item()
 				L"%s", L"RedPotion");
 			StringCchPrintf(pItem->szShopTag, _countof(pItem->szShopTag),
 				L"»¡°£ Æ÷¼Ç");
+			pItem->ePotionID = RED_POTION;
 		}
 		if (i == 8)
 		{
@@ -290,6 +300,36 @@ HRESULT CItem::Add_Component_Item()
 				L"%s", L"WhitePotion");
 			StringCchPrintf(pItem->szShopTag, _countof(pItem->szShopTag),
 				L"ÇÏ¾á Æ÷¼Ç");
+		}
+		if (i == 10)
+		{
+			pItem->iPrice = 100;
+			pItem->eSort = eITEM_SORT::POTION;
+			pItem->ePotionID = ePotion_ID::BLUE_POTION;
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"BluePotion");
+			StringCchPrintf(pItem->szShopTag, _countof(pItem->szShopTag),
+				L"ÆÄ¶õ Æ÷¼Ç");
+		}
+		if (i == 11)
+		{
+			pItem->iPrice = 200;
+			pItem->eSort = eITEM_SORT::POTION;
+			pItem->ePotionID = ePotion_ID::RED_ELIXIR;
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"RedElixir");
+			StringCchPrintf(pItem->szShopTag, _countof(pItem->szShopTag),
+				L"»¡°£ ¿¤¸¯¼­");
+		}
+		if (i == 12)
+		{
+			pItem->iPrice = 200;
+			pItem->eSort = eITEM_SORT::POTION;
+			pItem->ePotionID = ePotion_ID::BLUE_ELIXIR;
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"BlueElixir");
+			StringCchPrintf(pItem->szShopTag, _countof(pItem->szShopTag),
+				L"ÆÄ¶õ ¿¤¸¯¼­");
 		}
 		m_vItemList.emplace_back(pItem);
 
@@ -479,7 +519,7 @@ CGameObject * CItem::Clone_GameObject(void * pArg)
 
 void CItem::Free()
 {
-	for (_uint i = 0; i < 10; ++i)
+	for (_uint i = 0; i < 13; ++i)
 	{
 		Safe_Release(m_pTextureCom[i]);
 		Safe_Release(m_pStatCom[i]);

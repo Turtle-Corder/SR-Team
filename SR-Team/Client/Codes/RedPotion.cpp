@@ -1,8 +1,10 @@
 #include "stdafx.h"
 #include "..\Headers\RedPotion.h"
 #include "Equip.h"
+#include "Inventory.h"
 
 USING(Client)
+
 
 CRedPotion::CRedPotion(LPDIRECT3DDEVICE9 _pDevice, LPD3DXSPRITE _pSprite, LPD3DXFONT _pFont)
 	: CPlayerItem(_pDevice, _pSprite, _pFont)
@@ -70,8 +72,15 @@ HRESULT CRedPotion::Use_Item()
 	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 1);
 	if (pEquip == nullptr)
 		return E_FAIL;
+	CInventory* pInven = (CInventory*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Inventory", 0);
+	if (pInven == nullptr)
+		return E_FAIL;
 
+	// 장비창에서 플레이어 HP 증가
 	pEquip->Set_PlayerHp(30);
+
+	// 인벤에서 포션 아이템 개수 감소
+	pInven->Use_Potion(RED_POTION);
 
 	return S_OK;
 }

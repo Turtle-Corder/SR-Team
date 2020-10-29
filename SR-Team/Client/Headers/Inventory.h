@@ -31,6 +31,8 @@ public:
 	// ------------------------------------------------------------------
 	_bool Get_Render() { return m_bRender; }
 
+public:
+	void Use_Potion(ePotion_ID ePotionID);
 
 public:
 	// ------------------------------------------------------------------

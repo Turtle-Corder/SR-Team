@@ -50,7 +50,7 @@ void CEquip::Equip_Item(eITEM_SORT eSort, const wstring& strItemTag/*INVEN_ITEM 
 
 void CEquip::Set_PlayerHp(_int iHP)
 {
-	m_pStatCom->Set_HP(iHP);
+	m_pStatCom->Set_HP(-iHP);
 	if (m_pStatCom->Get_Status().iHp >= m_pStatCom->Get_Status().iMaxHp)
 		m_pStatCom->Set_HP(m_pStatCom->Get_Status().iHp - m_pStatCom->Get_Status().iMaxHp);
 }
@@ -403,7 +403,7 @@ HRESULT CEquip::Add_Component()
 	CStatus::STAT	tStat;
 	tStat.iMaxHp = 100;
 	tStat.iMaxMp = 100;
-	tStat.iHp = 100;
+	tStat.iHp = 50;
 	tStat.iMp = 100;
 
 	if (FAILED(CGameObject::Add_Component(

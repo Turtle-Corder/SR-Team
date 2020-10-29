@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Scene_Logo.h"
 #include "SkillManager.h"
+#include "ItemManager.h"
 #include "..\Headers\MainApp.h"
 
 
@@ -235,6 +236,11 @@ HRESULT CMainApp::Setup_StaticResources()
 		return E_FAIL;
 #pragma endregion
 
+#pragma region GameObject_ItemInven
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_ItemInven", CItemInventory::Create(m_pDevice, m_pSprite, m_pFont))))
+		return E_FAIL;
+#pragma endregion
+
 // 플레이어 스킬 객체
 #pragma region GameObject_LaserSkill
 	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_LaserSkill", CLaserSkill::Create(m_pDevice, m_pSprite, m_pFont))))
@@ -253,6 +259,12 @@ HRESULT CMainApp::Setup_StaticResources()
 
 #pragma region GameObject_TerrainBundle
 	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_TerrainBundle", CTerrainBundle::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+// 플레이어 아이템 객체
+#pragma regeion GameObject_RedPotion
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_RedPotion", CRedPotion::Create(m_pDevice, m_pSprite, m_pFont))))
 		return E_FAIL;
 #pragma endregion
 
@@ -484,6 +496,18 @@ HRESULT CMainApp::Setup_StaticResources()
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_OrangePotion", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
 		L"../Resources/2DResource/new_Item/orange_potion%d.png"))))
 		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
+		L"Component_Texture_Item_BluePotion", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/Sprite/Layer_Item/blue_potion%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
+		L"Component_Texture_Item_RedElixir", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/Sprite/Layer_Item/red_elixir%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
+		L"Component_Texture_Item_BlueElixir", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/Sprite/Layer_Item/blue_elixir%d.png"))))
+		return E_FAIL;
 #pragma endregion
 
 #pragma region Suit
@@ -668,6 +692,7 @@ CMainApp * CMainApp::Create()
 void CMainApp::Free()
 {
 	CSkillManager::Destroy_Instance();
+	CItemManager::Destroy_Instance();
 
 	Safe_Release(m_pFont);
 	Safe_Release(m_pSprite);

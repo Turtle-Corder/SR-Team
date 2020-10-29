@@ -16,6 +16,7 @@ public:
 	virtual ~CItemInventory();
 
 public:
+	HRESULT Set_ItemIndex(_int iIndex, ePotion_ID ePOTION);
 	HRESULT Use_Item(_int iIndex);
 
 public:

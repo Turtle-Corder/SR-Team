@@ -5,12 +5,16 @@
 
 BEGIN(Client)
 USING(Engine)
+class CPlayerItem;
 
 class CItemManager
 {
 private:
 	CItemManager();
 	virtual ~CItemManager() = default;
+
+public:
+	CPlayerItem* Get_PlayerItem(ePotion_ID ePotionID);
 
 public:
 	static CItemManager* Get_Instance()
@@ -27,6 +31,8 @@ public:
 
 private:
 	static CItemManager*	m_pInstance;
+
+	CPlayerItem*			m_pRedPotion = nullptr;
 };
 
 END

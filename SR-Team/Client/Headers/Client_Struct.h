@@ -11,6 +11,7 @@ typedef struct tagInvenItem
 	WCHAR			szShopTag[MIN_STR];
 	eITEM_SORT		eSort = eITEM_SORT::ITEMSORT_END;
 	eActiveSkill_ID	eActiveID = eActiveSkill_ID::ACTIVE_SKILL_END;
+	ePotion_ID		ePotionID = POTION_END;
 	int				iCnt = 0;
 	int				iPrice = 0;
 	int				iInvneInsertOrder = -1;
