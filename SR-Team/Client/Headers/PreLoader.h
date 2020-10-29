@@ -27,12 +27,17 @@ private:
 	HRESULT Load_Resources_Stage4();
 	HRESULT Load_Resources_Stage5();
 
+
+
+
 private:
 	static _uint WINAPI ThreadMain(void* _pParam);
 
 public:
 	static CPreLoader* Create(LPDIRECT3DDEVICE9 _pDevice, eSCENE_ID _eNextSceneID);
 	virtual void Free() override;
+
+	HRESULT Setup_Stage_CubeTerrain(const wstring & LayerTag);
 
 
 private:
