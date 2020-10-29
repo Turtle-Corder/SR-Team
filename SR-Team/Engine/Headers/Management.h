@@ -7,9 +7,10 @@
 #include "Timer_Manager.h"
 #include "Component_Manager.h"
 #include "Object_Manager.h"
-#include "Renderer.h"
 #include "Nav_Manager.h"
 #include "FrameManager.h"
+#include "Key_Manager.h"
+#include "Renderer.h"
 
 BEGIN(Engine)
 
@@ -115,6 +116,15 @@ public:
 	HRESULT Set_TileInfo(TILEINFO* _pTileInfo, _int _iWidth, _int _iHeight);
 	HRESULT PathFind(CNavAgent* _pAgent, _int _iStartX, _int _iStartZ, _int _iGoalX, _int _iGoalZ);
 
+
+	//--------------------------------------------------
+	// ±Ê√£±‚
+	//--------------------------------------------------
+	_bool Key_Pressing(_int _key);
+	_bool Key_Down(_int _key);
+	_bool Key_Up(_int _key);
+
+
 public:
 	virtual void Free() override;
 
@@ -131,6 +141,7 @@ private:
 	CObject_Manager*	m_pObject_Manager		= nullptr;
 	CNav_Manager*		m_pNav_Manager			= nullptr;
 	CFrame_Manager*		m_pFrame_Manager		= nullptr;
+	CKey_Manager*		m_pKey_Manager			= nullptr;
 
 	CRenderer*			m_pRenderer				= nullptr;
 

@@ -62,6 +62,11 @@ HRESULT CMouse::Change_State(CMouse::STATE _eState)
 	return S_OK;
 }
 
+const POINT & CMouse::Get_Point()
+{
+	return m_tPoint;
+}
+
 HRESULT CMouse::Setup_GameObject_Prototype()
 {
 	return S_OK;
@@ -79,20 +84,19 @@ HRESULT CMouse::Setup_GameObject(void * _pArg)
 
 int CMouse::Update_GameObject(float _fDeltaTime)
 {
-	POINT pt = {};
-	GetCursorPos(&pt);
-	ScreenToClient(g_hWnd, &pt);
-	
+	GetCursorPos(&m_tPoint);
+	ScreenToClient(g_hWnd, &m_tPoint);
+
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
 		_int iRand = rand() % (_int)STATE::STATE_END;
 		Change_State((STATE)iRand);
 	}
 
-	m_pTransformComp[KIND::ACTUAL]->Set_Position(_vec3( (_float)pt.x, (_float)pt.y, 0.f ));
+	m_pTransformComp[KIND::ACTUAL]->Set_Position(_vec3( (_float)m_tPoint.x, (_float)m_tPoint.y, 0.f ));
 	m_pTransformComp[KIND::ACTUAL]->Update_Transform();
 
-	m_pTransformComp[KIND::RENDER]->Set_Position(_vec3((_float)(pt.x + 16.f), (_float)(pt.y + 16.f), 0.f));
+	m_pTransformComp[KIND::RENDER]->Set_Position(_vec3((_float)(m_tPoint.x + 16.f), (_float)(m_tPoint.y + 16.f), 0.f));
 	m_pTransformComp[KIND::RENDER]->Update_Transform();
 
 	if (m_eState >= ANIMSTATE_START)

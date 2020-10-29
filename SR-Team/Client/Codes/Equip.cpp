@@ -1,7 +1,7 @@
 #include "stdafx.h"
+#include "Mouse.h"
 #include "..\Headers\Equip.h"
 
-#include "KeyManager.h"
 #include "Item.h"
 USING(Client)
 
@@ -106,7 +106,11 @@ HRESULT CEquip::Setup_GameObject(void * _pArg)
 
 _int CEquip::Update_GameObject(_float _fDeltaTime)
 {
-	if (CKeyManager::Get_Instance()->Key_Down('U'))
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return GAMEOBJECT::ERR;
+
+	if (pManagement->Key_Down('U'))
 		m_bRender = !m_bRender;
 
 	if (FAILED(Count_Stat()))
@@ -330,16 +334,21 @@ HRESULT CEquip::Count_Stat()
 
 HRESULT CEquip::UnEquip_Item()
 {
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	CMouse* pMouse = (CMouse*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Mouse");
+	if (nullptr == pMouse)
+		return E_FAIL;
+
 	for (_uint i = 0; i < ITEMSORT_END; ++i)
 	{
 		if (m_bEquip[i])
 		{
-			if (CKeyManager::Get_Instance()->Key_Down(VK_LBUTTON))
+			if (pManagement->Key_Down(VK_LBUTTON))
 			{
-				POINT ptMouse = {};
-				GetCursorPos(&ptMouse);
-				ScreenToClient(g_hWnd, &ptMouse);
-				if (PtInRect(&m_tEquipItemCollRt[i], ptMouse))
+				if (PtInRect(&m_tEquipItemCollRt[i], pMouse->Get_Point()))
 				{
 					m_bEquip[i] = false;
 				}

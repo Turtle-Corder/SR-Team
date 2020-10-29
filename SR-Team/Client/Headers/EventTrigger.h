@@ -4,5 +4,9 @@ class CEventTrigger
 public:
 	CEventTrigger();
 	~CEventTrigger();
+
+
+
+
 };
 

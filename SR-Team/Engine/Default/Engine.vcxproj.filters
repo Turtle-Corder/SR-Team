@@ -130,6 +130,9 @@
     <Filter Include="01.Utillity\08.FrameManager">
       <UniqueIdentifier>{34f5c554-e62a-454b-89e9-fe47bb2e3a9d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utillity\09.KeyManager">
+      <UniqueIdentifier>{4faa9aab-431a-444d-bd46-c661eab844b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Headers\Device_Manager.h">
@@ -243,6 +246,9 @@
     <ClInclude Include="..\Headers\SphereCollider.h">
       <Filter>01.Utillity\05.Component\05.Collision\00.SphereCollider</Filter>
     </ClInclude>
+    <ClInclude Include="..\Headers\Key_Manager.h">
+      <Filter>01.Utillity\09.KeyManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Codes\Device_Manager.cpp">
@@ -340,6 +346,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\SphereCollider.cpp">
       <Filter>01.Utillity\05.Component\05.Collision\00.SphereCollider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Key_Manager.cpp">
+      <Filter>01.Utillity\09.KeyManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
