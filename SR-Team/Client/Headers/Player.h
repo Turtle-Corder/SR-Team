@@ -24,6 +24,9 @@ private:
 	virtual ~CPlayer() = default;
 
 public:
+	_bool Get_IsOnActiveBuff(_int iIndex) { return m_bActiveBuff[iIndex]; }
+
+public:
 	virtual HRESULT Setup_GameObject_Prototype() override;
 	virtual HRESULT Setup_GameObject(void* _pArg) override;
 

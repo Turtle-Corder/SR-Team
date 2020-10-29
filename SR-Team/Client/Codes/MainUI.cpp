@@ -5,6 +5,7 @@
 #include "SkillInven.h"
 #include "ItemInventory.h"
 #include "Equip.h"
+#include "Player.h"
 #include "..\Headers\MainUI.h"
 #include "Mouse.h"
 
@@ -212,15 +213,6 @@ int CMainUI::Update_GameObject(float DeltaTime)
 	CMouse* pMouse = (CMouse*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Mouse");
 	if (nullptr == pMouse)
 		return GAMEOBJECT::NOEVENT;
-
-	if (pManagement->Key_Down(VK_LBUTTON))
-	{
-
-		TCHAR szBuff[MAX_PATH] = L"";
-		StringCchPrintf(szBuff, sizeof(TCHAR) * MAX_PATH,
-			L"X : %d, Y : %d", pMouse->Get_Point().x, pMouse->Get_Point().y);
-		//PRINT_LOG(szBuff, LOG::CLIENT);
-	}
 
 	if (m_bRender_GoingItem)
 	{
@@ -611,15 +603,24 @@ HRESULT CMainUI::Render_Item_GoingToQuickSlot()
 
 HRESULT CMainUI::Render_QuickSlot_Item()
 {
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (pManagement == nullptr)
+		return E_FAIL;
+	CPlayer* pPlayer = (CPlayer*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Player");
+	if (pPlayer == nullptr)
+		return E_FAIL;
+
 	_int k = 0;
 	_vec3 vCenter = { 0.f, 0.f, 0.f };
 	_vec3 vPos = { 0.f, 0.f, 0.f };
 	D3DXMATRIX matTrans, matWorld;
 
+
 	for (_uint i = 0; i < 8; ++i)
 	{
-		if (m_pTextureLeftQuickSlot[i] != nullptr)
+		if (m_pTextureLeftQuickSlot[i] != nullptr)	// 스킬
 		{
+			_bool bCheck = false;
 			const D3DXIMAGE_INFO* pTexInfo = m_pTextureLeftQuickSlot[i]->Get_TexInfo(0);
 			vCenter = { pTexInfo->Width * 0.5f, pTexInfo->Height * 0.5f, 0.f };
 			vPos = m_pTransformLeftSlot[i]->Get_Desc().vPosition;
@@ -632,13 +633,31 @@ HRESULT CMainUI::Render_QuickSlot_Item()
 			D3DXMatrixTranslation(&matTrans, vPos.x + 7.f, vPos.y + 10.f, 0.f);
 			matWorld = matTrans;
 
+			if (m_pLeftSlotItem[i]->eActiveID == ACTIVE_ENERGY_EXPLOTIATION)
+				bCheck = pPlayer->Get_IsOnActiveBuff(CPlayer::ACTIVE_BUFF::BUFF_ATT);
+			else if (m_pLeftSlotItem[i]->eActiveID == ACTIVE_MAGIC_ARMOR)
+				bCheck = pPlayer->Get_IsOnActiveBuff(CPlayer::ACTIVE_BUFF::BUFF_SHIELD);
+			else if (m_pLeftSlotItem[i]->eActiveID == ACTIVE_MANA_DRIFT)
+				bCheck = pPlayer->Get_IsOnActiveBuff(CPlayer::ACTIVE_BUFF::BUFF_MANA);
+
+
 			m_pSprite->SetTransform(&matWorld);
-			m_pSprite->Draw(
-				(LPDIRECT3DTEXTURE9)m_pTextureLeftQuickSlot[i]->GetTexture(0),
-				nullptr, &vCenter, nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
+			// 현재 버프를 사용중이면 약간 투명하게 그린다
+			if (bCheck)
+			{
+				m_pSprite->Draw(
+					(LPDIRECT3DTEXTURE9)m_pTextureLeftQuickSlot[i]->GetTexture(0),
+					nullptr, &vCenter, nullptr, D3DCOLOR_ARGB(100, 255, 255, 255));
+			}
+			else
+			{
+				m_pSprite->Draw(
+					(LPDIRECT3DTEXTURE9)m_pTextureLeftQuickSlot[i]->GetTexture(0),
+					nullptr, &vCenter, nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
+			}
 		}
 
-		if (m_pTextureRightQuickSlot[i] != nullptr)
+		if (m_pTextureRightQuickSlot[i] != nullptr)		// 아이템
 		{
 			const D3DXIMAGE_INFO* pTexInfo = m_pTextureRightQuickSlot[i]->Get_TexInfo(0);
 			vCenter = { pTexInfo->Width * 0.5f, pTexInfo->Height * 0.5f, 0.f };

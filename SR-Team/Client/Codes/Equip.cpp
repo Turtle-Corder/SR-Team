@@ -75,8 +75,7 @@ void CEquip::Set_PlayerHp(_int iHP)
 	if (m_pStatCom->Get_Status().iHp >= m_pStatCom->Get_Status().iMaxHp)
 		m_pStatCom->Set_HP(m_pStatCom->Get_Status().iHp - m_pStatCom->Get_Status().iMaxHp);
 	if (m_pStatCom->Get_Status().iHp <= 0)
-	{
-	}
+		m_pStatCom->Change_Hp(0);
 }
 
 void CEquip::Set_PlayerMP(_int iMP)
@@ -84,6 +83,8 @@ void CEquip::Set_PlayerMP(_int iMP)
 	m_pStatCom->Set_MP(-iMP);
 	if (m_pStatCom->Get_Status().iMp >= m_pStatCom->Get_Status().iMaxMp)
 		m_pStatCom->Set_MP(m_pStatCom->Get_Status().iMp - m_pStatCom->Get_Status().iMaxMp);
+	if (m_pStatCom->Get_Status().iMp <= 0)
+		m_pStatCom->Change_Mp(0);
 }
 
 HRESULT CEquip::Setup_GameObject_Prototype()
@@ -125,6 +126,7 @@ HRESULT CEquip::Setup_GameObject(void * _pArg)
 		m_pTransformItem[i]->Set_Position(vPos);
 	}
 
+
 	return S_OK;
 }
 
@@ -141,6 +143,13 @@ _int CEquip::Update_GameObject(_float _fDeltaTime)
 		return GAMEOBJECT::WARN;
 	if (FAILED(UnEquip_Item()))
 		return GAMEOBJECT::WARN;
+
+	// ġƮ
+	if (pManagement->Key_Down(VK_RETURN))
+	{
+		m_pStatCom->Change_Hp(100);
+		m_pStatCom->Change_Mp(100);
+	}
 
 	for (_uint i = 0; i < EQUIP_END; ++i)
 	{
