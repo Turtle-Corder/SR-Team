@@ -200,6 +200,9 @@ _int CInventory::Update_GameObject(float DeltaTime)
 			if (FAILED(Move_InventoryWnd()))
 				return GAMEOBJECT::WARN;
 		}
+
+		if (FAILED(Check_ItemCount()))
+			return GAMEOBJECT::ERR;
 	}
 
 	for (_uint i = 0; i < INVEN_END; ++i)
@@ -271,6 +274,63 @@ HRESULT CInventory::Render_UI()
 
 		if (FAILED(Render_Item()))
 			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CInventory::Check_ItemCount()
+{
+	auto& iter = m_pInvenList.begin();
+	_int iDeleteCnt = 0, iIndex = 0;
+	_bool bDelete[36] = { false, };
+
+	while (iter != m_pInvenList.end())
+	{
+		// 아이템 개수가 0이면 아이템/텍스처 삭제
+		if ((*iter)->iCnt == 0)
+		{
+			++iDeleteCnt;
+			bDelete[iIndex] = true;
+			Safe_Delete(*iter);
+			iter = m_pInvenList.erase(iter);
+			m_bIsItemHere[iIndex] = false;
+		}
+		else
+			++iter;
+		++iIndex;
+	}
+
+	// 아이템 텍스처 삭제
+	_int iTextureIndex = 0;
+	for (auto& iter = m_pTextureItem.begin(); iter != m_pTextureItem.end(); )
+	{
+		if (bDelete[iTextureIndex])
+		{
+			Safe_Release(*iter);
+			iter = m_pTextureItem.erase(iter);
+		}
+		else
+			++iter;
+		++iTextureIndex;
+	}
+
+	// 삭제한 텍스처만큼 생성
+	m_pTextureItem.resize(36);
+	for (_int i = 36 - iDeleteCnt, j = 0; j < iDeleteCnt; i++, ++j)
+	{
+		// Texture-------------------------------------------------------------------
+		TCHAR szItemTexture[MAX_STR] = L"";
+		TCHAR szItemTextureName[MAX_STR] = L"";
+		//ITEM* pItem = new ITEM;
+		//pItem->wstrItemName = L"Empty";
+		wsprintf(szItemTextureName, L"Component_Texture_Item_Empty");
+		wsprintf(szItemTexture, L"Com_NewItemTexture%d", m_iNewInsertOrder);
+
+		if (FAILED(CGameObject::Add_Component(SCENE_STATIC,
+			szItemTextureName, szItemTexture, (CComponent**)&m_pTextureItem[i])))
+			return E_FAIL;
+		++m_iNewInsertOrder;
 	}
 
 	return S_OK;
@@ -374,6 +434,7 @@ HRESULT CInventory::Check_AutoSortButton()
 		int iItemIndex = 0;
 		m_bAutoSort = true;
 
+		// 인벤에서 아이템 삭제
 		while (iter != m_pInvenList.end())
 		{
 			if (m_bSelectedSell[iItemIndex])
@@ -390,6 +451,7 @@ HRESULT CInventory::Check_AutoSortButton()
 
 		int iTextureItemIdx = 0;
 		int iDeleteCnt = 0;
+		// 아이템 텍스처 삭제
 		for (auto& iter = m_pTextureItem.begin(); iter != m_pTextureItem.end(); )
 		{
 			if (m_bSelectedSell[iTextureItemIdx])

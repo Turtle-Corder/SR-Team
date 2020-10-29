@@ -808,7 +808,6 @@ void CPlayer::Check_Skill(_float fDeltaTime)
 			m_bUsingSkill = false;
 			return;
 		}
-			
 
 		// ¸ð¼Ç
 		eSkillID = pSkillInven->Get_SkillID(0);

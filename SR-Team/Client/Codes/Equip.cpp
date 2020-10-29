@@ -419,8 +419,8 @@ HRESULT CEquip::Add_Component()
 	CStatus::STAT	tStat;
 	tStat.iMaxHp = 100;
 	tStat.iMaxMp = 100;
-	tStat.iHp = 50;
-	tStat.iMp = 50;
+	tStat.iHp = 100;
+	tStat.iMp = 30;
 	tStat.iLevel = 1;
 
 	if (FAILED(CGameObject::Add_Component(
