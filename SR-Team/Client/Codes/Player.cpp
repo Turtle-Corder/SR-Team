@@ -950,22 +950,22 @@ void CPlayer::Check_QuickSlotItem()
 	if (pItemInven == nullptr)
 		return;
 
-	if (CKeyManager::Get_Instance()->Key_Down('1'))
+	if (pManagement->Key_Down('1'))
 	{
 		if (FAILED(pItemInven->Use_Item(0)))
 			return;
 	}
-	else if (CKeyManager::Get_Instance()->Key_Down('2'))
+	else if (pManagement->Key_Down('2'))
 	{
 		if (FAILED(pItemInven->Use_Item(1)))
 			return;
 	}
-	else if (CKeyManager::Get_Instance()->Key_Down('3'))
+	else if (pManagement->Key_Down('3'))
 	{
 		if (FAILED(pItemInven->Use_Item(2)))
 			return;
 	}
-	else if (CKeyManager::Get_Instance()->Key_Down('4'))
+	else if (pManagement->Key_Down('4'))
 	{
 		if (FAILED(pItemInven->Use_Item(3)))
 			return;
