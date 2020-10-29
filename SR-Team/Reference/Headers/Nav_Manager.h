@@ -4,6 +4,8 @@
 
 #include "Base.h"
 
+#define NAVNODE_MAX 3000
+
 BEGIN(Engine)
 class CNavAgent;
 class CVIBuffer;
@@ -83,7 +85,8 @@ private:
 	_int m_iStartX, m_iStartZ;
 	_int m_iGoalX, m_iGoalZ;
 
-	_int m_iMaxFindCount = 10000;
+	NAV_NODE m_arryNodes[NAVNODE_MAX] = {};
+	_int m_iMaxFindCount = NAVNODE_MAX;
 	_int m_iCurFindCount;
 
 

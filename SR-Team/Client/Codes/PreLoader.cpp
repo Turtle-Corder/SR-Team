@@ -19,10 +19,8 @@
 #include "PlaneSkill.h"
 #include "EnergyBolt.h"
 #include "Crack.h"
-
 #include "TerrainBundle.h"
 #include "Wand.h"
-
 #pragma endregion
 
 USING(Client)
