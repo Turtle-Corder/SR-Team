@@ -17,6 +17,7 @@ public:
 public:
 	//void Equip_Item(INVEN_ITEM& _tItem);
 	void Equip_Item(eITEM_SORT eSort, const wstring& strItemTag);
+	CStatus::STAT Get_PlayerStat() { return m_pStatCom->Get_Status(); }
 
 public:
 	void Set_PlayerHp(_int iHP);
@@ -70,7 +71,7 @@ private:
 	RECT					m_tEquipWndCollRt[EQUIP_END];
 
 	// 착용하고 있는 장비 정보
-	//vector<INVEN_ITEM*>		m_vEquipItem;
+	INVEN_ITEM*				m_pEquipItem[ITEMSORT_END];
 	CStatus*				m_pStatItem[ITEMSORT_END];
 	CTexture*				m_pTextureItem[ITEMSORT_END];
 	vector<CTransform*>		m_pTransformItem;

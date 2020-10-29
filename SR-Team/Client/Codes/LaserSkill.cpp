@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "..\Headers\LaserSkill.h"
-
+#include "Equip.h"
 USING(Client)
 
 
@@ -91,6 +91,16 @@ HRESULT CLaserSkill::Use_Skill(float fDeltaTime)
 		m_fStartTime = 0.f;
 		PRINT_LOG(L"쿨타임 끝 / 레이저 스킬 사용", LOG::CLIENT);
 	}
+
+	// MP 감소
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (pManagement == nullptr)
+		return E_FAIL;
+	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 1);
+	if (pEquip == nullptr)
+		return E_FAIL;
+
+	pEquip->Set_PlayerMP(-10);
 
 	return S_OK;
 }

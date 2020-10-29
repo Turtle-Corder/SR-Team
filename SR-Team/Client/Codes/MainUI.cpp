@@ -4,6 +4,7 @@
 #include "Inventory.h"
 #include "SkillInven.h"
 #include "ItemInventory.h"
+#include "Equip.h"
 #include "..\Headers\MainUI.h"
 #include "Mouse.h"
 
@@ -122,10 +123,10 @@ HRESULT CMainUI::Setup_GameObject(void * pArg)
 	m_vPos[MAINUI_MAIN] = _vec3(WINCX * 0.5f, WINCY - 100.f, 0.f);
 	m_pTransformCom[MAINUI_MAIN]->Set_Position(m_vPos[MAINUI_MAIN]);
 
-	m_vPos[MAINUI_HP] = _vec3(380.f, 500.f, 0.f);
+	m_vPos[MAINUI_HP] = _vec3(371.f, 490.f, 0.f);
 	m_pTransformCom[MAINUI_HP]->Set_Position(m_vPos[MAINUI_HP]);
 
-	m_vPos[MAINUI_MP] = _vec3(420.f, 500.f, 0.f);
+	m_vPos[MAINUI_MP] = _vec3(429.f, 490.f, 0.f);
 	m_pTransformCom[MAINUI_MP]->Set_Position(m_vPos[MAINUI_MP]);
 
 	//m_vPos[MAINUI_QUICKSLOT_LFFT] = _vec3(170.f, 500.f, 0.f);
@@ -283,10 +284,16 @@ int CMainUI::LateUpdate_GameObject(float DeltaTime)
 
 HRESULT CMainUI::Render_UI()
 {
-	_int iHP = 50;
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
+	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 1);
+	if (pEquip == nullptr)
+		return E_FAIL;
+	_int iHp = pEquip->Get_PlayerStat().iHp;
+	_int iMaxHp = pEquip->Get_PlayerStat().iMaxHp;
+	_int iMp = pEquip->Get_PlayerStat().iMp;
+	_int iMaxMp = pEquip->Get_PlayerStat().iMaxMp;
 
 	for (_uint i = 0; i < MAINUI_END; ++i)
 	{
@@ -295,19 +302,49 @@ HRESULT CMainUI::Render_UI()
 
 		// - HP/MP 지연 감소
 		// HP/MP 감소에 따른 RECT 변경 나중에 하기
-		if (i == MAINUI_HP || i == MAINUI_MP)
+		if (i == MAINUI_HP)
 		{
+			m_tCollRt[i].left = 0;
+			m_tCollRt[i].right = (LONG)(pTexInfo->Width);
+			m_tCollRt[i].top = (LONG)((iMaxHp - iHp));
+			m_tCollRt[i].bottom = (LONG)(pTexInfo->Height);
+
+			_vec3 vPos = { 0.f, 0.f, 0.f };
+			vPos.y = (_float)(iMaxHp - iHp);
+
+			m_pSprite->SetTransform(&m_pTransformCom[i]->Get_Desc().matWorld);
+			m_pSprite->Draw(
+				(LPDIRECT3DTEXTURE9)m_pTextureCom[i]->GetTexture(0),
+				&m_tCollRt[i], &vCenter, &vPos, D3DCOLOR_ARGB(255, 255, 255, 255));
+		}
+		else if (i == MAINUI_MP)
+		{
+			m_tCollRt[i].left = 0;
+			m_tCollRt[i].right = (LONG)(pTexInfo->Width);
+			m_tCollRt[i].top = (LONG)((iMaxMp - iMp));
+			m_tCollRt[i].bottom = (LONG)(pTexInfo->Height);
+			
+			_vec3 vPos = { 0.f, 0.f, 0.f };
+			vPos.y = (_float)(iMaxMp - iMp);
+
+			m_pSprite->SetTransform(&m_pTransformCom[i]->Get_Desc().matWorld);
+			m_pSprite->Draw(
+				(LPDIRECT3DTEXTURE9)m_pTextureCom[i]->GetTexture(0),
+				&m_tCollRt[i], &vCenter, &vPos, D3DCOLOR_ARGB(255, 255, 255, 255));
+		}
+		else
+		{
+			m_tCollRt[i].left = 0;
+			m_tCollRt[i].right = (LONG)(pTexInfo->Width);
+			m_tCollRt[i].top = 0;
+			m_tCollRt[i].bottom = (LONG)(pTexInfo->Height);
+
+			m_pSprite->SetTransform(&m_pTransformCom[i]->Get_Desc().matWorld);
+			m_pSprite->Draw(
+				(LPDIRECT3DTEXTURE9)m_pTextureCom[i]->GetTexture(0),
+				&m_tCollRt[i], &vCenter, nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
 		}
 
-		m_tCollRt[i].left = 0;
-		m_tCollRt[i].right = (LONG)(pTexInfo->Width + (iHP - 50));
-		m_tCollRt[i].top = 0;
-		m_tCollRt[i].bottom = (LONG)(pTexInfo->Height);
-
-		m_pSprite->SetTransform(&m_pTransformCom[i]->Get_Desc().matWorld);
-		m_pSprite->Draw(
-			(LPDIRECT3DTEXTURE9)m_pTextureCom[i]->GetTexture(0),
-			&m_tCollRt[i], &vCenter, nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
 	}
 
 	if (m_bRender_GoingItem)

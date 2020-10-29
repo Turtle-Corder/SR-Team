@@ -15,6 +15,7 @@ class CPlayer final : public CGameObject
 public:
 	enum CHANGE_MOVE { CHANGE_LEFT, CHANGE_RIGHT, MOVE_END };
 	enum MOVEING_DIR { MOVING_UP, MOVING_DOWN, MOVING_LEFT, MOVING_RIGHT };
+	enum ACTIVE_BUFF { BUFF_MANA, BUFF_ATT, BUFF_SHIELD, BUFF_END };
 
 private:
 	explicit CPlayer(LPDIRECT3DDEVICE9 _pDevice);
@@ -87,6 +88,7 @@ private:
 
 	HRESULT Setup_Layer_EnergyBolt(const wstring & LayerTag);
 
+	HRESULT Setup_Layer_Wand(const wstring & LayerTag);
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 _pDevice);
 	virtual CGameObject* Clone_GameObject(void* _pArg) override;
@@ -186,6 +188,9 @@ private:
 
 	// 현재 사용중인 액티브 스킬ID
 	eActiveSkill_ID eSkillID = ACTIVE_SKILL_END;
+
+	// 현재 플레이어가 사용하고 있는 버프
+	ACTIVE_BUFF		eActiveBuff = BUFF_END;
 
 	//--------------------------------------------
 };
