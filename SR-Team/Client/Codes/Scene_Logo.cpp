@@ -30,7 +30,6 @@ _int CScene_Logo::Update_Scene(_float _fDeltaTime)
 	if (nullptr == pManagement)
 		return -1;
 
-	// UNDONE : KeyManager
 	if (GetAsyncKeyState(VK_RETURN) & 0x8000 && m_pPreLoader->IsFinished())
 	{
 		if (FAILED(pManagement->Change_CurrentScene(SCENE_STAGE0, CScene_Stage0::Create(m_pDevice))))
@@ -39,7 +38,7 @@ _int CScene_Logo::Update_Scene(_float _fDeltaTime)
 			return -1;
 		}
 
-		if (FAILED(pManagement->Clear_ForScene(SCENE_LOGO)))
+		if (FAILED(pManagement->ClearScene_All(SCENE_LOGO)))
 		{
 			PRINT_LOG(L"Failed To Clear CScene_Logo", LOG::CLIENT);
 			return -1;
