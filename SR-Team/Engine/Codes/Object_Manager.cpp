@@ -123,6 +123,81 @@ HRESULT CObject_Manager::Clear_ForScene(_int _iSceneID)
 	return S_OK;
 }
 
+HRESULT CObject_Manager::Register_ExceptTag(_int _iCurSceneID, const wstring& _strLayerTag)
+{
+	if (0 > _iCurSceneID || m_iSceneCount <= _iCurSceneID)
+		return E_FAIL;
+
+	if (nullptr == m_pGameObjects || nullptr == m_pLayers)
+		return E_FAIL;
+
+	auto iter_find = m_pLayers[_iCurSceneID].find(_strLayerTag);
+	if (m_pLayers[_iCurSceneID].end() == iter_find)
+		return E_FAIL;
+
+	m_PreseveLayers.emplace(iter_find->first, iter_find->second);
+	return S_OK;
+}
+
+HRESULT CObject_Manager::Clear_Except(_int _iSceneID)
+{
+	_bool bDelete = true;
+
+	if (0 > _iSceneID || m_iSceneCount <= _iSceneID)
+		return E_FAIL;
+
+	if (_iSceneID + 1 >= m_iSceneCount)
+		return E_FAIL;
+
+	if (nullptr == m_pGameObjects || nullptr == m_pLayers)
+		return E_FAIL;
+
+	//--------------------------------------------------
+	// object는 그냥 지우고 있다.. 보존해야 할 Prototype은 STATIC에 놔둬야 함!
+	//--------------------------------------------------
+	for (auto& Pair : m_pGameObjects[_iSceneID])
+		Safe_Release(Pair.second);
+
+	m_pGameObjects[_iSceneID].clear();
+
+
+	//--------------------------------------------------
+	// 해당 레이어를 돌면서 보존해야 할 Layer는 건너뛰면서 해제
+	//--------------------------------------------------
+	for(auto& Pair : m_pLayers[_iSceneID])
+	{
+		bDelete = true;
+
+		auto iter = m_PreseveLayers.begin();
+		auto iter_end = m_PreseveLayers.end();
+		for (iter; iter != iter_end; ++iter)
+		{
+			if (Pair.second == iter->second)
+			{
+				bDelete = false;
+				break;
+			}
+		}
+
+		if (bDelete)
+			Safe_Release(Pair.second);
+	}
+
+	m_pLayers[_iSceneID].clear();
+
+
+	//--------------------------------------------------
+	// m_PreseveLayer 들을 다음 씬 레이어에 넣어주어야 함
+	//--------------------------------------------------
+	auto iter = m_PreseveLayers.begin();
+	auto iter_end = m_PreseveLayers.end();
+	for (; iter != iter_end; ++iter)
+		Add_Layer(_iSceneID + 1, iter->first, iter->second);
+
+	m_PreseveLayers.clear();
+	return S_OK;
+}
+
 HRESULT CObject_Manager::CollisionSphere_Detection_Layers(_int _iSceneID, const wstring & _strSrcLayerTag, const wstring & _strDstLayerTag, const wstring& _strColliderTag, const wstring& _strDmgInfoTag)
 {
 	//--------------------------------------------------
@@ -336,6 +411,19 @@ EXIT_LATEUPDATE:
 	return iBehavior;
 }
 
+HRESULT CObject_Manager::Add_Layer(_int _iSceneID, const wstring& _strLayerTag, CLayer * _pLayer)
+{
+	if (0 > _iSceneID || _iSceneID >= m_iSceneCount)
+		return E_FAIL;
+
+	auto iter_find = m_pLayers[_iSceneID].find(_strLayerTag);
+	if (m_pLayers[_iSceneID].end() != iter_find)
+		return E_FAIL;
+
+	m_pLayers[_iSceneID].emplace(_strLayerTag, _pLayer);
+	return S_OK;
+}
+
 void CObject_Manager::Free()
 {
 	for (_int iCnt = 0; iCnt < m_iSceneCount; ++iCnt)
@@ -349,6 +437,8 @@ void CObject_Manager::Free()
 		m_pGameObjects[iCnt].clear();
 		m_pLayers[iCnt].clear();
 	}
+
+	m_PreseveLayers.clear();
 
 	Safe_Delete_Array(m_pGameObjects);
 	Safe_Delete_Array(m_pLayers);

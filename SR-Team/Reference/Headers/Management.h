@@ -42,7 +42,18 @@ public:
 	//--------------------------------------------------
 	// 공통
 	//--------------------------------------------------
-	HRESULT Clear_ForScene(_uint _iSceneID);
+	// 전부
+	HRESULT ClearScene_All(_uint _iSceneID);
+
+	// 컴포넌트
+	HRESULT ClearScene_Component_All(_uint _iSceneID);
+
+	// 오브젝트
+	HRESULT ClearScene_Object_All(_uint _iSceneID);
+
+	// 가변 인자로 레이어 태그를 입력하면 해당 레이어는 다음 씬으로 살려서 이동시킨다.
+	HRESULT ClearScene_Object_RegisterTag(_uint _iSceneID, const wstring& _strLayerTag);
+	HRESULT Clear_Except(_uint _iSceneID);
 
 
 	//--------------------------------------------------
@@ -58,6 +69,7 @@ public:
 	//--------------------------------------------------
 	_bool Lock_FrameManager();
 	void Render_FrameManager();
+
 
 	//--------------------------------------------------
 	// 타이머
@@ -86,6 +98,7 @@ public:
 
 	HRESULT CollisionSphere_Impulse_Layers(_int _iSceneID, const wstring& _strSrcLayerTag, const wstring& _strDstLayerTag, const wstring& _strColliderTag, const wstring& _strTransformTag);
 	HRESULT CollisionBox_Impulse_Layers(_int _iSceneID, const wstring& _strSrcLayerTag, const wstring& _strDstLayerTag, const wstring& _strColliderTag, const wstring& _strTransformTag);
+
 
 	//--------------------------------------------------
 	// 씬
