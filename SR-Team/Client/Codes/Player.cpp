@@ -684,12 +684,16 @@ void CPlayer::MoveMotion(_float fDeltaTime)
 		{
 			m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime);
 			m_pTransformCom[PART_HAND_LEFT]->Turn(CTransform::AXIS_X, fDeltaTime);
+			m_pTransformCom[PART_FOOT_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime);
+			m_pTransformCom[PART_FOOT_LEFT]->Turn(CTransform::AXIS_X, -fDeltaTime);
 		}
 
 		else if (m_eMovingDir == CHANGE_RIGHT)
 		{	
 			m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime);
 			m_pTransformCom[PART_HAND_LEFT]->Turn(CTransform::AXIS_X, -fDeltaTime);
+			m_pTransformCom[PART_FOOT_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime);
+			m_pTransformCom[PART_FOOT_LEFT]->Turn(CTransform::AXIS_X, fDeltaTime);
 		}
 	}
 	else if (!m_bMove)
