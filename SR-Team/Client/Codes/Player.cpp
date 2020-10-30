@@ -1189,15 +1189,12 @@ void CPlayer::Skill_ProjectileFall(_float fDeltaTime)
 	{
 		if (!m_bRenderInven && !m_bRenderShop)
 		{	
-			if (m_bOnece)
-			{
 				for (_uint iCnt = 0; iCnt < 5; ++iCnt)
 				{
 					if (FAILED(Ready_Layer_Meteor(L"Layer_Meteor", vGoalPos)))
 						PRINT_LOG(L"Failed To Ready_Layer_Meteor in CPlayer", LOG::CLIENT);
 				}
-				m_bOnece = false;
-			}
+			
 		}
 	}
 
