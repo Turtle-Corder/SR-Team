@@ -190,6 +190,7 @@ HRESULT CSnail::Add_Component()
 	tDmgInfo.iCriticalHit = m_pStatusCom->Get_Status().iCriticalHit;
 	tDmgInfo.iCriticalRate = m_pStatusCom->Get_Status().iCriticalRate;
 	tDmgInfo.pOwner = this;
+	tDmgInfo.eType = eELEMENTAL_TYPE::NONE;
 
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_DamageInfo", L"Com_DmgInfo", (CComponent**)&m_pDmgInfoCom, &tDmgInfo)))
 		return E_FAIL;
