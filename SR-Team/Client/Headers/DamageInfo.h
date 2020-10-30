@@ -12,11 +12,12 @@ class CDamageInfo final : public CComponent
 public:
 	typedef struct tagDamageDesc
 	{
-		CGameObject*	pOwner;
-		_int			iMinAtt;
-		_int			iMaxAtt;
-		_int			iCriticalRate;
-		_int			iCriticalHit;
+		CGameObject*	pOwner = nullptr;
+		_int			iMinAtt = 0;
+		_int			iMaxAtt = 0;
+		_int			iCriticalRate = 0;
+		_int			iCriticalHit = 0;
+		eELEMENTAL_TYPE	eType = eELEMENTAL_TYPE::NONE;
 	} DAMAGE_DESC;
 
 
