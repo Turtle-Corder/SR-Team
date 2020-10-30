@@ -27,6 +27,12 @@ public:
 		_int	iLevel = 0;
 		_int	iExp = 0;
 		_int	iMaxExp = 0;
+
+		_int	iCurFireStack = 0;
+		_int	iMaxFireStack = 0;
+		
+		_int	iCurIceStack = 0;
+		_int	iMaxIceStack = 0;
 	} STAT;
 
 private:
@@ -45,6 +51,15 @@ public:
 	void Change_Hp(_int iHp) { m_tStat.iHp = iHp; }
 	void Change_Mp(_int iMp) { m_tStat.iMp = iMp; }
 
+	// 속성 스택 카운트를 하나 올린 결과를 반환한다.
+	_int Increase_FireStack();
+	_int Increase_IceStack();
+
+	// 속성 스택을 초기화 한다.
+	void Clear_FireStack();
+	void Clear_IceStack();
+
+
 public:
 	virtual HRESULT Setup_Component_Prototype() override;
 	virtual HRESULT Setup_Component(void* _pArg) override;
@@ -54,7 +69,6 @@ public:
 	virtual CComponent * Clone_Component(void * _pArg) override;
 	virtual void Free() override;
 public:
-	//s
 	const STAT& Get_Status() { return m_tStat; }
 
 

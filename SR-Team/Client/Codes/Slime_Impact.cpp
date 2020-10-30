@@ -94,6 +94,8 @@ HRESULT CSlime_Impact::Add_Component()
 		tDmgInfo.iCriticalRate = m_pStatusCom->Get_Status().iCriticalHit;
 	}
 
+	tDmgInfo.eType = NONE;
+
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_DamageInfo", L"Com_DmgInfo", (CComponent**)&m_pDmgInfoCom, &tDmgInfo)))
 		return E_FAIL;
 

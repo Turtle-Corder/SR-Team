@@ -275,7 +275,7 @@ HRESULT CYeti::Moving(float _fDeltaTime)
 
 	float fLength = D3DXVec3Length(&vDir); // 플레이어와의 거리비교
 
-	if (fLength < 4.f)
+	if (fLength < 5.f)
 	{
 		LookAtPlayer(_fDeltaTime);
 
@@ -518,6 +518,7 @@ HRESULT CYeti::Create_Snow(const wstring & LayerTag)
 	_vec3 vRightHandPos = {};
 	memcpy_s(&vRightHandPos, sizeof(_vec3), &m_pTransformCom[YETI_RIGHT]->Get_Desc().matWorld._41, sizeof(_vec3));
 	tImpact.vPosition = vRightHandPos;
+
 
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Snow",
 		SCENE_STAGE0, LayerTag , &tImpact)))

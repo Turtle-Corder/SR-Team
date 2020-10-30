@@ -14,6 +14,7 @@ class CWand;
 class CPlayer final : public CGameObject
 {
 public:
+	enum STATE { IDLE, MOVE, SKILL, STATE_END };
 	enum CHANGE_MOVE { CHANGE_LEFT, CHANGE_RIGHT, MOVE_END };
 	enum MOVEING_DIR { MOVING_UP, MOVING_DOWN, MOVING_LEFT, MOVING_RIGHT };
 	enum ACTIVE_BUFF { BUFF_MANA, BUFF_ATT, BUFF_SHIELD, BUFF_END };
@@ -179,6 +180,11 @@ private:
 	_bool				m_bDownHand = false;
 	_float				m_fFallTime = 0.f;
 
+	_bool				m_bFrameWaveStart = false;
+	_float				m_fFrameWaveCnt = 0.f;
+	_float				m_fFrameWaveEnd = 0.8f;
+
+
 	//---------------------------------------------
 	// 버프 스킬들 사용 시간 체크
 	//---------------------------------------------
@@ -208,6 +214,7 @@ private:
 
 	_int			m_iAttBuff = 100;
 	CWand*			m_pWand = nullptr;
+
 	//--------------------------------------------
 };
 

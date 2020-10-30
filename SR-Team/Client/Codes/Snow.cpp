@@ -147,6 +147,8 @@ HRESULT CSnow::Add_Component()
 		tDmgInfo.iCriticalRate = m_pStatusComp->Get_Status().iCriticalRate;
 	}
 
+	tDmgInfo.eType = ICE;
+
 
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_DamageInfo", L"Com_DmgInfo", (CComponent**)&m_pDmgInfoCom, &tDmgInfo)))
 		return E_FAIL;
@@ -269,7 +271,7 @@ HRESULT CSnow::Throwing_Snow(float _fDeltaTime)
 		vPos.y += m_fJumpPower * m_fJumpTime - 9.8f * m_fJumpTime * m_fJumpTime;
 		m_fJumpTime += _fDeltaTime;
 
-		vPos += _vec3(m_vDir.x, 0.f, m_vDir.z) * (_fDeltaTime * 18.f);
+		vPos += _vec3(m_vDir.x * 2.f, 0.f, m_vDir.z * 2.f) * (_fDeltaTime * 8.f);
 	}
 
 	if (vPosition.y > vPos.y)
