@@ -78,9 +78,7 @@ private:
 	CTransform*		m_pTransformCom[MAINUI_END];
 	CTexture*		m_pTextureCom[MAINUI_END];
 
-	// 위치, 크기-------------------------------------------------------------
-	_vec3			m_vPos[MAINUI_END];
-	_vec3			m_vScale[MAINUI_END];
+	_vec3			m_vMainPos = { WINCX * 0.5f, WINCY - 300.f, 0.f };
 
 	// 충돌 렉트
 	RECT			m_tCollRt[MAINUI_END];

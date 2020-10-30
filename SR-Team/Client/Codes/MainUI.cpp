@@ -106,11 +106,9 @@ HRESULT CMainUI::Setup_GameObject_Prototype()
 
 HRESULT CMainUI::Setup_GameObject(void * pArg)
 {
+	_vec3 vPos = {};
 	if (FAILED(Add_Component()))
 		return E_FAIL;
-
-	for (_uint i = 0; i < MAINUI_END; ++i)
-		m_vScale[i] = { 80.f, 90.f, 1.f };
 
 	for (_uint i = 0; i < 8; i++)
 	{
@@ -121,20 +119,23 @@ HRESULT CMainUI::Setup_GameObject(void * pArg)
 		m_pRightSlotItem[i] = nullptr;
 	}
 
-	m_vPos[MAINUI_MAIN] = _vec3(WINCX * 0.5f, WINCY - 100.f, 0.f);
-	m_pTransformCom[MAINUI_MAIN]->Set_Position(m_vPos[MAINUI_MAIN]);
+	m_pTransformCom[MAINUI_MAIN]->Set_Position(m_vMainPos);
 
-	m_vPos[MAINUI_HP] = _vec3(371.f, 490.f, 0.f);
-	m_pTransformCom[MAINUI_HP]->Set_Position(m_vPos[MAINUI_HP]);
+	//m_vPos[MAINUI_HP] = _vec3(371.f, 490.f, 0.f);
+	vPos = { m_vMainPos.x - 27.f, m_vMainPos.y - 10.f, 0.f };
+	m_pTransformCom[MAINUI_HP]->Set_Position(vPos);
 
-	m_vPos[MAINUI_MP] = _vec3(429.f, 490.f, 0.f);
-	m_pTransformCom[MAINUI_MP]->Set_Position(m_vPos[MAINUI_MP]);
+	//m_vPos[MAINUI_MP] = _vec3(429.f, 490.f, 0.f);
+	vPos = { m_vMainPos.x + 27.f, m_vMainPos.y - 10.f, 0.f };
+	m_pTransformCom[MAINUI_MP]->Set_Position(vPos);
 
 	//m_vPos[MAINUI_QUICKSLOT_LFFT] = _vec3(170.f, 500.f, 0.f);
-	m_pTransformCom[MAINUI_QUICKSLOT_LFFT]->Set_Position(m_vLeftSlotPos);
+	vPos = { m_vMainPos.x - 500.f, m_vMainPos.y, 0.f };
+	m_pTransformCom[MAINUI_QUICKSLOT_LFFT]->Set_Position(vPos);
 
 	//m_vPos[MAINUI_QUICKSLOT_RIGHT] = _vec3(660.f, 500.f, 0.f);
-	m_pTransformCom[MAINUI_QUICKSLOT_RIGHT]->Set_Position(m_vRightSlotPos);
+	vPos = { m_vMainPos.x + 500.f, m_vMainPos.y, 0.f };
+	m_pTransformCom[MAINUI_QUICKSLOT_RIGHT]->Set_Position(vPos);
 
 	
 	// ¿ÞÂÊ Äü½½·Ô Ãæµ¹ ·ºÆ®
