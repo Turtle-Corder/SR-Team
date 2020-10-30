@@ -39,6 +39,34 @@ void CStatus::Set_MP(_int _iMP)
 	m_tStat.iMp -= _iMP;
 }
 
+_int CStatus::Increase_FireStack()
+{
+	++m_tStat.iCurFireStack;
+	if (m_tStat.iCurFireStack > m_tStat.iMaxFireStack)
+		m_tStat.iCurFireStack = 0;
+
+	return m_tStat.iCurFireStack;
+}
+
+_int CStatus::Increase_IceStack()
+{
+	++m_tStat.iCurIceStack;
+	if (m_tStat.iCurIceStack > m_tStat.iMaxIceStack)
+		m_tStat.iCurIceStack = 0;
+
+	return m_tStat.iCurIceStack;
+}
+
+void CStatus::Clear_FireStack()
+{
+	m_tStat.iCurFireStack = 0;
+}
+
+void CStatus::Clear_IceStack()
+{
+	m_tStat.iCurIceStack = 0;
+}
+
 HRESULT CStatus::Setup_Component_Prototype()
 {
 	return S_OK;

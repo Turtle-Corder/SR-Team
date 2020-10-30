@@ -1201,13 +1201,19 @@ void CPlayer::Skill_ProjectileFall(_float fDeltaTime)
 	_matrix mat;
 	D3DXMatrixIdentity(&mat);
 	_vec3 vGoalPos = {};
-
 	if (true == m_pRaycastCom->IsSimulate<VTX_TEXTURE, INDEX16>(
 		g_hWnd, WINCX, WINCY, pTerrainBuffer, &mat, pCamera, &vGoalPos))
 	{
 		if (!m_bRenderInven && !m_bRenderShop)
 		{	
 			Ready_Layer_Meteor(L"Layer_Meteor", vGoalPos);
+
+				for (_uint iCnt = 0; iCnt < 5; ++iCnt)
+				{
+					if (FAILED(Ready_Layer_Meteor(L"Layer_Meteor", vGoalPos)))
+						PRINT_LOG(L"Failed To Ready_Layer_Meteor in CPlayer", LOG::CLIENT);
+				}
+			
 		}
 	}
 

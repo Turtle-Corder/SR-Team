@@ -269,7 +269,7 @@ HRESULT CSnow::Throwing_Snow(float _fDeltaTime)
 		vPos.y += m_fJumpPower * m_fJumpTime - 9.8f * m_fJumpTime * m_fJumpTime;
 		m_fJumpTime += _fDeltaTime;
 
-		vPos += _vec3(m_vDir.x, 0.f, m_vDir.z) * (_fDeltaTime * 18.f);
+		vPos += _vec3(m_vDir.x * 2.f, 0.f, m_vDir.z * 2.f) * (_fDeltaTime * 8.f);
 	}
 
 	if (vPosition.y > vPos.y)
