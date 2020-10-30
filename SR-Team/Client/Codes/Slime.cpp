@@ -73,7 +73,7 @@ _int CSlime::Update_GameObject(_float _fDeltaTime)
 		return GAMEOBJECT::WARN;
 
 	Jumping(_fDeltaTime);
-	
+
 	if (FAILED(Move(_fDeltaTime)))
 		return GAMEOBJECT::WARN;
 
@@ -226,7 +226,11 @@ HRESULT CSlime::IsOnTerrain()
 	if (true == pTerrainBuffer->IsOnTerrain(&vPosition))
 	{
 		m_pTransformCom[SLIME_BASE]->Set_Position(vPosition);
-		m_bJump = true;
+
+		if (m_eCurState == STATE::STATE_MOVE)
+		{
+			m_bJump = true;
+		}
 	}
 
 	return S_OK;
@@ -440,20 +444,21 @@ HRESULT CSlime::Move(_float _fDeltaTime)
 
 	if (1.f <= m_fDistance)
 	{
-		m_vPos += vDir * _fDeltaTime * 5.f;
+		m_vPos += vDir * _fDeltaTime * 3.f;
 		m_pTransformCom[SLIME_BASE]->Set_Position(m_vPos);
 	}
-	else if(1.f >= m_fDistance)
+	else if (1.f >= m_fDistance)
 	{
 		m_eCurState = CSlime::STATE_ATTACK;
+		m_bAttackJump = true;
 	}
-	
+
 	return S_OK;
 }
 
 void CSlime::Update_State()
 {
-	switch (m_eCurState)
+	switch (m_ePreState)
 	{
 	case Client::CSlime::STATE_IDLE:
 		break;
@@ -465,7 +470,10 @@ void CSlime::Update_State()
 		break;
 	}
 
-	
+	//if (m_ePreState != m_eCurState)
+	//{
+	//	m_ePreState != m_eCurState;
+	//}
 }
 
 HRESULT CSlime::Stop_Move(_float _fDeltaTime)
@@ -481,28 +489,33 @@ HRESULT CSlime::Attack(_float _fDeltaTime)
 
 	if (m_eCurState == CSlime::STATE_ATTACK)
 	{
+		m_fStartTime += _fDeltaTime;
+
 		D3DXVECTOR3 vPos = m_pTransformCom[SLIME_BASE]->Get_Desc().vPosition;
 
-		if (m_bJump)
+		if (m_fStartTime > 0.5f)
 		{
-			vPos.y += (m_fJumpPower * 2.f) * m_fJumpTime - 9.8f * m_fJumpTime * m_fJumpTime * 0.5f;
-			m_fJumpTime += _fDeltaTime;
-
-			if (vPos.y < m_pTransformCom[SLIME_BASE]->Get_Desc().vPosition.y)
+			if (m_bJump)
 			{
-				vPos.y = m_pTransformCom[SLIME_BASE]->Get_Desc().vPosition.y;
-				m_bJump = false;
-				m_fJumpTime = 0.f;
+				vPos.y += (m_fJumpPower * 2.f) * m_fJumpTime - 9.8f * m_fJumpTime * m_fJumpTime * 0.5f;
+				m_fJumpTime += _fDeltaTime;
 
-				if (FAILED(Create_Crack(L"Layer_Crack")))
-					return E_FAIL;
+				if (vPos.y < m_pTransformCom[SLIME_BASE]->Get_Desc().vPosition.y)
+				{
+					vPos.y = m_pTransformCom[SLIME_BASE]->Get_Desc().vPosition.y;
+					m_bAttackJump = false;
+					m_fJumpTime = 0.f;
+					m_fStartTime = 0.f;
 
-				m_eCurState = CSlime::STATE_MOVE;
+					if (FAILED(Create_Crack(L"Layer_Crack")))
+						return E_FAIL;
+
+					m_eCurState = CSlime::STATE_MOVE;
+				}
+
+				m_pTransformCom[SLIME_BASE]->Set_Position(vPos);
 			}
-
-			m_pTransformCom[SLIME_BASE]->Set_Position(vPos);
 		}
-
 	}
 
 
