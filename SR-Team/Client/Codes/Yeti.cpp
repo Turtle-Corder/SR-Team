@@ -519,6 +519,7 @@ HRESULT CYeti::Create_Snow(const wstring & LayerTag)
 	memcpy_s(&vRightHandPos, sizeof(_vec3), &m_pTransformCom[YETI_RIGHT]->Get_Desc().matWorld._41, sizeof(_vec3));
 	tImpact.vPosition = vRightHandPos;
 
+
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Snow",
 		SCENE_STAGE0, LayerTag , &tImpact)))
 		return E_FAIL;
