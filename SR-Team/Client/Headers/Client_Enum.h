@@ -152,4 +152,16 @@ enum eITEM_SORT
 	POTION, SKILL_ICON
 };
 
+
+//--------------------------------------------------
+// 공격 속성
+//--------------------------------------------------
+enum eELEMENTAL_TYPE
+{
+	NONE,
+	FIRE,
+	ICE,
+	ELEMENTAL_END
+};
+
 #endif
