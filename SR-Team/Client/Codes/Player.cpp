@@ -209,78 +209,138 @@ HRESULT CPlayer::Take_Damage(const CComponent* _pDamageComp)
 
 HRESULT CPlayer::Add_Component()
 {
-	CTransform::TRANSFORM_DESC tTransformDesc;
+	if (FAILED(Add_Component_VIBuffer()))
+		return E_FAIL;
 
+	if (FAILED(Add_Component_Transform()))
+		return E_FAIL;
+
+	if (FAILED(Add_Component_Texture()))
+		return E_FAIL;
+
+	if (FAILED(Add_Component_Extends()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CPlayer::Add_Component_Transform()
+{
+	CTransform::TRANSFORM_DESC tTransformDesc[PART_END];
+	ZeroMemory(tTransformDesc, sizeof(CTransform::TRANSFORM_DESC) * PART_END);
+	_float fRPS_Rad = D3DXToRadian(90.f);
+
+	//--------------------------------------------------
+	// HEAD
+	//--------------------------------------------------
+	tTransformDesc[PART_HEAD].vPosition = { 5.f, 5.f, 5.f };
+	tTransformDesc[PART_HEAD].fSpeedPerSecond = 10.f;
+	tTransformDesc[PART_HEAD].fRotatePerSecond = fRPS_Rad;
+
+	//--------------------------------------------------
+	// BODY
+	//--------------------------------------------------
+	tTransformDesc[PART_BODY].vPosition = { tTransformDesc[PART_HEAD].vPosition + _vec3(0.f, -1.5f, 0.f) };
+	tTransformDesc[PART_BODY].vScale = { 0.9f, 0.9f, 0.9f };
+	tTransformDesc[PART_BODY].fSpeedPerSecond = 10.f;
+	tTransformDesc[PART_BODY].fRotatePerSecond = fRPS_Rad;
+
+	//--------------------------------------------------
+	// HAND_L
+	//--------------------------------------------------
+	tTransformDesc[PART_HAND_LEFT].vPosition = tTransformDesc[PART_BODY].vPosition + _vec3(-0.8f, -2.5f, 0.f);
+	tTransformDesc[PART_HAND_LEFT].vScale = { 0.2f, 0.7f, 0.2f };
+	tTransformDesc[PART_HAND_LEFT].fSpeedPerSecond = 10.f;
+	tTransformDesc[PART_HAND_LEFT].fRotatePerSecond = fRPS_Rad;
+
+	//--------------------------------------------------
+	// HAND_R
+	//--------------------------------------------------
+	tTransformDesc[PART_HAND_RIGHT].vPosition = tTransformDesc[PART_HAND_LEFT].vPosition + _vec3(0.8f, -2.5f, 0.f);
+	tTransformDesc[PART_HAND_RIGHT].vScale = { 0.3f, 0.5f, 0.5f };
+	tTransformDesc[PART_HAND_RIGHT].fSpeedPerSecond = 10.f;
+	tTransformDesc[PART_HAND_RIGHT].fRotatePerSecond = fRPS_Rad;
+
+	//--------------------------------------------------
+	// FOOT_L
+	//--------------------------------------------------
+	tTransformDesc[PART_FOOT_LEFT].vPosition = m_pTransformCom[PART_BODY]->Get_Desc().vPosition + _vec3(-0.2f, -2.5f, 0.f);
+	tTransformDesc[PART_FOOT_LEFT].vScale = { 0.3f, 0.5f, 0.5f };
+	tTransformDesc[PART_FOOT_LEFT].fSpeedPerSecond = 10.f;
+	tTransformDesc[PART_FOOT_LEFT].fRotatePerSecond = fRPS_Rad;
+
+	//--------------------------------------------------
+	// FOOT_R
+	//--------------------------------------------------
+	tTransformDesc[PART_FOOT_RIGHT].vPosition = m_pTransformCom[PART_BODY]->Get_Desc().vPosition + _vec3(0.2f, -2.5f, 0.f);
+	tTransformDesc[PART_FOOT_RIGHT].vScale = { 0.3f, 0.5f, 0.5f };
+	tTransformDesc[PART_FOOT_RIGHT].fSpeedPerSecond = 10.f;
+	tTransformDesc[PART_FOOT_RIGHT].fRotatePerSecond = fRPS_Rad;
+
+
+	//--------------------------------------------------
+	// Clone
+	//--------------------------------------------------
 	for (_uint iCnt = 0; iCnt < PART_END; ++iCnt)
 	{
-		TCHAR szVIBuffer[MAX_PATH] = L"";
-		StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH,
-			L"Com_VIBuffer%d", iCnt);
+		WCHAR szTransform[MIN_STR] = L"";
+		StringCchPrintf(szTransform, _countof(szTransform), L"Com_Transform%d", iCnt);
 
-		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", szVIBuffer, (CComponent**)&m_pVIBufferCom[iCnt])))
-			return E_FAIL;
-
-
-		if (iCnt == PART_HEAD)
-		{
-			tTransformDesc.vPosition = { 5.f, 5.f, 5.f };
-		}
-		else if (iCnt == PART_BODY)
-		{
-			_vec3 vHeadPos = m_pTransformCom[PART_HEAD]->Get_Desc().vPosition;
-			tTransformDesc.vPosition = { vHeadPos.x, vHeadPos.y - 1.5f, vHeadPos.z };
-			tTransformDesc.vScale = { 0.9f, 0.9f, 0.9f };
-		}
-		else if (iCnt == PART_HAND_LEFT)
-		{
-			_vec3 vBodyPos = m_pTransformCom[PART_BODY]->Get_Desc().vPosition;
-			tTransformDesc.vPosition
-				= { vBodyPos.x - 0.8f, vBodyPos.y - 2.5f, vBodyPos.z };
-			tTransformDesc.vScale = { 0.2f, 0.7f, 0.2f };
-		}
-		else if (iCnt == PART_HAND_RIGHT)
-		{
-			_vec3 vBodyPos = m_pTransformCom[PART_BODY]->Get_Desc().vPosition;
-			tTransformDesc.vPosition
-				= { vBodyPos.x + 0.8f, vBodyPos.y - 2.5f, vBodyPos.z };
-			tTransformDesc.vScale = { 0.2f, 0.7f, 0.2f };
-		}
-		else if (iCnt == PART_FOOT_LEFT)
-		{
-			_vec3 vBodyPos = m_pTransformCom[PART_BODY]->Get_Desc().vPosition;
-			tTransformDesc.vPosition = { vBodyPos.x - 0.2f, vBodyPos.y - 2.5f, vBodyPos.z };
-			tTransformDesc.vScale = { 0.3f, 0.5f, 0.5f };
-		}
-		else if (iCnt == PART_FOOT_RIGHT)
-		{
-			_vec3 vBodyPos = m_pTransformCom[PART_BODY]->Get_Desc().vPosition;
-			tTransformDesc.vPosition = { vBodyPos.x + 0.2f, vBodyPos.y - 2.5f, vBodyPos.z };
-			tTransformDesc.vScale = { 0.3f, 0.5f, 0.5f };
-		}
-		tTransformDesc.fSpeedPerSecond = 10.f;
-		tTransformDesc.fRotatePerSecond = D3DXToRadian(90.f);
-
-		TCHAR szTransform[MAX_PATH] = L"";
-		StringCchPrintf(szTransform, sizeof(TCHAR) * MAX_PATH,
-			L"Com_Transform%d", iCnt);
-
-		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", szTransform, (CComponent**)&m_pTransformCom[iCnt], &tTransformDesc)))
-			return E_FAIL;
-
-		// For.Com_Texture
-		TCHAR szTexture[MAX_PATH] = L"", szTextureName[MAX_PATH] = L"";
-		StringCchPrintf(szTexture, sizeof(TCHAR) * MAX_PATH,
-			L"Com_Texture%d", iCnt);
-		if (iCnt == PART_HEAD)			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,L"Component_Texture_Monster");
-		else if (iCnt == PART_BODY)		StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_PlayerHead");
-		else if (iCnt == PART_HAND_LEFT || iCnt == PART_HAND_RIGHT)	StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_PlayerHand");
-		else							StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_PlayerFoot");
-
-		if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, szTextureName, szTexture, (CComponent**)&m_pTextureCom[iCnt])))
+		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", szTransform, (CComponent**)&m_pTransformCom[iCnt], &tTransformDesc[iCnt])))
 			return E_FAIL;
 	}
 
-	// For.Com_Stat
+	return S_OK;
+}
+
+HRESULT CPlayer::Add_Component_VIBuffer()
+{
+	//--------------------------------------------------
+	// Clone
+	//--------------------------------------------------
+	for (_uint iCnt = 0; iCnt < PART_END; ++iCnt)
+	{
+		WCHAR szVIBuffer[MIN_STR] = L"";
+		StringCchPrintf(szVIBuffer, _countof(szVIBuffer), L"Com_VIBuffer%d", iCnt);
+
+		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", szVIBuffer, (CComponent**)&m_pVIBufferCom[iCnt])))
+			return E_FAIL;
+	}
+}
+
+HRESULT CPlayer::Add_Component_Texture()
+{
+	WCHAR szTextureName[PART_END][MAX_PATH] =
+	{
+		// UNDONE : 텍스처 변경해야 함
+		L"Component_Texture_Monster",
+		L"Component_Texture_PlayerHead",
+		L"Component_Texture_PlayerHand",
+		L"Component_Texture_PlayerHand",
+		L"Component_Texture_PlayerFoot",
+		L"Component_Texture_PlayerFoot"
+	};
+
+	//--------------------------------------------------
+	// Clone
+	//--------------------------------------------------
+	for (_uint iCnt = 0; iCnt < PART_END; ++iCnt)
+	{
+		WCHAR szTexture[MIN_STR] = L"";
+		StringCchPrintf(szTexture, _countof(szTexture), L"Com_Texture%d", iCnt);
+
+		if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, szTextureName[iCnt], szTexture, (CComponent**)&m_pTextureCom[iCnt])))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CPlayer::Add_Component_Extends()
+{
+	//--------------------------------------------------
+	// Status
+	//--------------------------------------------------
 	CStatus::STAT tStat;
 	tStat.iCriticalRate = 20;	tStat.iCriticalHit = 10;
 	tStat.iDef = 50;
@@ -291,16 +351,28 @@ HRESULT CPlayer::Add_Component()
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Status", L"Com_Stat", (CComponent**)&m_pStatusCom, &tStat)))
 		return E_FAIL;
 
+
+	//--------------------------------------------------
+	// Collider
+	//--------------------------------------------------
 	CSphereCollider::COLLIDER_DESC tColDesc;
-	tColDesc.vPosition = tTransformDesc.vPosition;
+	tColDesc.vPosition = m_pTransformCom[PART_BODY]->Get_Desc().vPosition;
 	tColDesc.fRadius = 0.7f;
 
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Collider_Sphere", L"Com_Collider", (CComponent**)&m_pColliderCom, &tColDesc)))
 		return E_FAIL;
 
+
+	//--------------------------------------------------
+	// Raycast
+	//--------------------------------------------------
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Raycast", L"Com_Ray", (CComponent**)&m_pRaycastCom)))
 		return E_FAIL;
 
+
+	//--------------------------------------------------
+	// DamageInfo
+	//--------------------------------------------------
 	CDamageInfo::DAMAGE_DESC tDmgInfo;
 	tDmgInfo.iMaxAtt = 99;
 	tDmgInfo.pOwner = this;
@@ -308,60 +380,46 @@ HRESULT CPlayer::Add_Component()
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_DamageInfo", L"Com_DmgInfo", (CComponent**)&m_pDmgInfoCom, &tDmgInfo)))
 		return E_FAIL;
 
-	return S_OK;
 }
 
-HRESULT CPlayer::Movement(_float _fDeltaTime)
+HRESULT CPlayer::Update_Move(_float _fDeltaTime)
 {
-	m_bMove = false;
-	if (!m_bUsingSkill)
+	if (VALIDATE_MOVE >= m_eCurState)
 	{
-		Move_Vertical(_fDeltaTime);
-		Turn(_fDeltaTime);
+		//--------------------------------------------------
+		// 이동
+		//--------------------------------------------------
+		Move_Target(_fDeltaTime);
 
-		MoveMotion(_fDeltaTime);
+		//--------------------------------------------------
+		// 높이 보정
+		//--------------------------------------------------
+		if (FAILED(Update_OnTerrain()))
+			return E_FAIL;
 	}
 
-	Normal_Attack(_fDeltaTime);
-	Check_Skill(_fDeltaTime);
-	Check_QuickSlotItem();
-
-	if (m_bActiveBuff[BUFF_MANA])
-		Buff_ManaDrift(_fDeltaTime);
-	if (m_bActiveBuff[BUFF_ATT])
-		Buff_EnergyExploitation(_fDeltaTime);
-
-	if (FAILED(IsOnTerrain()))
-		return E_FAIL;
-
-	if (FAILED(RaycastOnTerrain()))
-		return E_FAIL;
-	Jump(_fDeltaTime);
-
 	return S_OK;
 }
 
-HRESULT CPlayer::IsOnTerrain()
+HRESULT CPlayer::Update_OnTerrain()
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Terrain", L"Com_VIBuffer");
+	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Terrain", L"Com_VIBuffer");
 	if (nullptr == pTerrainBuffer)
 		return E_FAIL;
 
-	for (_uint iCnt = 4; iCnt < PART_END; ++iCnt)
+	for (_uint iCnt = PART_FOOT_START; iCnt <= PART_FOOT_END; ++iCnt)
 	{
 		_vec3 vPosition = m_pTransformCom[iCnt]->Get_Desc().vPosition;
 		if (true == pTerrainBuffer->IsOnTerrain(&vPosition))
-		{
 			m_pTransformCom[iCnt]->Set_Position(vPosition);
-		}
 	}
 
-	float fLeftFootPosY = m_pTransformCom[PART_FOOT_LEFT]->Get_Desc().vPosition.y;
 	// 변화한 다리의 위치에 따라 몸의 위치도 변경해준다
+	float fLeftFootPosY = m_pTransformCom[PART_FOOT_LEFT]->Get_Desc().vPosition.y;
 	_vec3 vBodyPos = m_pTransformCom[PART_BODY]->Get_Desc().vPosition;
 	vBodyPos.y = fLeftFootPosY + 1.f;
 	m_pTransformCom[PART_BODY]->Set_Position(vBodyPos);
@@ -381,17 +439,17 @@ HRESULT CPlayer::IsOnTerrain()
 	return S_OK;
 }
 
-HRESULT CPlayer::RaycastOnTerrain()
+HRESULT CPlayer::Raycast_OnTerrain()
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Terrain", L"Com_VIBuffer");
+	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Terrain", L"Com_VIBuffer");
 	if (nullptr == pTerrainBuffer)
 		return E_FAIL;
 
-	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Camera");
+	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Camera");
 	if (nullptr == pCamera)
 		return E_FAIL;
 
@@ -400,214 +458,35 @@ HRESULT CPlayer::RaycastOnTerrain()
 	D3DXMatrixIdentity(&mat);
 
 	// 반환받을 마우스 위치값
-	_vec3 vOutPos;
-
-	if (GetAsyncKeyState(VK_F1) & 0x8000)
-	{
-		m_bCheck = true;
-		m_bOnece = true;
-	}
-
-	if (m_bCheck)
-	{
-		if (m_bOnece)
-		{
-			if (Setup_Layer_PlaneSkill(L"Layer_PlaneSkill", vOutPos))
-				return E_FAIL;
-
-			m_bOnece = false;
-		}
-
-		if (m_pRaycastCom->IsSimulate<VTX_TEXTURE, INDEX16>(
-			g_hWnd, WINCX, WINCY, pTerrainBuffer, &mat, pCamera, &vOutPos))
-		{
-			CTransform* pSkill = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_PlaneSkill", L"Com_Transform");
-			if (nullptr == pSkill)
-				return E_FAIL;
-
-			pSkill->Set_Position(vOutPos);
-
-			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
-			{
-
-			}
-		}
-	}
-	return S_OK;
-}
-
-void CPlayer::Move_Vertical(_float _fDeltaTime)
-{
-	CManagement* pManagement = CManagement::Get_Instance();
-	if (nullptr == pManagement)
-		return;
-
-	if (pManagement->Key_Pressing(VK_UP))
-	{
-		m_ePlayerDir = MOVING_UP;
-		if (!m_bUpTurn)
-		{
-			for (_uint i = 0; i < 2; ++i)
-			{
-				_vec3 vRot = m_pTransformCom[i]->Get_Desc().vRotate;
-				vRot.y = 0.f;
-				//m_pTransformCom[i]->Set_Rotation(vRot);
-			}
-			m_bUpTurn = true;
-		}
-
-		// 위로 이동
-		for (_uint i = 0; i < 2; ++i)
-		{
-			m_pTransformCom[i]->Move_Vertical(_fDeltaTime);
-		}
-
-		if (m_bLeftTurn)
-			m_bLeftTurn = false;
-		if (m_bRightTurn)
-			m_bRightTurn = false;
-		if (m_bDownTurn)
-			m_bDownTurn = false;
-		m_bMove = true;
-	}
-
-	else if (pManagement->Key_Pressing(VK_DOWN))
-	{
-		m_ePlayerDir = MOVING_DOWN;
-		if (!m_bDownTurn)
-		{
-			m_bDownTurn = true;
-		}
-
-		for (_uint i = 0; i < 2; ++i)
-			m_pTransformCom[i]->Move_Vertical(-_fDeltaTime);
-
-		if (m_bLeftTurn)
-			m_bLeftTurn = false;
-		if (m_bRightTurn)
-			m_bRightTurn = false;
-		if (m_bUpTurn)
-			m_bUpTurn = false;
-		m_bMove = true;
-	}
-}
-
-void CPlayer::Move_Horizontal(_float _fDeltaTime)
-{
-	CManagement* pManagement = CManagement::Get_Instance();
-	if (nullptr == pManagement)
-		return;
-
-	if (pManagement->Key_Pressing(VK_LEFT))
-	{
-		m_ePlayerDir = MOVING_LEFT;
-		if (!m_bLeftTurn)
-		{
-			for (_uint i = 0; i < 2; ++i)
-			{
-				_vec3 vRot = m_pTransformCom[i]->Get_Desc().vRotate;
-				vRot.y = -1.5f;
-				m_pTransformCom[i]->Set_Rotation(vRot);
-			}
-
-			m_bLeftTurn = true;
-		}
-
-		for (_uint i = 0; i < 2; ++i)
-			m_pTransformCom[i]->Move_Vertical(_fDeltaTime);
-
-		m_bMove = true;
-		if (m_bRightTurn)
-			m_bRightTurn = false;
-		if (m_bDownTurn)
-			m_bDownTurn = false;
-		if (m_bUpTurn)
-			m_bUpTurn = false;
-	}
-
-	else if (pManagement->Key_Pressing(VK_RIGHT))
-	{
-		m_ePlayerDir = MOVING_RIGHT;
-		if (!m_bRightTurn)
-		{
-			for (_uint i = 0; i < 2; ++i)
-			{
-				_vec3 vRot = m_pTransformCom[i]->Get_Desc().vRotate;
-				vRot.y = 1.57079637f;
-				m_pTransformCom[i]->Set_Rotation(vRot);
-			}
-			m_bRightTurn = true;
-		}
-
-		for (_uint i = 0; i < 2; ++i)
-			m_pTransformCom[i]->Move_Vertical(_fDeltaTime);
-
-		m_bMove = true;
-		if (m_bLeftTurn)
-			m_bLeftTurn = false;
-		if (m_bDownTurn)
-			m_bDownTurn = false;
-		if (m_bUpTurn)
-			m_bUpTurn = false;
-	}
-}
-
-void CPlayer::Turn(_float _fDeltaTime)
-{
-	CManagement* pManagement = CManagement::Get_Instance();
-	if (nullptr == pManagement)
-		return;
-
-	if (pManagement->Key_Pressing(VK_LEFT))
-	{
-		for (_uint i = 0; i < 2; ++i)
-			m_pTransformCom[i]->Turn(CTransform::AXIS_Y, -_fDeltaTime);
-	}
-
-	if (pManagement->Key_Pressing(VK_RIGHT))
-	{
-		for (_uint i = 0; i < 2; ++i)
-			m_pTransformCom[i]->Turn(CTransform::AXIS_Y, _fDeltaTime);
-	}
+	if (m_pRaycastCom->IsSimulate<VTX_TEXTURE, INDEX16>(g_hWnd, WINCX, WINCY, pTerrainBuffer, &mat, pCamera, &m_vTargetPos))
+		return S_OK;
+	
+	return E_FAIL;
 }
 
 void CPlayer::Move_Target(_float _fDeltaTime)
 {
-	//if (false == m_bIsTagetMove)
-	//	return;
+	if (MOVE != m_eCurState)
+		return;
 
-	//_vec3 vCurPos = m_pTransformCom->Get_Desc().vPosition;
-	//_vec3 vMoveDir = m_vTargetPos - vCurPos;
+	_vec3 vCurPos = m_pTransformCom[PART_BODY]->Get_Desc().vPosition;
+	_vec3 vMoveDir = m_vTargetPos - vCurPos;
 
-	//_float fSpeedPerSecond = m_pTransformCom->Get_Desc().fSpeedPerSecond;
-	//_float fDist = D3DXVec3Length(&vMoveDir);
+	_float fSpeedPerSecond = m_pTransformCom[PART_BODY]->Get_Desc().fSpeedPerSecond;
+	_float fDist = D3DXVec3Length(&vMoveDir);
 
-	//if (0.6f >= fDist)
-	//{
-	//	m_bIsTagetMove = false;
-	//	return;
-	//}
+	if (0.4f >= fDist)
+		m_eCurState = IDLE;
 
-	//D3DXVec3Normalize(&vMoveDir, &vMoveDir);
+	D3DXVec3Normalize(&vMoveDir, &vMoveDir);
 
-	//vCurPos += vMoveDir * fSpeedPerSecond * _fDeltaTime;
-	//m_pTransformCom->Set_Position(vCurPos);
-}
-
-_int CPlayer::Initial_Update_GameObject()
-{
-	for (_uint iCnt = 0; iCnt < PART_END; ++iCnt)
-	{
-		m_vConstRot[iCnt] = m_pTransformCom[iCnt]->Get_Desc().vRotate;
-	}
-	m_bInitial = false;
-
-	return GAMEOBJECT::NOEVENT;
+	vCurPos += vMoveDir * fSpeedPerSecond * _fDeltaTime;
+	m_pTransformCom[PART_BODY]->Set_Position(vCurPos);
 }
 
 _int CPlayer::Update_Parts()
 {
-	for (_uint iCnt = 0; iCnt < PART_END; ++iCnt)
+	for (_uint iCnt = PART_START; iCnt < PART_END; ++iCnt)
 	{
 		if (iCnt > PART_BODY)
 		{
@@ -657,41 +536,31 @@ _int CPlayer::Update_Parts()
 	return GAMEOBJECT::NOEVENT;
 }
 
-void CPlayer::Jump(_float fDeltaTime)
+void CPlayer::Update_Jump(_float fDeltaTime)
 {
-	CManagement* pManagement = CManagement::Get_Instance();
-	if (nullptr == pManagement)
+	if (JUMP != m_eCurState)
 		return;
 
-	int k = 0;
-	if (pManagement->Key_Pressing(VK_SPACE))
-	{
-		m_bJump = true;
-	}
-
-	_vec3 vCurPos[PART_END];
 	// 플레이어의 현재 위치를 계속 받아온다
+	_vec3 vCurPos[PART_END];
 	for (_uint i = 0; i < PART_END; ++i)
 		vCurPos[i] = m_pTransformCom[i]->Get_Desc().vPosition;
 
-	if (m_bJump)
+	// 시간 더해주기
+	m_fJumpTime += fDeltaTime;
+	for (_uint i = 0; i < 2; ++i)
 	{
-		// 시간 더해주기
-		m_fJumpTime += fDeltaTime;
-		for (_uint i = 0; i < 2; ++i)
+		// 점프
+		vCurPos[i].y += (m_fJumpPower * m_fJumpTime - 9.8f * m_fJumpTime * m_fJumpTime * 0.5f);
+
+		if (vCurPos[i].y <= m_pTransformCom[i]->Get_Desc().vPosition.y)
 		{
-			// 점프
-			vCurPos[i].y += (m_fJumpPower * m_fJumpTime - 9.8f * m_fJumpTime * m_fJumpTime * 0.5f);
-
-			if (vCurPos[i].y <= m_pTransformCom[i]->Get_Desc().vPosition.y)
-			{
-				m_fJumpTime = 0.f;
-				m_bJump = false;
-				vCurPos[i].y = m_pTransformCom[i]->Get_Desc().vPosition.y;
-			}
-
-			m_pTransformCom[i]->Set_Position(vCurPos[i]);
+			m_fJumpTime = 0.f;
+			vCurPos[i].y = m_pTransformCom[i]->Get_Desc().vPosition.y;
+			m_eCurState = IDLE;
 		}
+
+		m_pTransformCom[i]->Set_Position(vCurPos[i]);
 	}
 }
 
