@@ -815,7 +815,7 @@ void CPlayer::Check_Skill(_float fDeltaTime)
 		// 공격체 생성
 		if (FAILED(pSkillInven->Use_Skill(0, fDeltaTime)))
 		{
-			m_bUsingSkill = false;
+			//m_bUsingSkill = false;
 			return;
 		}
 
@@ -966,21 +966,31 @@ void CPlayer::Move_SkillMotion(_float fDeltaTime, eActiveSkill_ID eSkillID)
 		m_bActiveBuff[BUFF_ATT] = true;
 		break;
 	case ACTIVE_FLAME_WAVE:	// 투사체
-		if (m_bFrameWaveStart)
+		//if (m_bFrameWaveStart)
+		//{
+		//	if (bUseMp)
+		//		pEquip->Set_PlayerMP(-30);
+		//	m_fFrameWaveCnt += fDeltaTime;
+
+		//	if (m_fFrameWaveCnt >= m_fFrameWaveEnd)
+		//	{
+		//		m_bFrameWaveStart = false;
+		//		m_fFrameWaveCnt = 0.f;
+
+		//		Skill_ProjectileFall(fDeltaTime);
+
+		//		//m_bUsingSkill = false;
+		//	}
+		//}
+		m_fFrameWaveCnt += fDeltaTime;
+		if (m_fFrameWaveCnt >= m_fFrameWaveEnd)
 		{
+			m_bFrameWaveStart = false;
 			if (bUseMp)
 				pEquip->Set_PlayerMP(-30);
-			m_fFrameWaveCnt += fDeltaTime;
-
-			if (m_fFrameWaveCnt >= m_fFrameWaveEnd)
-			{
-				m_bFrameWaveStart = false;
-				m_fFrameWaveCnt = 0.f;
-
-				Skill_ProjectileFall(fDeltaTime);
-
-				//m_bUsingSkill = false;
-			}
+			Skill_ProjectileFall(fDeltaTime);
+			m_bUsingSkill = false;
+			m_fFrameWaveCnt = 0.f;
 		}
 		break;
 	case ACTIVE_ICE_SPEAR: // 레이저
@@ -1208,11 +1218,11 @@ void CPlayer::Skill_ProjectileFall(_float fDeltaTime)
 		{	
 			Ready_Layer_Meteor(L"Layer_Meteor", vGoalPos);
 
-				for (_uint iCnt = 0; iCnt < 5; ++iCnt)
-				{
-					if (FAILED(Ready_Layer_Meteor(L"Layer_Meteor", vGoalPos)))
-						PRINT_LOG(L"Failed To Ready_Layer_Meteor in CPlayer", LOG::CLIENT);
-				}
+			for (_uint iCnt = 0; iCnt < 5; ++iCnt)
+			{
+				if (FAILED(Ready_Layer_Meteor(L"Layer_Meteor", vGoalPos)))
+					PRINT_LOG(L"Failed To Ready_Layer_Meteor in CPlayer", LOG::CLIENT);
+			}
 			
 		}
 	}

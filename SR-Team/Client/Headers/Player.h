@@ -182,7 +182,8 @@ private:
 
 	_bool				m_bFrameWaveStart = false;
 	_float				m_fFrameWaveCnt = 0.f;
-	_float				m_fFrameWaveEnd = 0.3f;
+	_float				m_fFrameWaveEnd = 0.8f;
+
 
 	//---------------------------------------------
 	// 버프 스킬들 사용 시간 체크

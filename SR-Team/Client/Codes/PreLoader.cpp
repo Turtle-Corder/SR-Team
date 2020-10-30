@@ -437,7 +437,7 @@ HRESULT CPreLoader::Setup_Stage_CubeTerrain(const wstring & LayerTag)
 	//로딩파츠
 
 	wifstream fin;
-	wstring wstrFilePath = _T("../DataPath/MapSource/Stage0.txt");
+	wstring wstrFilePath = _T("../DataPath/MapSource/마을.txt");
 	fin.open(wstrFilePath.c_str());
 	if (!fin.fail())
 	{

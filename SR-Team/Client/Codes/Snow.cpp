@@ -147,6 +147,8 @@ HRESULT CSnow::Add_Component()
 		tDmgInfo.iCriticalRate = m_pStatusComp->Get_Status().iCriticalRate;
 	}
 
+	tDmgInfo.eType = ICE;
+
 
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_DamageInfo", L"Com_DmgInfo", (CComponent**)&m_pDmgInfoCom, &tDmgInfo)))
 		return E_FAIL;
