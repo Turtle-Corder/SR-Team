@@ -70,18 +70,18 @@ HRESULT CMeteoSkill::Use_Skill(float fDeltaTime)
 {
 	if (m_bInitial)
 	{
-		PRINT_LOG(L"메테오 스킬 사용", LOG::CLIENT);
+		//PRINT_LOG(L"메테오 스킬 사용", LOG::CLIENT);
 		m_bInitial = false;
 	}
 	else if (m_fStartTime <= m_fEndTime)
 	{
-		PRINT_LOG(L"쿨타임중", LOG::CLIENT);
-		return E_FAIL;
+		//PRINT_LOG(L"쿨타임중", LOG::CLIENT);
+		//return E_FAIL;
 	}
 	else if (m_fStartTime >= m_fEndTime)
 	{
 		m_fStartTime = 0.f;
-		PRINT_LOG(L"쿨타임 끝 / 메테오 스킬 사용", LOG::CLIENT);
+		//PRINT_LOG(L"쿨타임 끝 / 메테오 스킬 사용", LOG::CLIENT);
 	}
 
 	// 공격체 생성

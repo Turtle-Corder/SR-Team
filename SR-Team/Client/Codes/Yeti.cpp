@@ -275,7 +275,7 @@ HRESULT CYeti::Moving(float _fDeltaTime)
 
 	float fLength = D3DXVec3Length(&vDir); // 플레이어와의 거리비교
 
-	if (fLength < 4.f)
+	if (fLength < 5.f)
 	{
 		LookAtPlayer(_fDeltaTime);
 

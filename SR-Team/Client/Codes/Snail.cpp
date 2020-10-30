@@ -285,6 +285,7 @@ HRESULT CSnail::Move(_float _fDeltaTime)
 
 HRESULT CSnail::LookAtPlayer(_float _fDeltaTime)
 {
+
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
@@ -386,7 +387,11 @@ HRESULT CSnail::Attack(_float _fDeltaTime)
 			return S_OK;
 		}
 	}
-
+	else
+	{
+		m_eCurState = CSnail::MOVE;
+		m_bCheck = false;
+	}
 
 	return S_OK;
 }
