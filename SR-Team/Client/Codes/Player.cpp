@@ -1166,7 +1166,7 @@ void CPlayer::Skill_ProjectileFall(_float fDeltaTime)
 		m_bDownHand = false;
 
 		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
-		m_bUsingSkill = true;
+		//m_bUsingSkill = true;
 		m_ePlayerSkillID = PLAYER_SKILL_FALL;
 	}
 
@@ -1174,7 +1174,7 @@ void CPlayer::Skill_ProjectileFall(_float fDeltaTime)
 	if (nullptr == pManagement)
 		return;
 
-	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Terrain", L"Com_VIBuffer");
+	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Terrain", L"Com_VIBuffer");
 	if (nullptr == pTerrainBuffer)
 		return;
 
@@ -1189,17 +1189,23 @@ void CPlayer::Skill_ProjectileFall(_float fDeltaTime)
 	{
 		if (!m_bRenderInven && !m_bRenderShop)
 		{	
-			if (m_bOnece)
-			{
-				for (_uint iCnt = 0; iCnt < 5; ++iCnt)
+				if (!m_bUsingSkill)
 				{
-					if (FAILED(Ready_Layer_Meteor(L"Layer_Meteor", vGoalPos)))
-						PRINT_LOG(L"Failed To Ready_Layer_Meteor in CPlayer", LOG::CLIENT);
+					m_fAttCount += fDeltaTime;
+					Ready_Layer_Meteor(L"Layer_Meteor", vGoalPos);
+					if (m_fAttCount >= m_fAttEndCount)
+					{
+						m_fAttCount = 0.f;
+						m_bUsingSkill = true;
+					}
+					//for (_uint iCnt = 0; iCnt < 5; ++iCnt)
+					//{
+					//	if (FAILED(Ready_Layer_Meteor(L"Layer_Meteor", vGoalPos)))
+					//		PRINT_LOG(L"Failed To Ready_Layer_Meteor in CPlayer", LOG::CLIENT);
+					//}
 				}
-				m_bOnece = false;
 			}
 		}
-	}
 
 	if (m_bIsFall)
 	{
@@ -1289,20 +1295,20 @@ void CPlayer::Buff_EnergyExploitation(_float fDeltaTime)
 	}
 }
 
-HRESULT CPlayer::Ready_Layer_Meteor(const wstring& _strLayerTag , _vec3 vGoalPos)
+HRESULT CPlayer::Ready_Layer_Meteor(const wstring& _strLayerTag, _vec3 vGoalPos)
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	m_fRand[0] = (_float)(rand() % 2 - 4);
-	m_fRand[1] = (_float)(rand() % 2 - 4);
+	//m_fRand[0] = (_float)(rand() % 2 - 4);
+	//m_fRand[1] = (_float)(rand() % 2 - 4);
 	INSTANTIMPACT tImpact;
 	tImpact.pAttacker = this;
 	tImpact.pStatusComp = m_pStatusCom;
-	tImpact.vPosition = vGoalPos + _vec3(m_fRand[0] , 0.f , m_fRand[1]);
+	tImpact.vPosition = vGoalPos/* + _vec3(m_fRand[0], 0.f, m_fRand[1])*/;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Meteor", SCENE_STAGE0, _strLayerTag , &tImpact)))
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Meteor", SCENE_STAGE0, _strLayerTag, &tImpact)))
 		return E_FAIL;
 
 	return S_OK;
