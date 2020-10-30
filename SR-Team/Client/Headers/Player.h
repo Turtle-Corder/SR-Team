@@ -180,6 +180,10 @@ private:
 	_bool				m_bDownHand = false;
 	_float				m_fFallTime = 0.f;
 
+	_bool				m_bFrameWaveStart = false;
+	_float				m_fFrameWaveCnt = 0.f;
+	_float				m_fFrameWaveEnd = 0.3f;
+
 	//---------------------------------------------
 	// 버프 스킬들 사용 시간 체크
 	//---------------------------------------------
@@ -210,8 +214,6 @@ private:
 	_int			m_iAttBuff = 100;
 	CWand*			m_pWand = nullptr;
 
-	_float			m_fAttCount = 0.f;
-	_float			m_fAttEndCount = 3.f;
 	//--------------------------------------------
 };
 

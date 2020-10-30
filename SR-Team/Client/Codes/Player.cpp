@@ -922,8 +922,13 @@ void CPlayer::Check_Skill(_float fDeltaTime)
 		eSkillID = pSkillInven->Get_SkillID(7);
 	}
 
+
 	if (m_bUsingSkill)
+	{
+		if (eSkillID == ACTIVE_FLAME_WAVE)
+			m_bFrameWaveStart = true;
 		Move_SkillMotion(fDeltaTime, eSkillID);
+	}
 	else
 		eSkillID = ACTIVE_SKILL_END;
 }
@@ -961,9 +966,22 @@ void CPlayer::Move_SkillMotion(_float fDeltaTime, eActiveSkill_ID eSkillID)
 		m_bActiveBuff[BUFF_ATT] = true;
 		break;
 	case ACTIVE_FLAME_WAVE:	// 투사체
-		if (bUseMp)
-			pEquip->Set_PlayerMP(-30);
-		Skill_ProjectileFall(fDeltaTime);
+		if (m_bFrameWaveStart)
+		{
+			if (bUseMp)
+				pEquip->Set_PlayerMP(-30);
+			m_fFrameWaveCnt += fDeltaTime;
+
+			if (m_fFrameWaveCnt >= m_fFrameWaveEnd)
+			{
+				m_bFrameWaveStart = false;
+				m_fFrameWaveCnt = 0.f;
+
+				Skill_ProjectileFall(fDeltaTime);
+
+				//m_bUsingSkill = false;
+			}
+		}
 		break;
 	case ACTIVE_ICE_SPEAR: // 레이저
 		if (bUseMp)
@@ -1159,7 +1177,17 @@ void CPlayer::Skill_Laser(_float fDeltaTime)
 
 void CPlayer::Skill_ProjectileFall(_float fDeltaTime)
 {
-	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return;
+
+	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Terrain", L"Com_VIBuffer");
+	if (nullptr == pTerrainBuffer)
+		return;
+
+	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Camera");
+
+	if (pManagement->Key_Down(VK_RBUTTON))
 	{
 		m_bStartFall = true;
 		m_bIsFall = false;
@@ -1170,16 +1198,6 @@ void CPlayer::Skill_ProjectileFall(_float fDeltaTime)
 		m_ePlayerSkillID = PLAYER_SKILL_FALL;
 	}
 
-	CManagement* pManagement = CManagement::Get_Instance();
-	if (nullptr == pManagement)
-		return;
-
-	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Terrain", L"Com_VIBuffer");
-	if (nullptr == pTerrainBuffer)
-		return;
-
-	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Camera");
-
 	_matrix mat;
 	D3DXMatrixIdentity(&mat);
 	_vec3 vGoalPos = {};
@@ -1189,23 +1207,9 @@ void CPlayer::Skill_ProjectileFall(_float fDeltaTime)
 	{
 		if (!m_bRenderInven && !m_bRenderShop)
 		{	
-				if (!m_bUsingSkill)
-				{
-					m_fAttCount += fDeltaTime;
-					Ready_Layer_Meteor(L"Layer_Meteor", vGoalPos);
-					if (m_fAttCount >= m_fAttEndCount)
-					{
-						m_fAttCount = 0.f;
-						m_bUsingSkill = true;
-					}
-					//for (_uint iCnt = 0; iCnt < 5; ++iCnt)
-					//{
-					//	if (FAILED(Ready_Layer_Meteor(L"Layer_Meteor", vGoalPos)))
-					//		PRINT_LOG(L"Failed To Ready_Layer_Meteor in CPlayer", LOG::CLIENT);
-					//}
-				}
-			}
+			Ready_Layer_Meteor(L"Layer_Meteor", vGoalPos);
 		}
+	}
 
 	if (m_bIsFall)
 	{
@@ -1301,12 +1305,12 @@ HRESULT CPlayer::Ready_Layer_Meteor(const wstring& _strLayerTag, _vec3 vGoalPos)
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	//m_fRand[0] = (_float)(rand() % 2 - 4);
-	//m_fRand[1] = (_float)(rand() % 2 - 4);
+	m_fRand[0] = (_float)(rand() % 2 - 4);
+	m_fRand[1] = (_float)(rand() % 2 - 4);
 	INSTANTIMPACT tImpact;
 	tImpact.pAttacker = this;
 	tImpact.pStatusComp = m_pStatusCom;
-	tImpact.vPosition = vGoalPos/* + _vec3(m_fRand[0], 0.f, m_fRand[1])*/;
+	tImpact.vPosition = vGoalPos + _vec3(m_fRand[0], 0.f, m_fRand[1]);
 
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Meteor", SCENE_STAGE0, _strLayerTag, &tImpact)))
 		return E_FAIL;
