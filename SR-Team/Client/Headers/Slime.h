@@ -75,6 +75,8 @@ private:
 	STATE		m_ePreState;
 	STATE		m_eCurState;
 	_float		m_fDistance = 0.f;
+	_float		m_fStartTime = 0.f;
+	_bool		m_bAttackJump = false;
 };
 
 END

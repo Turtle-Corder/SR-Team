@@ -93,14 +93,6 @@ HRESULT CMainApp::Setup_MainApp()
 
 	Safe_AddRef(m_pFont);
 
-
-
-	if (FAILED(m_pManagement->Change_CurrentScene(SCENE_LOGO, CScene_Logo::Create(m_pDevice))))
-	{
-		PRINT_LOG(L"Failed To Change_CurrentScene SCENE_LOGO", LOG::CLIENT);
-		return E_FAIL;
-	}
-
 	if (FAILED(Setup_DefaultSetting()))
 	{
 		PRINT_LOG(L"Failed To Setup_DefaultSetting", LOG::CLIENT);
@@ -124,6 +116,13 @@ HRESULT CMainApp::Setup_MainApp()
 		PRINT_LOG(L"Failed To Setup_SaveData", LOG::CLIENT);
 		return E_FAIL;
 	}
+
+	if (FAILED(m_pManagement->Change_CurrentScene(SCENE_LOGO, CScene_Logo::Create(m_pDevice))))
+	{
+		PRINT_LOG(L"Failed To Change_CurrentScene SCENE_LOGO", LOG::CLIENT);
+		return E_FAIL;
+	}
+
 
 	ShowCursor(FALSE);
 

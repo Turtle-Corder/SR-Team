@@ -31,7 +31,7 @@ public:
 	virtual CGameObject * Clone_GameObject(void * _pArg) override;
 
 private:
-	CPlayerItem*		m_pPlayerItem[4];
+	CPlayerItem*		m_pPlayerItem[4] = { nullptr, };
 };
 
 END

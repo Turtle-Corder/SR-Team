@@ -437,7 +437,7 @@ HRESULT CPreLoader::Setup_Stage_CubeTerrain(const wstring & LayerTag)
 	//·ÎµùÆÄÃ÷
 
 	wifstream fin;
-	wstring wstrFilePath = _T("../DataPath/MapSource/Stage2.txt");
+	wstring wstrFilePath = _T("../DataPath/MapSource/Stage0.txt");
 	fin.open(wstrFilePath.c_str());
 	if (!fin.fail())
 	{
