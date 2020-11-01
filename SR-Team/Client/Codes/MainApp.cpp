@@ -348,6 +348,9 @@ HRESULT CMainApp::Setup_StaticResources()
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Player", CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL, 
 		L"../Resources/ÇÑ°Ü¹Ì%d.png"))))
 		return E_FAIL;
+	//if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Monster", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE,
+	//	L"../Resources/3D/Layer_Player/player_head%d.dds"))))
+	//	return E_FAIL;
 #pragma endregion
 
 

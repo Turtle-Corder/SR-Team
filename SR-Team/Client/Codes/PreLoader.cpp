@@ -271,20 +271,20 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 #pragma endregion
 	// player
 #pragma region Component_Texture_Player
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_Monster", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, 
-		L"../Resources/Player/Monster%d.dds"))))
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_Monster", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE,
+		L"../Resources/3D/Layer_Player/player_head%d.dds"))))
 		return E_FAIL;
 
 	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_PlayerHead", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE,
-			L"../Resources/Player/PlayerHead%d.dds"))))
+			L"../Resources/3D/Layer_Player/player_body%d.dds"))))
 		return E_FAIL;
 
 	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_PlayerHand", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE,
-			L"../Resources/Player/PlayerHand%d.dds"))))
+			L"../Resources/3D/Layer_Player/player_hand%d.dds"))))
 		return E_FAIL;
 
 	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_PlayerFoot", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE,
-			L"../Resources/Player/PlayerFoot%d.dds"))))
+			L"../Resources/3D/Layer_Player/player_foot%d.dds"))))
 		return E_FAIL;
 #pragma endregion
 
