@@ -21,7 +21,7 @@ const CTransform::TRANSFORM_DESC & CTransform::Get_Desc() const
 
 const _vec3 CTransform::Get_Look() const
 {
-	return *(_vec3*)&m_tTransformDesc.matWorld.m[0][0];
+	return *(_vec3*)&m_tTransformDesc.matWorld.m[2][0];
 }
 
 const _vec3 CTransform::Get_Up() const
@@ -31,7 +31,7 @@ const _vec3 CTransform::Get_Up() const
 
 const _vec3 CTransform::Get_Right() const
 {
-	return *(_vec3*)&m_tTransformDesc.matWorld.m[2][0];
+	return *(_vec3*)&m_tTransformDesc.matWorld.m[0][0];
 }
 
 void CTransform::Set_Transform(const TRANSFORM_DESC & _rTransform)

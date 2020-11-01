@@ -68,7 +68,7 @@ HRESULT CPlayer::Setup_GameObject(void * _pArg)
 	_vec3 vLeftFoot = (-vRight * 0.3f);
 	vLeftFoot.y = -0.7f;
 	m_pTransformCom[PART_FOOT_LEFT]->Set_Position(vLeftFoot);
-	
+
 	return S_OK;
 }
 
@@ -475,10 +475,10 @@ HRESULT CPlayer::Update_Move(_float _fDeltaTime)
 	//--------------------------------------------------
 	// 점프
 	//--------------------------------------------------
-	else if (JUMP == m_eCurState)
-	{
-		Update_Jump(_fDeltaTime);
-	}
+	//else if (JUMP == m_eCurState)
+	//{
+	//	Update_Jump(_fDeltaTime);
+	//}
 
 
 	//--------------------------------------------------
@@ -579,23 +579,26 @@ HRESULT CPlayer::Update_Look(_float _fDeltaTime)
 	_float fDot = D3DXVec3Dot(&vLook, &vPlayerToTarget);;
 	_float fRad = acosf(fDot);
 
-	// 우벡터
-	_vec3 vRight;
-	D3DXVec3Cross(&vRight, &vLook, &_vec3(0.f, 1.f, 0.f));
-//	D3DXVec3Cross(&vRight, &_vec3(0.f, 1.f, 0.f), &vLook);
+	_vec3 vLeft;
+	D3DXVec3Cross(&vLeft, &vLook, &_vec3(0.f, 1.f, 0.f));
+	//	D3DXVec3Cross(&vRight, &_vec3(0.f, 1.f, 0.f), &vLook);
 
 
-	_float fLimit = D3DXVec3Dot(&vRight, &vPlayerToTarget);
+	_float fLimit = D3DXVec3Dot(&vLeft, &vPlayerToTarget);
+
+	if (fabsf(fLimit) < 0.2f)
+		return S_OK;
+
 	if (fLimit > 0)
-	{	
-		m_pTransformCom[PART_HEAD]->Turn(CTransform::AXIS_Y, -fRad);
-		m_pTransformCom[PART_BODY]->Turn(CTransform::AXIS_Y, -fRad);
+	{
+		m_pTransformCom[PART_HEAD]->Set_Rotation(m_pTransformCom[PART_HEAD]->Get_Desc().vRotate + _vec3(0.f, -fRad, 0.f));
+		m_pTransformCom[PART_BODY]->Set_Rotation(m_pTransformCom[PART_BODY]->Get_Desc().vRotate + _vec3(0.f, -fRad, 0.f));
 	}
 
 	else
 	{
-		m_pTransformCom[PART_HEAD]->Turn(CTransform::AXIS_Y, fRad);
-		m_pTransformCom[PART_BODY]->Turn(CTransform::AXIS_Y, fRad);
+		m_pTransformCom[PART_HEAD]->Set_Rotation(m_pTransformCom[PART_HEAD]->Get_Desc().vRotate + _vec3(0.f, fRad, 0.f));
+		m_pTransformCom[PART_BODY]->Set_Rotation(m_pTransformCom[PART_BODY]->Get_Desc().vRotate + _vec3(0.f, fRad, 0.f));
 	}
 
 
@@ -631,7 +634,7 @@ HRESULT CPlayer::Raycast_OnTerrain(_bool* _pFound)
 		*_pFound = true;
 		return S_OK;
 	}
-	
+
 	return S_OK;
 }
 
@@ -682,8 +685,8 @@ _int CPlayer::Update_State()
 			break;
 		case Client::CPlayer::MOVE:
 			break;
-		case Client::CPlayer::JUMP:
-			break;
+			//case Client::CPlayer::JUMP:
+			//	break;
 		case Client::CPlayer::ATTACK:
 			break;
 		case Client::CPlayer::SKILL:
@@ -736,7 +739,7 @@ _int CPlayer::Update_Input_Action(_float _fDeltaTime)
 	//--------------------------------------------------
 	// L Click : Move
 	//--------------------------------------------------
-	if (pManagement->Key_Down(VK_LBUTTON))
+	if (pManagement->Key_Pressing(VK_LBUTTON))
 	{
 		if (VALIDATE_MOVE >= m_eCurState)
 		{
@@ -746,6 +749,9 @@ _int CPlayer::Update_Input_Action(_float _fDeltaTime)
 				PRINT_LOG(L"Failed To Raycast!", LOG::CLIENT);
 				return GAMEOBJECT::WARN;
 			}
+
+			// TODO : 길찾기로 대체
+
 
 			if (bFound)
 			{
@@ -770,8 +776,8 @@ _int CPlayer::Update_Input_Action(_float _fDeltaTime)
 	//--------------------------------------------------
 	else if (pManagement->Key_Down(VK_SPACE))
 	{
-		if(VALIDATE_MOVE >= m_eCurState)
-			m_eCurState = JUMP;
+		//if(VALIDATE_MOVE >= m_eCurState)
+		//	m_eCurState = JUMP;
 	}
 
 	//--------------------------------------------------
@@ -829,7 +835,7 @@ _int CPlayer::Update_Input_Skill(_float _fDeltaTime)
 				m_eCurState = SKILL;
 			}
 		}
-	} 
+	}
 
 
 	//--------------------------------------------------
@@ -1070,33 +1076,33 @@ _int CPlayer::Update_Parts()
 	return GAMEOBJECT::NOEVENT;
 }
 
-void CPlayer::Update_Jump(_float fDeltaTime)
-{
-	if (JUMP != m_eCurState)
-		return;
-
-	// 플레이어의 현재 위치를 계속 받아온다
-	_vec3 vCurPos[2];
-	for (_uint i = 0; i < 2; ++i)
-		vCurPos[i] = m_pTransformCom[i]->Get_Desc().vPosition;
-
-	// 시간 더해주기
-	m_fJumpTime += fDeltaTime;
-	for (_uint i = 0; i < 2; ++i)
-	{
-		// 점프
-		vCurPos[i].y += (m_fJumpPower * m_fJumpTime - 9.8f * m_fJumpTime * m_fJumpTime * 0.5f);
-
-		if (vCurPos[i].y < m_pTransformCom[i]->Get_Desc().vPosition.y)
-		{
-			m_fJumpTime = 0.f;
-			vCurPos[i].y = m_pTransformCom[i]->Get_Desc().vPosition.y;
-			m_eCurState = IDLE;
-		}
-
-		m_pTransformCom[i]->Set_Position(vCurPos[i]);
-	}
-}
+//void CPlayer::Update_Jump(_float fDeltaTime)
+//{
+//	if (JUMP != m_eCurState)
+//		return;
+//
+//	// 플레이어의 현재 위치를 계속 받아온다
+//	_vec3 vCurPos[2];
+//	for (_uint i = 0; i < 2; ++i)
+//		vCurPos[i] = m_pTransformCom[i]->Get_Desc().vPosition;
+//
+//	// 시간 더해주기
+//	m_fJumpTime += fDeltaTime;
+//	for (_uint i = 0; i < 2; ++i)
+//	{
+//		// 점프
+//		vCurPos[i].y += (m_fJumpPower * m_fJumpTime - 9.8f * m_fJumpTime * m_fJumpTime * 0.5f);
+//
+//		if (vCurPos[i].y < m_pTransformCom[i]->Get_Desc().vPosition.y)
+//		{
+//			m_fJumpTime = 0.f;
+//			vCurPos[i].y = m_pTransformCom[i]->Get_Desc().vPosition.y;
+//			m_eCurState = IDLE;
+//		}
+//
+//		m_pTransformCom[i]->Set_Position(vCurPos[i]);
+//	}
+//}
 
 void CPlayer::Update_Anim(_float _fDeltaTime)
 {
@@ -1107,8 +1113,8 @@ void CPlayer::Update_Anim(_float _fDeltaTime)
 		Update_Anim_Move(_fDeltaTime);
 		break;
 
-	case Client::CPlayer::JUMP:
-		break;
+		//case Client::CPlayer::JUMP:
+		//	break;
 
 	case Client::CPlayer::ATTACK:
 		Update_Anim_Attack(_fDeltaTime);
@@ -1165,7 +1171,7 @@ void CPlayer::Update_Anim_Move(_float _fDeltaTime)
 	//--------------------------------------------------
 	// 멈춤
 	//--------------------------------------------------
-	else if(IDLE == m_eCurState)
+	else if (IDLE == m_eCurState)
 	{
 		for (_uint i = 2; i < PART_END; ++i)
 			m_pTransformCom[i]->Set_Rotation(_vec3(0.f, 0.f, 0.f));
@@ -1285,13 +1291,13 @@ HRESULT CPlayer::Spawn_EnergyBolt()
 	tImpact.pStatusComp = m_pStatusCom;
 
 	_vec3 vWandPos = {};
-	memcpy_s(&vWandPos , sizeof(_vec3),&m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().matWorld._41,sizeof(_vec3));
+	memcpy_s(&vWandPos, sizeof(_vec3), &m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().matWorld._41, sizeof(_vec3));
 	_vec3 vPlayerLook = m_pTransformCom[PART_HEAD]->Get_Look();
 	D3DXVec3Normalize(&vPlayerLook, &vPlayerLook);
-	
+
 	tImpact.vPosition = vWandPos;
 	tImpact.vDirection = vPlayerLook;
-	if (FAILED(pManagement->Add_GameObject_InLayer(pManagement->Get_CurrentSceneID(), L"GameObject_EnergyBolt", pManagement->Get_CurrentSceneID(), L"Player_Attack" , &tImpact)))
+	if (FAILED(pManagement->Add_GameObject_InLayer(pManagement->Get_CurrentSceneID(), L"GameObject_EnergyBolt", pManagement->Get_CurrentSceneID(), L"Player_Attack", &tImpact)))
 		return E_FAIL;
 
 	return S_OK;

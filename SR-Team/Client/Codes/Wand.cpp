@@ -11,7 +11,7 @@ CWand::CWand(LPDIRECT3DDEVICE9 _pDevice)
 }
 
 CWand::CWand(const CWand & _rOther)
-	:CGameObject(_rOther)
+	: CGameObject(_rOther)
 {
 }
 
@@ -27,7 +27,7 @@ HRESULT CWand::Setup_GameObject(void * _pArg)
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	
+
 	return S_OK;
 }
 
@@ -96,7 +96,7 @@ HRESULT CWand::Add_Component()
 	// For.Com_Texture
 	for (_int iCnt = 0; iCnt < WAND_END; ++iCnt)
 	{
-		StringCchPrintf(szCombine, _countof(szCombine), szVIBuffer , iCnt);
+		StringCchPrintf(szCombine, _countof(szCombine), szVIBuffer, iCnt);
 
 		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", szCombine, (CComponent**)&m_pVIBufferCom[iCnt]))) //생성 갯수
 			return E_FAIL;
@@ -116,10 +116,11 @@ HRESULT CWand::Add_Component()
 
 		if (iCnt == WAND_BASE)
 		{
-			tTransformDesc[WAND_BASE].vPosition = { 0.f , -0.5f , 0.f };
+			tTransformDesc[WAND_BASE].vPosition = { 0.f , -0.5f , 0.5f };
+			tTransformDesc[WAND_BASE].vRotate = { D3DXToRadian(-90.f), 0.f, 0.f };
 			tTransformDesc[WAND_BASE].fSpeedPerSecond = 10.f;
 			tTransformDesc[WAND_BASE].fRotatePerSecond = D3DXToRadian(90.f);
-			tTransformDesc[WAND_BASE].vScale = { 1.f , 1.f , 1.f };
+			tTransformDesc[WAND_BASE].vScale = { 3.5f , 2.0f , 1.5f };
 		}
 		if (iCnt == WAND_HANDLE)
 		{
@@ -130,18 +131,19 @@ HRESULT CWand::Add_Component()
 		}
 		else if (iCnt == WAND_HEAD)
 		{
-			tTransformDesc[WAND_HEAD].vPosition = { 0.f , -1.f , 0.f };
+			tTransformDesc[WAND_HEAD].vPosition = { 0.f , -1.25f , 0.f };
+			tTransformDesc[WAND_HEAD].vRotate = { D3DXToRadian(45.f), 0.f, D3DXToRadian(45.f) };
 			tTransformDesc[WAND_HEAD].fSpeedPerSecond = 10.f;
 			tTransformDesc[WAND_HEAD].fRotatePerSecond = D3DXToRadian(90.f);
 			tTransformDesc[WAND_HEAD].vScale = { 0.5f , 0.4f , 0.5f };
 		}
 
-		StringCchPrintf(szCombine, _countof(szCombine), szTransform , iCnt);
+		StringCchPrintf(szCombine, _countof(szCombine), szTransform, iCnt);
 
 		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", szCombine, (CComponent**)&m_pTransformCom[iCnt], &tTransformDesc[iCnt]))) ////생성 갯수
 			return E_FAIL;
 	}
-	
+
 	//m_pTransformCom[WAND_BASE]->Turn(CTransform::AXIS_X, D3DXToRadian(75.f));
 	// 이제 각도를 구해주자
 
@@ -150,7 +152,6 @@ HRESULT CWand::Add_Component()
 
 HRESULT CWand::Movement(_float _fDeltaTime)
 {
-	// 1.player의 look을 구해온다.
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
@@ -159,101 +160,13 @@ HRESULT CWand::Movement(_float _fDeltaTime)
 	if (nullptr == pPlayerRH)
 		return E_FAIL;
 
-	CTransform* pPlayerHead = (CTransform*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Player", L"Com_Transform0");
-	if (nullptr == pPlayerHead)
-		return E_FAIL;
+	m_pTransformCom[WAND_HEAD]->Turn(CTransform::AXIS_X, _fDeltaTime * D3DXToRadian(45.f));
+	m_pTransformCom[WAND_HEAD]->Turn(CTransform::AXIS_Y, _fDeltaTime * D3DXToRadian(90.f));
+	m_pTransformCom[WAND_HEAD]->Turn(CTransform::AXIS_Z, _fDeltaTime * D3DXToRadian(45.f));
 
-	//_vec3 vPlayerPos ={};
-	_vec3 vPlayerLook = pPlayerHead->Get_Look();
-
-//	_matrix matWOrld = pPlayerRH->Get_Desc().matWorld;
-//	_vec3 vUp = { 0.f , 1.f , 0.f };
-	_vec3 vRightRH = pPlayerRH->Get_Look();
-	vRightRH.y = 0.f;
-	_vec3 vTemp = vPlayerLook;
-	//이 위의 과정은 사전세팅
-
-//	memcpy_s(vPlayerPos, sizeof(_vec3), &pPlayerRH->Get_Desc().matWorld._41, sizeof(_vec3));
-//	m_pTransformCom[WAND_BASE]->Set_Position(vPlayerPos);
-	_matrix PlayerWorld = pPlayerRH->Get_Desc().matWorld;
-	
-
-
-	
-	m_pTransformCom[WAND_BASE]->Update_Transform();
-
-	_vec3 vRotate = pPlayerHead->Get_Desc().vRotate;
-	m_vTest.push_back(vRotate);
-	//_matrix MyHead = pPlayerHead->Get_Desc().matWorld;
-	_matrix MyMat = m_pTransformCom[WAND_BASE]->Get_Desc().matWorld;
-
-	//D3DXMatrixRotationZ(&MyMat, D3DXToRadian(120.f));
-	D3DXMatrixRotationAxis(&MyMat, &vRightRH, D3DXToRadian(-120.f));
-
-	D3DXMATRIX matRotX;
-	D3DXMatrixIdentity(&matRotX);
-
-	_vec3 vRight = { 1.f, 0.f, 0.f };
-	_vec3 vUp = { 0.f, 1.f, 0.f };
-	_vec3 vLook = { 0.f, 0.f, 1.f };
-
-	//vPlayerLook.y = vTemp.y * cosf(vRotate.x) - vTemp.z * sinf(vRotate.x);
-	//vPlayerLook.z = vTemp.y * sinf(vRotate.x) + vTemp.z * cosf(vRotate.x);
-	////--------------------------------
-	//vPlayerLook.x = vTemp.x * cosf(vRotate.y) + vTemp.z * sinf(vRotate.y);
-	//vPlayerLook.z = vTemp.x * -sinf(vRotate.y) + vTemp.z * cosf(vRotate.y);
-	////--------------------------------
-	//vPlayerLook.x = vTemp.x * cosf(vRotate.z) - vTemp.y * sinf(vRotate.z);
-	//vPlayerLook.y = vTemp.x * sinf(vRotate.z) + vTemp.y * cosf(vRotate.z);
-	//-------------------------------------------------------------------
-	vRight.y = vRight.y * cosf(vRotate.x) - vRight.z * sinf(vRotate.x);
-	vRight.z = vRight.y * sinf(vRotate.x) + vRight.z * cosf(vRotate.x);
-	//--------------------------------
-	//vRight.x = vRight.x * cosf(vRotate.y) + vRight.z * sinf(vRotate.y);
-	//vRight.z = vRight.x * -sinf(vRotate.y) + vRight.z * cosf(vRotate.y);
-	//--------------------------------
-	vRight.x = vRight.x * cosf(vRotate.z) - vRight.y * sinf(vRotate.z);
-	vRight.y = vRight.x * sinf(vRotate.z) + vRight.y * cosf(vRotate.z);
-	//-------------------------------------------------------------------
-	// 위에 right
-	//-------------------------------------------------------------------
-	//-------------------------------------------------------------------
-	vUp.y = vUp.y * cosf(vRotate.x) - vUp.z * sinf(vRotate.x);
-	vUp.z = vUp.y * sinf(vRotate.x) + vUp.z * cosf(vRotate.x);
-	//--------------------------------
-	/*vUp.x = vUp.x * cosf(vRotate.y) + vUp.z * sinf(vRotate.y);
-	vUp.z = vUp.x * -sinf(vRotate.y) + vUp.z * cosf(vRotate.y);*/
-	//--------------------------------
-	vUp.x = vUp.x * cosf(vRotate.z) - vUp.y * sinf(vRotate.z);
-	vUp.y = vUp.x * sinf(vRotate.z) + vUp.y * cosf(vRotate.z);
-	//-------------------------------------------------------------------
-	// 위에 Up
-	//-------------------------------------------------------------------
-	//-------------------------------------------------------------------
-	vLook.y = vLook.y * cosf(vRotate.x) - vLook.z * sinf(vRotate.x);
-	vLook.z = vLook.y * sinf(vRotate.x) + vLook.z * cosf(vRotate.x);
-	//--------------------------------
-	//vLook.x = vLook.x * cosf(vRotate.y) + vLook.z * sinf(vRotate.y);
-	//vLook.z = vLook.x * -sinf(vRotate.y) + vLook.z * cosf(vRotate.y);
-	//--------------------------------
-	vLook.x = vLook.x * cosf(vRotate.z) - vLook.y * sinf(vRotate.z);
-	vLook.y = vLook.x * sinf(vRotate.z) + vLook.y * cosf(vRotate.z);
-	//-------------------------------------------------------------------
-	// 위에 Look
-	//-------------------------------------------------------------------
-
-	memcpy_s(&matRotX.m[0][0], sizeof(_vec3), vRight, sizeof(_vec3));
-	memcpy_s(&matRotX.m[1][0], sizeof(_vec3), vUp, sizeof(_vec3));
-	memcpy_s(&matRotX.m[2][0], sizeof(_vec3), vLook, sizeof(_vec3));
-	matRotX._41 = PlayerWorld._41;
-	matRotX._42 = PlayerWorld._42;
-	matRotX._43 = PlayerWorld._43;
-	matRotX._44 = 1.f;
-	//matRotX._41
-	m_pTransformCom[WAND_BASE]->Set_WorldMatrix(MyMat * m_pTransformCom[WAND_BASE]->Get_Desc().matWorld * matRotX);
+	m_pTransformCom[WAND_BASE]->Update_Transform(pPlayerRH->Get_Desc().matWorld);
 
 	return S_OK;
-
 }
 
 HRESULT CWand::Setting_Handle()
@@ -295,7 +208,6 @@ void CWand::Free()
 	}
 
 	Safe_Release(m_pColliderCom);
-	Safe_Release(m_pStatusComp);
 	Safe_Release(m_pDmgInfoCom);
 
 	CGameObject::Free();

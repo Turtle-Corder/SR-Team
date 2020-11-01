@@ -74,13 +74,13 @@ _bool CBlueElixir::Actual_UseItem()
 
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
-		return E_FAIL;
+		return false;
 	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 1);
 	if (pEquip == nullptr)
-		return E_FAIL;
+		return false;
 	CInventory* pInven = (CInventory*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Inventory", 0);
 	if (pInven == nullptr)
-		return E_FAIL;
+		return false;
 
 	// 장비창에서 플레이어 HP 증가
 	pEquip->Set_PlayerMP(50);
