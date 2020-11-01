@@ -81,6 +81,34 @@ HRESULT CTransform::Update_Transform()
 		m_tTransformDesc.vPosition);
 }
 
+HRESULT CTransform::Update_Transform(const _matrix & _matRevolution)
+{
+	if (FAILED(CPipeline::Setup_WorldMatrix(
+		&m_tTransformDesc.matWorld,
+		m_tTransformDesc.vScale,
+		m_tTransformDesc.vRotate,
+		m_tTransformDesc.vPosition)))
+		return E_FAIL;
+
+	m_tTransformDesc.matWorld = m_tTransformDesc.matWorld * _matRevolution;
+
+	return S_OK;
+}
+
+HRESULT CTransform::Update_Transform(const _matrix & _matRevolution, const _matrix & _matParent)
+{
+	if (FAILED(CPipeline::Setup_WorldMatrix(
+		&m_tTransformDesc.matWorld,
+		m_tTransformDesc.vScale,
+		m_tTransformDesc.vRotate,
+		m_tTransformDesc.vPosition)))
+		return E_FAIL;
+
+	m_tTransformDesc.matWorld = m_tTransformDesc.matWorld * _matRevolution * _matParent;
+
+	return S_OK;
+}
+
 void CTransform::Move_Vertical(_float _fDeltaTime)
 {
 	_vec3 vLook;

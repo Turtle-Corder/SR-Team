@@ -52,6 +52,8 @@ public:
 
 public:
 	HRESULT Update_Transform();
+	HRESULT Update_Transform(const _matrix& _matRevolution);
+	HRESULT Update_Transform(const _matrix& _matRevolution, const _matrix& _matParent);
 	void Move_Vertical(_float _fDeltaTime);
 	void Move_Horizontal(_float _fDeltaTime);
 	void Turn(AXIS_XYZ _eAxis, _float _fDeltaTime);

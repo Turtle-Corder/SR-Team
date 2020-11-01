@@ -28,12 +28,20 @@ HRESULT CItemInventory::Set_ItemIndex(_int iIndex, ePotion_ID ePOTION)
 	return S_OK;
 }
 
-HRESULT CItemInventory::Use_Item(_int iIndex)
+_bool CItemInventory::Can_UseItem(_int _iIndex)
+{
+	if (m_pPlayerItem[_iIndex])
+		return m_pPlayerItem[_iIndex]->Can_UseItem();
+
+	return false;
+}
+
+_bool CItemInventory::Actual_UseItem(_int iIndex)
 {
 	if (m_pPlayerItem[iIndex])
-		return m_pPlayerItem[iIndex]->Use_Item();
+		return m_pPlayerItem[iIndex]->Actual_UseItem();
 
-	return E_FAIL;
+	return false;
 }
 
 HRESULT CItemInventory::Setup_GameObject_Prototype()

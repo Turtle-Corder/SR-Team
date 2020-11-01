@@ -25,7 +25,6 @@
 #include "SkillInven.h"
 #include "LaserSkill.h"
 #include "MeteoSkill.h"
-#include "EnergyVoltSkill.h"
 #include "ItemInventory.h"
 #include "RedPotion.h"
 #include "Mouse.h"
@@ -250,8 +249,6 @@ HRESULT CMainApp::Setup_StaticResources()
 	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_LaserSkill", CLaserSkill::Create(m_pDevice, m_pSprite, m_pFont))))
 		return E_FAIL;
 	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_MeteoSkill", CMeteoSkill::Create(m_pDevice, m_pSprite, m_pFont))))
-		return E_FAIL;
-	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_EnergyVoltSkill", CEnergyVoltSkill::Create(m_pDevice, m_pSprite, m_pFont))))
 		return E_FAIL;
 	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_ManaDriftSkill", CManaDriftSkill::Create(m_pDevice, m_pSprite, m_pFont))))
 		return E_FAIL;

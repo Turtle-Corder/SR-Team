@@ -244,9 +244,6 @@
     <Filter Include="02.GameObject\13. PlayerSkill\01. Meteo">
       <UniqueIdentifier>{9da80b4c-8ee5-4ced-a1c2-54cefff23de2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\13. PlayerSkill\02. EnergyVolt">
-      <UniqueIdentifier>{a4b9ad97-d5d5-47a1-b9c6-d9af3e9a4666}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\13. PlayerSkill\03. ManaDirft">
       <UniqueIdentifier>{d4508580-6c5e-4cd4-924c-7803e8320082}</UniqueIdentifier>
     </Filter>
@@ -398,9 +395,6 @@
     </ClInclude>
     <ClInclude Include="..\Headers\MeteoSkill.h">
       <Filter>02.GameObject\13. PlayerSkill\01. Meteo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Headers\EnergyVoltSkill.h">
-      <Filter>02.GameObject\13. PlayerSkill\02. EnergyVolt</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\PlayerItem.h">
       <Filter>02.GameObject\14. PlayerItem</Filter>
@@ -584,9 +578,6 @@
     </ClCompile>
     <ClCompile Include="..\Codes\MeteoSkill.cpp">
       <Filter>02.GameObject\13. PlayerSkill\01. Meteo</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\EnergyVoltSkill.cpp">
-      <Filter>02.GameObject\13. PlayerSkill\02. EnergyVolt</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\PlayerItem.cpp">
       <Filter>02.GameObject\14. PlayerItem</Filter>

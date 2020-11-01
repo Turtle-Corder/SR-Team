@@ -634,11 +634,11 @@ HRESULT CMainUI::Render_QuickSlot_Item()
 			matWorld = matTrans;
 
 			if (m_pLeftSlotItem[i]->eActiveID == ACTIVE_ENERGY_EXPLOTIATION)
-				bCheck = pPlayer->Get_IsOnActiveBuff(CPlayer::ACTIVE_BUFF::BUFF_ATT);
+				bCheck = pPlayer->IsOnBuff(CPlayer::ACTIVE_BUFF::BUFF_ATTACK);
 			else if (m_pLeftSlotItem[i]->eActiveID == ACTIVE_MAGIC_ARMOR)
-				bCheck = pPlayer->Get_IsOnActiveBuff(CPlayer::ACTIVE_BUFF::BUFF_SHIELD);
+				bCheck = pPlayer->IsOnBuff(CPlayer::ACTIVE_BUFF::BUFF_SHIELD);
 			else if (m_pLeftSlotItem[i]->eActiveID == ACTIVE_MANA_DRIFT)
-				bCheck = pPlayer->Get_IsOnActiveBuff(CPlayer::ACTIVE_BUFF::BUFF_MANA);
+				bCheck = pPlayer->IsOnBuff(CPlayer::ACTIVE_BUFF::BUFF_MANA);
 
 
 			m_pSprite->SetTransform(&matWorld);

@@ -20,35 +20,24 @@ HRESULT CLaserSkill::Setup_GameObject_Prototype()
 
 HRESULT CLaserSkill::Setup_GameObject(void * _pArg)
 {
-	CManagement* pManagement = CManagement::Get_Instance();
-	m_fStartTime = 0.f;
-	// 쿨타임 끝나는 시간
-	m_fEndTime = 5.f;
+	m_iCanUseCnt = m_iMaxUseCnt = 1;
+	m_fEachDelay = 5.f;
 
-	if (pManagement == nullptr)
-		return E_FAIL;
-	if (FAILED(pManagement->Add_Timer(L"Laser_Timer", true)))
-		return E_FAIL;
-	if (FAILED(pManagement->Pause(L"Laser_Timer")))
-		return E_FAIL;
+	m_iConsumeMP = 10;
+
 	return S_OK;
 }
 
 _int CLaserSkill::Update_GameObject(_float _fDeltaTime)
 {
-	if (!m_bInitial)
-	{
-		m_fStartTime += _fDeltaTime;
-		++m_iProjectileCnt;
-		if (m_iProjectileCnt >= 10.f)
-			_int k = 0;
-	}
-
 	return GAMEOBJECT::NOEVENT;
 }
 
 _int CLaserSkill::LateUpdate_GameObject(_float _fDeltaTime)
 {
+	if (FAILED(Update_Delay(_fDeltaTime)))
+		return GAMEOBJECT::WARN;
+
 	return GAMEOBJECT::NOEVENT;
 }
 
@@ -79,25 +68,17 @@ CGameObject * CLaserSkill::Clone_GameObject(void * _pArg)
 	return pInstance;
 }
 
-HRESULT CLaserSkill::Use_Skill(float fDeltaTime)
+_bool CLaserSkill::Actual_UseSkill()
 {
-	if (m_bInitial)
-	{
-		m_iProjectileCnt = 0;
-		PRINT_LOG(L"레이저 스킬 사용", LOG::CLIENT);
-		m_bInitial = false;
-	}
-	else if (m_fStartTime <= m_fEndTime)
-	{
-		PRINT_LOG(L"쿨타임중", LOG::CLIENT);
-		return E_FAIL;
-	}
-	else if (m_fStartTime >= m_fEndTime)
-	{
-		m_fStartTime = 0.f;
-		m_iProjectileCnt = 0;
-		PRINT_LOG(L"쿨타임 끝 / 레이저 스킬 사용", LOG::CLIENT);
-	}
+	// 한번 더 검사
+	if (!Can_UseSkill())
+		return false;
 
-	return S_OK;
+	//--------------------------------------------------
+	// TODO : 레이저 소환
+	//--------------------------------------------------
+
+
+	--m_iCanUseCnt;
+	return true;
 }

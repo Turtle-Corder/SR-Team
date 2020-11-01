@@ -35,7 +35,6 @@ private:
 
 	CPlayerSkill*			m_pLaserSkill = nullptr;
 	CPlayerSkill*			m_pMeteoSkill = nullptr;
-	CPlayerSkill*			m_pEnergyVoltSkill = nullptr;
 	CPlayerSkill*			m_pManaDriftSkill = nullptr;
 	CPlayerSkill*			m_pEnergyExplotiationSkill = nullptr;
 };

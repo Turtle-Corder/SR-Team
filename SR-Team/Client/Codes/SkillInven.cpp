@@ -25,15 +25,23 @@ HRESULT CSkillInven::Set_SkillIndex(_int iIndex, eActiveSkill_ID eSkillID)
 	m_pPlayerSkill[iIndex] = CSkillManager::Get_Instance()->Get_PlayerSkill(eSkillID);
 	m_pPlayerSkillID[iIndex] = eSkillID;
 
-	_int k = 0;
 	return S_OK;
 }
 
-HRESULT CSkillInven::Use_Skill(_int iIndex, _float fDeltaTime)
+_bool CSkillInven::Can_UseSkill(_int _iIndex)
 {
-	if (m_pPlayerSkill[iIndex])
-		return m_pPlayerSkill[iIndex]->Use_Skill(fDeltaTime);
-	return E_FAIL;
+	if (m_pPlayerSkill[_iIndex])
+		return m_pPlayerSkill[_iIndex]->Can_UseSkill();
+
+	return false;
+}
+
+_bool CSkillInven::Actual_UseSkill(_int _iIndex)
+{
+	if (m_pPlayerSkill[_iIndex])
+		return m_pPlayerSkill[_iIndex]->Actual_UseSkill();
+
+	return false;
 }
 
 eActiveSkill_ID CSkillInven::Get_SkillID(_int iIndex)
@@ -41,6 +49,14 @@ eActiveSkill_ID CSkillInven::Get_SkillID(_int iIndex)
 	if (m_pPlayerSkillID[iIndex] != ACTIVE_SKILL_END)
 		return m_pPlayerSkillID[iIndex];
 	return ACTIVE_SKILL_END;
+}
+
+_int CSkillInven::Get_ConsumeMP(_int _iIndex)
+{
+	if (m_pPlayerSkill[_iIndex])
+		return m_pPlayerSkill[_iIndex]->Get_ConsumeMP();
+
+	return 0;
 }
 
 HRESULT CSkillInven::Setup_GameObject_Prototype()

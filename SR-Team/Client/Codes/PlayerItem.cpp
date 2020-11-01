@@ -15,9 +15,33 @@ CPlayerItem::CPlayerItem(const CPlayerItem & _rOther)
 {
 }
 
-HRESULT CPlayerItem::Use_Item()
+HRESULT CPlayerItem::Update_Delay(_float _fDeltaTime)
 {
+	if (m_iCanUseCnt < m_iMaxUseCnt)
+	{
+		m_fDelayCnt += _fDeltaTime;
+		if (m_fDelayCnt > m_fEachDelay)
+		{
+			++m_iCanUseCnt;
+			m_fDelayCnt = 0.f;
+		}
+	}
+
 	return S_OK;
+
+}
+
+_bool CPlayerItem::Can_UseItem()
+{
+	if (0 >= m_iCanUseCnt)
+		return false;
+
+	return true;
+}
+
+_bool CPlayerItem::Actual_UseItem()
+{
+	return false;
 }
 
 void CPlayerItem::Free()

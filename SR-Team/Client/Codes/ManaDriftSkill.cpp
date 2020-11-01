@@ -22,22 +22,24 @@ HRESULT CManaDriftSkill::Setup_GameObject_Prototype()
 
 HRESULT CManaDriftSkill::Setup_GameObject(void * _pArg)
 {
-	m_fStartTime = 0.f;
-	m_fEndTime = 30.f;
+	m_iCanUseCnt = m_iMaxUseCnt = 1;
+	m_fEachDelay = 10.f;
+
+	m_iConsumeMP = 10;
 
 	return S_OK;
 }
 
 _int CManaDriftSkill::Update_GameObject(_float _fDeltaTime)
 {
-	if (!m_bInitial)
-		m_fStartTime += _fDeltaTime;
-
 	return GAMEOBJECT::NOEVENT;
 }
 
 _int CManaDriftSkill::LateUpdate_GameObject(_float _fDeltaTime)
 {
+	if (FAILED(Update_Delay(_fDeltaTime)))
+		return GAMEOBJECT::WARN;
+
 	return GAMEOBJECT::NOEVENT;
 }
 
@@ -68,34 +70,17 @@ CGameObject * CManaDriftSkill::Clone_GameObject(void * _pArg)
 	return pInstance;
 }
 
-HRESULT CManaDriftSkill::Use_Skill(float fDeltaTime)
+_bool CManaDriftSkill::Actual_UseSkill()
 {
-	// 쿨타임 검사
-	if (m_bInitial)
-	{
-		PRINT_LOG(L"마나 드리프트 스킬 사용", LOG::CLIENT);
-		m_bInitial = false;
-	}
-	else if (m_fStartTime <= m_fEndTime)
-	{
-		PRINT_LOG(L"쿨타임중", LOG::CLIENT);
-		return E_FAIL;
-	}
-	else if (m_fStartTime >= m_fEndTime)
-	{
-		m_fStartTime = 0.f;
-		PRINT_LOG(L"쿨타임 끝 / 마나 드리프트 스킬 사용", LOG::CLIENT);
-	}
+	// 한번 더 검사
+	if (!Can_UseSkill())
+		return false;
 
-	// MP 감소
-	CManagement* pManagement = CManagement::Get_Instance();
-	if (pManagement == nullptr)
-		return E_FAIL;
-	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 1);
-	if (pEquip == nullptr)
-		return E_FAIL;
+	//--------------------------------------------------
+	// TODO : 버프 이펙트 소환
+	//--------------------------------------------------
 
-	//pEquip->Set_PlayerMP(-20);
 
-	return S_OK;
+	--m_iCanUseCnt;
+	return true;
 }

@@ -20,22 +20,24 @@ HRESULT CMeteoSkill::Setup_GameObject_Prototype()
 
 HRESULT CMeteoSkill::Setup_GameObject(void * _pArg)
 {
-	m_fStartTime = 0.f;
-	m_fEndTime = 7.f;
+	m_iCanUseCnt = m_iMaxUseCnt = 1;
+	m_fEachDelay = 10.f;
+
+	m_iConsumeMP = 10;
 
 	return S_OK;
 }
 
 _int CMeteoSkill::Update_GameObject(_float _fDeltaTime)
 {
-	if (!m_bInitial)
-		m_fStartTime += _fDeltaTime;
-
 	return GAMEOBJECT::NOEVENT;
 }
 
 _int CMeteoSkill::LateUpdate_GameObject(_float _fDeltaTime)
 {
+	if (FAILED(Update_Delay(_fDeltaTime)))
+		return GAMEOBJECT::WARN;
+
 	return GAMEOBJECT::NOEVENT;
 }
 
@@ -66,25 +68,20 @@ CGameObject * CMeteoSkill::Clone_GameObject(void * _pArg)
 	return pInstance;
 }
 
-HRESULT CMeteoSkill::Use_Skill(float fDeltaTime)
+_bool CMeteoSkill::Actual_UseSkill()
 {
-	if (m_bInitial)
-	{
-		//PRINT_LOG(L"메테오 스킬 사용", LOG::CLIENT);
-		m_bInitial = false;
-	}
-	else if (m_fStartTime <= m_fEndTime)
-	{
-		//PRINT_LOG(L"쿨타임중", LOG::CLIENT);
-		//return E_FAIL;
-	}
-	else if (m_fStartTime >= m_fEndTime)
-	{
-		m_fStartTime = 0.f;
-		//PRINT_LOG(L"쿨타임 끝 / 메테오 스킬 사용", LOG::CLIENT);
-	}
+	// 한번 더 검사
+	if (!Can_UseSkill())
+		return false;
 
-	// 공격체 생성
+	//--------------------------------------------------
+	// TODO : 메테오 소환, 5개 한방에 소환
+	//--------------------------------------------------
+	for (_uint iCnt = 0; iCnt < 5; ++iCnt)
+	{
 
-	return S_OK;
+	}
+	
+	--m_iCanUseCnt;
+	return true;
 }

@@ -13,6 +13,9 @@
 
 USING(Client)
 
+//----------------------------------------------------------------------------------------------------
+// Setup
+//----------------------------------------------------------------------------------------------------
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 _pDevice)
 	: CGameObject(_pDevice)
 {
@@ -40,58 +43,21 @@ HRESULT CPlayer::Setup_GameObject(void * _pArg)
 		return E_FAIL;
 
 
-	if (FAILED(Setup_Layer_Wand(L"Layer_Wand")))
+	if (FAILED(Add_Wand(L"Layer_Wand")))
 		return E_FAIL;
 
-	//---------------------------------------------
-	// HP바 지연 감소
-	//---------------------------------------------
-	m_iHP = 100;
 
-	m_bUsingSkill = false;
-	m_ePlayerSkillID = PLAYER_SKILL_END;
-
-	//---------------------------------------------
-	// 점프
-	//---------------------------------------------
-	m_bJump = false;
-	m_fFallSpeed = 0.f;
 	m_fJumpPower = 5.f;
 	m_fJumpTime = 0.f;
 
-	//---------------------------------------------
-	// 일반 공격
-	//---------------------------------------------
-	m_bIsNormalAtt = false;
-	m_fAttTime = 0.f;
-	m_bRightAtt = false;
-	m_bLeftAtt = false;
-
-	//---------------------------------------------
-	// 스킬1 - 레이저
-	//---------------------------------------------
-	m_bStartLaser = false;
-	m_bUsingLaser = false;
-	m_fLaserTime = 0.f;
-
-	//---------------------------------------------
-	// 스킬2 - 투사체 낙하
-	//---------------------------------------------
-	m_bStartFall = false;
-	m_bIsFall = false;
-	m_bDownHand = false;
-	m_fFallTime = 0.f;
-
-	// 현재 사용중인 액티브 스킬ID
-	eSkillID = ACTIVE_SKILL_END;
 
 	_vec3 vRight = { 1.f, 0.f, 0.f };
 
 	// 오른쪽 손
-	_vec3 vRightHand = (vRight * m_fHandDis);
+	_vec3 vRightHand = (vRight * 0.7f);
 	m_pTransformCom[PART_HAND_RIGHT]->Set_Position(vRightHand);
 	// 왼쪽 손
-	_vec3 vLeftHand = (-vRight * m_fHandDis);
+	_vec3 vLeftHand = (-vRight * 0.7f);
 	m_pTransformCom[PART_HAND_LEFT]->Set_Position(vLeftHand);
 	// 오른쪽 발
 	_vec3 vRightFoot = (vRight * 0.3f);
@@ -106,57 +72,56 @@ HRESULT CPlayer::Setup_GameObject(void * _pArg)
 	return S_OK;
 }
 
+
+
+//----------------------------------------------------------------------------------------------------
+// Common
+//----------------------------------------------------------------------------------------------------
 _int CPlayer::Update_GameObject(_float _fDeltaTime)
 {
-	CManagement* pManagement = CManagement::Get_Instance();
-	if (nullptr == pManagement)
-		return 0;
-	CInventory* pInven = (CInventory*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Inventory");
-	if (pInven == nullptr)
-		return 0;
-	CShop* pShop = (CShop*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Shop");
-	if (pShop == nullptr)
-		return 0;
-	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 1);
-	if (pEquip == nullptr)
-		return 0;
-	CSkill* pSkill = (CSkill*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 2);
-	if (pSkill == nullptr)
-		return 0;
+	//--------------------------------------------------
+	// UI가 켜져있는 상태 -> 입력불가 처리
+	//--------------------------------------------------
+	if (Update_UICheck())
+		return GAMEOBJECT::WARN;
 
-	// 에너지 익스플로전 사용중이면 공격력 증가
-	if (m_bActiveBuff[BUFF_ATT])
-		pEquip->Set_PlayerAtt(m_iAttBuff);
+	if (Update_Input(_fDeltaTime))
+		return GAMEOBJECT::WARN;
 
-	if (GetAsyncKeyState(VK_F6) & 0x8000)
-	{
-		if (FAILED(Setup_Layer_EnergyBolt(L"Layer_EnergyBolt")))
-			return E_FAIL;
-	}
 
-	if (m_bInitial)
-		Initial_Update_GameObject();
+	//--------------------------------------------------
+	// 이동, 높이 보정
+	//--------------------------------------------------
+	if (FAILED(Update_Move(_fDeltaTime)))
+		return GAMEOBJECT::WARN;
 
-	m_bRenderInven = pInven->Get_Render();
-	m_bRenderShop = pShop->Get_Render();
-	m_bRenderEquip = pEquip->Get_Render();
-	m_bRenderSkill = pSkill->Get_Render();
+	if (Update_Parts())
+		return GAMEOBJECT::WARN;
 
-	if (!m_bRenderInven && !m_bRenderShop && !m_bRenderEquip && !m_bRenderSkill)
-	{
-		if (FAILED(Movement(_fDeltaTime)))
-			return GAMEOBJECT::WARN;
 
-		if (Update_Parts())
-			return GAMEOBJECT::WARN;
+	//--------------------------------------------------
+	// 상태, 애니메이션
+	//--------------------------------------------------
+	if (Update_State())
+		return GAMEOBJECT::WARN;
 
-		if (FAILED(m_pColliderCom->Update_Collider(m_pTransformCom[PART_BODY]->Get_Desc().vPosition)))
-			return GAMEOBJECT::WARN;
-	}
+	Update_Anim(_fDeltaTime);
+
+
+	//--------------------------------------------------
+	// 충돌체
+	//--------------------------------------------------
+	if (FAILED(m_pColliderCom->Update_Collider(m_pTransformCom[PART_BODY]->Get_Desc().vPosition)))
+		return GAMEOBJECT::WARN;
 
 	return GAMEOBJECT::NOEVENT;
 }
 
+
+
+//----------------------------------------------------------------------------------------------------
+// Render
+//----------------------------------------------------------------------------------------------------
 _int CPlayer::LateUpdate_GameObject(_float _fDeltaTime)
 {
 	CManagement* pManagemnet = CManagement::Get_Instance();
@@ -165,6 +130,8 @@ _int CPlayer::LateUpdate_GameObject(_float _fDeltaTime)
 
 	if (FAILED(pManagemnet->Add_RendererList(CRenderer::RENDER_NONEALPHA, this)))
 		return GAMEOBJECT::WARN;
+
+	Update_AtkDelay(_fDeltaTime);
 
 	return GAMEOBJECT::NOEVENT;
 }
@@ -175,11 +142,11 @@ HRESULT CPlayer::Render_NoneAlpha()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Camera");
+	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Camera");
 	if (nullptr == pCamera)
 		return E_FAIL;
 
-	for (_uint iCnt = 0; iCnt < PART_END; ++iCnt)
+	for (_uint iCnt = PART_START; iCnt < PART_END; ++iCnt)
 	{
 		if (FAILED(m_pVIBufferCom[iCnt]->Set_Transform(&m_pTransformCom[iCnt]->Get_Desc().matWorld, pCamera)))
 			return E_FAIL;
@@ -207,6 +174,60 @@ HRESULT CPlayer::Take_Damage(const CComponent* _pDamageComp)
 	return S_OK;
 }
 
+_bool CPlayer::IsOnBuff(ACTIVE_BUFF _eType)
+{
+	return m_bBuffActive[_eType];
+}
+
+void CPlayer::Buff_On(ACTIVE_BUFF _eType)
+{
+	switch (_eType)
+	{
+	case Client::CPlayer::BUFF_MANA:
+		m_fConsumeRate = 0.f;
+		break;
+
+	case Client::CPlayer::BUFF_ATTACK:
+		m_fAttackRate = 2.f;
+		break;
+
+	case Client::CPlayer::BUFF_SHIELD:
+		break;
+
+	default:
+		break;
+	}
+
+	m_bBuffActive[_eType] = true;
+}
+
+void CPlayer::Buff_Off(ACTIVE_BUFF _eType)
+{
+	switch (_eType)
+	{
+	case Client::CPlayer::BUFF_MANA:
+		m_fConsumeRate = 1.f;
+		break;
+
+	case Client::CPlayer::BUFF_ATTACK:
+		m_fAttackRate = 1.f;
+		break;
+
+	case Client::CPlayer::BUFF_SHIELD:
+		break;
+
+	default:
+		break;
+	}
+
+	m_bBuffActive[_eType] = false;
+}
+
+
+
+//----------------------------------------------------------------------------------------------------
+// Add Component
+//----------------------------------------------------------------------------------------------------
 HRESULT CPlayer::Add_Component()
 {
 	if (FAILED(Add_Component_VIBuffer()))
@@ -224,6 +245,23 @@ HRESULT CPlayer::Add_Component()
 	return S_OK;
 }
 
+HRESULT CPlayer::Add_Component_VIBuffer()
+{
+	//--------------------------------------------------
+	// Clone
+	//--------------------------------------------------
+	for (_uint iCnt = 0; iCnt < PART_END; ++iCnt)
+	{
+		WCHAR szVIBuffer[MIN_STR] = L"";
+		StringCchPrintf(szVIBuffer, _countof(szVIBuffer), L"Com_VIBuffer%d", iCnt);
+
+		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", szVIBuffer, (CComponent**)&m_pVIBufferCom[iCnt])))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
 HRESULT CPlayer::Add_Component_Transform()
 {
 	CTransform::TRANSFORM_DESC tTransformDesc[PART_END];
@@ -234,7 +272,7 @@ HRESULT CPlayer::Add_Component_Transform()
 	// HEAD
 	//--------------------------------------------------
 	tTransformDesc[PART_HEAD].vPosition = { 5.f, 5.f, 5.f };
-	tTransformDesc[PART_HEAD].fSpeedPerSecond = 10.f;
+	tTransformDesc[PART_HEAD].fSpeedPerSecond = 5.f;
 	tTransformDesc[PART_HEAD].fRotatePerSecond = fRPS_Rad;
 
 	//--------------------------------------------------
@@ -242,7 +280,7 @@ HRESULT CPlayer::Add_Component_Transform()
 	//--------------------------------------------------
 	tTransformDesc[PART_BODY].vPosition = { tTransformDesc[PART_HEAD].vPosition + _vec3(0.f, -1.5f, 0.f) };
 	tTransformDesc[PART_BODY].vScale = { 0.9f, 0.9f, 0.9f };
-	tTransformDesc[PART_BODY].fSpeedPerSecond = 10.f;
+	tTransformDesc[PART_BODY].fSpeedPerSecond = 5.f;
 	tTransformDesc[PART_BODY].fRotatePerSecond = fRPS_Rad;
 
 	//--------------------------------------------------
@@ -250,31 +288,31 @@ HRESULT CPlayer::Add_Component_Transform()
 	//--------------------------------------------------
 	tTransformDesc[PART_HAND_LEFT].vPosition = tTransformDesc[PART_BODY].vPosition + _vec3(-0.8f, -2.5f, 0.f);
 	tTransformDesc[PART_HAND_LEFT].vScale = { 0.2f, 0.7f, 0.2f };
-	tTransformDesc[PART_HAND_LEFT].fSpeedPerSecond = 10.f;
+	tTransformDesc[PART_HAND_LEFT].fSpeedPerSecond = 5.f;
 	tTransformDesc[PART_HAND_LEFT].fRotatePerSecond = fRPS_Rad;
 
 	//--------------------------------------------------
 	// HAND_R
 	//--------------------------------------------------
-	tTransformDesc[PART_HAND_RIGHT].vPosition = tTransformDesc[PART_HAND_LEFT].vPosition + _vec3(0.8f, -2.5f, 0.f);
-	tTransformDesc[PART_HAND_RIGHT].vScale = { 0.3f, 0.5f, 0.5f };
-	tTransformDesc[PART_HAND_RIGHT].fSpeedPerSecond = 10.f;
+	tTransformDesc[PART_HAND_RIGHT].vPosition = tTransformDesc[PART_BODY].vPosition + _vec3(0.8f, -2.5f, 0.f);
+	tTransformDesc[PART_HAND_RIGHT].vScale = { 0.2f, 0.7f, 0.2f };
+	tTransformDesc[PART_HAND_RIGHT].fSpeedPerSecond = 5.f;
 	tTransformDesc[PART_HAND_RIGHT].fRotatePerSecond = fRPS_Rad;
 
 	//--------------------------------------------------
 	// FOOT_L
 	//--------------------------------------------------
-	tTransformDesc[PART_FOOT_LEFT].vPosition = m_pTransformCom[PART_BODY]->Get_Desc().vPosition + _vec3(-0.2f, -2.5f, 0.f);
+	tTransformDesc[PART_FOOT_LEFT].vPosition = tTransformDesc[PART_BODY].vPosition + _vec3(-0.2f, -2.5f, 0.f);
 	tTransformDesc[PART_FOOT_LEFT].vScale = { 0.3f, 0.5f, 0.5f };
-	tTransformDesc[PART_FOOT_LEFT].fSpeedPerSecond = 10.f;
+	tTransformDesc[PART_FOOT_LEFT].fSpeedPerSecond = 5.f;
 	tTransformDesc[PART_FOOT_LEFT].fRotatePerSecond = fRPS_Rad;
 
 	//--------------------------------------------------
 	// FOOT_R
 	//--------------------------------------------------
-	tTransformDesc[PART_FOOT_RIGHT].vPosition = m_pTransformCom[PART_BODY]->Get_Desc().vPosition + _vec3(0.2f, -2.5f, 0.f);
+	tTransformDesc[PART_FOOT_RIGHT].vPosition = tTransformDesc[PART_BODY].vPosition + _vec3(0.2f, -2.5f, 0.f);
 	tTransformDesc[PART_FOOT_RIGHT].vScale = { 0.3f, 0.5f, 0.5f };
-	tTransformDesc[PART_FOOT_RIGHT].fSpeedPerSecond = 10.f;
+	tTransformDesc[PART_FOOT_RIGHT].fSpeedPerSecond = 5.f;
 	tTransformDesc[PART_FOOT_RIGHT].fRotatePerSecond = fRPS_Rad;
 
 
@@ -291,21 +329,6 @@ HRESULT CPlayer::Add_Component_Transform()
 	}
 
 	return S_OK;
-}
-
-HRESULT CPlayer::Add_Component_VIBuffer()
-{
-	//--------------------------------------------------
-	// Clone
-	//--------------------------------------------------
-	for (_uint iCnt = 0; iCnt < PART_END; ++iCnt)
-	{
-		WCHAR szVIBuffer[MIN_STR] = L"";
-		StringCchPrintf(szVIBuffer, _countof(szVIBuffer), L"Com_VIBuffer%d", iCnt);
-
-		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", szVIBuffer, (CComponent**)&m_pVIBufferCom[iCnt])))
-			return E_FAIL;
-	}
 }
 
 HRESULT CPlayer::Add_Component_Texture()
@@ -369,260 +392,28 @@ HRESULT CPlayer::Add_Component_Extends()
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Raycast", L"Com_Ray", (CComponent**)&m_pRaycastCom)))
 		return E_FAIL;
 
-
-	//--------------------------------------------------
-	// DamageInfo
-	//--------------------------------------------------
-	CDamageInfo::DAMAGE_DESC tDmgInfo;
-	tDmgInfo.iMaxAtt = 99;
-	tDmgInfo.pOwner = this;
-
-	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_DamageInfo", L"Com_DmgInfo", (CComponent**)&m_pDmgInfoCom, &tDmgInfo)))
-		return E_FAIL;
-
-}
-
-HRESULT CPlayer::Update_Move(_float _fDeltaTime)
-{
-	if (VALIDATE_MOVE >= m_eCurState)
-	{
-		//--------------------------------------------------
-		// 이동
-		//--------------------------------------------------
-		Move_Target(_fDeltaTime);
-
-		//--------------------------------------------------
-		// 높이 보정
-		//--------------------------------------------------
-		if (FAILED(Update_OnTerrain()))
-			return E_FAIL;
-	}
-
 	return S_OK;
 }
 
-HRESULT CPlayer::Update_OnTerrain()
+HRESULT CPlayer::Add_Wand(const wstring & LayerTag)
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Terrain", L"Com_VIBuffer");
-	if (nullptr == pTerrainBuffer)
+	_vec3 vPlayer_RightHand_Pos = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vPosition;
+
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Wand", SCENE_STAGE0, LayerTag, &vPlayer_RightHand_Pos)))
 		return E_FAIL;
-
-	for (_uint iCnt = PART_FOOT_START; iCnt <= PART_FOOT_END; ++iCnt)
-	{
-		_vec3 vPosition = m_pTransformCom[iCnt]->Get_Desc().vPosition;
-		if (true == pTerrainBuffer->IsOnTerrain(&vPosition))
-			m_pTransformCom[iCnt]->Set_Position(vPosition);
-	}
-
-	// 변화한 다리의 위치에 따라 몸의 위치도 변경해준다
-	float fLeftFootPosY = m_pTransformCom[PART_FOOT_LEFT]->Get_Desc().vPosition.y;
-	_vec3 vBodyPos = m_pTransformCom[PART_BODY]->Get_Desc().vPosition;
-	vBodyPos.y = fLeftFootPosY + 1.f;
-	m_pTransformCom[PART_BODY]->Set_Position(vBodyPos);
-
-	_vec3 vHeadPos = m_pTransformCom[PART_HEAD]->Get_Desc().vPosition;
-	vHeadPos.y = vBodyPos.y + 0.5f;
-	m_pTransformCom[PART_HEAD]->Set_Position(vHeadPos);
-
-	_vec3 vLeftHandPos = m_pTransformCom[PART_HAND_LEFT]->Get_Desc().vPosition;
-	vLeftHandPos.y = fLeftFootPosY + 1.f;
-	m_pTransformCom[PART_HAND_LEFT]->Set_Position(vLeftHandPos);
-
-	_vec3 vRightHandPos = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vPosition;
-	vRightHandPos.y = fLeftFootPosY + 1.f;
-	m_pTransformCom[PART_HAND_RIGHT]->Set_Position(vRightHandPos);
 
 	return S_OK;
 }
 
-HRESULT CPlayer::Raycast_OnTerrain()
-{
-	CManagement* pManagement = CManagement::Get_Instance();
-	if (nullptr == pManagement)
-		return E_FAIL;
 
-	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Terrain", L"Com_VIBuffer");
-	if (nullptr == pTerrainBuffer)
-		return E_FAIL;
 
-	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Camera");
-	if (nullptr == pCamera)
-		return E_FAIL;
-
-	// 카메라의 월드행렬은 항등행렬!
-	_matrix mat;
-	D3DXMatrixIdentity(&mat);
-
-	// 반환받을 마우스 위치값
-	if (m_pRaycastCom->IsSimulate<VTX_TEXTURE, INDEX16>(g_hWnd, WINCX, WINCY, pTerrainBuffer, &mat, pCamera, &m_vTargetPos))
-		return S_OK;
-	
-	return E_FAIL;
-}
-
-void CPlayer::Move_Target(_float _fDeltaTime)
-{
-	if (MOVE != m_eCurState)
-		return;
-
-	_vec3 vCurPos = m_pTransformCom[PART_BODY]->Get_Desc().vPosition;
-	_vec3 vMoveDir = m_vTargetPos - vCurPos;
-
-	_float fSpeedPerSecond = m_pTransformCom[PART_BODY]->Get_Desc().fSpeedPerSecond;
-	_float fDist = D3DXVec3Length(&vMoveDir);
-
-	if (0.4f >= fDist)
-		m_eCurState = IDLE;
-
-	D3DXVec3Normalize(&vMoveDir, &vMoveDir);
-
-	vCurPos += vMoveDir * fSpeedPerSecond * _fDeltaTime;
-	m_pTransformCom[PART_BODY]->Set_Position(vCurPos);
-}
-
-_int CPlayer::Update_Parts()
-{
-	for (_uint iCnt = PART_START; iCnt < PART_END; ++iCnt)
-	{
-		if (iCnt > PART_BODY)
-		{
-			_vec3 vPos = m_pTransformCom[iCnt]->Get_Desc().vPosition;
-			if (iCnt == PART_FOOT_LEFT || iCnt == PART_FOOT_RIGHT)
-				vPos.y -= 1.5f;
-			else
-				vPos.y -= 1.f;
-			m_pTransformCom[iCnt]->Set_Position(vPos);
-		}
-
-		if (FAILED(m_pTransformCom[iCnt]->Update_Transform()))
-			return GAMEOBJECT::WARN;
-	}
-
-	// 공전 곱
-	_vec3 vRotate = m_pTransformCom[PART_BODY]->Get_Desc().vRotate;
-	_matrix matWorld;
-	D3DXMatrixIdentity(&matWorld);
-	D3DXMatrixRotationZ(&matWorld, vRotate.z);
-	D3DXMatrixRotationY(&matWorld, vRotate.y);
-	D3DXMatrixRotationX(&matWorld, vRotate.x);
-
-	m_pTransformCom[PART_HAND_LEFT]->Set_WorldMatrix(
-		m_pTransformCom[PART_HAND_LEFT]->Get_Desc().matWorld * matWorld);
-	m_pTransformCom[PART_HAND_RIGHT]->Set_WorldMatrix(
-		m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().matWorld * matWorld);
-	m_pTransformCom[PART_FOOT_LEFT]->Set_WorldMatrix(
-		m_pTransformCom[PART_FOOT_LEFT]->Get_Desc().matWorld * matWorld);
-	m_pTransformCom[PART_FOOT_RIGHT]->Set_WorldMatrix(
-		m_pTransformCom[PART_FOOT_RIGHT]->Get_Desc().matWorld * matWorld);
-
-	// 부모의 월드행렬 곱해주기
-	m_pTransformCom[PART_HAND_LEFT]->Set_WorldMatrix(
-		(m_pTransformCom[PART_HAND_LEFT]->Get_Desc().matWorld
-			* m_pTransformCom[PART_BODY]->Get_Desc().matWorld));
-	m_pTransformCom[PART_HAND_RIGHT]->Set_WorldMatrix(
-		(m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().matWorld
-			* m_pTransformCom[PART_BODY]->Get_Desc().matWorld));
-	m_pTransformCom[PART_FOOT_LEFT]->Set_WorldMatrix(
-		(m_pTransformCom[PART_FOOT_LEFT]->Get_Desc().matWorld
-			* m_pTransformCom[PART_BODY]->Get_Desc().matWorld));
-	m_pTransformCom[PART_FOOT_RIGHT]->Set_WorldMatrix(
-		(m_pTransformCom[PART_FOOT_RIGHT]->Get_Desc().matWorld
-			* m_pTransformCom[PART_BODY]->Get_Desc().matWorld));
-
-	return GAMEOBJECT::NOEVENT;
-}
-
-void CPlayer::Update_Jump(_float fDeltaTime)
-{
-	if (JUMP != m_eCurState)
-		return;
-
-	// 플레이어의 현재 위치를 계속 받아온다
-	_vec3 vCurPos[PART_END];
-	for (_uint i = 0; i < PART_END; ++i)
-		vCurPos[i] = m_pTransformCom[i]->Get_Desc().vPosition;
-
-	// 시간 더해주기
-	m_fJumpTime += fDeltaTime;
-	for (_uint i = 0; i < 2; ++i)
-	{
-		// 점프
-		vCurPos[i].y += (m_fJumpPower * m_fJumpTime - 9.8f * m_fJumpTime * m_fJumpTime * 0.5f);
-
-		if (vCurPos[i].y <= m_pTransformCom[i]->Get_Desc().vPosition.y)
-		{
-			m_fJumpTime = 0.f;
-			vCurPos[i].y = m_pTransformCom[i]->Get_Desc().vPosition.y;
-			m_eCurState = IDLE;
-		}
-
-		m_pTransformCom[i]->Set_Position(vCurPos[i]);
-	}
-}
-
-void CPlayer::MoveMotion(_float fDeltaTime)
-{
-	if (m_bMove)
-	{
-		m_fMovingTime += fDeltaTime;
-
-		if (m_fMovingTime >= 0.5f)
-		{
-			if (m_eMovingDir == CHANGE_LEFT)
-				m_eMovingDir = CHANGE_RIGHT;
-			else if (m_eMovingDir == CHANGE_RIGHT)
-				m_eMovingDir = CHANGE_LEFT;
-			m_fMovingTime = 0.f;
-
-			for (_uint i = 2; i < PART_END; ++i)
-				m_pTransformCom[i]->Set_Rotation(m_vConstRot[i]);
-		}
-
-		if (m_eMovingDir == CHANGE_LEFT)
-		{
-			m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime);
-			m_pTransformCom[PART_HAND_LEFT]->Turn(CTransform::AXIS_X, fDeltaTime);
-
-			m_pTransformCom[PART_FOOT_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime);
-			m_pTransformCom[PART_FOOT_LEFT]->Turn(CTransform::AXIS_X, -fDeltaTime);
-		}
-
-		else if (m_eMovingDir == CHANGE_RIGHT)
-		{	
-			m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime);
-			m_pTransformCom[PART_HAND_LEFT]->Turn(CTransform::AXIS_X, -fDeltaTime);
-
-			m_pTransformCom[PART_FOOT_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime);
-			m_pTransformCom[PART_FOOT_LEFT]->Turn(CTransform::AXIS_X, fDeltaTime);
-		}
-	}
-	else if (!m_bMove)
-	{
-		m_fMovingTime = 0.f;
-		for (_uint i = 2; i < PART_END; ++i)
-		{
-			m_pTransformCom[i]->Set_Rotation(m_vConstRot[i]);
-		}
-	}
-}
-
-HRESULT CPlayer::Universal_Key()
-{
-	CManagement* pManagement = CManagement::Get_Instance();
-	if (nullptr == pManagement)
-		E_FAIL;
-
-	if (pManagement->Key_Pressing('G'))
-	{
-	}
-
-	return S_OK;
-}
-
+//----------------------------------------------------------------------------------------------------
+// Create, Release
+//----------------------------------------------------------------------------------------------------
 CPlayer * CPlayer::Create(LPDIRECT3DDEVICE9 _pDevice)
 {
 	if (nullptr == _pDevice)
@@ -662,560 +453,828 @@ void CPlayer::Free()
 	Safe_Release(m_pStatusCom);
 	Safe_Release(m_pRaycastCom);
 	Safe_Release(m_pColliderCom);
-	Safe_Release(m_pDmgInfoCom);
 
 	CGameObject::Free();
 }
 
-void CPlayer::Check_Skill(_float fDeltaTime)
+
+
+//----------------------------------------------------------------------------------------------------
+// Movement
+//----------------------------------------------------------------------------------------------------
+HRESULT CPlayer::Update_Move(_float _fDeltaTime)
 {
-	CManagement* pManagement = CManagement::Get_Instance();
-	if (pManagement == nullptr)
-		return;
-	CSkillInven* pSkillInven = (CSkillInven*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 3);
-	if (pSkillInven == nullptr)
-		return;
-
-	if (pManagement->Key_Pressing('Q'))
+	//--------------------------------------------------
+	// 이동 (x, z 이동)
+	//--------------------------------------------------
+	if (MOVE == m_eCurState)
 	{
-		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
-		m_bUsingSkill = true;
-
-		// 공격체 생성
-		if (FAILED(pSkillInven->Use_Skill(0, fDeltaTime)))
-		{
-			//m_bUsingSkill = false;
-			return;
-		}
-
-		// 모션
-		eSkillID = pSkillInven->Get_SkillID(0);
-		m_bOnece = true;
+		Move_Target(_fDeltaTime);
 	}
-	else if (pManagement->Key_Pressing('W'))
+
+	//--------------------------------------------------
+	// 점프
+	//--------------------------------------------------
+	else if (JUMP == m_eCurState)
 	{
-		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
-		m_bUsingSkill = true;
-
-		if (FAILED(pSkillInven->Use_Skill(1, fDeltaTime)))
-		{
-			m_bUsingSkill = false;
-			return;
-		}
-
-		// 모션
-		eSkillID = pSkillInven->Get_SkillID(0);
-	}
-	else if (pManagement->Key_Pressing('E'))
-	{
-		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
-		m_bUsingSkill = true;
-
-		if (FAILED(pSkillInven->Use_Skill(2, fDeltaTime)))
-		{
-			m_bUsingSkill = false;
-			return;
-		}
-
-		// 모션
-		eSkillID = pSkillInven->Get_SkillID(2);
-	}
-	else if (pManagement->Key_Pressing('R'))
-	{
-		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
-		m_bUsingSkill = true;
-
-		if (FAILED(pSkillInven->Use_Skill(3, fDeltaTime)))
-		{
-			m_bUsingSkill = false;
-			return;
-		}
-
-		// 모션
-		eSkillID = pSkillInven->Get_SkillID(3);
-	}
-	else if (pManagement->Key_Pressing('A'))
-	{
-		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
-		m_bUsingSkill = true;
-
-		if (FAILED(pSkillInven->Use_Skill(4, fDeltaTime)))
-		{
-			m_bUsingSkill = false;
-			return;
-		}
-
-		// 모션
-		eSkillID = pSkillInven->Get_SkillID(4);
-	}
-	else if (pManagement->Key_Pressing('S'))
-	{
-		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
-		m_bUsingSkill = true;
-
-		if (FAILED(pSkillInven->Use_Skill(5, fDeltaTime)))
-		{
-			m_bUsingSkill = false;
-			return;
-		}
-
-		// 모션
-		eSkillID = pSkillInven->Get_SkillID(5);
-	}
-	else if (pManagement->Key_Pressing('D'))
-	{
-		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
-		m_bUsingSkill = true;
-
-		if (FAILED(pSkillInven->Use_Skill(6, fDeltaTime)))
-		{
-			m_bUsingSkill = false;
-			return;
-		}
-
-		// 모션
-		eSkillID = pSkillInven->Get_SkillID(6);
-	}
-	else if (pManagement->Key_Pressing('F'))
-	{
-		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
-		m_bUsingSkill = true;
-
-		if (FAILED(pSkillInven->Use_Skill(7, fDeltaTime)))
-		{
-			m_bUsingSkill = false;
-			return;
-		}
-
-		// 모션
-		eSkillID = pSkillInven->Get_SkillID(7);
+		Update_Jump(_fDeltaTime);
 	}
 
 
-	if (m_bUsingSkill)
+	//--------------------------------------------------
+	// 높이 보정(y)
+	//--------------------------------------------------
+	if (IDLE == m_eCurState || MOVE == m_eCurState)
 	{
-		if (eSkillID == ACTIVE_FLAME_WAVE)
-			m_bFrameWaveStart = true;
-		Move_SkillMotion(fDeltaTime, eSkillID);
+		if (FAILED(Update_OnTerrain()))
+			return E_FAIL;
 	}
-	else
-		eSkillID = ACTIVE_SKILL_END;
+
+	return S_OK;
 }
 
-void CPlayer::Move_SkillMotion(_float fDeltaTime, eActiveSkill_ID eSkillID)
+void CPlayer::Move_Target(_float _fDeltaTime)
 {
-	// MP 감소
+	if (MOVE != m_eCurState)
+		return;
+
+	//--------------------------------------------------
+	// 몸체의 위치를 기준으로 방향을 구한다. y축은 계산에서 제외
+	//--------------------------------------------------
+	_vec3 vCurPos = { m_pTransformCom[PART_BODY]->Get_Desc().vPosition.x, 0.f, m_pTransformCom[PART_BODY]->Get_Desc().vPosition.z };
+	_vec3 vTargetNoneZ = { m_vTargetPos.x, 0.f, m_vTargetPos.z };
+
+	_float fSpeedPerSecond = m_pTransformCom[PART_BODY]->Get_Desc().fSpeedPerSecond;
+
+	_vec3 vMoveDir = vTargetNoneZ - vCurPos;
+	_float fDist = D3DXVec3Length(&vMoveDir);
+
+	if (m_fNearDist >= fDist)
+		m_eCurState = IDLE;
+
+	D3DXVec3Normalize(&vMoveDir, &vMoveDir);
+
+	vCurPos = vMoveDir * fSpeedPerSecond * _fDeltaTime;
+
+	m_pTransformCom[PART_HEAD]->Set_Position(m_pTransformCom[PART_HEAD]->Get_Desc().vPosition + vCurPos);
+	m_pTransformCom[PART_BODY]->Set_Position(m_pTransformCom[PART_BODY]->Get_Desc().vPosition + vCurPos);
+}
+
+HRESULT CPlayer::Update_OnTerrain()
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Terrain", L"Com_VIBuffer");
+	if (nullptr == pTerrainBuffer)
+		return E_FAIL;
+
+	//--------------------------------------------------
+	// 다리들을 터레인 위로 조정.
+	//--------------------------------------------------
+	for (_uint iCnt = PART_FOOT_START; iCnt <= PART_FOOT_END; ++iCnt)
+	{
+		_vec3 vPosition = m_pTransformCom[iCnt]->Get_Desc().vPosition;
+		if (pTerrainBuffer->IsOnTerrain(&vPosition))
+			m_pTransformCom[iCnt]->Set_Position(vPosition);
+	}
+
+
+	//--------------------------------------------------
+	// 나머지 높이(y)들을 조정
+	//--------------------------------------------------
+	float fLeftFootPosY = m_pTransformCom[PART_FOOT_LEFT]->Get_Desc().vPosition.y;
+
+	_vec3 vBodyPos = m_pTransformCom[PART_BODY]->Get_Desc().vPosition;
+	vBodyPos.y = fLeftFootPosY + 1.f;
+	m_pTransformCom[PART_BODY]->Set_Position(vBodyPos);
+
+	_vec3 vHeadPos = m_pTransformCom[PART_HEAD]->Get_Desc().vPosition;
+	vHeadPos.y = vBodyPos.y + 0.5f;
+	m_pTransformCom[PART_HEAD]->Set_Position(vHeadPos);
+
+	_vec3 vLeftHandPos = m_pTransformCom[PART_HAND_LEFT]->Get_Desc().vPosition;
+	vLeftHandPos.y = fLeftFootPosY + 1.f;
+	m_pTransformCom[PART_HAND_LEFT]->Set_Position(vLeftHandPos);
+
+	_vec3 vRightHandPos = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vPosition;
+	vRightHandPos.y = fLeftFootPosY + 1.f;
+	m_pTransformCom[PART_HAND_RIGHT]->Set_Position(vRightHandPos);
+
+	return S_OK;
+}
+
+HRESULT CPlayer::Update_Look(_float _fDeltaTime)
+{
+	// 플레이어의 전방
+	_vec3 vLook = m_pTransformCom[PART_BODY]->Get_Look();
+	D3DXVec3Normalize(&vLook, &vLook);
+
+	// 타겟과의 방향
+	_vec3 vPlayerToTarget = m_vTargetPos - m_pTransformCom[PART_BODY]->Get_Desc().vPosition;
+	D3DXVec3Normalize(&vPlayerToTarget, &vPlayerToTarget);
+
+	// 각을 구함
+	_float fDot = D3DXVec3Dot(&vLook, &vPlayerToTarget);;
+	_float fRad = acosf(fDot);
+
+	// 우벡터
+	_vec3 vRight;
+	D3DXVec3Cross(&vRight, &vLook, &_vec3(0.f, 1.f, 0.f));
+//	D3DXVec3Cross(&vRight, &_vec3(0.f, 1.f, 0.f), &vLook);
+
+
+	_float fLimit = D3DXVec3Dot(&vRight, &vPlayerToTarget);
+	if (fLimit > 0)
+	{	
+		m_pTransformCom[PART_HEAD]->Turn(CTransform::AXIS_Y, -fRad);
+		m_pTransformCom[PART_BODY]->Turn(CTransform::AXIS_Y, -fRad);
+	}
+
+	else
+	{
+		m_pTransformCom[PART_HEAD]->Turn(CTransform::AXIS_Y, fRad);
+		m_pTransformCom[PART_BODY]->Turn(CTransform::AXIS_Y, fRad);
+	}
+
+
+	return S_OK;
+}
+
+
+
+//----------------------------------------------------------------------------------------------------
+// Raycast
+//----------------------------------------------------------------------------------------------------
+HRESULT CPlayer::Raycast_OnTerrain(_bool* _pFound)
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Terrain", L"Com_VIBuffer");
+	if (nullptr == pTerrainBuffer)
+		return E_FAIL;
+
+	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Camera");
+	if (nullptr == pCamera)
+		return E_FAIL;
+
+	// 카메라의 월드행렬은 항등행렬!
+	_matrix mat;
+	D3DXMatrixIdentity(&mat);
+
+	// 반환받을 마우스 위치값
+	if (m_pRaycastCom->IsSimulate<VTX_TEXTURE, INDEX16>(g_hWnd, WINCX, WINCY, pTerrainBuffer, &mat, pCamera, &m_vTargetPos))
+	{
+		*_pFound = true;
+		return S_OK;
+	}
+	
+	return S_OK;
+}
+
+
+
+//----------------------------------------------------------------------------------------------------
+// Common
+//----------------------------------------------------------------------------------------------------
+_int CPlayer::Update_UICheck()
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return GAMEOBJECT::ERR;
+
+	CInventory* pInven = (CInventory*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Inventory");
+	if (pInven == nullptr)
+		return GAMEOBJECT::WARN;
+
+	CShop* pShop = (CShop*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Shop");
+	if (pShop == nullptr)
+		return GAMEOBJECT::WARN;
+
+	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 1);
+	if (pEquip == nullptr)
+		return GAMEOBJECT::WARN;
+
+	CSkill* pSkill = (CSkill*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 2);
+	if (pSkill == nullptr)
+		return GAMEOBJECT::WARN;
+
+	if (pInven->Get_Render() || pShop->Get_Render() || pEquip->Get_Render() || pSkill->Get_Render())
+		bShowUI = true;
+	else
+		bShowUI = false;
+
+	return GAMEOBJECT::NOEVENT;
+}
+
+_int CPlayer::Update_State()
+{
+	if (m_ePreState != m_eCurState)
+	{
+		switch (m_eCurState)
+		{
+		case Client::CPlayer::IDLE:
+			m_iInputIdx_Slot = -1;
+			m_iInputIdx_Anim = -1;
+			break;
+		case Client::CPlayer::MOVE:
+			break;
+		case Client::CPlayer::JUMP:
+			break;
+		case Client::CPlayer::ATTACK:
+			break;
+		case Client::CPlayer::SKILL:
+			break;
+		default:
+			break;
+		}
+
+		m_iAnimStep = 0;
+		m_fAnimTimer = 0.f;
+		m_ePreState = m_eCurState;
+	}
+
+	return GAMEOBJECT::NOEVENT;
+}
+
+
+
+//----------------------------------------------------------------------------------------------------
+// Input
+//----------------------------------------------------------------------------------------------------
+_int CPlayer::Update_Input(_float _fDeltaTime)
+{
+	if (bShowUI)
+		return GAMEOBJECT::NOEVENT;
+
+	// Click & ETC key
+	if (Update_Input_Action(_fDeltaTime))
+		return GAMEOBJECT::WARN;
+
+	// Z, Q, W, E, R, A, S, D, F key
+	if (Update_Input_Skill(_fDeltaTime))
+		return GAMEOBJECT::WARN;
+
+	// 1, 2, 3, 4, 5, 6, 7, 8 key
+	if (Update_Input_Item(_fDeltaTime))
+		return GAMEOBJECT::WARN;
+
+
+	return GAMEOBJECT::NOEVENT;
+}
+
+_int CPlayer::Update_Input_Action(_float _fDeltaTime)
+{
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
-		return;
-	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 1);
-	if (pEquip == nullptr)
-		return;
-	_bool bUseMp = true;
+		return GAMEOBJECT::ERR;
 
-	// 마나 드리프트 버프 사용중이면 mp감소 X
-	if (m_bActiveBuff[BUFF_MANA])
-		bUseMp = false;
 
-	switch (eSkillID)
+	//--------------------------------------------------
+	// L Click : Move
+	//--------------------------------------------------
+	if (pManagement->Key_Down(VK_LBUTTON))
 	{
-	case ACTIVE_ICE_STRIKE:	// 에너지 볼트
-		if (bUseMp)
-			pEquip->Set_PlayerMP(-10);
-		Skill_Laser(fDeltaTime);
-		break;
-	case ACTIVE_MANA_DRIFT:	// 마나 드리프트
-		if (bUseMp)
-			pEquip->Set_PlayerMP(-20);
-		m_bActiveBuff[BUFF_MANA] = true;
-		break;
-	case ACTIVE_ENERGY_EXPLOTIATION:	// 에너지 익스플로전
-		if (bUseMp)
-			pEquip->Set_PlayerMP(-30);
-		m_bActiveBuff[BUFF_ATT] = true;
-		break;
-	case ACTIVE_FLAME_WAVE:	// 투사체
-		//if (m_bFrameWaveStart)
-		//{
-		//	if (bUseMp)
-		//		pEquip->Set_PlayerMP(-30);
-		//	m_fFrameWaveCnt += fDeltaTime;
-
-		//	if (m_fFrameWaveCnt >= m_fFrameWaveEnd)
-		//	{
-		//		m_bFrameWaveStart = false;
-		//		m_fFrameWaveCnt = 0.f;
-
-		//		Skill_ProjectileFall(fDeltaTime);
-
-		//		//m_bUsingSkill = false;
-		//	}
-		//}
-		m_fFrameWaveCnt += fDeltaTime;
-		if (m_fFrameWaveCnt >= m_fFrameWaveEnd)
+		if (VALIDATE_MOVE >= m_eCurState)
 		{
-			m_bFrameWaveStart = false;
-			if (bUseMp)
-				pEquip->Set_PlayerMP(-30);
-			Skill_ProjectileFall(fDeltaTime);
-			m_bUsingSkill = false;
-			m_fFrameWaveCnt = 0.f;
+			_bool bFound = false;
+			if (FAILED(Raycast_OnTerrain(&bFound)))
+			{
+				PRINT_LOG(L"Failed To Raycast!", LOG::CLIENT);
+				return GAMEOBJECT::WARN;
+			}
+
+			if (bFound)
+			{
+				Update_Look(_fDeltaTime);
+				m_eCurState = MOVE;
+			}
 		}
+	}
+
+
+	//--------------------------------------------------
+	// R Click : 
+	//--------------------------------------------------
+	else if (pManagement->Key_Down(VK_RBUTTON))
+	{
+		// TODO : any..
+	}
+
+
+	//--------------------------------------------------
+	// Space : Jump
+	//--------------------------------------------------
+	else if (pManagement->Key_Down(VK_SPACE))
+	{
+		if(VALIDATE_MOVE >= m_eCurState)
+			m_eCurState = JUMP;
+	}
+
+	//--------------------------------------------------
+	// G : Interaction
+	//--------------------------------------------------
+	else if (pManagement->Key_Down('G'))
+	{
+		// TODO : Interaction
+	}
+
+
+	return GAMEOBJECT::NOEVENT;
+}
+
+_int CPlayer::Update_Input_Skill(_float _fDeltaTime)
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (pManagement == nullptr)
+		return GAMEOBJECT::ERR;
+
+	CSkillInven* pSkillInven = (CSkillInven*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 3);
+	if (pSkillInven == nullptr)
+		return GAMEOBJECT::WARN;
+
+
+	_int iRemainMP = 0;
+
+
+	//--------------------------------------------------
+	// Z : 일반 공격 (에너지 볼트)
+	//--------------------------------------------------
+	if (pManagement->Key_Down('Z'))
+	{
+		if (m_bCanNormalAtk && IDLE == m_eCurState || MOVE == m_eCurState)
+		{
+			m_bCanNormalAtk = false;
+			m_eCurState = ATTACK;
+		}
+	}
+
+
+	//--------------------------------------------------
+	// Q 스킬 슬롯
+	//--------------------------------------------------
+	else if (pManagement->Key_Down('Q'))
+	{
+		if (IDLE == m_eCurState || MOVE == m_eCurState)
+		{
+			iRemainMP = m_pStatusCom->Get_Status().iMp - (_int)(pSkillInven->Get_ConsumeMP(SLOT_Q) * m_fConsumeRate);
+			if (0 <= iRemainMP && pSkillInven->Can_UseSkill(SLOT_Q))
+			{
+				m_pStatusCom->Set_MP(iRemainMP);
+				m_iInputIdx_Slot = SLOT_Q;
+				m_iInputIdx_Anim = pSkillInven->Get_SkillID(SLOT_Q);
+				m_eCurState = SKILL;
+			}
+		}
+	} 
+
+
+	//--------------------------------------------------
+	// W 스킬 슬롯
+	//--------------------------------------------------
+	else if (pManagement->Key_Down('W'))
+	{
+		if (IDLE == m_eCurState || MOVE == m_eCurState)
+		{
+			iRemainMP = m_pStatusCom->Get_Status().iMp - (_int)(pSkillInven->Get_ConsumeMP(SLOT_W) * m_fConsumeRate);
+			if (0 <= iRemainMP && pSkillInven->Can_UseSkill(SLOT_W))
+			{
+				m_pStatusCom->Set_MP(iRemainMP);
+				m_iInputIdx_Slot = SLOT_W;
+				m_iInputIdx_Anim = pSkillInven->Get_SkillID(SLOT_W);
+				m_eCurState = SKILL;
+			}
+		}
+	}
+
+
+	//--------------------------------------------------
+	// E 스킬 슬롯
+	//--------------------------------------------------
+	else if (pManagement->Key_Down('E'))
+	{
+		if (IDLE == m_eCurState || MOVE == m_eCurState)
+		{
+			iRemainMP = m_pStatusCom->Get_Status().iMp - (_int)(pSkillInven->Get_ConsumeMP(SLOT_E) * m_fConsumeRate);
+			if (0 <= iRemainMP && pSkillInven->Can_UseSkill(SLOT_E))
+			{
+				m_pStatusCom->Set_MP(iRemainMP);
+				m_iInputIdx_Slot = SLOT_E;
+				m_iInputIdx_Anim = pSkillInven->Get_SkillID(SLOT_E);
+				m_eCurState = SKILL;
+			}
+		}
+	}
+
+
+	//--------------------------------------------------
+	// R 스킬 슬롯
+	//--------------------------------------------------
+	else if (pManagement->Key_Down('R'))
+	{
+		if (IDLE == m_eCurState || MOVE == m_eCurState)
+		{
+			iRemainMP = m_pStatusCom->Get_Status().iMp - (_int)(pSkillInven->Get_ConsumeMP(SLOT_R) * m_fConsumeRate);
+			if (0 <= iRemainMP && pSkillInven->Can_UseSkill(SLOT_R))
+			{
+				m_pStatusCom->Set_MP(iRemainMP);
+				m_iInputIdx_Slot = SLOT_R;
+				m_iInputIdx_Anim = pSkillInven->Get_SkillID(SLOT_R);
+				m_eCurState = SKILL;
+			}
+		}
+	}
+
+
+	//--------------------------------------------------
+	// A 스킬 슬롯
+	//--------------------------------------------------
+	else if (pManagement->Key_Down('A'))
+	{
+		if (IDLE == m_eCurState || MOVE == m_eCurState)
+		{
+			iRemainMP = m_pStatusCom->Get_Status().iMp - (_int)(pSkillInven->Get_ConsumeMP(SLOT_A) * m_fConsumeRate);
+			if (0 <= iRemainMP && pSkillInven->Can_UseSkill(SLOT_A))
+			{
+				m_pStatusCom->Set_MP(iRemainMP);
+				m_iInputIdx_Slot = SLOT_A;
+				m_iInputIdx_Anim = pSkillInven->Get_SkillID(SLOT_A);
+				m_eCurState = SKILL;
+			}
+		}
+	}
+
+
+	//--------------------------------------------------
+	// S 스킬 슬롯
+	//--------------------------------------------------
+	else if (pManagement->Key_Down('S'))
+	{
+		if (IDLE == m_eCurState || MOVE == m_eCurState)
+		{
+			iRemainMP = m_pStatusCom->Get_Status().iMp - (_int)(pSkillInven->Get_ConsumeMP(SLOT_S) * m_fConsumeRate);
+			if (0 <= iRemainMP && pSkillInven->Can_UseSkill(SLOT_S))
+			{
+				m_pStatusCom->Set_MP(iRemainMP);
+				m_iInputIdx_Slot = SLOT_S;
+				m_iInputIdx_Anim = pSkillInven->Get_SkillID(SLOT_S);
+				m_eCurState = SKILL;
+			}
+		}
+	}
+
+
+	//--------------------------------------------------
+	// D 스킬 슬롯
+	//--------------------------------------------------
+	else if (pManagement->Key_Down('D'))
+	{
+		if (IDLE == m_eCurState || MOVE == m_eCurState)
+		{
+			iRemainMP = m_pStatusCom->Get_Status().iMp - (_int)(pSkillInven->Get_ConsumeMP(SLOT_D) * m_fConsumeRate);
+			if (iRemainMP <= 0 && pSkillInven->Can_UseSkill(SLOT_D))
+			{
+				m_pStatusCom->Set_MP(iRemainMP);
+				m_iInputIdx_Slot = SLOT_D;
+				m_iInputIdx_Anim = pSkillInven->Get_SkillID(SLOT_D);
+				m_eCurState = SKILL;
+			}
+		}
+	}
+
+
+	//--------------------------------------------------
+	// F 스킬 슬롯
+	//--------------------------------------------------
+	else if (pManagement->Key_Down('F'))
+	{
+		if (IDLE == m_eCurState || MOVE == m_eCurState)
+		{
+			iRemainMP = m_pStatusCom->Get_Status().iMp - (_int)(pSkillInven->Get_ConsumeMP(SLOT_F) * m_fConsumeRate);
+			if (iRemainMP <= 0 && pSkillInven->Can_UseSkill(SLOT_F))
+			{
+				m_pStatusCom->Set_MP(iRemainMP);
+				m_iInputIdx_Slot = SLOT_F;
+				m_iInputIdx_Anim = pSkillInven->Get_SkillID(SLOT_F);
+				m_eCurState = SKILL;
+			}
+		}
+	}
+
+	// 아무것도 안누르면 변화 없음
+
+	return GAMEOBJECT::NOEVENT;
+}
+
+_int CPlayer::Update_Input_Item(_float _fDeltaTime)
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (pManagement == nullptr)
+		return GAMEOBJECT::ERR;
+	CItemInventory* pItemInven = (CItemInventory*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 4);
+	if (pItemInven == nullptr)
+		return GAMEOBJECT::WARN;
+
+	if (pManagement->Key_Down('1'))
+	{
+		pItemInven->Actual_UseItem(SLOT_1);
+	}
+	else if (pManagement->Key_Down('2'))
+	{
+		pItemInven->Actual_UseItem(SLOT_2);
+	}
+	else if (pManagement->Key_Down('3'))
+	{
+		pItemInven->Actual_UseItem(SLOT_3);
+	}
+	else if (pManagement->Key_Down('4'))
+	{
+		pItemInven->Actual_UseItem(SLOT_4);
+	}
+
+	return GAMEOBJECT::NOEVENT;
+}
+
+
+_bool CPlayer::Actual_UseSkill()
+{
+	if (SKILL != m_eCurState)
+		return false;
+
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return false;
+
+	CSkillInven* pSkillInven = (CSkillInven*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 3);
+	if (nullptr == pSkillInven)
+		return false;
+
+	if (!pSkillInven->Actual_UseSkill(m_iInputIdx_Slot))
+		return false;
+
+	return true;
+}
+
+_int CPlayer::Update_Parts()
+{
+	//--------------------------------------------------
+	// 공전값 구함
+	//--------------------------------------------------
+	_matrix matRevolution;
+	_vec3 vRotate = m_pTransformCom[PART_BODY]->Get_Desc().vRotate;
+	D3DXMatrixIdentity(&matRevolution);
+	D3DXMatrixRotationZ(&matRevolution, vRotate.z);
+	D3DXMatrixRotationY(&matRevolution, vRotate.y);
+	D3DXMatrixRotationX(&matRevolution, vRotate.x);
+
+
+	//--------------------------------------------------
+	// 부모값 구함
+	//--------------------------------------------------
+	_matrix matParent = m_pTransformCom[PART_BODY]->Get_Desc().matWorld;
+
+	_vec3 vRelativeHand = { 0.f, -1.f, 0.f };
+	_vec3 vRelativeFoot = { 0.f, -1.5f, 0.f };
+
+	HRESULT hr = 0;
+
+	//--------------------------------------------------
+	// 스케일 * 자전 * 이동
+	//--------------------------------------------------
+	hr = m_pTransformCom[PART_HEAD]->Update_Transform();
+	hr = m_pTransformCom[PART_BODY]->Update_Transform();
+
+
+	//--------------------------------------------------
+	// 스케일 * 자전 * 이동 * 공전 * 부모
+	//--------------------------------------------------
+	m_pTransformCom[PART_HAND_LEFT]->Set_Position(m_pTransformCom[PART_HAND_LEFT]->Get_Desc().vPosition + vRelativeHand);
+	hr = m_pTransformCom[PART_HAND_LEFT]->Update_Transform(matRevolution, matParent);
+
+	m_pTransformCom[PART_HAND_RIGHT]->Set_Position(m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vPosition + vRelativeHand);
+	hr = m_pTransformCom[PART_HAND_RIGHT]->Update_Transform(matRevolution, matParent);
+
+	m_pTransformCom[PART_FOOT_LEFT]->Set_Position(m_pTransformCom[PART_FOOT_LEFT]->Get_Desc().vPosition + vRelativeFoot);
+	hr = m_pTransformCom[PART_FOOT_LEFT]->Update_Transform(matRevolution, matParent);
+
+	m_pTransformCom[PART_FOOT_RIGHT]->Set_Position(m_pTransformCom[PART_FOOT_RIGHT]->Get_Desc().vPosition + vRelativeFoot);
+	hr = m_pTransformCom[PART_FOOT_RIGHT]->Update_Transform(matRevolution, matParent);
+
+
+	if (FAILED(hr))
+		return GAMEOBJECT::WARN;
+
+	return GAMEOBJECT::NOEVENT;
+}
+
+void CPlayer::Update_Jump(_float fDeltaTime)
+{
+	if (JUMP != m_eCurState)
+		return;
+
+	// 플레이어의 현재 위치를 계속 받아온다
+	_vec3 vCurPos[2];
+	for (_uint i = 0; i < 2; ++i)
+		vCurPos[i] = m_pTransformCom[i]->Get_Desc().vPosition;
+
+	// 시간 더해주기
+	m_fJumpTime += fDeltaTime;
+	for (_uint i = 0; i < 2; ++i)
+	{
+		// 점프
+		vCurPos[i].y += (m_fJumpPower * m_fJumpTime - 9.8f * m_fJumpTime * m_fJumpTime * 0.5f);
+
+		if (vCurPos[i].y < m_pTransformCom[i]->Get_Desc().vPosition.y)
+		{
+			m_fJumpTime = 0.f;
+			vCurPos[i].y = m_pTransformCom[i]->Get_Desc().vPosition.y;
+			m_eCurState = IDLE;
+		}
+
+		m_pTransformCom[i]->Set_Position(vCurPos[i]);
+	}
+}
+
+void CPlayer::Update_Anim(_float _fDeltaTime)
+{
+	switch (m_eCurState)
+	{
+	case Client::CPlayer::IDLE:
+	case Client::CPlayer::MOVE:
+		Update_Anim_Move(_fDeltaTime);
 		break;
-	case ACTIVE_ICE_SPEAR: // 레이저
-		if (bUseMp)
-			pEquip->Set_PlayerMP(-20);
-		Skill_Laser(fDeltaTime);
+
+	case Client::CPlayer::JUMP:
 		break;
+
+	case Client::CPlayer::ATTACK:
+		Update_Anim_Attack(_fDeltaTime);
+		break;
+
+	case Client::CPlayer::SKILL:
+		Update_Anim_Skill(_fDeltaTime);
+		break;
+
+	default:
+		break;
+	}
+}
+
+void CPlayer::Update_Anim_Move(_float _fDeltaTime)
+{
+	if (MOVE == m_eCurState)
+	{
+		m_fAnimTimer += _fDeltaTime;
+
+		if (m_fAnimTimer >= 0.5f)
+		{
+			if (m_iAnimStep)	m_iAnimStep = 0;
+			else				m_iAnimStep = 1;
+
+			m_fAnimTimer = 0.f;
+
+			for (_uint i = 2; i < PART_END; ++i)
+				m_pTransformCom[i]->Set_Rotation(_vec3(0.f, 0.f, 0.f));
+		}
+
+		//--------------------------------------------------
+		// 회전 (자전)
+		//--------------------------------------------------
+		if (m_iAnimStep)
+		{
+			m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, _fDeltaTime);
+			m_pTransformCom[PART_HAND_LEFT]->Turn(CTransform::AXIS_X, -_fDeltaTime);
+
+			m_pTransformCom[PART_FOOT_RIGHT]->Turn(CTransform::AXIS_X, -_fDeltaTime);
+			m_pTransformCom[PART_FOOT_LEFT]->Turn(CTransform::AXIS_X, _fDeltaTime);
+		}
+
+		else
+		{
+			m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -_fDeltaTime);
+			m_pTransformCom[PART_HAND_LEFT]->Turn(CTransform::AXIS_X, _fDeltaTime);
+
+			m_pTransformCom[PART_FOOT_RIGHT]->Turn(CTransform::AXIS_X, _fDeltaTime);
+			m_pTransformCom[PART_FOOT_LEFT]->Turn(CTransform::AXIS_X, -_fDeltaTime);
+		}
+	}
+
+	//--------------------------------------------------
+	// 멈춤
+	//--------------------------------------------------
+	else if(IDLE == m_eCurState)
+	{
+		for (_uint i = 2; i < PART_END; ++i)
+			m_pTransformCom[i]->Set_Rotation(_vec3(0.f, 0.f, 0.f));
+	}
+}
+
+void CPlayer::Update_Anim_Attack(_float _fDeltaTime)
+{
+	if (ATTACK != m_eCurState)
+		return;
+
+	m_fAnimTimer += _fDeltaTime;
+	if (0 == m_iAnimStep)
+	{
+		m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -_fDeltaTime * 5.f);
+
+		if (m_fAnimTimer >= 0.2f)
+		{
+			m_fAnimTimer = 0.f;
+			++m_iAnimStep;
+
+			Spawn_EnergyBolt();
+		}
+	}
+
+	else if (1 == m_iAnimStep)
+	{
+		if (m_fAnimTimer >= 0.2f)
+		{
+			m_fAnimTimer = 0.f;
+			++m_iAnimStep;
+		}
+
+		m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Y, _fDeltaTime * 5.f);
+	}
+
+	else if (2 == m_iAnimStep)
+	{
+		m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Y, -_fDeltaTime * 5.f);
+
+		if (m_fAnimTimer >= 0.3f)
+		{
+			m_pTransformCom[PART_HAND_RIGHT]->Set_Rotation(_vec3(0.f, 0.f, 0.f));
+			m_eCurState = IDLE;
+		}
+	}
+}
+
+void CPlayer::Update_Anim_Skill(_float _fDeltaTime)
+{
+	if (SKILL != m_eCurState)
+		return;
+
+	// 일단 하나로 통일
+	switch ((eActiveSkill_ID)m_iInputIdx_Anim)
+	{
+	case ACTIVE_ICE_STRIKE:
+	case ACTIVE_MANA_DRIFT:
+	case ACTIVE_ENERGY_EXPLOTIATION:
+	case ACTIVE_FLAME_WAVE:
+	case ACTIVE_ICE_SPEAR:
 	case ACTIVE_MAGIC_ARMOR:
-		break;
 	case ACTIVE_NORMAL_ATTACK:
-		break;
-	case ACTIVE_SKILL_END:
+	case ACTIVE_SKILL:
+		Update_Anim_Skill_Common(_fDeltaTime);
 		break;
 	default:
 		break;
 	}
 }
 
-void CPlayer::Check_QuickSlotItem()
+void CPlayer::Update_Anim_Skill_Common(_float _fDeltaTime)
 {
-	CManagement* pManagement = CManagement::Get_Instance();
-	if (pManagement == nullptr)
-		return;
-	CItemInventory* pItemInven = (CItemInventory*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 4);
-	if (pItemInven == nullptr)
-		return;
+	m_fAnimTimer += _fDeltaTime;
+	if (0 == m_iAnimStep)
+	{
+		m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -_fDeltaTime * 5.f);
 
-	if (pManagement->Key_Down('1'))
-	{
-		if (FAILED(pItemInven->Use_Item(0)))
-			return;
+		if (m_fAnimTimer >= 0.4f)
+		{
+			m_fAnimTimer = 0.f;
+			++m_iAnimStep;
+
+			Actual_UseSkill();
+		}
 	}
-	else if (pManagement->Key_Down('2'))
+
+	else if (1 == m_iAnimStep)
 	{
-		if (FAILED(pItemInven->Use_Item(1)))
-			return;
+		if (m_fAnimTimer >= 1.f)
+		{
+			m_fAnimTimer = 0.f;
+			++m_iAnimStep;
+		}
 	}
-	else if (pManagement->Key_Down('3'))
+
+	else if (2 == m_iAnimStep)
 	{
-		if (FAILED(pItemInven->Use_Item(2)))
-			return;
-	}
-	else if (pManagement->Key_Down('4'))
-	{
-		if (FAILED(pItemInven->Use_Item(3)))
-			return;
+		m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, _fDeltaTime * 5.f);
+
+		if (m_fAnimTimer >= 0.2f)
+		{
+			m_pTransformCom[PART_HAND_RIGHT]->Set_Rotation(_vec3(0.f, 0.f, 0.f));
+			m_eCurState = IDLE;
+		}
 	}
 }
 
-void CPlayer::Normal_Attack(_float fDeltaTime)
-{
-	CManagement* pManagement = CManagement::Get_Instance();
-	if (nullptr == pManagement)
-		return;
-
-	int k = 0;
-
-	//if (GetAsyncKeyState('Z') & 0x8000)
-	if (pManagement->Key_Pressing('Z'))
-	{
-		m_bUsingSkill = true;
-		m_ePlayerSkillID = PLAYER_NORMAL_ATTACK;
-		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
-
-		m_bIsNormalAtt = true;
-		m_bRightAtt = false;
-		m_bLeftAtt = false;
-	}
-
-	// 일반 공격은 팔만 움직이면 된다
-	else if (m_bIsNormalAtt)
-	{
-		if (m_bRightAtt)
-		{
-			m_fAttTime += fDeltaTime;
-			if (m_fAttTime >= 0.2f)
-			{
-				m_fAttTime = 0.f;
-				//m_bIsNormalAtt = false;
-				m_bRightAtt = false;
-				m_bLeftAtt = true;
-			}
-
-			m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Y, fDeltaTime * 5.f);
-
-			//if (m_ePlayerDir == MOVING_UP || m_ePlayerDir == MOVING_DOWN)
-			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Y, fDeltaTime * 5.f);
-			//else if (m_ePlayerDir == MOVING_RIGHT)
-			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
-		}
-
-		else if (m_bLeftAtt)
-		{
-			m_fAttTime += fDeltaTime;
-			m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Y, -fDeltaTime * 5.f);
-
-			//if (m_ePlayerDir == MOVING_UP || m_ePlayerDir == MOVING_DOWN)
-			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Y, -fDeltaTime * 5.f);
-			//else if (m_ePlayerDir == MOVING_RIGHT)
-			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
-
-			if (m_fAttTime >= 0.3f)
-			{
-				m_fAttTime = 0.f;
-				m_bIsNormalAtt = false;
-				m_bRightAtt = false;
-				m_bLeftAtt = false;
-
-				m_pTransformCom[PART_HAND_RIGHT]->Set_Rotation(m_vInitialRot);
-				m_bUsingSkill = false;
-				m_ePlayerSkillID = PLAYER_SKILL_END;
-			}
-		}
-
-		else
-		{
-			m_fAttTime += fDeltaTime;
-			m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
-
-			//if (m_ePlayerDir == MOVING_UP)
-			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
-			//else if (m_ePlayerDir == MOVING_DOWN)
-			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
-			//else if (m_ePlayerDir == MOVING_RIGHT)
-			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Z, fDeltaTime * 5.f);
-
-			if (m_fAttTime >= 0.2f)
-			{
-				m_fAttTime = 0.f;
-				m_bRightAtt = true;
-				m_bIsNormalAtt = true;
-
-				if (FAILED(Setup_Layer_EnergyBolt(L"Layer_EnergyBolt")))
-					return;
-
-				// 생성해서 쏘면 됨
-			}
-		}
-	}
-
-
-
-
-}
-
-void CPlayer::Skill_Laser(_float fDeltaTime)
-{
-	if (GetAsyncKeyState('X') & 0x8000)
-	{
-		m_bStartLaser = true;
-		m_bUsingLaser = false;
-
-		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
-		m_bUsingSkill = true;
-		m_ePlayerSkillID = PLAYER_SKILL_LASER;
-	}
-
-	/*else if (m_bStartLaser)
-	{*/
-		if (m_bUsingLaser)
-		{
-			m_fAttTime += fDeltaTime;
-			if (m_fAttTime >= 3.f)
-			{
-				m_bUsingLaser = false;
-				m_bStartLaser = false;
-				m_fAttTime = 0.f;
-
-				m_pTransformCom[PART_HAND_RIGHT]->Set_Rotation(m_vInitialRot);
-				m_bUsingSkill = false;
-				m_ePlayerSkillID = PLAYER_SKILL_END;
-			}
-		}
-
-		else
-		{
-			m_fAttTime += fDeltaTime;
-			m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
-			//if (m_ePlayerDir == MOVING_UP)
-			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
-			//else if (m_ePlayerDir == MOVING_DOWN)
-			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
-			//else if (m_ePlayerDir == MOVING_RIGHT)
-			//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Z, fDeltaTime * 5.f);
-
-			if (m_fAttTime >= 0.2f)
-			{
-				m_fAttTime = 0.f;
-				m_bUsingLaser = true;
-			}
-		}
-	//}
-}
-
-void CPlayer::Skill_ProjectileFall(_float fDeltaTime)
-{
-	CManagement* pManagement = CManagement::Get_Instance();
-	if (nullptr == pManagement)
-		return;
-
-	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Terrain", L"Com_VIBuffer");
-	if (nullptr == pTerrainBuffer)
-		return;
-
-	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Camera");
-
-	if (pManagement->Key_Down(VK_RBUTTON))
-	{
-		m_bStartFall = true;
-		m_bIsFall = false;
-		m_bDownHand = false;
-
-		m_vInitialRot = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vRotate;
-		//m_bUsingSkill = true;
-		m_ePlayerSkillID = PLAYER_SKILL_FALL;
-	}
-
-	_matrix mat;
-	D3DXMatrixIdentity(&mat);
-	_vec3 vGoalPos = {};
-	if (true == m_pRaycastCom->IsSimulate<VTX_TEXTURE, INDEX16>(
-		g_hWnd, WINCX, WINCY, pTerrainBuffer, &mat, pCamera, &vGoalPos))
-	{
-		if (!m_bRenderInven && !m_bRenderShop)
-		{	
-			Ready_Layer_Meteor(L"Layer_Meteor", vGoalPos);
-
-			for (_uint iCnt = 0; iCnt < 5; ++iCnt)
-			{
-				if (FAILED(Ready_Layer_Meteor(L"Layer_Meteor", vGoalPos)))
-					PRINT_LOG(L"Failed To Ready_Layer_Meteor in CPlayer", LOG::CLIENT);
-			}
-			
-		}
-	}
-
-	if (m_bIsFall)
-	{
-		m_fAttTime += fDeltaTime;
-
-		if (m_fAttTime >= 1.f)
-		{
-			m_fAttTime = 0.f;
-			m_bIsFall = false;
-			m_bDownHand = true;
-		}
-	}
-
-	else if (m_bDownHand)
-	{
-		m_fAttTime += fDeltaTime;
-		m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
-		//if (m_ePlayerDir == MOVING_UP)
-		//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
-		//else if (m_ePlayerDir == MOVING_DOWN)
-		//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
-		//else if (m_ePlayerDir == MOVING_RIGHT)
-		//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Z, -fDeltaTime * 5.f);
-
-		if (m_fAttTime >= 0.2f)
-		{
-			m_bStartFall = false;
-			m_bIsFall = false;
-			m_bDownHand = false;
-			m_fAttTime = 0.f;
-
-			m_pTransformCom[PART_HAND_RIGHT]->Set_Rotation(m_vInitialRot);
-			m_bUsingSkill = false;
-			m_ePlayerSkillID = PLAYER_SKILL_END;
-		}
-	}
-	else
-	{
-		m_fAttTime += fDeltaTime;
-		m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
-		//if (m_ePlayerDir == MOVING_UP)
-		//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -fDeltaTime * 5.f);
-		//else if (m_ePlayerDir == MOVING_DOWN)
-		//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, fDeltaTime * 5.f);
-		//else if (m_ePlayerDir == MOVING_RIGHT)
-		//	m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Z, fDeltaTime * 5.f);
-
-		if (m_fAttTime >= 0.4f)
-		{
-			m_bIsFall = true;
-			m_fAttTime = 0.f;
-		}
-	}
-	
-}
-
-void CPlayer::Buff_ManaDrift(_float fDeltaTime)
-{
-	m_fManaDriftTime += fDeltaTime;
-	if (m_fManaDriftTime >= 60.f)
-	{
-		m_fManaDriftTime = 0.f;
-		m_bActiveBuff[BUFF_MANA] = false;
-		PRINT_LOG(L"마나 드리프트 끝", LOG::CLIENT);
-		eSkillID = ACTIVE_SKILL_END;
-	}
-}
-
-void CPlayer::Buff_EnergyExploitation(_float fDeltaTime)
-{
-	CManagement* pManagement = CManagement::Get_Instance();
-	if (pManagement == nullptr)
-		return;
-	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 1);
-	if (pEquip == nullptr)
-		return;
-
-	m_fEnergyExploitationSkill += fDeltaTime;
-
-	if (m_fEnergyExploitationSkill >= 10.f)
-	{
-		m_fEnergyExploitationSkill = 0.f;
-		m_bActiveBuff[BUFF_ATT] = false;
-		pEquip->Set_PlayerAtt(-m_iAttBuff);
-		PRINT_LOG(L"에너지 익스플로전 끝", LOG::CLIENT);
-		eSkillID = ACTIVE_SKILL_END;
-	}
-}
-
-HRESULT CPlayer::Ready_Layer_Meteor(const wstring& _strLayerTag, _vec3 vGoalPos)
-{
-	CManagement* pManagement = CManagement::Get_Instance();
-	if (nullptr == pManagement)
-		return E_FAIL;
-
-	m_fRand[0] = (_float)(rand() % 2 - 4);
-	m_fRand[1] = (_float)(rand() % 2 - 4);
-	INSTANTIMPACT tImpact;
-	tImpact.pAttacker = this;
-	tImpact.pStatusComp = m_pStatusCom;
-	tImpact.vPosition = vGoalPos + _vec3(m_fRand[0], 0.f, m_fRand[1]);
-
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Meteor", SCENE_STAGE0, _strLayerTag, &tImpact)))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-HRESULT CPlayer::Setup_Layer_PlaneSkill(const wstring & LayerTag , _vec3 _vMouse)
-{
-	CManagement* pManagement = CManagement::Get_Instance();
-	if (nullptr == pManagement)
-		return E_FAIL;
-
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_PlanSkill", SCENE_STAGE0, LayerTag , &_vMouse)))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-HRESULT CPlayer::Setup_Layer_EnergyBolt(const wstring & LayerTag)
+HRESULT CPlayer::Spawn_EnergyBolt()
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
@@ -1225,7 +1284,6 @@ HRESULT CPlayer::Setup_Layer_EnergyBolt(const wstring & LayerTag)
 	tImpact.pAttacker = this;
 	tImpact.pStatusComp = m_pStatusCom;
 
-	//CTransform* pWandTransform = (CTransform*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Wand", L"Com_Transform2");
 	_vec3 vWandPos = {};
 	memcpy_s(&vWandPos , sizeof(_vec3),&m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().matWorld._41,sizeof(_vec3));
 	_vec3 vPlayerLook = m_pTransformCom[PART_HEAD]->Get_Look();
@@ -1233,22 +1291,22 @@ HRESULT CPlayer::Setup_Layer_EnergyBolt(const wstring & LayerTag)
 	
 	tImpact.vPosition = vWandPos;
 	tImpact.vDirection = vPlayerLook;
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_EnergyBolt", SCENE_STAGE0, LayerTag , &tImpact)))
+	if (FAILED(pManagement->Add_GameObject_InLayer(pManagement->Get_CurrentSceneID(), L"GameObject_EnergyBolt", pManagement->Get_CurrentSceneID(), L"Player_Attack" , &tImpact)))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CPlayer::Setup_Layer_Wand(const wstring & LayerTag)
+void CPlayer::Update_AtkDelay(_float _fDeltaTime)
 {
-	CManagement* pManagement = CManagement::Get_Instance();
-	if (nullptr == pManagement)
-		return E_FAIL;
-
-	_vec3 vPlayer_RightHand_Pos = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vPosition;
-
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Wand", SCENE_STAGE0, LayerTag , &vPlayer_RightHand_Pos)))
-		return E_FAIL;
-
-	return S_OK;
+	if (!m_bCanNormalAtk)
+	{
+		m_fAtkDelayCounter += _fDeltaTime;
+		if (m_fAtkDelayCounter > m_fAtkDelayTime)
+		{
+			m_bCanNormalAtk = true;
+			m_fAtkDelayCounter = 0.f;
+		}
+	}
 }
+

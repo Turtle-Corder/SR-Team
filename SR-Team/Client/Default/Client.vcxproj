@@ -162,7 +162,6 @@
     <ClInclude Include="..\Headers\BluePotion.h" />
     <ClInclude Include="..\Headers\Bomb.h" />
     <ClInclude Include="..\Headers\EnergyExploitationSkill.h" />
-    <ClInclude Include="..\Headers\EnergyVoltSkill.h" />
     <ClInclude Include="..\Headers\Crack.h" />
     <ClInclude Include="..\Headers\EnergyBolt.h" />
     <ClInclude Include="..\Headers\Equip.h" />
@@ -230,7 +229,6 @@
     <ClCompile Include="..\Codes\BluePotion.cpp" />
     <ClCompile Include="..\Codes\Bomb.cpp" />
     <ClCompile Include="..\Codes\EnergyExploitationSkill.cpp" />
-    <ClCompile Include="..\Codes\EnergyVoltSkill.cpp" />
     <ClCompile Include="..\Codes\Crack.cpp" />
     <ClCompile Include="..\Codes\EnergyBolt.cpp" />
     <ClCompile Include="..\Codes\Equip.cpp" />

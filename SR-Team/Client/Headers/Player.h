@@ -22,20 +22,58 @@ public:
 
 		JUMP, 
 		ATTACK, 
-		SKILL0, 
-		SKILL1, 
-		SKILL2, 
+		SKILL, 
+		DEAD,
 		STATE_END 
 	};
+
+	enum SLOT_SKILL
+	{
+		SLOT_Q,
+		SLOT_W,
+		SLOT_E,
+		SLOT_R,
+		SLOT_A,
+		SLOT_S,
+		SLOT_D,
+		SLOT_F
+	};
+
+	enum SLOT_ITEM_QUEST
+	{
+		SLOT_F1,
+		SLOT_F2,
+		SLOT_F3,
+		SLOT_F4
+	};
+
+	enum SLOT_ITEM_CONSUME
+	{
+		SLOT_1,
+		SLOT_2,
+		SLOT_3,
+		SLOT_4
+	};
+
+	enum ACTIVE_BUFF 
+	{ 
+		BUFF_MANA, 
+		BUFF_ATTACK, 
+		BUFF_SHIELD, 
+		BUFF_END 
+	};
+
+
 
 private:
 	explicit CPlayer(LPDIRECT3DDEVICE9 _pDevice);
 	explicit CPlayer(const CPlayer& _rOther);
 	virtual ~CPlayer() = default;
 
-public:
-	_bool Get_IsOnActiveBuff(_int iIndex) { return m_bActiveBuff[iIndex]; }
 
+	//----------------------------------------------------------------------------------------------------
+	// Common
+	//----------------------------------------------------------------------------------------------------
 public:
 	virtual HRESULT Setup_GameObject_Prototype() override;
 	virtual HRESULT Setup_GameObject(void* _pArg) override;
@@ -43,8 +81,19 @@ public:
 	virtual _int Update_GameObject(_float _fDeltaTime) override;
 	virtual _int LateUpdate_GameObject(_float _fDeltaTime) override;
 	virtual HRESULT Render_NoneAlpha() override;
-
 	virtual HRESULT Take_Damage(const CComponent* _pDamageComp) override;
+
+public:
+	static CPlayer* Create(LPDIRECT3DDEVICE9 _pDevice);
+	virtual CGameObject* Clone_GameObject(void* _pArg) override;
+	virtual void Free() override;
+
+public:
+	_bool IsOnBuff(ACTIVE_BUFF _eType);
+	void Buff_On(ACTIVE_BUFF _eType);
+	void Buff_Off(ACTIVE_BUFF _eType);
+
+
 
 private:
 	//----------------------------------------------------------------------------------------------------
@@ -57,16 +106,52 @@ private:
 	HRESULT Add_Component_Texture();
 	HRESULT Add_Component_Extends();
 
+	// 장비지만 여기 껴준다..
+	HRESULT Add_Wand(const wstring & LayerTag);
+
+
 
 	//----------------------------------------------------------------------------------------------------
-	// Update
+	// UI
 	//----------------------------------------------------------------------------------------------------
-	
+	_int Update_UICheck();
+
+
+
+	//----------------------------------------------------------------------------------------------------
+	// State
+	//----------------------------------------------------------------------------------------------------
+	_int Update_State();
+
+
+
+	//----------------------------------------------------------------------------------------------------
+	// Input
+	//----------------------------------------------------------------------------------------------------
+	_int Update_Input(_float _fDeltaTime);
+	_int Update_Input_Skill(_float _fDeltaTime);
+	_int Update_Input_Item(_float _fDeltaTime);
+	_int Update_Input_Action(_float _fDeltaTime);
+
+	_bool Actual_UseSkill();
+
+
+
+	//----------------------------------------------------------------------------------------------------
+	// Transform
+	//----------------------------------------------------------------------------------------------------
+	_int Update_Parts();
+
 	//--------------------------------------------------
 	// 이동
 	//--------------------------------------------------
 	HRESULT Update_Move(_float _fDeltaTime);
 	HRESULT Update_OnTerrain();
+
+	//--------------------------------------------------
+	// 회전
+	//--------------------------------------------------
+	HRESULT Update_Look(_float _fDeltaTime);
 
 	//--------------------------------------------------
 	// 점프
@@ -76,60 +161,34 @@ private:
 	//--------------------------------------------------
 	// 마우스 피킹
 	//--------------------------------------------------
-	HRESULT Raycast_OnTerrain();	
+	HRESULT Raycast_OnTerrain(_bool* _pFound);	
 	void Move_Target(_float _fDeltaTime);
 
 
 
-	// 처음 시작 상태로 돌아가기
-	virtual _int Initial_Update_GameObject();
-	// 부위별 업데이트
-	_int Update_Parts();
-
-	// 점프
 
 
-	// 이동 모션
-	void MoveMotion(_float fDeltaTime);
+	//----------------------------------------------------------------------------------------------------
+	// Anim
+	//----------------------------------------------------------------------------------------------------
+	void Update_Anim(_float _fDeltaTime);
 
-	HRESULT Universal_Key();
+	void Update_Anim_Move(_float _fDeltaTime);
+	void Update_Anim_Attack(_float _fDeltaTime);
+	void Update_Anim_Skill(_float _fDeltaTime);
 
-private:
-	// 퀵슬롯에 있는 스킬 사용
-	void Check_Skill(_float fDeltaTime);
-	// 스킬에 따른 모션
-	void Move_SkillMotion(_float fDeltaTime, eActiveSkill_ID eSkillID);
+	void Update_Anim_Skill_Common(_float _fDeltaTime);
 
-	// 퀵슬롯에 있는 아이템 사용
-	void Check_QuickSlotItem();
 
 private:
+	//----------------------------------------------------------------------------------------------------
 	// 일반 공격
-	void Normal_Attack(_float fDeltaTime);
-	// 스킬1 - 레이저, 에너지 볼트
-	void Skill_Laser(_float fDeltaTime);
-	// 스킬2 - 투사체 낙하
-	void Skill_ProjectileFall(_float fDeltaTime);
-	// 버프1 - 마나 드리프트(일정 시간 동안 마나 감소 X)
-	void Buff_ManaDrift(_float fDeltaTime);
-	// 버프2 - 에너지 익스플로전(일정 시간 동안 공격력 증가)
-	void Buff_EnergyExploitation(_float fDeltaTime);
+	//----------------------------------------------------------------------------------------------------
+	HRESULT Spawn_EnergyBolt();
+
+	void Update_AtkDelay(_float _fDeltaTime);
 
 
-private:
-	HRESULT Ready_Layer_Meteor(const wstring& _strLayerTag, _vec3 vGoalPos);
-
-	HRESULT Setup_Layer_PlaneSkill(const wstring & LayerTag, _vec3 _vMouse);
-
-	HRESULT Setup_Layer_EnergyBolt(const wstring & LayerTag);
-
-	HRESULT Setup_Layer_Wand(const wstring & LayerTag);
-
-
-public:
-	static CPlayer* Create(LPDIRECT3DDEVICE9 _pDevice);
-	virtual CGameObject* Clone_GameObject(void* _pArg) override;
-	virtual void Free() override;
 
 
 
@@ -147,125 +206,58 @@ private:
 	CRaycast*			m_pRaycastCom	= nullptr;
 	CSphereCollider*	m_pColliderCom	= nullptr;
 	CStatus*			m_pStatusCom	= nullptr;
-	CDamageInfo*		m_pDmgInfoCom	= nullptr;
 
 
 	//--------------------------------------------------
 	// State
 	//--------------------------------------------------
-	STATE				m_ePreState = STATE_END;
-	STATE				m_eCurState = STATE_END;
+	STATE				m_ePreState = IDLE;
+	STATE				m_eCurState = IDLE;
 
 
 	//--------------------------------------------------
-	// Velocity
+	// State
 	//--------------------------------------------------
 	_float				m_fJumpTime		= 0.f;
-	_float				m_fJumpPower	= 5.f;
+	_float				m_fJumpPower	= 1.f;
+
 	_vec3				m_vTargetPos	= {};
 
+	_bool				m_bCanNormalAtk = true;
+	_float				m_fAtkDelayTime = 0.5f;
+	_float				m_fAtkDelayCounter = 0.f;
+
+	_float				m_fNearDist = 0.3f;
+
+	//--------------------------------------------------
+	// UI
+	//--------------------------------------------------
+	_bool				bShowUI = false;
 
 
-	//_float				m_fMeteor_Create_Time = 0.f;
-	//_bool				m_bIsTagetMove = false;
-	//_vec3				m_vTargetPos = {};
-	//_bool				m_bCheck = false;
-	//_bool				m_bOnece = false;
-	//// 플레이어 초기 회전값 보관용
-	//_bool				m_bInitial = true;
-	//D3DXVECTOR3			m_vConstRot[PART_END];
+	//--------------------------------------------------
+	// Animation
+	//--------------------------------------------------
+	_int				m_iAnimStep = 0;		// state 변경시 초기화 해 줌
+	_float				m_fAnimTimer = 0.f;
 
-	//// 팔, 다리는 일정 거리만큼 떨어짐
-	//_float				m_fDisY = 2.5f;
-	//_float				m_fHandDis = 0.8f;
-	//_float				m_fFootDis = 0.2f;
-	//_float				m_fRand[2] = {};
-	////---------------------------------------------
-	//// 이동 모션
-	////---------------------------------------------
-	//_bool				m_bMove = false;
-	//CHANGE_MOVE			m_eMovingDir = CHANGE_LEFT;
-	//MOVEING_DIR			m_ePlayerDir = MOVING_UP;
-	//_float				m_fMovingTime = 0.f;
-
-	////---------------------------------------------
-	//// HP바 지연 감소
-	////---------------------------------------------
-	//_int				m_iHP = 100;
-
-	////---------------------------------------------
-	//// 점프
-	////---------------------------------------------
-	//_bool				m_bJump = false;
-	//_float				m_fFallSpeed = 0.f;
-
-	//// 플레이어가 공격, 스킬 사용할 때 참고할 초기 회전값 보관
-	//_vec3				m_vInitialRot;
-	//// 플레이어가 현재 스킬을 사용하고 있는 중인지
-	//// 사용 -> true, 사용X -> false
-	//_bool				m_bUsingSkill = false;
-	//// 현재 플레이어가 사용하고 있는 스킬 아이디
-	//ePLAYER_SKILL_ID	m_ePlayerSkillID = PLAYER_SKILL_END;
-
-	////---------------------------------------------
-	//// 일반 공격
-	////---------------------------------------------
-	//_bool				m_bIsNormalAtt = false;
-	//_float				m_fAttTime = 0.f;
-	//_bool				m_bRightAtt = false;
-	//_bool				m_bLeftAtt = false;
-
-	////---------------------------------------------
-	//// 스킬1 - 레이저
-	////---------------------------------------------
-	//_bool				m_bStartLaser = true;
-	//_bool				m_bUsingLaser = false;
-	//_float				m_fLaserTime = 0.f;
-
-	////---------------------------------------------
-	//// 스킬2 - 투사체 낙하
-	////---------------------------------------------
-	//_bool				m_bStartFall = true;
-	//_bool				m_bIsFall = false;
-	//_bool				m_bDownHand = false;
-	//_float				m_fFallTime = 0.f;
-
-	//_bool				m_bFrameWaveStart = false;
-	//_float				m_fFrameWaveCnt = 0.f;
-	//_float				m_fFrameWaveEnd = 0.8f;
+	
+	//--------------------------------------------------
+	// Late Process
+	//--------------------------------------------------
+	_int				m_iInputIdx_Slot = -1;
+	_int				m_iInputIdx_Anim = -1;
 
 
-	////---------------------------------------------
-	//// 버프 스킬들 사용 시간 체크
-	////---------------------------------------------
-	//_float				m_fManaDriftTime = 0.f;
-	//_float				m_fEnergyExploitationSkill = 0.f;
+	//--------------------------------------------------
+	// Buff
+	//--------------------------------------------------
+	_bool				m_bBuffActive[BUFF_END] = { false, };
 
-	////---------------------------------------------
-	//// 상하좌우 이동할 때 마다 큐브들 자전
-	////---------------------------------------------
-	//_bool				m_bLeftTurn = false;
-	//_bool				m_bRightTurn = false;
-	//_bool				m_bUpTurn = false;
-	//_bool				m_bDownTurn = false;
+	// mana, atk, shield rate
+	_float				m_fConsumeRate = 1.f;
+	_float				m_fAttackRate = 1.f;
 
-	//// 상점, 인벤, 장비창이 출력되어 있으면 true
-	//_bool				m_bRenderShop = false;
-	//_bool				m_bRenderInven = false;
-	//_bool				m_bRenderEquip = false;
-	//_bool				m_bRenderSkill = false;
-
-	//// 현재 사용중인 액티브 스킬ID
-	//eActiveSkill_ID eSkillID = ACTIVE_SKILL_END;
-
-	//// 현재 플레이어가 사용하고 있는 버프들
-	//// 사용중 -> true
-	//_bool			m_bActiveBuff[BUFF_END] = { false, };
-
-	//_int			m_iAttBuff = 100;
-	//CWand*			m_pWand = nullptr;
-
-	////--------------------------------------------
 };
 
 END

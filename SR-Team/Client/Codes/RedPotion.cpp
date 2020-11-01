@@ -23,6 +23,8 @@ HRESULT CRedPotion::Setup_GameObject_Prototype()
 
 HRESULT CRedPotion::Setup_GameObject(void * _pArg)
 {
+	m_iCanUseCnt = m_iMaxUseCnt = 1;
+
 	return S_OK;
 }
 
@@ -33,6 +35,9 @@ _int CRedPotion::Update_GameObject(_float _fDeltaTime)
 
 _int CRedPotion::LateUpdate_GameObject(_float _fDeltaTime)
 {
+	if (FAILED(Update_Delay(_fDeltaTime)))
+		return GAMEOBJECT::WARN;
+
 	return GAMEOBJECT::NOEVENT;
 }
 
@@ -64,17 +69,20 @@ CGameObject * CRedPotion::Clone_GameObject(void * _pArg)
 	return pInstance;
 }
 
-HRESULT CRedPotion::Use_Item()
+_bool CRedPotion::Actual_UseItem()
 {
+	if (!Can_UseItem())
+		return false;
+
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
-		return E_FAIL;
-	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 1);
+		return false;
+	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 1);
 	if (pEquip == nullptr)
-		return E_FAIL;
-	CInventory* pInven = (CInventory*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Inventory", 0);
+		return false;
+	CInventory* pInven = (CInventory*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Inventory", 0);
 	if (pInven == nullptr)
-		return E_FAIL;
+		return false;
 
 	// 장비창에서 플레이어 HP 증가
 	pEquip->Set_PlayerHp(30);
@@ -82,5 +90,5 @@ HRESULT CRedPotion::Use_Item()
 	// 인벤에서 포션 아이템 개수 감소
 	pInven->Use_Potion(RED_POTION);
 
-	return S_OK;
+	return true;
 }

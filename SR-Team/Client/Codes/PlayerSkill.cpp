@@ -15,9 +15,37 @@ CPlayerSkill::CPlayerSkill(const CPlayerSkill & _rOther)
 {
 }
 
-HRESULT CPlayerSkill::Use_Skill(float fDeltaTime)
+HRESULT CPlayerSkill::Update_Delay(_float _fDeltaTime)
 {
+	if (m_iCanUseCnt < m_iMaxUseCnt)
+	{
+		m_fDelayCnt += _fDeltaTime;
+		if (m_fDelayCnt > m_fEachDelay)
+		{
+			++m_iCanUseCnt;
+			m_fDelayCnt = 0.f;
+		}
+	}
+
 	return S_OK;
+}
+
+_bool CPlayerSkill::Can_UseSkill()
+{
+	if (0 >= m_iCanUseCnt)
+		return false;
+
+	return true;
+}
+
+_bool CPlayerSkill::Actual_UseSkill()
+{
+	return false;
+}
+
+_int CPlayerSkill::Get_ConsumeMP()
+{
+	return m_iConsumeMP;
 }
 
 void CPlayerSkill::Free()

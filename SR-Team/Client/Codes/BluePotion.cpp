@@ -22,6 +22,8 @@ HRESULT CBluePotion::Setup_GameObject_Prototype()
 
 HRESULT CBluePotion::Setup_GameObject(void * _pArg)
 {
+	m_iCanUseCnt = m_iMaxUseCnt = 1;
+
 	return S_OK;
 }
 
@@ -32,6 +34,9 @@ _int CBluePotion::Update_GameObject(_float _fDeltaTime)
 
 _int CBluePotion::LateUpdate_GameObject(_float _fDeltaTime)
 {
+	if (FAILED(Update_Delay(_fDeltaTime)))
+		return GAMEOBJECT::WARN;
+
 	return GAMEOBJECT::NOEVENT;
 }
 
@@ -62,15 +67,18 @@ CGameObject * CBluePotion::Clone_GameObject(void * _pArg)
 	return pInstance;
 }
 
-HRESULT CBluePotion::Use_Item()
+_bool CBluePotion::Actual_UseItem()
 {
+	if (!Can_UseItem())
+		return false;
+
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
 		return E_FAIL;
-	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 1);
+	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 1);
 	if (pEquip == nullptr)
 		return E_FAIL;
-	CInventory* pInven = (CInventory*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Inventory", 0);
+	CInventory* pInven = (CInventory*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Inventory", 0);
 	if (pInven == nullptr)
 		return E_FAIL;
 
@@ -80,5 +88,5 @@ HRESULT CBluePotion::Use_Item()
 	// 인벤에서 포션 아이템 개수 감소
 	pInven->Use_Potion(BLUE_POTION);
 
-	return S_OK;
+	return true;
 }

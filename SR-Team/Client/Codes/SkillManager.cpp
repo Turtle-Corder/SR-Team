@@ -10,7 +10,6 @@ CSkillManager::CSkillManager()
 
 	m_pLaserSkill = (CPlayerSkill*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_PlayerSkill", 0);
 	m_pMeteoSkill = (CPlayerSkill*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_PlayerSkill", 1);
-	m_pEnergyVoltSkill = (CPlayerSkill*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_PlayerSkill", 2);
 	m_pManaDriftSkill = (CPlayerSkill*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_PlayerSkill", 3);
 	m_pEnergyExplotiationSkill = (CPlayerSkill*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_PlayerSkill", 4);
 }
@@ -30,8 +29,6 @@ CPlayerSkill * CSkillManager::Get_PlayerSkill(eActiveSkill_ID eSkillID)
 	case ACTIVE_ICE_SPEAR:
 		return m_pLaserSkill;
 	case ACTIVE_MAGIC_ARMOR:
-		break;
-	case ACTIVE_NORMAL_ATTACK:
 		break;
 	case ACTIVE_SKILL_END:
 		break;

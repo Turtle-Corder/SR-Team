@@ -364,8 +364,6 @@ HRESULT CScene_Stage0::SetUp_Layer_PlayerSkill(const wstring & LayerTag)
 		return E_FAIL;
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_MeteoSkill", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_EnergyVoltSkill", SCENE_STAGE0, LayerTag)))
-		return E_FAIL;
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_ManaDriftSkill", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_EnergyExploitationSkill", SCENE_STAGE0, LayerTag)))

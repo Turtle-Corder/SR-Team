@@ -17,8 +17,10 @@ public:
 
 public:
 	HRESULT Set_SkillIndex(_int iIndex, eActiveSkill_ID eSkillID);
-	HRESULT Use_Skill(_int iIndex, _float fDeltaTime);
-	eActiveSkill_ID Get_SkillID(_int iIndex);
+	_bool Can_UseSkill(_int _iIndex);
+	_bool Actual_UseSkill(_int _iIndex);
+	eActiveSkill_ID Get_SkillID(_int _iIndex);
+	_int Get_ConsumeMP(_int _iIndex);
 
 public:
 	// CUIObject을(를) 통해 상속됨

@@ -26,7 +26,7 @@ public:
 	virtual CGameObject * Clone_GameObject(void * _pArg) override;
 
 public:
-	virtual HRESULT Use_Item() override;
+	virtual _bool Actual_UseItem() override;
 };
 
 END

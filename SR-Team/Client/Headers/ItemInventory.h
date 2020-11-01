@@ -17,7 +17,8 @@ public:
 
 public:
 	HRESULT Set_ItemIndex(_int iIndex, ePotion_ID ePOTION);
-	HRESULT Use_Item(_int iIndex);
+	_bool Can_UseItem(_int _iIndex);
+	_bool Actual_UseItem(_int iIndex);
 
 public:
 	// CUIObject을(를) 통해 상속됨

@@ -26,7 +26,7 @@ public:
 	virtual CGameObject * Clone_GameObject(void * _pArg) override;
 
 public:
-	virtual HRESULT Use_Skill(float fDeltaTime) override;
+	virtual _bool Actual_UseSkill() override;
 };
 
 END
