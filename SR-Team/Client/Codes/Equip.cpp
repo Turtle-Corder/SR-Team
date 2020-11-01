@@ -101,18 +101,19 @@ HRESULT CEquip::Setup_GameObject(void * _pArg)
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
+	m_vPos = { 500.f, 400.f, 0.f };
+
 	m_pTransformCom[EQUIP_WND]->Set_Position(m_vPos);
 	m_pTransformCom[EQUIP_EQUIPMENT]->Set_Position(
-		_vec3(m_vPos.x - 200.f, m_vPos.y, 0.f));
+		_vec3(m_vPos.x - 285.f, m_vPos.y, 0.f));
 	m_pTransformCom[EQUIP_INFO]->Set_Position(
-		_vec3(m_vPos.x - 130.f, m_vPos.y - 200.f, 0.f));
+		_vec3(m_vPos.x - 180.f, m_vPos.y - 265.f, 0.f));
 
 	for (_uint i = 0; i < 6; ++i)
 	{
 		_vec3 vPos = {};
-		if (i <= 5)
-			vPos.x = m_vPos.x - 297.f;
-		vPos.y = (i * 40) + (m_vPos.y - 85.f);
+		vPos.x = m_vPos.x - 430.f;
+		vPos.y = (i * 55.f) + (m_vPos.y - 120.f);
 		vPos.z = 0.f;
 		m_pTransformItem[i]->Set_Position(vPos);
 	}
@@ -120,8 +121,8 @@ HRESULT CEquip::Setup_GameObject(void * _pArg)
 	for (_uint i = 6, j = 0; i < ITEMSORT_END; ++i, ++j)
 	{
 		_vec3 vPos = {};
-		vPos.x = m_vPos.x - 95.f;
-		vPos.y = (j * 40) + (m_vPos.y - 85.f);
+		vPos.x = m_vPos.x - 138.f;
+		vPos.y = (j * 55.f) + (m_vPos.y - 120.f);
 		vPos.z = 0.f;
 		m_pTransformItem[i]->Set_Position(vPos);
 	}
@@ -263,7 +264,7 @@ HRESULT CEquip::Render_Stat()
 		m_pStatCom->Get_Status().iMinAtt, m_pStatCom->Get_Status().iMaxAtt);
 
 	D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
-	D3DXMatrixTranslation(&matTrans, vPos.x + 200.f, vPos.y - 110.f, 0.f);
+	D3DXMatrixTranslation(&matTrans, vPos.x + 300.f, vPos.y - 160.f, 0.f);
 	matWorld = matScale * matTrans;
 
 	m_pSprite->SetTransform(&matWorld);
@@ -275,7 +276,7 @@ HRESULT CEquip::Render_Stat()
 		m_pStatCom->Get_Status().iDef);
 
 	D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
-	D3DXMatrixTranslation(&matTrans, vPos.x + 200.f, vPos.y - 65.f, 0.f);
+	D3DXMatrixTranslation(&matTrans, vPos.x + 300.f, vPos.y - 90.f, 0.f);
 	matWorld = matScale * matTrans;
 
 	m_pSprite->SetTransform(&matWorld);
@@ -287,7 +288,7 @@ HRESULT CEquip::Render_Stat()
 		m_pStatCom->Get_Status().iCriticalRate);
 
 	D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
-	D3DXMatrixTranslation(&matTrans, vPos.x + 200.f, vPos.y - 20.f, 0.f);
+	D3DXMatrixTranslation(&matTrans, vPos.x + 300.f, vPos.y - 20.f, 0.f);
 	matWorld = matScale * matTrans;
 
 	m_pSprite->SetTransform(&matWorld);
@@ -299,7 +300,7 @@ HRESULT CEquip::Render_Stat()
 		m_pStatCom->Get_Status().iCriticalRate);
 
 	D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
-	D3DXMatrixTranslation(&matTrans, vPos.x + 200.f, vPos.y + 25.f, 0.f);
+	D3DXMatrixTranslation(&matTrans, vPos.x + 300.f, vPos.y + 50.f, 0.f);
 	matWorld = matScale * matTrans;
 
 	m_pSprite->SetTransform(&matWorld);
@@ -311,7 +312,7 @@ HRESULT CEquip::Render_Stat()
 		m_pStatCom->Get_Status().iHp, m_pStatCom->Get_Status().iMaxHp);
 
 	D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
-	D3DXMatrixTranslation(&matTrans, vPos.x + 160.f, vPos.y + 65.f, 0.f);
+	D3DXMatrixTranslation(&matTrans, vPos.x + 250.f, vPos.y + 110.f, 0.f);
 	matWorld = matScale * matTrans;
 
 	m_pSprite->SetTransform(&matWorld);
@@ -323,24 +324,24 @@ HRESULT CEquip::Render_Stat()
 		m_pStatCom->Get_Status().iMp, m_pStatCom->Get_Status().iMaxMp);
 
 	D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
-	D3DXMatrixTranslation(&matTrans, vPos.x + 160.f, vPos.y + 105.f, 0.f);
+	D3DXMatrixTranslation(&matTrans, vPos.x + 250.f, vPos.y + 175.f, 0.f);
 	matWorld = matScale * matTrans;
 
 	m_pSprite->SetTransform(&matWorld);
 	m_pFont->DrawTextW(m_pSprite, szBuff2, lstrlen(szBuff2),
 		nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
 
-	// 레벨
-	StringCchPrintf(szBuff2, sizeof(TCHAR) * MAX_PATH, L"%d",
-		m_pStatCom->Get_Status().iLevel);
+	//// 레벨
+	//StringCchPrintf(szBuff2, sizeof(TCHAR) * MAX_PATH, L"%d",
+	//	m_pStatCom->Get_Status().iLevel);
 
-	D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
-	D3DXMatrixTranslation(&matTrans, vPos.x + 25.f, vPos.y - 220.f, 0.f);
-	matWorld = matScale * matTrans;
+	//D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
+	//D3DXMatrixTranslation(&matTrans, vPos.x + 25.f, vPos.y - 220.f, 0.f);
+	//matWorld = matScale * matTrans;
 
-	m_pSprite->SetTransform(&matWorld);
-	m_pFont->DrawTextW(m_pSprite, szBuff2, lstrlen(szBuff2),
-		nullptr, 0, D3DCOLOR_ARGB(255, 0, 0, 0));
+	//m_pSprite->SetTransform(&matWorld);
+	//m_pFont->DrawTextW(m_pSprite, szBuff2, lstrlen(szBuff2),
+	//	nullptr, 0, D3DCOLOR_ARGB(255, 0, 0, 0));
 
 	return S_OK;
 }

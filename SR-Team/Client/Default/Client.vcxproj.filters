@@ -250,6 +250,9 @@
     <Filter Include="02.GameObject\13. PlayerSkill\04. EnergyExploitation">
       <UniqueIdentifier>{746da5d1-79bd-419c-b91b-7349a130b680}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.Monster\05.Stump">
+      <UniqueIdentifier>{f8917998-c959-4eff-8fc5-7b94bbc43e94}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -448,6 +451,7 @@
     <ClInclude Include="..\Headers\EnergyExploitationSkill.h">
       <Filter>02.GameObject\13. PlayerSkill\04. EnergyExploitation</Filter>
     </ClInclude>
+    <ClInclude Include="..\Headers\Stump.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -631,6 +635,7 @@
     <ClCompile Include="..\Codes\EnergyExploitationSkill.cpp">
       <Filter>02.GameObject\13. PlayerSkill\04. EnergyExploitation</Filter>
     </ClCompile>
+    <ClCompile Include="..\Codes\Stump.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

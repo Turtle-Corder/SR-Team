@@ -46,7 +46,7 @@ private:
 	CDamageInfo*		m_pDmgInfoCom = nullptr;
 	bool				m_bDead = false;
 	bool				m_bJump = false;
-	float				m_fJumpPower = 8.5f;
+	float				m_fJumpPower = 1.5f;
 	float				m_fJumpTime = 0.f;
 	_vec3				m_vPos = {};
 	_vec3				m_vDir = {};

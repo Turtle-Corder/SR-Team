@@ -9,6 +9,7 @@
 #include "SkillInven.h"
 #include "ItemInventory.h"
 #include "Wand.h"
+#include "Mouse.h"
 #include "..\Headers\Player.h"
 
 USING(Client)

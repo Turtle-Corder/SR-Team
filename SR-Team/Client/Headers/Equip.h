@@ -79,7 +79,7 @@ private:
 	//CTransform*				m_pTransformFont = nullptr;
 
 	// 장비창 윈도우
-	_vec3					m_vPos = _vec3(350.f, 300.f, 0.f);
+	_vec3					m_vPos = { 500.f, 400.f, 0.f };
 	CTransform*				m_pTransformCom[EQUIP_END];
 	CTexture*				m_pTextureCom[EQUIP_END];
 	RECT					m_tEquipWndCollRt[EQUIP_END];
