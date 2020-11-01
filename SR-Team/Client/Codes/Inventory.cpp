@@ -111,7 +111,7 @@ _int CInventory::Get_ItemCount(const wstring & strItemName)
 		++iIndex;
 	}
 
-	return -1;
+	return 0;
 }
 
 HRESULT CInventory::Delete_Item(const wstring & strItemName)

@@ -71,6 +71,12 @@ private:
 
 private:
 	RECT					m_tActiveCollRt[6];
+
+private:
+	CTexture*				m_pTextureSkillInfo[6] = { nullptr, };
+	_int					m_iSkillInfoIndex = -1;
+	_bool					m_bRenderSkillInfo = false;
+	_vec3					m_vSkillInfoPos = { 0.f, 0.f, 0.f };
 };
 
 END

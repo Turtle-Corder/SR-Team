@@ -26,6 +26,9 @@ public:
 	virtual HRESULT Render_UI() override;
 
 private:
+	HRESULT Render_HelpWnd();
+
+private:
 	HRESULT Add_Component();
 
 public:

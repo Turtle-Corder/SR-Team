@@ -436,6 +436,34 @@ HRESULT CMainApp::Setup_StaticResources()
 #pragma endregion
 
 
+#pragma region Component_Texture_SkillInfo
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
+		L"Component_Texture_SkillInfo_EnergyExploitiation", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/Sprite/Layer_MainUI/energy_exploitiation%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
+		L"Component_Texture_SkillInfo_FlameWave", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+			L"../Resources/Sprite/Layer_MainUI/flame_wave%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
+		L"Component_Texture_SkillInfo_IceSpear", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+			L"../Resources/Sprite/Layer_MainUI/ice_spear%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
+		L"Component_Texture_SkillInfo_IceStrike", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+			L"../Resources/Sprite/Layer_MainUI/ice_strike%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
+		L"Component_Texture_SkillInfo_MagicArmor", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+			L"../Resources/Sprite/Layer_MainUI/magic_armor%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
+		L"Component_Texture_SkillInfo_ManaDrift", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+			L"../Resources/Sprite/Layer_MainUI/mana_drift%d.png"))))
+		return E_FAIL;
+#pragma endregion
+
+
 #pragma region Component_Textures_SkillIcon
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
 		L"Component_Texture_SkillIcon_ElementalMaster", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,

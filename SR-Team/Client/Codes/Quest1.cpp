@@ -73,7 +73,7 @@ _int CQuest1::Update_GameObject(_float _fDeltaTime)
 
 	case REJECT:
 		if (pManagement->Key_Pressing(VK_LBUTTON))
-			m_eSituation = QUEST1_WAIT;
+			m_eSituation = QUEST1_END;
 		break;
 
 	case ACCEPT:
@@ -160,6 +160,40 @@ HRESULT CQuest1::Render_UI()
 			(LPDIRECT3DTEXTURE9)m_pTextureCom[m_eSituation]->GetTexture(0),
 			nullptr, &vCenter, nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
 	}
+
+	if (FAILED(Render_HelpWnd()))
+		return S_OK;
+
+	return S_OK;
+}
+
+HRESULT CQuest1::Render_HelpWnd()
+{
+	TCHAR		szBuff[MAX_PATH] = L"";
+	D3DXMATRIX	matScale2, matTrans2, matWorld2;
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+	CInventory* pInven = (CInventory*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Inventory");
+	if (pInven == nullptr)
+		return E_FAIL;
+
+	if (m_eSituation == QUEST1_WAIT)
+	{
+		StringCchPrintf(szBuff, sizeof(TCHAR) * MAX_PATH, L"%d / 3",
+			pInven->Get_ItemCount(L"Goguma"));
+	}
+	else if (m_eSituation == QUEST1_CLEARWAIT)
+		StringCchPrintf(szBuff, sizeof(TCHAR) * MAX_PATH, L"Äù½ºÆ® ¿Ï·á!");
+
+	D3DXMatrixScaling(&matScale2, 3.f, 3.f, 0.f);
+	D3DXMatrixTranslation(&matTrans2, 1600.f, 400.f, 0.f);
+	matWorld2 = matScale2 * matTrans2;
+
+	m_pSprite->SetTransform(&matWorld2);
+	m_pFont->DrawTextW(m_pSprite, szBuff, lstrlen(szBuff),
+		nullptr, 0, D3DCOLOR_ARGB(255, 0, 0, 0));
+
 
 	return S_OK;
 }
