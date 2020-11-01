@@ -349,27 +349,27 @@ HRESULT CMainApp::Setup_StaticResources()
 
 	// frame
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_MainUI_Main", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/2DResource/MainUI/MainUI임%d.png"))))
+			L"../Resources/Sprite/Layer_MainUI/MainUI임%d.png"))))
 		return E_FAIL;
 
 	// hp
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_MainUI_Hp", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/2DResource/MainUI/HPbar%d.png"))))
+			L"../Resources/Sprite/Layer_MainUI/HPbar%d.png"))))
 		return E_FAIL;
 
 	// mp
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_MainUI_Mp", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/2DResource/MainUI/MpBar%d.png"))))
+			L"../Resources/Sprite/Layer_MainUI/MpBar%d.png"))))
 		return E_FAIL;
 
 	// slot_left
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_MainUI_QuickSlot_Left", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/2DResource/MainUI/QuickSlot_Right%d.png"))))
+			L"../Resources/Sprite/Layer_MainUI/QuickSlot_Right%d.png"))))
 		return E_FAIL;
 
 	// slot_left
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_MainUI_QuickSlot_Right", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/2DResource/MainUI/QuickSlot_Right%d.png"))))
+			L"../Resources/Sprite/Layer_MainUI/QuickSlot_Right%d.png"))))
 		return E_FAIL;
 
 #pragma endregion
@@ -377,43 +377,43 @@ HRESULT CMainApp::Setup_StaticResources()
 
 #pragma region Component_Textures_Shop
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Shop_ShopWnd", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/2DResource/Shop/ShopWnd%d.png"))))
+			L"../Resources/Sprite/Layer_Shop/ShopWnd%d.png"))))
 		return E_FAIL;
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Shop_ShopScrollBar", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/2DResource/Shop/ScrollBar%d.png"))))
+		L"../Resources/Sprite/Layer_Shop/ScrollBar%d.png"))))
 		return E_FAIL;
 #pragma endregion
 
 
 #pragma region Component_Textures_Inventory
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Inven_InvenWnd", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/2DResource/인벤이야%d.png"))))
+			L"../Resources/Sprite/Layer_Inventory/Inven%d.png"))))
 		return E_FAIL;
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Inven_SellButton",CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/2DResource/Inven/SellButton%d.png"))))
+			L"../Resources/Sprite/Layer_Inventory/SellButton%d.png"))))
 		return E_FAIL;
 
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_Empty",CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/2DResource/Item/empty%d.png"))))
+			L"../Resources/Sprite/Layer_Inventory/empty%d.png"))))
 		return E_FAIL;
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Select_SellItem",CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/2DResource/Item/select_sellitem%d.png"))))
+			L"../Resources/Sprite/Layer_Item/select_sellitem%d.png"))))
 		return E_FAIL;
 #pragma endregion
 
 
 #pragma region Component_Textures_Equip
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Equip_Stat", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/2DResource/Equip/Stat%d.png"))))
+		L"../Resources/Sprite/Layer_MainUI/Stat%d.png"))))
 		return E_FAIL;
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Equip_Equipment", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/2DResource/Equip/Equip%d.png"))))
+		L"../Resources/Sprite/Layer_MainUI/Equip%d.png"))))
 		return E_FAIL;
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Equip_BackGround", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/2DResource/Equip/back%d.png"))))
+		L"../Resources/Sprite/Layer_MainUI/back%d.png"))))
 		return E_FAIL;
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Equip_Info", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/2DResource/Equip/info%d.png"))))
+		L"../Resources/Sprite/Layer_MainUI/info%d.png"))))
 		return E_FAIL;
 #pragma endregion
 
@@ -473,24 +473,24 @@ HRESULT CMainApp::Setup_StaticResources()
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
 		L"Component_Texture_Item_ScholarShoes", 
 		CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/2DResource/Item/Scholar_Shoes%d.png"))))
+		L"../Resources/Sprite/Layer_Item/Scholar_Shoes%d.png"))))
 		return E_FAIL;
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
 		L"Component_Texture_Item_ArcaneShoes", 
 		CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/2DResource/Item/Arcane_Shoes%d.png"))))
+		L"../Resources/Sprite/Layer_Item/Moonlight_Traveler's_Shoes%d.png"))))
 		return E_FAIL;
 #pragma endregion
 
 #pragma region Staff
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_GoldenSword", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/2DResource/new_Item/golden_sword%d.png"))))
+			L"../Resources/Sprite/Layer_Item/golden_sword%d.png"))))
 		return E_FAIL;
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_IronSword", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/2DResource/new_Item/iron_sword%d.png"))))
+			L"../Resources/Sprite/Layer_Item/iron_sword%d.png"))))
 		return E_FAIL;
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_DiaSword", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/2DResource/new_Item/diamond_sword%d.png"))))
+			L"../Resources/Sprite/Layer_Item/diamond_sword%d.png"))))
 		return E_FAIL;
 #pragma endregion
 
@@ -515,13 +515,13 @@ HRESULT CMainApp::Setup_StaticResources()
 
 #pragma region Potion
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_RedPotion", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/2DResource/new_Item/red_potion%d.png"))))
+		L"../Resources/Sprite/Layer_Item/red_potion%d.png"))))
 		return E_FAIL;
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_WhitePotion", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/2DResource/new_Item/white_potion%d.png"))))
+		L"../Resources/Sprite/Layer_Item/white_potion%d.png"))))
 		return E_FAIL;
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_OrangePotion", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/2DResource/new_Item/orange_potion%d.png"))))
+		L"../Resources/Sprite/Layer_Item/orange_potion%d.png"))))
 		return E_FAIL;
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
 		L"Component_Texture_Item_BluePotion", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
@@ -539,10 +539,10 @@ HRESULT CMainApp::Setup_StaticResources()
 
 #pragma region Suit
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_BlackDress", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/2DResource/new_Item/black_dress%d.png"))))
+			L"../Resources/Sprite/Layer_Item/black_dress%d.png"))))
 		return E_FAIL;
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_PupleDress", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/2DResource/new_Item/puple_dress%d.png"))))
+			L"../Resources/Sprite/Layer_Item/puple_dress%d.png"))))
 		return E_FAIL;
 #pragma endregion
 

@@ -130,11 +130,8 @@ HRESULT CInventory::Setup_GameObject(void * pArg)
 	if (FAILED(Add_Component_Item()))
 		return E_FAIL;
 
-	//_vec3 vWndPos = { 500.f, 200.f, 0.f };
 	m_pTransformCom[INVEN_WND]->Set_Position(vWndPos);
-	//m_pTransformCom[INVEN_SELL_BUTTON]->Set_Position(_vec3(610.f, 380.f, 0.f));
 	m_pTransformCom[INVEN_SELL_BUTTON]->Set_Position(_vec3(vWndPos.x + 110.f, vWndPos.y + 180.f, 0.f));
-	//m_pTransformCom[INVEN_GOLD]->Set_Position(_vec3(525.f, 335.f, 0.f));
 	m_pTransformCom[INVEN_GOLD]->Set_Position(_vec3(vWndPos.x + 25.f, vWndPos.y + 115.f, 0.f));
 
 	_int iIndex = 0;
@@ -145,8 +142,8 @@ HRESULT CInventory::Setup_GameObject(void * pArg)
 			iIndex = i * 6 + j;
 			//m_vItemPos[i][j].x = (j * 45.f) + 380.f;
 			//m_vItemPos[i][j].y = (i * 30.f) + 85.f;
-			m_vItemPos[i][j].x = (j * 45.f) + (vWndPos.x - 120.f);
-			m_vItemPos[i][j].y = (i * 30.f) + (vWndPos.y - 115.f);
+			m_vItemPos[i][j].x = (j * 92.f) + (vWndPos.x - 243.f);
+			m_vItemPos[i][j].y = (i * 92.f) + (vWndPos.y - 237.f);
 			m_vItemPos[i][j].z = 0.f;
 			m_pTransformItem[iIndex]->Set_Position(m_vItemPos[i][j]);
 		}
@@ -717,8 +714,8 @@ HRESULT CInventory::Render_Item()
 				D3DXMatrixIdentity(&matWorld);
 				StringCchPrintf(szBuff, sizeof(TCHAR) * MAX_PATH, L"%d", m_pInvenList[iIndex]->iCnt);
 
-				D3DXMatrixTranslation(&matTrans, vPos.x + 10.f, vPos.y + 10.f, 0.f);
-				D3DXMatrixScaling(&matScale, 1.5f, 1.5f, 0.f);
+				D3DXMatrixTranslation(&matTrans, vPos.x + 20.f, vPos.y + 20.f, 0.f);
+				D3DXMatrixScaling(&matScale, 2.f, 2.f, 0.f);
 				matWorld = matScale * matTrans;
 
 				m_pSprite->SetTransform(&matWorld);

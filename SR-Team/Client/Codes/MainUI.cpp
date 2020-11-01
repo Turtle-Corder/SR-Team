@@ -122,19 +122,21 @@ HRESULT CMainUI::Setup_GameObject(void * pArg)
 	m_pTransformCom[MAINUI_MAIN]->Set_Position(m_vMainPos);
 
 	//m_vPos[MAINUI_HP] = _vec3(371.f, 490.f, 0.f);
-	vPos = { m_vMainPos.x - 27.f, m_vMainPos.y - 10.f, 0.f };
+	vPos = { m_vMainPos.x - 55.f, m_vMainPos.y - 20.f, 0.f };
 	m_pTransformCom[MAINUI_HP]->Set_Position(vPos);
 
 	//m_vPos[MAINUI_MP] = _vec3(429.f, 490.f, 0.f);
-	vPos = { m_vMainPos.x + 27.f, m_vMainPos.y - 10.f, 0.f };
+	vPos = { m_vMainPos.x + 55.f, m_vMainPos.y - 20.f, 0.f };
 	m_pTransformCom[MAINUI_MP]->Set_Position(vPos);
 
 	//m_vPos[MAINUI_QUICKSLOT_LFFT] = _vec3(170.f, 500.f, 0.f);
 	vPos = { m_vMainPos.x - 500.f, m_vMainPos.y, 0.f };
+	m_vLeftSlotPos = vPos;
 	m_pTransformCom[MAINUI_QUICKSLOT_LFFT]->Set_Position(vPos);
 
 	//m_vPos[MAINUI_QUICKSLOT_RIGHT] = _vec3(660.f, 500.f, 0.f);
 	vPos = { m_vMainPos.x + 500.f, m_vMainPos.y, 0.f };
+	m_vRightSlotPos = vPos;
 	m_pTransformCom[MAINUI_QUICKSLOT_RIGHT]->Set_Position(vPos);
 
 	
@@ -143,31 +145,31 @@ HRESULT CMainUI::Setup_GameObject(void * pArg)
 	{
 		_vec3 vPos = {};
 		//vPos.x = (i * 39.f) + 97.f;
-		vPos.x = (i * 39.f) + (m_vLeftSlotPos.x - 73.f);
-		vPos.y = 472.f;
+		vPos.x = (i * 78.f) + (m_vLeftSlotPos.x - 155.f);
+		vPos.y = 710.f;
 		vPos.z = 0.f;
 
 		m_pTransformLeftSlot[i]->Set_Position(vPos);
 
-		m_tLeftSlotCollRt[i].left = (LONG)(vPos.x - 16.f);
-		m_tLeftSlotCollRt[i].right = (LONG)(vPos.x + 16.f);
-		m_tLeftSlotCollRt[i].top = (LONG)(vPos.y - 16.f);
-		m_tLeftSlotCollRt[i].bottom = (LONG)(vPos.y + 16.f);
+		m_tLeftSlotCollRt[i].left = (LONG)(vPos.x - 35.f);
+		m_tLeftSlotCollRt[i].right = (LONG)(vPos.x + 35.f);
+		m_tLeftSlotCollRt[i].top = (LONG)(vPos.y - 35.f);
+		m_tLeftSlotCollRt[i].bottom = (LONG)(vPos.y + 35.f);
 	}
 	for (_uint i = 4, j = 0; i < 8; ++i, ++j)
 	{
 		_vec3 vPos = {};
 		//vPos.x = (j * 39.f) + 110.f;
-		vPos.x = (j * 39.f) + (m_vLeftSlotPos.x - 60.f);
-		vPos.y = 510.f;
+		vPos.x = (j * 78.f) + (m_vLeftSlotPos.x - 130.f);
+		vPos.y = 790.f;
 		vPos.z = 0.f;
 
 		m_pTransformLeftSlot[i]->Set_Position(vPos);
 
-		m_tLeftSlotCollRt[i].left = (LONG)(vPos.x - 16.f);
-		m_tLeftSlotCollRt[i].right = (LONG)(vPos.x + 16.f);
-		m_tLeftSlotCollRt[i].top = (LONG)(vPos.y - 16.f);
-		m_tLeftSlotCollRt[i].bottom = (LONG)(vPos.y + 16.f);
+		m_tLeftSlotCollRt[i].left = (LONG)(vPos.x - 35.f);
+		m_tLeftSlotCollRt[i].right = (LONG)(vPos.x + 35.f);
+		m_tLeftSlotCollRt[i].top = (LONG)(vPos.y - 35.f);
+		m_tLeftSlotCollRt[i].bottom = (LONG)(vPos.y + 35.f);
 	}
 
 	// 오른쪽 퀵슬롯 위치
@@ -175,31 +177,31 @@ HRESULT CMainUI::Setup_GameObject(void * pArg)
 	{
 		_vec3 vPos = {};
 		//vPos.x = (i * 39.f) + 97.f;
-		vPos.x = (i * 39.f) + (m_vRightSlotPos.x - 75.f);
-		vPos.y = 472.f;
+		vPos.x = (i * 78.f) + (m_vRightSlotPos.x - 155.f);
+		vPos.y = 710.f;
 		vPos.z = 0.f;
 
 		m_pTransformRightSlot[i]->Set_Position(vPos);
 
-		m_tRightSlotCollRt[i].left = (LONG)(vPos.x - 16.f);
-		m_tRightSlotCollRt[i].right = (LONG)(vPos.x + 16.f);
-		m_tRightSlotCollRt[i].top = (LONG)(vPos.y - 16.f);
-		m_tRightSlotCollRt[i].bottom = (LONG)(vPos.y + 16.f);
+		m_tRightSlotCollRt[i].left = (LONG)(vPos.x - 32.f);
+		m_tRightSlotCollRt[i].right = (LONG)(vPos.x + 32.f);
+		m_tRightSlotCollRt[i].top = (LONG)(vPos.y - 32.f);
+		m_tRightSlotCollRt[i].bottom = (LONG)(vPos.y + 32.f);
 	}
 	for (_uint i = 4, j = 0; i < 8; ++i, ++j)
 	{
 		_vec3 vPos = {};
 		//vPos.x = (j * 39.f) + 110.f;
-		vPos.x = (j * 39.f) + (m_vRightSlotPos.x - 48.f);
-		vPos.y = 510.f;
+		vPos.x = (j * 78.f) + (m_vRightSlotPos.x - 130.f);
+		vPos.y = 790.f;
 		vPos.z = 0.f;
 
 		m_pTransformRightSlot[i]->Set_Position(vPos);
 
-		m_tRightSlotCollRt[i].left = (LONG)(vPos.x - 16.f);
-		m_tRightSlotCollRt[i].right = (LONG)(vPos.x + 16.f);
-		m_tRightSlotCollRt[i].top = (LONG)(vPos.y - 16.f);
-		m_tRightSlotCollRt[i].bottom = (LONG)(vPos.y + 16.f);
+		m_tRightSlotCollRt[i].left = (LONG)(vPos.x - 32.f);
+		m_tRightSlotCollRt[i].right = (LONG)(vPos.x + 32.f);
+		m_tRightSlotCollRt[i].top = (LONG)(vPos.y - 32.f);
+		m_tRightSlotCollRt[i].bottom = (LONG)(vPos.y + 32.f);
 	}
 
 	return S_OK;
@@ -353,10 +355,10 @@ HRESULT CMainUI::Render_UI()
 	//	_vec3 vCenter = { pTexInfo->Width * 0.5f, pTexInfo->Height * 0.5f, 0.f };
 	//	_vec3 vPos = m_pTransformLeftSlot[i]->Get_Desc().vPosition;
 
-	//	m_tLeftSlotCollRt[i].left = (LONG)(vPos.x - 16.f);
-	//	m_tLeftSlotCollRt[i].right = (LONG)(vPos.x + 16.f);
-	//	m_tLeftSlotCollRt[i].top = (LONG)(vPos.y - 16.f);
-	//	m_tLeftSlotCollRt[i].bottom = (LONG)(vPos.y + 16.f);
+	//	m_tLeftSlotCollRt[i].left = (LONG)(vPos.x - 35.f);
+	//	m_tLeftSlotCollRt[i].right = (LONG)(vPos.x + 35.f);
+	//	m_tLeftSlotCollRt[i].top = (LONG)(vPos.y - 35.f);
+	//	m_tLeftSlotCollRt[i].bottom = (LONG)(vPos.y + 35.f);
 
 	//	m_pSprite->SetTransform(&m_pTransformLeftSlot[i]->Get_Desc().matWorld);
 	//	m_pSprite->Draw(
@@ -371,10 +373,10 @@ HRESULT CMainUI::Render_UI()
 	//	_vec3 vCenter = { pTexInfo->Width * 0.5f, pTexInfo->Height * 0.5f, 0.f };
 	//	_vec3 vPos = m_pTransformRightSlot[i]->Get_Desc().vPosition;
 
-	//	m_tRightSlotCollRt[i].left = (LONG)(vPos.x - 16.f);
-	//	m_tRightSlotCollRt[i].right = (LONG)(vPos.x + 16.f);
-	//	m_tRightSlotCollRt[i].top = (LONG)(vPos.y - 16.f);
-	//	m_tRightSlotCollRt[i].bottom = (LONG)(vPos.y + 16.f);
+	//	m_tRightSlotCollRt[i].left = (LONG)(vPos.x - 35.f);
+	//	m_tRightSlotCollRt[i].right = (LONG)(vPos.x + 35.f);
+	//	m_tRightSlotCollRt[i].top = (LONG)(vPos.y - 35.f);
+	//	m_tRightSlotCollRt[i].bottom = (LONG)(vPos.y + 35.f);
 
 	//	m_pSprite->SetTransform(&m_pTransformRightSlot[i]->Get_Desc().matWorld);
 	//	m_pSprite->Draw(
@@ -610,6 +612,9 @@ HRESULT CMainUI::Render_QuickSlot_Item()
 	CPlayer* pPlayer = (CPlayer*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Player");
 	if (pPlayer == nullptr)
 		return E_FAIL;
+	CMouse* pMouse = (CMouse*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Mouse");
+	if (pMouse == nullptr)
+		return E_FAIL;
 
 	_int k = 0;
 	_vec3 vCenter = { 0.f, 0.f, 0.f };
@@ -693,8 +698,26 @@ HRESULT CMainUI::Render_QuickSlot_Item()
 		}
 	}
 
+
+
+	// 마우스 위치
+	TCHAR		szBuff[MAX_PATH] = L"";
+	D3DXMATRIX	matScale2, matTrans2, matWorld2;
+	StringCchPrintf(szBuff, sizeof(TCHAR) * MAX_PATH, L"%d, %d",
+		pMouse->Get_Point().x, pMouse->Get_Point().y);
+
+	D3DXMatrixScaling(&matScale2, 3.f, 3.f, 0.f);
+	D3DXMatrixTranslation(&matTrans2, 200.f, 900.f, 0.f);
+	matWorld2 = matScale2 * matTrans2;
+
+	m_pSprite->SetTransform(&matWorld2);
+	m_pFont->DrawTextW(m_pSprite, szBuff, lstrlen(szBuff),
+		nullptr, 0, D3DCOLOR_ARGB(255, 0, 0, 0));
+
 	return S_OK;
 }
+
+
 
 HRESULT CMainUI::Add_Component()
 {

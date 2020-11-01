@@ -57,8 +57,8 @@ HRESULT CShop::Setup_GameObject(void * pArg)
 	if (FAILED(Add_Component_ShopItem()))
 		return E_FAIL;
 
-	m_pTransformCom[SHOP_WND]->Set_Position(_vec3(400.f, 300.f, 0.f));
-	m_pTransformCom[SHOP_SCROLLBAR]->Set_Position(_vec3(735.f, 160.f, 0.f));
+	m_pTransformCom[SHOP_WND]->Set_Position(_vec3(400.f, 400.f, 0.f));
+	m_pTransformCom[SHOP_SCROLLBAR]->Set_Position(_vec3(810.f, 230.f, 0.f));
 
 	// 아이템 텍스처, 이름, 가격 위치 설정
 	_uint iIndex = 0;
@@ -67,8 +67,8 @@ HRESULT CShop::Setup_GameObject(void * pArg)
 		for (_uint i = 0; i < 4; ++i)
 		{
 			iIndex = j * 4 + i;
-			m_vItemTexturePos[j][i].x = (i * 135.f) + 250.f;
-			m_vItemTexturePos[j][i].y = (j * 172.f) + 105.f;
+			m_vItemTexturePos[j][i].x = (i * 170.f) + 208.f;
+			m_vItemTexturePos[j][i].y = (j * 213.f) + 156.f;
 			m_vItemTexturePos[j][i].z = 0.f;
 
 			if (iIndex < 15)
@@ -183,7 +183,7 @@ HRESULT CShop::Check_BuyItem()
 	if (nullptr == pMouse)
 		return GAMEOBJECT::NOEVENT;
 
-	for (_uint j = m_iStartIndex; j < 3; ++j)
+	for (_uint j = m_iStartIndex; j < 3 + m_iStartIndex; ++j)
 	{
 		for (_uint i = 0; i < 4; ++i)
 		{
@@ -413,10 +413,11 @@ HRESULT CShop::Render_ShopItem()
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
+	D3DXMATRIX	matScale, matTrans, matWorld;
 
 	//m_vItemTexturePos[j][i].x = (i * 115.f) + 270.f;
 	int iIndex = 0;
-	for (_uint j = m_iStartIndex, k = 0; j < 3; ++j, ++k)
+	for (_uint j = m_iStartIndex, k = 0; j < 3 + m_iStartIndex; ++j, ++k)
 	{
 		for (_uint i = 0; i < 4; ++i)
 		{
@@ -436,7 +437,11 @@ HRESULT CShop::Render_ShopItem()
 			m_tItemTextureRt[j][i].top = (LONG)(vPos.y - vCenter.y);
 			m_tItemTextureRt[j][i].bottom = (LONG)(vPos.y + vCenter.y);
 
-			m_pSprite->SetTransform(&m_pItemTransformCom[iIndex]->Get_Desc().matWorld);
+			D3DXMatrixScaling(&matScale, 0.7f, 0.7f, 0.f);
+			D3DXMatrixTranslation(&matTrans, vPos.x, vPos.y, 0.f);
+			matWorld = matScale * matTrans;
+
+			m_pSprite->SetTransform(&/*m_pItemTransformCom[iIndex]->Get_Desc().*/matWorld);
 			m_pSprite->Draw(
 				(LPDIRECT3DTEXTURE9)m_pItemTextureCom[iIndex]->GetTexture(0),
 				nullptr, &vCenter, nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
@@ -444,12 +449,11 @@ HRESULT CShop::Render_ShopItem()
 
 			// 아이템 이름
 			TCHAR		szBuff[MAX_PATH] = L"";
-			D3DXMATRIX	matScale, matTrans, matWorld;
 			D3DXMatrixIdentity(&matWorld);
 			StringCchPrintf(szBuff, sizeof(TCHAR) * MAX_PATH, L"%s", m_vShopItem[iIndex]->szShopTag);
 
-			D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
-			D3DXMatrixTranslation(&matTrans, vPos.x - 65.f, vPos.y + 30.f, 0.f);
+			D3DXMatrixScaling(&matScale, 1.5f, 1.7f, 0.f);
+			D3DXMatrixTranslation(&matTrans, vPos.x - 55.f, vPos.y + 55.f, 0.f);
 			matWorld = matScale * matTrans;
 
 			m_pSprite->SetTransform(&matWorld);
@@ -463,8 +467,8 @@ HRESULT CShop::Render_ShopItem()
 			D3DXMatrixIdentity(&matWorld);
 			StringCchPrintf(szBuff2, sizeof(TCHAR) * MAX_PATH, L"%d", m_vShopItem[iIndex]->iPrice);
 
-			D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
-			D3DXMatrixTranslation(&matTrans, vPos.x, vPos.y + 65.f, 0.f);
+			D3DXMatrixScaling(&matScale, 1.5f, 1.7f, 0.f);
+			D3DXMatrixTranslation(&matTrans, vPos.x, vPos.y + 85.f, 0.f);
 			matWorld = matScale * matTrans;
 
 			m_pSprite->SetTransform(&matWorld);
