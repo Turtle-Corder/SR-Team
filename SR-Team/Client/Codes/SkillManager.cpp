@@ -10,8 +10,9 @@ CSkillManager::CSkillManager()
 
 	m_pLaserSkill = (CPlayerSkill*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_PlayerSkill", 0);
 	m_pMeteoSkill = (CPlayerSkill*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_PlayerSkill", 1);
-	m_pManaDriftSkill = (CPlayerSkill*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_PlayerSkill", 3);
-	m_pEnergyExplotiationSkill = (CPlayerSkill*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_PlayerSkill", 4);
+	m_pManaDriftSkill = (CPlayerSkill*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_PlayerSkill", 2);
+	m_pEnergyExplotiationSkill = (CPlayerSkill*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_PlayerSkill", 3);
+	m_pIceCrystalSkill = (CPlayerSkill*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_PlayerSkill", 4);
 }
 
 CPlayerSkill * CSkillManager::Get_PlayerSkill(eActiveSkill_ID eSkillID)
@@ -19,6 +20,7 @@ CPlayerSkill * CSkillManager::Get_PlayerSkill(eActiveSkill_ID eSkillID)
 	switch (eSkillID)
 	{
 	case ACTIVE_ICE_STRIKE:
+		return m_pIceCrystalSkill;
 		break;
 	case ACTIVE_MANA_DRIFT:
 		return m_pManaDriftSkill;

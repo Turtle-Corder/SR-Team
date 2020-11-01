@@ -167,6 +167,7 @@
     <ClInclude Include="..\Headers\Equip.h" />
     <ClInclude Include="..\Headers\EventTrigger.h" />
     <ClInclude Include="..\Headers\Fire.h" />
+    <ClInclude Include="..\Headers\IceStrikeSkill.h" />
     <ClInclude Include="..\Headers\ManaDriftSkill.h" />
     <ClInclude Include="..\Headers\Mouse.h" />
     <ClInclude Include="..\Headers\Golem_Impact.h" />
@@ -235,6 +236,7 @@
     <ClCompile Include="..\Codes\Equip.cpp" />
     <ClCompile Include="..\Codes\EventTrigger.cpp" />
     <ClCompile Include="..\Codes\Fire.cpp" />
+    <ClCompile Include="..\Codes\IceStrikeSkill.cpp" />
     <ClCompile Include="..\Codes\ManaDriftSkill.cpp" />
     <ClCompile Include="..\Codes\Mouse.cpp" />
     <ClCompile Include="..\Codes\Golem_Impact.cpp" />

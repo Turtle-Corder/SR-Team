@@ -18,7 +18,7 @@ public:
 public:
 	HRESULT Set_SkillIndex(_int iIndex, eActiveSkill_ID eSkillID);
 	_bool Can_UseSkill(_int _iIndex);
-	_bool Actual_UseSkill(_int _iIndex);
+	_bool Actual_UseSkill(_int _iIndex, void* _pArg = nullptr);
 	eActiveSkill_ID Get_SkillID(_int _iIndex);
 	_int Get_ConsumeMP(_int _iIndex);
 

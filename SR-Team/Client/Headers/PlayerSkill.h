@@ -19,7 +19,7 @@ protected:
 
 public:
 	virtual _bool Can_UseSkill();
-	virtual _bool Actual_UseSkill() = 0;
+	virtual _bool Actual_UseSkill(void* _pArg = nullptr) = 0;
 
 	_int Get_ConsumeMP();
 

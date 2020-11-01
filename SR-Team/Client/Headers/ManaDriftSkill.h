@@ -26,7 +26,7 @@ public:
 	virtual CGameObject * Clone_GameObject(void * _pArg) override;
 
 public:
-	virtual _bool Actual_UseSkill() override;
+	virtual _bool Actual_UseSkill(void* _pArg = nullptr) override;
 };
 
 END

@@ -253,6 +253,9 @@
     <Filter Include="02.GameObject\05.Monster\05.Stump">
       <UniqueIdentifier>{f8917998-c959-4eff-8fc5-7b94bbc43e94}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\13. PlayerSkill\05.IceStrike">
+      <UniqueIdentifier>{8e088724-e126-45d3-881b-75a961e9f7f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -452,6 +455,9 @@
       <Filter>02.GameObject\13. PlayerSkill\04. EnergyExploitation</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\Stump.h" />
+    <ClInclude Include="..\Headers\IceStrikeSkill.h">
+      <Filter>02.GameObject\13. PlayerSkill\05.IceStrike</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -636,6 +642,9 @@
       <Filter>02.GameObject\13. PlayerSkill\04. EnergyExploitation</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Stump.cpp" />
+    <ClCompile Include="..\Codes\IceStrikeSkill.cpp">
+      <Filter>02.GameObject\13. PlayerSkill\05.IceStrike</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

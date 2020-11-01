@@ -42,7 +42,7 @@ HRESULT CMouse::Add_Component()
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", L"Com_Transform0", (CComponent**)&m_pTransformComp[KIND::ACTUAL])))
 		return E_FAIL;
 
-	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", L"Com_Transform1", (CComponent**)&m_pTransformComp[KIND::RENDER])))
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", L"Com_Transform2", (CComponent**)&m_pTransformComp[KIND::RENDER])))
 		return E_FAIL;
 
 	return S_OK;

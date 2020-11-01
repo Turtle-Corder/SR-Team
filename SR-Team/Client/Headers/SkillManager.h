@@ -37,6 +37,7 @@ private:
 	CPlayerSkill*			m_pMeteoSkill = nullptr;
 	CPlayerSkill*			m_pManaDriftSkill = nullptr;
 	CPlayerSkill*			m_pEnergyExplotiationSkill = nullptr;
+	CPlayerSkill*			m_pIceCrystalSkill = nullptr;
 };
 
 END

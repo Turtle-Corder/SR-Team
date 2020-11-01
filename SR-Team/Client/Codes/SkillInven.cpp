@@ -36,10 +36,10 @@ _bool CSkillInven::Can_UseSkill(_int _iIndex)
 	return false;
 }
 
-_bool CSkillInven::Actual_UseSkill(_int _iIndex)
+_bool CSkillInven::Actual_UseSkill(_int _iIndex, void* _pArg)
 {
 	if (m_pPlayerSkill[_iIndex])
-		return m_pPlayerSkill[_iIndex]->Actual_UseSkill();
+		return m_pPlayerSkill[_iIndex]->Actual_UseSkill(_pArg);
 
 	return false;
 }

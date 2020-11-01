@@ -70,7 +70,7 @@ CGameObject * CManaDriftSkill::Clone_GameObject(void * _pArg)
 	return pInstance;
 }
 
-_bool CManaDriftSkill::Actual_UseSkill()
+_bool CManaDriftSkill::Actual_UseSkill(void* _pArg)
 {
 	// 한번 더 검사
 	if (!Can_UseSkill())

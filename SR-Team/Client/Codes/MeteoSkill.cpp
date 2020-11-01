@@ -68,11 +68,19 @@ CGameObject * CMeteoSkill::Clone_GameObject(void * _pArg)
 	return pInstance;
 }
 
-_bool CMeteoSkill::Actual_UseSkill()
+_bool CMeteoSkill::Actual_UseSkill(void* _pArg)
 {
 	// 한번 더 검사
 	if (!Can_UseSkill())
 		return false;
+
+	if (_pArg)
+	{
+		INSTANTIMPACT* pImpact = (INSTANTIMPACT*)_pArg;
+		CStatus* pStatus = (CStatus*)pImpact->pStatusComp;
+		if (pStatus)
+			pStatus->Increase_FireStack();
+	}
 
 	//--------------------------------------------------
 	// TODO : 메테오 소환, 5개 한방에 소환

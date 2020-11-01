@@ -38,7 +38,7 @@ _bool CPlayerSkill::Can_UseSkill()
 	return true;
 }
 
-_bool CPlayerSkill::Actual_UseSkill()
+_bool CPlayerSkill::Actual_UseSkill(void* _pArg)
 {
 	return false;
 }

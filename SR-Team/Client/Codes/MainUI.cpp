@@ -6,6 +6,7 @@
 #include "ItemInventory.h"
 #include "Equip.h"
 #include "Player.h"
+#include "Status.h"
 #include "..\Headers\MainUI.h"
 #include "Mouse.h"
 
@@ -348,41 +349,18 @@ HRESULT CMainUI::Render_UI()
 	if (FAILED(Render_QuickSlot_Item()))
 		return E_FAIL;
 
-	//// ¿ÞÂÊ
-	//for (_uint i = 0; i < 8; ++i)
-	//{
-	//	const D3DXIMAGE_INFO* pTexInfo = m_pEmptyTexture->Get_TexInfo(0);
-	//	_vec3 vCenter = { pTexInfo->Width * 0.5f, pTexInfo->Height * 0.5f, 0.f };
-	//	_vec3 vPos = m_pTransformLeftSlot[i]->Get_Desc().vPosition;
 
-	//	m_tLeftSlotCollRt[i].left = (LONG)(vPos.x - 35.f);
-	//	m_tLeftSlotCollRt[i].right = (LONG)(vPos.x + 35.f);
-	//	m_tLeftSlotCollRt[i].top = (LONG)(vPos.y - 35.f);
-	//	m_tLeftSlotCollRt[i].bottom = (LONG)(vPos.y + 35.f);
+	// TODO : remove
+	CPlayer* pPlayer = (CPlayer*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Player");
+	CStatus* pStatus = (CStatus*)pPlayer->Get_Component(L"Com_Stat");
 
-	//	m_pSprite->SetTransform(&m_pTransformLeftSlot[i]->Get_Desc().matWorld);
-	//	m_pSprite->Draw(
-	//		(LPDIRECT3DTEXTURE9)m_pEmptyTexture->GetTexture(0),
-	//		&m_tLeftSlotCollRt[i], &vCenter, nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
-	//}
+	WCHAR szIce[32] = L"";
+	StringCchPrintf(szIce, _countof(szIce), L"ICE:%d FIRE:%d", pStatus->Get_Status().iCurIceStack, pStatus->Get_Status().iCurFireStack);
 
-	//// ¿À¸¥ÂÊ
-	//for (_uint i = 0; i < 8; ++i)
-	//{
-	//	const D3DXIMAGE_INFO* pTexInfo = m_pEmptyTexture->Get_TexInfo(0);
-	//	_vec3 vCenter = { pTexInfo->Width * 0.5f, pTexInfo->Height * 0.5f, 0.f };
-	//	_vec3 vPos = m_pTransformRightSlot[i]->Get_Desc().vPosition;
-
-	//	m_tRightSlotCollRt[i].left = (LONG)(vPos.x - 35.f);
-	//	m_tRightSlotCollRt[i].right = (LONG)(vPos.x + 35.f);
-	//	m_tRightSlotCollRt[i].top = (LONG)(vPos.y - 35.f);
-	//	m_tRightSlotCollRt[i].bottom = (LONG)(vPos.y + 35.f);
-
-	//	m_pSprite->SetTransform(&m_pTransformRightSlot[i]->Get_Desc().matWorld);
-	//	m_pSprite->Draw(
-	//		(LPDIRECT3DTEXTURE9)m_pEmptyTexture->GetTexture(0),
-	//		&m_tRightSlotCollRt[i], &vCenter, nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
-	//} 
+	_matrix mat;
+	D3DXMatrixTranslation(&mat, WINCX * 0.5f, 30.f, 0.f);
+	m_pSprite->SetTransform(&mat);
+	m_pFont->DrawText(m_pSprite, szIce, _tcslen(szIce), nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
 
 	return S_OK;
 }

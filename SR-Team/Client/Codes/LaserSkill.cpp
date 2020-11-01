@@ -68,7 +68,7 @@ CGameObject * CLaserSkill::Clone_GameObject(void * _pArg)
 	return pInstance;
 }
 
-_bool CLaserSkill::Actual_UseSkill()
+_bool CLaserSkill::Actual_UseSkill(void* _pArg)
 {
 	// 한번 더 검사
 	if (!Can_UseSkill())

@@ -51,24 +51,8 @@ HRESULT CPlayer::Setup_GameObject(void * _pArg)
 	m_fJumpPower = 5.f;
 	m_fJumpTime = 0.f;
 
-
-	_vec3 vRight = { 1.f, 0.f, 0.f };
-
-	// 오른쪽 손
-	_vec3 vRightHand = (vRight * 0.7f);
-	m_pTransformCom[PART_HAND_RIGHT]->Set_Position(vRightHand);
-	// 왼쪽 손
-	_vec3 vLeftHand = (-vRight * 0.7f);
-	m_pTransformCom[PART_HAND_LEFT]->Set_Position(vLeftHand);
-	// 오른쪽 발
-	_vec3 vRightFoot = (vRight * 0.3f);
-	vRightFoot.y = -0.7f;
-
-	m_pTransformCom[PART_FOOT_RIGHT]->Set_Position(vRightFoot);
-	// 왼쪽 발
-	_vec3 vLeftFoot = (-vRight * 0.3f);
-	vLeftFoot.y = -0.7f;
-	m_pTransformCom[PART_FOOT_LEFT]->Set_Position(vLeftFoot);
+	m_tImpact.pAttacker = this;
+	m_tImpact.pStatusComp = m_pStatusCom;
 
 	return S_OK;
 }
@@ -96,9 +80,6 @@ _int CPlayer::Update_GameObject(_float _fDeltaTime)
 	if (FAILED(Update_Move(_fDeltaTime)))
 		return GAMEOBJECT::WARN;
 
-	if (Update_Parts())
-		return GAMEOBJECT::WARN;
-
 
 	//--------------------------------------------------
 	// 상태, 애니메이션
@@ -108,6 +89,8 @@ _int CPlayer::Update_GameObject(_float _fDeltaTime)
 
 	Update_Anim(_fDeltaTime);
 
+	if (Update_Parts())
+		return GAMEOBJECT::WARN;
 
 	//--------------------------------------------------
 	// 충돌체
@@ -273,6 +256,7 @@ HRESULT CPlayer::Add_Component_Transform()
 	// HEAD
 	//--------------------------------------------------
 	tTransformDesc[PART_HEAD].vPosition = { 5.f, 5.f, 5.f };
+	tTransformDesc[PART_HEAD].vScale = { 1.f, 1.f, 1.f };
 	tTransformDesc[PART_HEAD].fSpeedPerSecond = 5.f;
 	tTransformDesc[PART_HEAD].fRotatePerSecond = fRPS_Rad;
 
@@ -280,14 +264,14 @@ HRESULT CPlayer::Add_Component_Transform()
 	// BODY
 	//--------------------------------------------------
 	tTransformDesc[PART_BODY].vPosition = { tTransformDesc[PART_HEAD].vPosition + _vec3(0.f, -1.5f, 0.f) };
-	tTransformDesc[PART_BODY].vScale = { 0.9f, 0.9f, 0.9f };
+	tTransformDesc[PART_BODY].vScale = { 0.8f, 0.8f, 0.8f };
 	tTransformDesc[PART_BODY].fSpeedPerSecond = 5.f;
 	tTransformDesc[PART_BODY].fRotatePerSecond = fRPS_Rad;
 
 	//--------------------------------------------------
 	// HAND_L
 	//--------------------------------------------------
-	tTransformDesc[PART_HAND_LEFT].vPosition = tTransformDesc[PART_BODY].vPosition + _vec3(-0.8f, -2.5f, 0.f);
+	tTransformDesc[PART_HAND_LEFT].vPosition = _vec3(-0.7f, 0.0f, 0.f);
 	tTransformDesc[PART_HAND_LEFT].vScale = { 0.2f, 0.7f, 0.2f };
 	tTransformDesc[PART_HAND_LEFT].fSpeedPerSecond = 5.f;
 	tTransformDesc[PART_HAND_LEFT].fRotatePerSecond = fRPS_Rad;
@@ -295,7 +279,7 @@ HRESULT CPlayer::Add_Component_Transform()
 	//--------------------------------------------------
 	// HAND_R
 	//--------------------------------------------------
-	tTransformDesc[PART_HAND_RIGHT].vPosition = tTransformDesc[PART_BODY].vPosition + _vec3(0.8f, -2.5f, 0.f);
+	tTransformDesc[PART_HAND_RIGHT].vPosition = _vec3(0.7f, 0.0f, 0.f);
 	tTransformDesc[PART_HAND_RIGHT].vScale = { 0.2f, 0.7f, 0.2f };
 	tTransformDesc[PART_HAND_RIGHT].fSpeedPerSecond = 5.f;
 	tTransformDesc[PART_HAND_RIGHT].fRotatePerSecond = fRPS_Rad;
@@ -303,16 +287,16 @@ HRESULT CPlayer::Add_Component_Transform()
 	//--------------------------------------------------
 	// FOOT_L
 	//--------------------------------------------------
-	tTransformDesc[PART_FOOT_LEFT].vPosition = tTransformDesc[PART_BODY].vPosition + _vec3(-0.2f, -2.5f, 0.f);
-	tTransformDesc[PART_FOOT_LEFT].vScale = { 0.3f, 0.5f, 0.5f };
+	tTransformDesc[PART_FOOT_LEFT].vPosition = _vec3(-0.2f, -0.8f, 0.f);
+	tTransformDesc[PART_FOOT_LEFT].vScale = { 0.3f, 0.7f, 0.5f };
 	tTransformDesc[PART_FOOT_LEFT].fSpeedPerSecond = 5.f;
 	tTransformDesc[PART_FOOT_LEFT].fRotatePerSecond = fRPS_Rad;
 
 	//--------------------------------------------------
 	// FOOT_R
 	//--------------------------------------------------
-	tTransformDesc[PART_FOOT_RIGHT].vPosition = tTransformDesc[PART_BODY].vPosition + _vec3(0.2f, -2.5f, 0.f);
-	tTransformDesc[PART_FOOT_RIGHT].vScale = { 0.3f, 0.5f, 0.5f };
+	tTransformDesc[PART_FOOT_RIGHT].vPosition = _vec3(0.2f, -0.8f, 0.f);
+	tTransformDesc[PART_FOOT_RIGHT].vScale = { 0.3f, 0.7f, 0.5f };
 	tTransformDesc[PART_FOOT_RIGHT].fSpeedPerSecond = 5.f;
 	tTransformDesc[PART_FOOT_RIGHT].fRotatePerSecond = fRPS_Rad;
 
@@ -371,6 +355,8 @@ HRESULT CPlayer::Add_Component_Extends()
 	tStat.iHp = 100;			tStat.iMp = 100;
 	tStat.iMaxHp = 100;			tStat.iMaxMp = 100;
 	tStat.iMinAtt = 10;			tStat.iMaxAtt = 50;
+	tStat.iMaxFireStack = 3;
+	tStat.iMaxIceStack = 3;
 
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Status", L"Com_Stat", (CComponent**)&m_pStatusCom, &tStat)))
 		return E_FAIL;
@@ -532,36 +518,14 @@ HRESULT CPlayer::Update_OnTerrain()
 		return E_FAIL;
 
 	//--------------------------------------------------
-	// 다리들을 터레인 위로 조정.
+	// 머리, 몸통 터레인 위로 조정.
 	//--------------------------------------------------
-	for (_uint iCnt = PART_FOOT_START; iCnt <= PART_FOOT_END; ++iCnt)
+	_vec3 vPosition = m_pTransformCom[PART_BODY]->Get_Desc().vPosition;
+	if (pTerrainBuffer->IsOnTerrain(&vPosition))
 	{
-		_vec3 vPosition = m_pTransformCom[iCnt]->Get_Desc().vPosition;
-		if (pTerrainBuffer->IsOnTerrain(&vPosition))
-			m_pTransformCom[iCnt]->Set_Position(vPosition);
+		m_pTransformCom[PART_HEAD]->Set_Position(vPosition + _vec3(0.f, 1.3f, 0.f));
+		m_pTransformCom[PART_BODY]->Set_Position(vPosition + _vec3(0.f, 0.5f, 0.f));
 	}
-
-
-	//--------------------------------------------------
-	// 나머지 높이(y)들을 조정
-	//--------------------------------------------------
-	float fLeftFootPosY = m_pTransformCom[PART_FOOT_LEFT]->Get_Desc().vPosition.y;
-
-	_vec3 vBodyPos = m_pTransformCom[PART_BODY]->Get_Desc().vPosition;
-	vBodyPos.y = fLeftFootPosY + 1.f;
-	m_pTransformCom[PART_BODY]->Set_Position(vBodyPos);
-
-	_vec3 vHeadPos = m_pTransformCom[PART_HEAD]->Get_Desc().vPosition;
-	vHeadPos.y = vBodyPos.y + 0.5f;
-	m_pTransformCom[PART_HEAD]->Set_Position(vHeadPos);
-
-	_vec3 vLeftHandPos = m_pTransformCom[PART_HAND_LEFT]->Get_Desc().vPosition;
-	vLeftHandPos.y = fLeftFootPosY + 1.f;
-	m_pTransformCom[PART_HAND_LEFT]->Set_Position(vLeftHandPos);
-
-	_vec3 vRightHandPos = m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vPosition;
-	vRightHandPos.y = fLeftFootPosY + 1.f;
-	m_pTransformCom[PART_HAND_RIGHT]->Set_Position(vRightHandPos);
 
 	return S_OK;
 }
@@ -582,12 +546,9 @@ HRESULT CPlayer::Update_Look(_float _fDeltaTime)
 
 	_vec3 vLeft;
 	D3DXVec3Cross(&vLeft, &vLook, &_vec3(0.f, 1.f, 0.f));
-	//	D3DXVec3Cross(&vRight, &_vec3(0.f, 1.f, 0.f), &vLook);
-
 
 	_float fLimit = D3DXVec3Dot(&vLeft, &vPlayerToTarget);
-
-	if (fabsf(fLimit) < 0.2f)
+	if (fabsf(fLimit) < 0.3f)
 		return S_OK;
 
 	if (fLimit > 0)
@@ -1019,7 +980,7 @@ _bool CPlayer::Actual_UseSkill()
 	if (nullptr == pSkillInven)
 		return false;
 
-	if (!pSkillInven->Actual_UseSkill(m_iInputIdx_Slot))
+	if (!pSkillInven->Actual_UseSkill(m_iInputIdx_Slot, (void*)&m_tImpact))
 		return false;
 
 	return true;
@@ -1058,16 +1019,9 @@ _int CPlayer::Update_Parts()
 	//--------------------------------------------------
 	// 스케일 * 자전 * 이동 * 공전 * 부모
 	//--------------------------------------------------
-	m_pTransformCom[PART_HAND_LEFT]->Set_Position(m_pTransformCom[PART_HAND_LEFT]->Get_Desc().vPosition + vRelativeHand);
 	hr = m_pTransformCom[PART_HAND_LEFT]->Update_Transform(matRevolution, matParent);
-
-	m_pTransformCom[PART_HAND_RIGHT]->Set_Position(m_pTransformCom[PART_HAND_RIGHT]->Get_Desc().vPosition + vRelativeHand);
 	hr = m_pTransformCom[PART_HAND_RIGHT]->Update_Transform(matRevolution, matParent);
-
-	m_pTransformCom[PART_FOOT_LEFT]->Set_Position(m_pTransformCom[PART_FOOT_LEFT]->Get_Desc().vPosition + vRelativeFoot);
 	hr = m_pTransformCom[PART_FOOT_LEFT]->Update_Transform(matRevolution, matParent);
-
-	m_pTransformCom[PART_FOOT_RIGHT]->Set_Position(m_pTransformCom[PART_FOOT_RIGHT]->Get_Desc().vPosition + vRelativeFoot);
 	hr = m_pTransformCom[PART_FOOT_RIGHT]->Update_Transform(matRevolution, matParent);
 
 
@@ -1200,13 +1154,13 @@ void CPlayer::Update_Anim_Attack(_float _fDeltaTime)
 
 	else if (1 == m_iAnimStep)
 	{
+		m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Y, _fDeltaTime * 5.f);
+
 		if (m_fAnimTimer >= 0.2f)
 		{
 			m_fAnimTimer = 0.f;
 			++m_iAnimStep;
 		}
-
-		m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_Y, _fDeltaTime * 5.f);
 	}
 
 	else if (2 == m_iAnimStep)
@@ -1251,7 +1205,7 @@ void CPlayer::Update_Anim_Skill_Common(_float _fDeltaTime)
 	{
 		m_pTransformCom[PART_HAND_RIGHT]->Turn(CTransform::AXIS_X, -_fDeltaTime * 5.f);
 
-		if (m_fAnimTimer >= 0.4f)
+		if (m_fAnimTimer >= 0.2f)
 		{
 			m_fAnimTimer = 0.f;
 			++m_iAnimStep;
@@ -1262,7 +1216,7 @@ void CPlayer::Update_Anim_Skill_Common(_float _fDeltaTime)
 
 	else if (1 == m_iAnimStep)
 	{
-		if (m_fAnimTimer >= 1.f)
+		if (m_fAnimTimer >= 0.4f)
 		{
 			m_fAnimTimer = 0.f;
 			++m_iAnimStep;
@@ -1316,4 +1270,3 @@ void CPlayer::Update_AtkDelay(_float _fDeltaTime)
 		}
 	}
 }
-
