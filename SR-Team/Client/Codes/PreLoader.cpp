@@ -271,7 +271,8 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 #pragma endregion
 	// player
 #pragma region Component_Texture_Player
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_Monster", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/Monster%d.dds"))))
+	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_Monster", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, 
+		L"../Resources/Player/Monster%d.dds"))))
 		return E_FAIL;
 
 	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_PlayerHead", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE,

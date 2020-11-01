@@ -16,7 +16,7 @@ CShop::CShop(LPDIRECT3DDEVICE9 _pDevice, LPD3DXSPRITE _pSprite, LPD3DXFONT _pFon
 		m_pTextureCom[i] = nullptr;
 	}
 
-	for (_uint i = 0; i < 15; ++i)
+	for (_uint i = 0; i < 16; ++i)
 	{
 		m_pItemTransformCom[i] = nullptr;
 		m_pItemTextureCom[i] = nullptr;
@@ -71,7 +71,7 @@ HRESULT CShop::Setup_GameObject(void * pArg)
 			m_vItemTexturePos[j][i].y = (j * 213.f) + 156.f;
 			m_vItemTexturePos[j][i].z = 0.f;
 
-			if (iIndex < 15)
+			if (iIndex < 16)
 			{
 				m_pItemTransformCom[iIndex]->Set_Position(m_vItemTexturePos[j][i]);
 			}
@@ -85,7 +85,7 @@ HRESULT CShop::Setup_GameObject(void * pArg)
 		for (_uint i = 0; i < 4; ++i)
 		{
 			iIndex = j * 4 + i;
-			if (iIndex >= 15)
+			if (iIndex >= 16)
 				return S_OK;
 			m_tItemTextureRt[j][i].left = (LONG)(m_vItemTexturePos[j][i].x - 20.f);
 			m_tItemTextureRt[j][i].right = (LONG)(m_vItemTexturePos[j][i].x + 20.f);
@@ -286,11 +286,11 @@ HRESULT CShop::Add_Component_ShopItem()
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
 		return E_FAIL;
-	CItem* pOrigin = (CItem*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Item");
+	CItem* pOrigin = (CItem*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Item");
 	if (pOrigin == nullptr)
 		return E_FAIL;
 
-	for (_uint i = 0; i < 15; ++i)
+	for (_uint i = 0; i < 16; ++i)
 	{
 		// Transform-----------------------------------------------------------------
 		TCHAR szItemTransform[MAX_STR] = L"";
@@ -394,6 +394,12 @@ HRESULT CShop::Add_Component_ShopItem()
 				L"%s", L"SorcererGloves");
 			wsprintf(szItemTextureName, L"Component_Texture_Item_SorcererGloves");
 		}
+		else if (i == 15)
+		{
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"Goguma");
+			wsprintf(szItemTextureName, L"Component_Texture_Quest1_Goguma");
+		}
 		pOrigin->Get_ItemInfo(pItem->szItemTag, *pItem);
 		//m_pItemTextureCom[i] = pOrigin->Get_ItemInfo_Texture(pItem->szItemTag);
 		m_vShopItem.emplace_back(pItem);
@@ -422,7 +428,7 @@ HRESULT CShop::Render_ShopItem()
 		for (_uint i = 0; i < 4; ++i)
 		{
 			iIndex = j * 4 + i;
-			if (iIndex >= 15)
+			if (iIndex >= 16)
 				return S_OK;
 
 			// 아이템 이미지--------------------------------------------------------------------------------------
@@ -497,6 +503,7 @@ CShop * CShop::Create(LPDIRECT3DDEVICE9 _pDevice, LPD3DXSPRITE _pSprite, LPD3DXF
 
 CGameObject * CShop::Clone_GameObject(void * pArg)
 {
+
 	CShop* pInstance = new CShop(*this);
 	if (FAILED(pInstance->Setup_GameObject(pArg)))
 	{
@@ -516,7 +523,7 @@ void CShop::Free()
 	}
 	
 
-	for (_uint i = 0; i < 15; ++i)
+	for (_uint i = 0; i < 16; ++i)
 	{
 		Safe_Release(m_pItemTransformCom[i]);
 		Safe_Release(m_pItemTextureCom[i]);

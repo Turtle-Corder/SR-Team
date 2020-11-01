@@ -38,6 +38,8 @@ private:
 
 	eQuest1_ID		m_eSituation = QUEST1_END;
 	RECT			m_tGreetingCollRt = { 0, };
+	RECT			m_tQuestWndCollRt = { 0, };
+	_bool			m_bRenderClear = false;
 };
 
 

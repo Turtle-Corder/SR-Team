@@ -215,6 +215,9 @@ HRESULT CPlayer::Take_Damage(const CComponent* _pDamageComp)
 HRESULT CPlayer::Add_Component()
 {
 	CTransform::TRANSFORM_DESC tTransformDesc;
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return GAMEOBJECT::ERR;
 
 	for (_uint iCnt = 0; iCnt < PART_END; ++iCnt)
 	{
@@ -281,7 +284,7 @@ HRESULT CPlayer::Add_Component()
 		else if (iCnt == PART_HAND_LEFT || iCnt == PART_HAND_RIGHT)	StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_PlayerHand");
 		else							StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_PlayerFoot");
 
-		if (FAILED(CGameObject::Add_Component(pManagement->Get_CurrentSceneID(), szTextureName, szTexture, (CComponent**)&m_pTextureCom[iCnt])))
+		if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, szTextureName, szTexture, (CComponent**)&m_pTextureCom[iCnt])))
 			return E_FAIL;
 	}
 

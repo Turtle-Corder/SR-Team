@@ -114,6 +114,64 @@ _int CInventory::Get_ItemCount(const wstring & strItemName)
 	return -1;
 }
 
+HRESULT CInventory::Delete_Item(const wstring & strItemName)
+{
+	_int iIndex = 0;
+	_bool bDeletIndex[36] = { false, };
+	auto& iter = m_pInvenList.begin();
+
+	while (iter != m_pInvenList.end())
+	{
+		if (!wcscmp((*iter)->szItemTag, strItemName.c_str()))
+		{
+			m_bIsItemHere[iIndex] = false;
+			bDeletIndex[iIndex] = true;
+			Safe_Delete(*iter);
+			iter = m_pInvenList.erase(iter);
+		}
+		else
+			++iter;
+
+		++iIndex;
+	}
+
+	int iTextureItemIdx = 0;
+	int iDeleteCnt = 0;
+	// 아이템 텍스처 삭제
+	for (auto& iter = m_pTextureItem.begin(); iter != m_pTextureItem.end(); )
+	{
+		if (bDeletIndex[iTextureItemIdx])
+		{
+			++iDeleteCnt;
+			Safe_Release(*iter);
+			iter = m_pTextureItem.erase(iter);
+		}
+		else
+			++iter;
+		++iTextureItemIdx;
+	}
+
+	m_pTextureItem.resize(36);
+	// 삭제한만큼 새로 만들어서 넣어준다
+	for (_int i = 36 - iDeleteCnt, j = 0; j < iDeleteCnt; i++, ++j)
+	{
+		// Texture-------------------------------------------------------------------
+		TCHAR szItemTexture[MAX_STR] = L"";
+		TCHAR szItemTextureName[MAX_STR] = L"";
+		//ITEM* pItem = new ITEM;
+		//pItem->wstrItemName = L"Empty";
+		wsprintf(szItemTextureName, L"Component_Texture_Item_Empty");
+		wsprintf(szItemTexture, L"Com_NewItemTexture%d", m_iNewInsertOrder);
+
+		if (FAILED(CGameObject::Add_Component(SCENE_STATIC,
+			szItemTextureName, szItemTexture, (CComponent**)&m_pTextureItem[i])))
+			return E_FAIL;
+		++m_iNewInsertOrder;
+	}
+
+	return S_OK;
+}
+
 HRESULT CInventory::Setup_GameObject_Prototype()
 {
 	

@@ -9,7 +9,7 @@ USING(Client)
 CItem::CItem(LPDIRECT3DDEVICE9 _pDevice)
 	: CGameObject(_pDevice)
 {
-	for (_uint i = 0; i < 17; ++i)
+	for (_uint i = 0; i < 18; ++i)
 	{
 		m_pTextureCom[i] = nullptr;
 		m_pStatCom[i] = nullptr;
@@ -154,7 +154,7 @@ HRESULT CItem::Add_Component()
 
 HRESULT CItem::Add_Component_Item()
 {
-	for (_uint i = 0; i < 17; ++i)
+	for (_uint i = 0; i < 18; ++i)
 	{
 		// 3. Texture--------------------------------------------------------------
 		TCHAR szTexture[MAX_PATH] = L"";
@@ -210,6 +210,9 @@ HRESULT CItem::Add_Component_Item()
 		else if (i == 16)
 			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
 				L"Component_Texture_Item_SorcererGloves");
+		else if (i == 17)
+			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+				L"Component_Texture_Quest1_Goguma");
 		
 		StringCchPrintf(szTexture, sizeof(TCHAR) * MAX_PATH,
 			L"Com_Texture%d", i);
@@ -379,6 +382,15 @@ HRESULT CItem::Add_Component_Item()
 			StringCchPrintf(pItem->szShopTag, _countof(pItem->szShopTag),
 				L"마법사장갑");
 		}
+		if (i == 17)
+		{
+			pItem->iPrice = 50;
+			pItem->eSort = eITEM_SORT::QUEST1;
+			swprintf(pItem->szItemTag, sizeof(pItem->szItemTag) / sizeof(TCHAR),
+				L"%s", L"Goguma");
+			StringCchPrintf(pItem->szShopTag, _countof(pItem->szShopTag),
+				L"고구마");
+		}
 		m_vItemList.emplace_back(pItem);
 
 
@@ -443,6 +455,11 @@ HRESULT CItem::Add_Component_Item()
 		else if (i == 16)
 		{
 			tStat.iCriticalRate = 20;
+		}
+		else if (i == 17)
+		{
+			tStat.iHp = 50;
+			tStat.iMp = 50;
 		}
 
 		TCHAR szStat[MAX_PATH] = L"";
@@ -590,7 +607,7 @@ CGameObject * CItem::Clone_GameObject(void * pArg)
 
 void CItem::Free()
 {
-	for (_uint i = 0; i < 17; ++i)
+	for (_uint i = 0; i < 18; ++i)
 	{
 		Safe_Release(m_pTextureCom[i]);
 		Safe_Release(m_pStatCom[i]);
