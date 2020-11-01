@@ -8,9 +8,9 @@ CSkillManager::CSkillManager()
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 
-	m_pLaserSkill = (CPlayerSkill*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_PlayerSkill", 0);
-	m_pMeteoSkill = (CPlayerSkill*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_PlayerSkill", 1);
-	m_pEnergyVoltSkill = (CPlayerSkill*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_PlayerSkill", 2);
+	m_pLaserSkill = (CPlayerSkill*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_PlayerSkill", 0);
+	m_pMeteoSkill = (CPlayerSkill*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_PlayerSkill", 1);
+	m_pEnergyVoltSkill = (CPlayerSkill*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_PlayerSkill", 2);
 	m_pManaDriftSkill = (CPlayerSkill*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_PlayerSkill", 3);
 	m_pEnergyExplotiationSkill = (CPlayerSkill*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_PlayerSkill", 4);
 }

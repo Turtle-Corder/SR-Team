@@ -181,7 +181,7 @@ HRESULT CSkill::Move_To_QuickSlot()
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
 		return E_FAIL;
-	CMainUI* pMainUI = (CMainUI*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 0);
+	CMainUI* pMainUI = (CMainUI*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 0);
 
 	CMouse* pMouse = (CMouse*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Mouse");
 	if (nullptr == pMouse)

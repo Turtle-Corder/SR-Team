@@ -32,7 +32,7 @@ void CEquip::Equip_Item(eITEM_SORT eSort, const wstring& strItemTag/*INVEN_ITEM 
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
 		return;
-	CItem* pItem = (CItem*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Item");
+	CItem* pItem = (CItem*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Item");
 	if (pItem == nullptr)
 		return;
 

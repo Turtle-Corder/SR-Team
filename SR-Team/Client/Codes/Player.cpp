@@ -10,6 +10,7 @@
 #include "ItemInventory.h"
 #include "Wand.h"
 #include "Mouse.h"
+#include "Quest1.h"
 #include "..\Headers\Player.h"
 
 USING(Client)
@@ -112,16 +113,16 @@ _int CPlayer::Update_GameObject(_float _fDeltaTime)
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return 0;
-	CInventory* pInven = (CInventory*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Inventory");
+	CInventory* pInven = (CInventory*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Inventory");
 	if (pInven == nullptr)
 		return 0;
-	CShop* pShop = (CShop*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Shop");
+	CShop* pShop = (CShop*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Shop");
 	if (pShop == nullptr)
 		return 0;
-	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 1);
+	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 1);
 	if (pEquip == nullptr)
 		return 0;
-	CSkill* pSkill = (CSkill*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 2);
+	CSkill* pSkill = (CSkill*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 2);
 	if (pSkill == nullptr)
 		return 0;
 
@@ -151,6 +152,9 @@ _int CPlayer::Update_GameObject(_float _fDeltaTime)
 		if (Update_Parts())
 			return GAMEOBJECT::WARN;
 
+		if (FAILED(Universal_Key()))
+			return GAMEOBJECT::WARN;
+
 		if (FAILED(m_pColliderCom->Update_Collider(m_pTransformCom[PART_BODY]->Get_Desc().vPosition)))
 			return GAMEOBJECT::WARN;
 	}
@@ -176,7 +180,7 @@ HRESULT CPlayer::Render_NoneAlpha()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Camera");
+	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Camera");
 	if (nullptr == pCamera)
 		return E_FAIL;
 
@@ -277,7 +281,7 @@ HRESULT CPlayer::Add_Component()
 		else if (iCnt == PART_HAND_LEFT || iCnt == PART_HAND_RIGHT)	StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_PlayerHand");
 		else							StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_PlayerFoot");
 
-		if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, szTextureName, szTexture, (CComponent**)&m_pTextureCom[iCnt])))
+		if (FAILED(CGameObject::Add_Component(pManagement->Get_CurrentSceneID(), szTextureName, szTexture, (CComponent**)&m_pTextureCom[iCnt])))
 			return E_FAIL;
 	}
 
@@ -348,7 +352,7 @@ HRESULT CPlayer::IsOnTerrain()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Terrain", L"Com_VIBuffer");
+	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Terrain", L"Com_VIBuffer");
 	if (nullptr == pTerrainBuffer)
 		return E_FAIL;
 
@@ -388,11 +392,11 @@ HRESULT CPlayer::RaycastOnTerrain()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Terrain", L"Com_VIBuffer");
+	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Terrain", L"Com_VIBuffer");
 	if (nullptr == pTerrainBuffer)
 		return E_FAIL;
 
-	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Camera");
+	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Camera");
 	if (nullptr == pCamera)
 		return E_FAIL;
 
@@ -422,7 +426,7 @@ HRESULT CPlayer::RaycastOnTerrain()
 		if (m_pRaycastCom->IsSimulate<VTX_TEXTURE, INDEX16>(
 			g_hWnd, WINCX, WINCY, pTerrainBuffer, &mat, pCamera, &vOutPos))
 		{
-			CTransform* pSkill = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_PlaneSkill", L"Com_Transform");
+			CTransform* pSkill = (CTransform*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_PlaneSkill", L"Com_Transform");
 			if (nullptr == pSkill)
 				return E_FAIL;
 
@@ -747,9 +751,13 @@ HRESULT CPlayer::Universal_Key()
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		E_FAIL;
+	CQuest1* pQuest1 = (CQuest1*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Quest1");
+	if (pQuest1 == nullptr)
+		return E_FAIL;
 
 	if (pManagement->Key_Pressing('G'))
 	{
+		//eQuest1_ID
 	}
 
 	return S_OK;
@@ -804,7 +812,7 @@ void CPlayer::Check_Skill(_float fDeltaTime)
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
 		return;
-	CSkillInven* pSkillInven = (CSkillInven*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 3);
+	CSkillInven* pSkillInven = (CSkillInven*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 3);
 	if (pSkillInven == nullptr)
 		return;
 
@@ -1015,7 +1023,7 @@ void CPlayer::Check_QuickSlotItem()
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
 		return;
-	CItemInventory* pItemInven = (CItemInventory*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 4);
+	CItemInventory* pItemInven = (CItemInventory*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 4);
 	if (pItemInven == nullptr)
 		return;
 
@@ -1329,7 +1337,7 @@ HRESULT CPlayer::Ready_Layer_Meteor(const wstring& _strLayerTag, _vec3 vGoalPos)
 	tImpact.pStatusComp = m_pStatusCom;
 	tImpact.vPosition = vGoalPos + _vec3(m_fRand[0], 0.f, m_fRand[1]);
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Meteor", SCENE_STAGE0, _strLayerTag, &tImpact)))
+	if (FAILED(pManagement->Add_GameObject_InLayer(pManagement->Get_CurrentSceneID(), L"GameObject_Meteor", pManagement->Get_CurrentSceneID(), _strLayerTag, &tImpact)))
 		return E_FAIL;
 
 	return S_OK;

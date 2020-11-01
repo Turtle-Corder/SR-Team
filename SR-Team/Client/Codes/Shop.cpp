@@ -204,7 +204,7 @@ HRESULT CShop::Buy_Item(_uint iIndexJ, _uint iIndexI)
 	wstring strName = m_vShopItem[iIndex]->szItemTag;
 
 	CManagement* pManagement = CManagement::Get_Instance();
-	CInventory* pInven = (CInventory*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Inventory");
+	CInventory* pInven = (CInventory*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Inventory");
 	pInven->Get_ShopItem(strName);
 
 	return S_OK;
@@ -286,7 +286,7 @@ HRESULT CShop::Add_Component_ShopItem()
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
 		return E_FAIL;
-	CItem* pOrigin = (CItem*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Item");
+	CItem* pOrigin = (CItem*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Item");
 	if (pOrigin == nullptr)
 		return E_FAIL;
 

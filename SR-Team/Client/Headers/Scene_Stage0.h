@@ -45,6 +45,8 @@ private:
 	HRESULT SetUp_Layer_PlayerSkill(const wstring& LayerTag);
 	HRESULT Setup_Layer_Mouse(const wstring& LayerTag);
 	HRESULT Setup_Layer_PlayerItem(const wstring& LayerTag);
+
+	HRESULT Setup_Layer_Quest1(const wstring& LayerTag);
 	
 
 private:

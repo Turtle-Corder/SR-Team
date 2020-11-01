@@ -64,6 +64,9 @@ HRESULT CScene_Stage0::Setup_Scene()
 	if (FAILED(Setup_Layer_PlayerItem(L"Layer_PlayerItem")))
 		return E_FAIL;
 
+	if (FAILED(Setup_Layer_Quest1(L"Layer_Quest1")))
+		return E_FAIL;
+
 	//m_pPreLoader = CPreLoader::Create(m_pDevice, SCENE_STAGE1);
 	//if (nullptr == m_pPreLoader)
 	//{
@@ -399,6 +402,18 @@ HRESULT CScene_Stage0::Setup_Layer_PlayerItem(const wstring & LayerTag)
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_RedElixir", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_BlueElixir", SCENE_STAGE0, LayerTag)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CScene_Stage0::Setup_Layer_Quest1(const wstring & LayerTag)
+{
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_Quest1", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
 
 	return S_OK;

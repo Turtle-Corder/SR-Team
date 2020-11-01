@@ -46,7 +46,7 @@ HRESULT CInventory::Get_ShopItem(const wstring & strItemName)
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CItem* pItem = (CItem*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Item");
+	CItem* pItem = (CItem*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Item");
 	if (nullptr == pItem)
 		return E_FAIL;
 
@@ -514,7 +514,7 @@ HRESULT CInventory::Check_EquipItem()
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
-	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 1);
+	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 1);
 
 	CMouse* pMouse = (CMouse*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Mouse");
 	if (nullptr == pMouse)
@@ -553,7 +553,7 @@ HRESULT CInventory::Move_To_QuickSlot()
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
 		return E_FAIL;
-	CMainUI* pMainUI = (CMainUI*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 0);
+	CMainUI* pMainUI = (CMainUI*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 0);
 
 	CMouse* pMouse = (CMouse*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Mouse");
 	if (nullptr == pMouse)
@@ -591,7 +591,7 @@ HRESULT CInventory::Change_PotionCnt()
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
 		return E_FAIL;
-	CMainUI* pMain = (CMainUI*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 0);
+	CMainUI* pMain = (CMainUI*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 0);
 	if (pMain == nullptr)
 		return E_FAIL;
 

@@ -44,7 +44,7 @@ HRESULT CMainUI::Get_QuickSlotItem(INVEN_ITEM * pItem)
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
 		return E_FAIL;
-	CItem* pItems = (CItem*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Item");
+	CItem* pItems = (CItem*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Item");
 
 	m_pMovingItem = pItem;
 
@@ -81,7 +81,7 @@ HRESULT CMainUI::Get_QuickSlotSkill(_int iSkillID)
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
 		return E_FAIL;
-	CItem* pItems = (CItem*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Item");
+	CItem* pItems = (CItem*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Item");
 
 	// 받아온 스킬 아이디로 아이템 클래스에서 스킬 아이콘 객체를 받아온다
 	m_pMovingItem = pItems->Get_ActiveSkillIcon(iSkillID);
@@ -282,7 +282,7 @@ HRESULT CMainUI::Render_UI()
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
-	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 1);
+	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 1);
 	if (pEquip == nullptr)
 		return E_FAIL;
 	_int iHp = pEquip->Get_PlayerStat().iHp;
@@ -415,7 +415,7 @@ HRESULT CMainUI::Check_LeftQuickSlot_Item()
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
 		return E_FAIL;
-	CSkillInven* pSkillInven = (CSkillInven*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 3);
+	CSkillInven* pSkillInven = (CSkillInven*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 3);
 	if (pSkillInven == nullptr)
 		return E_FAIL;
 
@@ -475,7 +475,7 @@ HRESULT CMainUI::Check_RightQuickSlot_Item()
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
 		return E_FAIL;
-	CItemInventory* pItemInven = (CItemInventory*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 4);
+	CItemInventory* pItemInven = (CItemInventory*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 4);
 	if (pItemInven == nullptr)
 		return E_FAIL;
 
@@ -563,7 +563,7 @@ _bool CMainUI::Check_Item_In_Slot()
 HRESULT CMainUI::Set_SlotItem_Count()
 {
 	CManagement* pManagement = CManagement::Get_Instance();
-	CInventory* pInven = (CInventory*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Inventory");
+	CInventory* pInven = (CInventory*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Inventory");
 
 	for (_uint i = 0; i < 8; ++i)
 	{
@@ -609,7 +609,7 @@ HRESULT CMainUI::Render_QuickSlot_Item()
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
 		return E_FAIL;
-	CPlayer* pPlayer = (CPlayer*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Player");
+	CPlayer* pPlayer = (CPlayer*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Player");
 	if (pPlayer == nullptr)
 		return E_FAIL;
 	CMouse* pMouse = (CMouse*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Mouse");
@@ -707,7 +707,7 @@ HRESULT CMainUI::Render_QuickSlot_Item()
 		pMouse->Get_Point().x, pMouse->Get_Point().y);
 
 	D3DXMatrixScaling(&matScale2, 3.f, 3.f, 0.f);
-	D3DXMatrixTranslation(&matTrans2, 200.f, 900.f, 0.f);
+	D3DXMatrixTranslation(&matTrans2, 200.f, 200.f, 0.f);
 	matWorld2 = matScale2 * matTrans2;
 
 	m_pSprite->SetTransform(&matWorld2);
