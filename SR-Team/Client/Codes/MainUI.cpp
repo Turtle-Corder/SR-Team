@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "UICamera.h"
-#include "ItemManager.h"
+#include "DataManager.h"
 #include "Inventory.h"
 #include "SkillInven.h"
 #include "ItemInventory.h"
@@ -46,7 +46,7 @@ HRESULT CMainUI::Get_QuickSlotItem(INVEN_ITEM * pItem)
 	if (pManagement == nullptr)
 		return E_FAIL;
 
-	CItemManager* pItems = (CItemManager*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Item");
+	CDataManager* pItems = (CDataManager*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Item");
 
 	m_pMovingItem = pItem;
 
@@ -83,7 +83,7 @@ HRESULT CMainUI::Get_QuickSlotSkill(_int iSkillID)
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
 		return E_FAIL;
-	CItem* pItems = (CItem*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Item");
+	CDataManager* pItems = (CDataManager*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Item");
 
 	// 받아온 스킬 아이디로 아이템 클래스에서 스킬 아이콘 객체를 받아온다
 	m_pMovingItem = pItems->Get_ActiveSkillIcon(iSkillID);
@@ -233,7 +233,7 @@ int CMainUI::Update_GameObject(float DeltaTime)
 		return GAMEOBJECT::WARN;
 
 #pragma region Move_MainUI
-	if (GetAsyncKeyState('P') & 0x8000)
+	if (pManagement->Key_Down('P') & 0x8000)
 	{
 		for (_uint i = 0; i < MAINUI_END; ++i)
 			m_pTransformCom[i]->Set_Position(m_pTransformCom[i]->Get_Desc().vPosition - _vec3(0.f, 10.f, 0.f));
@@ -244,7 +244,7 @@ int CMainUI::Update_GameObject(float DeltaTime)
 		}
 	}
 
-	if (GetAsyncKeyState('L') & 0x8000)
+	if (pManagement->Key_Down('L') & 0x8000)
 	{
 		for (_uint i = 0; i < MAINUI_END; ++i)
 			m_pTransformCom[i]->Set_Position(m_pTransformCom[i]->Get_Desc().vPosition + _vec3(0.f, 10.f, 0.f));
@@ -284,7 +284,7 @@ HRESULT CMainUI::Render_UI()
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
-	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 1);
+	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 1);
 	if (pEquip == nullptr)
 		return E_FAIL;
 	_int iHp = pEquip->Get_PlayerStat().iHp;
@@ -350,19 +350,6 @@ HRESULT CMainUI::Render_UI()
 	if (FAILED(Render_QuickSlot_Item()))
 		return E_FAIL;
 
-
-	// TODO : remove
-	CPlayer* pPlayer = (CPlayer*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Player");
-	CStatus* pStatus = (CStatus*)pPlayer->Get_Component(L"Com_Stat");
-
-	WCHAR szIce[32] = L"";
-	StringCchPrintf(szIce, _countof(szIce), L"ICE:%d FIRE:%d", pStatus->Get_Status().iCurIceStack, pStatus->Get_Status().iCurFireStack);
-
-	_matrix mat;
-	D3DXMatrixTranslation(&mat, WINCX * 0.5f, 30.f, 0.f);
-	m_pSprite->SetTransform(&mat);
-	m_pFont->DrawText(m_pSprite, szIce, _tcslen(szIce), nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
-
 	return S_OK;
 }
 
@@ -394,7 +381,7 @@ HRESULT CMainUI::Check_LeftQuickSlot_Item()
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
 		return E_FAIL;
-	CSkillInven* pSkillInven = (CSkillInven*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 3);
+	CSkillInven* pSkillInven = (CSkillInven*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 3);
 	if (pSkillInven == nullptr)
 		return E_FAIL;
 
@@ -454,7 +441,7 @@ HRESULT CMainUI::Check_RightQuickSlot_Item()
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
 		return E_FAIL;
-	CItemInventory* pItemInven = (CItemInventory*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 4);
+	CItemInventory* pItemInven = (CItemInventory*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 4);
 	if (pItemInven == nullptr)
 		return E_FAIL;
 
@@ -542,7 +529,7 @@ _bool CMainUI::Check_Item_In_Slot()
 HRESULT CMainUI::Set_SlotItem_Count()
 {
 	CManagement* pManagement = CManagement::Get_Instance();
-	CInventory* pInven = (CInventory*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Inventory");
+	CInventory* pInven = (CInventory*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Inventory");
 
 	for (_uint i = 0; i < 8; ++i)
 	{
@@ -588,7 +575,7 @@ HRESULT CMainUI::Render_QuickSlot_Item()
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
 		return E_FAIL;
-	CPlayer* pPlayer = (CPlayer*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Player");
+	CPlayer* pPlayer = (CPlayer*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Player");
 	if (pPlayer == nullptr)
 		return E_FAIL;
 	CMouse* pMouse = (CMouse*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Mouse");
@@ -665,7 +652,7 @@ HRESULT CMainUI::Render_QuickSlot_Item()
 			TCHAR		szBuff[MAX_PATH] = L"";
 			D3DXMATRIX	matScale2, matTrans2, matWorld2;
 			D3DXMatrixIdentity(&matWorld);
-			StringCchPrintf(szBuff, sizeof(TCHAR) * MAX_PATH, L"%d", m_pRightSlotItem[i]->iCnt);
+			StringCchPrintf(szBuff, _countof(szBuff), L"%d", m_pRightSlotItem[i]->iCnt);
 
 			D3DXMatrixTranslation(&matTrans2, vPos.x + 10.f, vPos.y + 10.f, 0.f);
 			D3DXMatrixScaling(&matScale2, 1.5f, 1.5f, 0.f);
@@ -676,22 +663,6 @@ HRESULT CMainUI::Render_QuickSlot_Item()
 				nullptr, 0, D3DCOLOR_ARGB(255, 0, 0, 0));
 		}
 	}
-
-
-
-	// 마우스 위치
-	TCHAR		szBuff[MAX_PATH] = L"";
-	D3DXMATRIX	matScale2, matTrans2, matWorld2;
-	StringCchPrintf(szBuff, sizeof(TCHAR) * MAX_PATH, L"%d, %d",
-		pMouse->Get_Point().x, pMouse->Get_Point().y);
-
-	D3DXMatrixScaling(&matScale2, 3.f, 3.f, 0.f);
-	D3DXMatrixTranslation(&matTrans2, 200.f, 900.f, 0.f);
-	matWorld2 = matScale2 * matTrans2;
-
-	m_pSprite->SetTransform(&matWorld2);
-	m_pFont->DrawTextW(m_pSprite, szBuff, lstrlen(szBuff),
-		nullptr, 0, D3DCOLOR_ARGB(255, 0, 0, 0));
 
 	return S_OK;
 }
@@ -704,7 +675,7 @@ HRESULT CMainUI::Add_Component()
 	{
 		// 1. VIBuffer
 		TCHAR szVIBuffer[MAX_PATH] = L"";
-		StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH,
+		StringCchPrintf(szVIBuffer, _countof(szVIBuffer),
 			L"Com_VIBuffer%d", i);
 		if (FAILED(CGameObject::Add_Component(
 			SCENE_STATIC, L"Component_VIBuffer_RectTexture"
@@ -713,7 +684,7 @@ HRESULT CMainUI::Add_Component()
 
 		// 2. Transform
 		TCHAR szTransform[MAX_PATH] = L"";
-		StringCchPrintf(szTransform, sizeof(TCHAR) * MAX_PATH,
+		StringCchPrintf(szTransform, _countof(szTransform),
 			L"Com_Transform%d", i);
 		if (FAILED(CGameObject::Add_Component(
 			SCENE_STATIC, L"Component_Transform"
@@ -726,23 +697,23 @@ HRESULT CMainUI::Add_Component()
 		wstring strTexture = L"";
 		wstring strTextureName = L"";
 
-		StringCchPrintf(szTexture, sizeof(TCHAR) * MAX_PATH,
+		StringCchPrintf(szTexture, _countof(szTexture),
 			L"Com_Texture%d", i);
 		strTexture = szTexture;
 		if (i == MAINUI_MAIN)
-			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+			StringCchPrintf(szTextureName, _countof(szTextureName),
 				L"Component_Texture_MainUI_Main");
 		else if (i == MAINUI_HP)
-			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+			StringCchPrintf(szTextureName, _countof(szTextureName),
 				L"Component_Texture_MainUI_Hp");
 		else if (i == MAINUI_MP)
-			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+			StringCchPrintf(szTextureName, _countof(szTextureName),
 				L"Component_Texture_MainUI_Mp");
 		else if (i == MAINUI_QUICKSLOT_LFFT)
-			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+			StringCchPrintf(szTextureName, _countof(szTextureName),
 				L"Component_Texture_MainUI_QuickSlot_Left");
 		else if (i == MAINUI_QUICKSLOT_RIGHT)
-			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+			StringCchPrintf(szTextureName, _countof(szTextureName),
 				L"Component_Texture_MainUI_QuickSlot_Right");
 		strTextureName = szTextureName;
 
@@ -756,7 +727,7 @@ HRESULT CMainUI::Add_Component()
 	{
 		// 2. Transform
 		TCHAR szTransform[MAX_PATH] = L"";
-		StringCchPrintf(szTransform, sizeof(TCHAR) * MAX_PATH,
+		StringCchPrintf(szTransform, _countof(szTransform),
 			L"Com_LeftTransform%d", i);
 		if (FAILED(CGameObject::Add_Component(
 			SCENE_STATIC, L"Component_Transform"
@@ -764,7 +735,7 @@ HRESULT CMainUI::Add_Component()
 			return E_FAIL;
 
 		TCHAR szRightTransform[MAX_PATH] = L"";
-		StringCchPrintf(szRightTransform, sizeof(TCHAR) * MAX_PATH,
+		StringCchPrintf(szRightTransform, _countof(szTransform),
 			L"Com_RightTransform%d", i);
 		if (FAILED(CGameObject::Add_Component(
 			SCENE_STATIC, L"Component_Transform"

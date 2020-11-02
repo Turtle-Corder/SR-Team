@@ -174,4 +174,20 @@ enum eELEMENTAL_TYPE
 	ELEMENTAL_END
 };
 
+
+//--------------------------------------------------
+// 첫 번째 퀘스트 상황
+//--------------------------------------------------
+enum eQuest1_ID
+{
+	GREETINGS, REQUEST,
+	REJECT, ACCEPT,
+	CLEAR, NOCLEAR,
+	FINAL,
+	QUEST1_END,
+	QUEST1_WAIT,
+	QUEST1_CLEARWAIT,
+	QUEST1_FINISH
+};
+
 #endif

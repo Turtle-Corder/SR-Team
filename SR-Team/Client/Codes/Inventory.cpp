@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Item.h"
+#include "DataManager.h"
 #include "UICamera.h"
 #include "Equip.h"
 #include "MainUI.h"
@@ -46,7 +46,7 @@ HRESULT CInventory::Get_ShopItem(const wstring & strItemName)
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CItem* pItem = (CItem*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Item");
+	CDataManager* pItem = (CDataManager*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Item");
 	if (nullptr == pItem)
 		return E_FAIL;
 
@@ -60,10 +60,10 @@ HRESULT CInventory::Get_ShopItem(const wstring & strItemName)
 			{
 				++pItem->iCnt;
 				m_iGold -= pItem->iPrice;
-				PRINT_LOG(L"상점 아이템 구매 완료", LOG::CLIENT);
+				PRINT_LOG(L"상점 아이템 구매 완료", LOG::DEBUG);
 			}
 			else
-				PRINT_LOG(L"못사", LOG::CLIENT);
+				PRINT_LOG(L"못사", LOG::DEBUG);
 			return S_OK;
 		}
 	}
@@ -72,7 +72,7 @@ HRESULT CInventory::Get_ShopItem(const wstring & strItemName)
 
 	if ((iPrice == -1) || m_iGold < iPrice)
 	{
-		PRINT_LOG(L"못사", LOG::CLIENT);
+		PRINT_LOG(L"못사", LOG::DEBUG);
 	}
 	else if (m_iGold >= iPrice)
 	{
@@ -93,7 +93,7 @@ HRESULT CInventory::Get_ShopItem(const wstring & strItemName)
 		m_bIsItemHere[m_iInsertOrder] = true;
 		++m_pInvenList[m_iInsertOrder]->iCnt;
 
-		PRINT_LOG(L"상점 아이템 구매 완료", LOG::CLIENT);
+		PRINT_LOG(L"상점 아이템 구매 완료", LOG::DEBUG);
 		++m_iInsertOrder;
 	}
 
@@ -114,9 +114,66 @@ _int CInventory::Get_ItemCount(const wstring & strItemName)
 	return -1;
 }
 
+HRESULT CInventory::Delete_Item(const wstring & strItemName)
+{
+	_int iIndex = 0;
+	_bool bDeletIndex[36] = { false, };
+	auto& iter = m_pInvenList.begin();
+
+	while (iter != m_pInvenList.end())
+	{
+		if (!wcscmp((*iter)->szItemTag, strItemName.c_str()))
+		{
+			m_bIsItemHere[iIndex] = false;
+			bDeletIndex[iIndex] = true;
+			Safe_Delete(*iter);
+			iter = m_pInvenList.erase(iter);
+		}
+		else
+			++iter;
+
+		++iIndex;
+	}
+
+	int iTextureItemIdx = 0;
+	int iDeleteCnt = 0;
+	// 아이템 텍스처 삭제
+	for (auto& iter = m_pTextureItem.begin(); iter != m_pTextureItem.end(); )
+	{
+		if (bDeletIndex[iTextureItemIdx])
+		{
+			++iDeleteCnt;
+			Safe_Release(*iter);
+			iter = m_pTextureItem.erase(iter);
+		}
+		else
+			++iter;
+		++iTextureItemIdx;
+	}
+
+	m_pTextureItem.resize(36);
+	// 삭제한만큼 새로 만들어서 넣어준다
+	for (_int i = 36 - iDeleteCnt, j = 0; j < iDeleteCnt; i++, ++j)
+	{
+		// Texture-------------------------------------------------------------------
+		TCHAR szItemTexture[MAX_STR] = L"";
+		TCHAR szItemTextureName[MAX_STR] = L"";
+		//ITEM* pItem = new ITEM;
+		//pItem->wstrItemName = L"Empty";
+		wsprintf(szItemTextureName, L"Component_Texture_Item_Empty");
+		wsprintf(szItemTexture, L"Com_NewItemTexture%d", m_iNewInsertOrder);
+
+		if (FAILED(CGameObject::Add_Component(SCENE_STATIC,
+			szItemTextureName, szItemTexture, (CComponent**)&m_pTextureItem[i])))
+			return E_FAIL;
+		++m_iNewInsertOrder;
+	}
+
+	return S_OK;
+}
+
 HRESULT CInventory::Setup_GameObject_Prototype()
 {
-	
 	return S_OK;
 }
 
@@ -350,7 +407,7 @@ HRESULT CInventory::Check_SellButton()
 			if (!m_bSelect_SellItem)
 			{
 				m_bSelect_SellItem = true;
-				PRINT_LOG(L"판매 모드로 변경", LOG::CLIENT);
+				PRINT_LOG(L"판매 모드로 변경", LOG::DEBUG);
 			}
 			else if (m_bSelect_SellItem)
 			{
@@ -369,7 +426,7 @@ HRESULT CInventory::Check_SellButton()
 				if (FAILED(Change_PotionCnt()))
 					return E_FAIL;
 
-				PRINT_LOG(L"아이템 판매 시작.", LOG::CLIENT);
+				PRINT_LOG(L"아이템 판매 시작.", LOG::DEBUG);
 			}
 		}
 	}
@@ -414,7 +471,7 @@ HRESULT CInventory::Select_SellItem()
 							m_iSellGold += (m_pInvenList[iIndex]->iPrice * m_pInvenList[iIndex]->iCnt);
 						}
 						else
-							PRINT_LOG(L"현재 장착하고 있는 아이템은 판매 못함", LOG::CLIENT);
+							PRINT_LOG(L"현재 장착하고 있는 아이템은 판매 못함", LOG::DEBUG);
 					}
 
 				}
@@ -514,7 +571,7 @@ HRESULT CInventory::Check_EquipItem()
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
-	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 1);
+	CEquip* pEquip = (CEquip*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 1);
 
 	CMouse* pMouse = (CMouse*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Mouse");
 	if (nullptr == pMouse)
@@ -553,7 +610,7 @@ HRESULT CInventory::Move_To_QuickSlot()
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
 		return E_FAIL;
-	CMainUI* pMainUI = (CMainUI*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 0);
+	CMainUI* pMainUI = (CMainUI*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 0);
 
 	CMouse* pMouse = (CMouse*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Mouse");
 	if (nullptr == pMouse)
@@ -591,7 +648,7 @@ HRESULT CInventory::Change_PotionCnt()
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
 		return E_FAIL;
-	CMainUI* pMain = (CMainUI*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_MainUI", 0);
+	CMainUI* pMain = (CMainUI*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_MainUI", 0);
 	if (pMain == nullptr)
 		return E_FAIL;
 
@@ -812,7 +869,7 @@ HRESULT CInventory::Add_Component()
 	{
 		// 2. Transform
 		TCHAR szTransform[MAX_PATH] = L"";
-		StringCchPrintf(szTransform, sizeof(TCHAR) * MAX_PATH,
+		StringCchPrintf(szTransform, _countof(szTransform),
 			L"Com_Transform%d", i);
 		if (FAILED(CGameObject::Add_Component(
 			SCENE_STATIC, L"Component_Transform"
@@ -825,12 +882,12 @@ HRESULT CInventory::Add_Component()
 		TCHAR szTexture[MAX_PATH] = L"";
 		TCHAR szTextureName[MAX_PATH] = L"";
 		if (i == INVEN_WND)
-			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+			StringCchPrintf(szTextureName, _countof(szTextureName),
 				L"Component_Texture_Inven_InvenWnd");
 		if (i == INVEN_SELL_BUTTON)
-			StringCchPrintf(szTextureName, sizeof(TCHAR) * MAX_PATH,
+			StringCchPrintf(szTextureName, _countof(szTextureName),
 				L"Component_Texture_Inven_SellButton");
-		StringCchPrintf(szTexture, sizeof(TCHAR) * MAX_PATH,
+		StringCchPrintf(szTexture, _countof(szTexture),
 				L"Com_Texturem%d", i);
 		if (FAILED(CGameObject::Add_Component(
 			SCENE_STATIC, szTextureName,
@@ -854,9 +911,9 @@ HRESULT CInventory::Add_Component_Item()
 		// Texture-------------------------------------------------------------------
 		TCHAR szItemTexture[MAX_PATH] = L"";
 		TCHAR szItemTextureName[MAX_PATH] = L"";
-		StringCchPrintf(szItemTexture, sizeof(TCHAR) * MAX_PATH,
+		StringCchPrintf(szItemTexture, _countof(szItemTexture),
 			L"Com_ItemTexture%d", i);
-		StringCchPrintf(szItemTextureName, sizeof(TCHAR) * MAX_PATH,
+		StringCchPrintf(szItemTextureName, _countof(szItemTextureName),
 			L"Component_Texture_Item_Empty");
 
 		if (FAILED(CGameObject::Add_Component(
@@ -866,7 +923,7 @@ HRESULT CInventory::Add_Component_Item()
 
 		// Transform-------------------------------------------------------------------
 		TCHAR szTransform[MAX_PATH] = L"";
-		StringCchPrintf(szTransform, sizeof(TCHAR) * MAX_PATH,
+		StringCchPrintf(szTransform, _countof(szTransform),
 			L"Com_ItemTransform%d", i);
 		if (FAILED(CGameObject::Add_Component(
 			SCENE_STATIC, L"Component_Transform"

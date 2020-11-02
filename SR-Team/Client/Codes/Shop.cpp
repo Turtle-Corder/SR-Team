@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Item.h"
+#include "DataManager.h"
 #include "UICamera.h"
 #include "Inventory.h"
 #include "Mouse.h"
@@ -85,7 +85,7 @@ HRESULT CShop::Setup_GameObject(void * pArg)
 		for (_uint i = 0; i < 4; ++i)
 		{
 			iIndex = j * 4 + i;
-			if (iIndex >= 15)
+			if (iIndex >= 16)
 				return S_OK;
 			m_tItemTextureRt[j][i].left = (LONG)(m_vItemTexturePos[j][i].x - 20.f);
 			m_tItemTextureRt[j][i].right = (LONG)(m_vItemTexturePos[j][i].x + 20.f);
@@ -204,7 +204,7 @@ HRESULT CShop::Buy_Item(_uint iIndexJ, _uint iIndexI)
 	wstring strName = m_vShopItem[iIndex]->szItemTag;
 
 	CManagement* pManagement = CManagement::Get_Instance();
-	CInventory* pInven = (CInventory*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Inventory");
+	CInventory* pInven = (CInventory*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Inventory");
 	pInven->Get_ShopItem(strName);
 
 	return S_OK;
@@ -286,11 +286,11 @@ HRESULT CShop::Add_Component_ShopItem()
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
 		return E_FAIL;
-	CItem* pOrigin = (CItem*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Item");
+	CDataManager* pOrigin = (CDataManager*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Item");
 	if (pOrigin == nullptr)
 		return E_FAIL;
 
-	for (_uint i = 0; i < 15; ++i)
+	for (_uint i = 0; i < 16; ++i)
 	{
 		// Transform-----------------------------------------------------------------
 		TCHAR szItemTransform[MAX_STR] = L"";
@@ -422,7 +422,7 @@ HRESULT CShop::Render_ShopItem()
 		for (_uint i = 0; i < 4; ++i)
 		{
 			iIndex = j * 4 + i;
-			if (iIndex >= 15)
+			if (iIndex >= 16)
 				return S_OK;
 
 			// 아이템 이미지--------------------------------------------------------------------------------------
@@ -465,7 +465,7 @@ HRESULT CShop::Render_ShopItem()
 			TCHAR szBuff2[MAX_PATH] = L"";
 			matScale, matTrans, matWorld;
 			D3DXMatrixIdentity(&matWorld);
-			StringCchPrintf(szBuff2, sizeof(TCHAR) * MAX_PATH, L"%d", m_vShopItem[iIndex]->iPrice);
+			StringCchPrintf(szBuff2, _countof(szBuff2), L"%d", m_vShopItem[iIndex]->iPrice);
 
 			D3DXMatrixScaling(&matScale, 1.5f, 1.7f, 0.f);
 			D3DXMatrixTranslation(&matTrans, vPos.x, vPos.y + 85.f, 0.f);

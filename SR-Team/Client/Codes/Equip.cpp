@@ -2,7 +2,7 @@
 #include "Mouse.h"
 #include "..\Headers\Equip.h"
 
-#include "Item.h"
+#include "DataManager.h"
 USING(Client)
 
 
@@ -32,7 +32,7 @@ void CEquip::Equip_Item(eITEM_SORT eSort, const wstring& strItemTag/*INVEN_ITEM 
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
 		return;
-	CItem* pItem = (CItem*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Item");
+	CDataManager* pItem = (CDataManager*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Item");
 	if (pItem == nullptr)
 		return;
 
@@ -260,7 +260,7 @@ HRESULT CEquip::Render_Stat()
 	_vec3 vPos = m_pTransformCom[EQUIP_EQUIPMENT]->Get_Desc().vPosition;
 	D3DXMatrixIdentity(&matWorld);
 
-	StringCchPrintf(szBuff2, sizeof(TCHAR) * MAX_PATH, L"%d ~ %d", 
+	StringCchPrintf(szBuff2, _countof(szBuff2), L"%d ~ %d", 
 		m_pStatCom->Get_Status().iMinAtt, m_pStatCom->Get_Status().iMaxAtt);
 
 	D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
@@ -272,7 +272,7 @@ HRESULT CEquip::Render_Stat()
 		nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
 
 	// 방어력
-	StringCchPrintf(szBuff2, sizeof(TCHAR) * MAX_PATH, L"%d",
+	StringCchPrintf(szBuff2, _countof(szBuff2), L"%d",
 		m_pStatCom->Get_Status().iDef);
 
 	D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
@@ -284,7 +284,7 @@ HRESULT CEquip::Render_Stat()
 		nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
 
 	// 치명 확률
-	StringCchPrintf(szBuff2, sizeof(TCHAR) * MAX_PATH, L"%d",
+	StringCchPrintf(szBuff2, _countof(szBuff2), L"%d",
 		m_pStatCom->Get_Status().iCriticalRate);
 
 	D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
@@ -296,7 +296,7 @@ HRESULT CEquip::Render_Stat()
 		nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
 
 	// 치명 피해
-	StringCchPrintf(szBuff2, sizeof(TCHAR) * MAX_PATH, L"%d",
+	StringCchPrintf(szBuff2, _countof(szBuff2), L"%d",
 		m_pStatCom->Get_Status().iCriticalRate);
 
 	D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
@@ -308,7 +308,7 @@ HRESULT CEquip::Render_Stat()
 		nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
 
 	// HP
-	StringCchPrintf(szBuff2, sizeof(TCHAR) * MAX_PATH, L"%d / %d",
+	StringCchPrintf(szBuff2, _countof(szBuff2), L"%d / %d",
 		m_pStatCom->Get_Status().iHp, m_pStatCom->Get_Status().iMaxHp);
 
 	D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);
@@ -320,7 +320,7 @@ HRESULT CEquip::Render_Stat()
 		nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
 
 	// MP
-	StringCchPrintf(szBuff2, sizeof(TCHAR) * MAX_PATH, L"%d / %d",
+	StringCchPrintf(szBuff2, _countof(szBuff2), L"%d / %d",
 		m_pStatCom->Get_Status().iMp, m_pStatCom->Get_Status().iMaxMp);
 
 	D3DXMatrixScaling(&matScale, 1.2f, 1.7f, 0.f);

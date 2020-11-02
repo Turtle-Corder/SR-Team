@@ -253,6 +253,9 @@
     <Filter Include="02.GameObject\04.Player\00.Wand">
       <UniqueIdentifier>{149baf85-c5c6-4663-82ea-218486cb2f67}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\07.UI\05.Quest1">
+      <UniqueIdentifier>{ca64a5aa-16d1-4e2f-a212-cf3d0426d15a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -454,6 +457,9 @@
     <ClInclude Include="..\Headers\DataManager.h">
       <Filter>02.GameObject\08.Data</Filter>
     </ClInclude>
+    <ClInclude Include="..\Headers\Quest1.h">
+      <Filter>02.GameObject\07.UI\05.Quest1</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -639,6 +645,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\DataManager.cpp">
       <Filter>02.GameObject\08.Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Quest1.cpp">
+      <Filter>02.GameObject\07.UI\05.Quest1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

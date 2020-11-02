@@ -45,6 +45,11 @@ public:
 	// const wstring& strItemName : 어떤 아이템의 개수가 궁금한지
 	// ------------------------------------------------------------------
 	_int Get_ItemCount(const wstring& strItemName);
+	// ------------------------------------------------------------------
+	// 아이템을 삭제하는 함수
+	// const wstring& strItemName : 삭제할 아이템의 이름
+	// ------------------------------------------------------------------
+	HRESULT Delete_Item(const wstring& strItemName);
 
 public:
 	virtual HRESULT Setup_GameObject_Prototype() override;

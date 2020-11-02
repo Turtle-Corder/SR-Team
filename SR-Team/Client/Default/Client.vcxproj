@@ -194,6 +194,7 @@
     <ClInclude Include="..\Headers\PlayerItem.h" />
     <ClInclude Include="..\Headers\PlayerSkill.h" />
     <ClInclude Include="..\Headers\PreLoader.h" />
+    <ClInclude Include="..\Headers\Quest1.h" />
     <ClInclude Include="..\Headers\RedElixir.h" />
     <ClInclude Include="..\Headers\RedPotion.h" />
     <ClInclude Include="..\Headers\Scene_Logo.h" />
@@ -259,6 +260,7 @@
     <ClCompile Include="..\Codes\PlayerItem.cpp" />
     <ClCompile Include="..\Codes\PlayerSkill.cpp" />
     <ClCompile Include="..\Codes\PreLoader.cpp" />
+    <ClCompile Include="..\Codes\Quest1.cpp" />
     <ClCompile Include="..\Codes\RedElixir.cpp" />
     <ClCompile Include="..\Codes\RedPotion.cpp" />
     <ClCompile Include="..\Codes\Scene_Logo.cpp" />
