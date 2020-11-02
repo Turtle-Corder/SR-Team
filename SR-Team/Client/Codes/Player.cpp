@@ -321,7 +321,7 @@ HRESULT CPlayer::Add_Component_Texture()
 	WCHAR szTextureName[PART_END][MAX_PATH] =
 	{
 		// UNDONE : 텍스처 변경해야 함
-		L"Component_Texture_Monster",
+		L"Component_Texture_Player",
 		L"Component_Texture_PlayerHead",
 		L"Component_Texture_PlayerHand",
 		L"Component_Texture_PlayerHand",

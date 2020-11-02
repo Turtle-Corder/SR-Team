@@ -52,7 +52,7 @@ public:
 	virtual CGameObject* Clone_GameObject(void * pArg) override;
 	virtual void Free() override;
 	HRESULT LookAtPlayer(float _fDeltaTime);
-	HRESULT Create_Snow(const wstring& LayerTag);
+	HRESULT Spawn_Snow(const wstring& LayerTag);
 
 private:
 	CVIBuffer*		m_pVIBufferCom[YETI_END];

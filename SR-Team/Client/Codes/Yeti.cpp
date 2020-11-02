@@ -78,7 +78,7 @@ HRESULT CYeti::Render_NoneAlpha()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Camera");
+	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Camera");
 	if (nullptr == pCamera)
 		return E_FAIL;
 
@@ -230,7 +230,7 @@ HRESULT CYeti::IsOnTerrain()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Terrain", L"Com_VIBuffer");
+	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Terrain", L"Com_VIBuffer");
 	if (nullptr == pTerrainBuffer)
 		return E_FAIL;
 
@@ -263,7 +263,7 @@ HRESULT CYeti::Moving(float _fDeltaTime)
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform1");
+	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Player", L"Com_Transform1");
 
 	if (nullptr == pPlayerTransform)
 		return E_FAIL;
@@ -316,7 +316,7 @@ HRESULT CYeti::Attack(float _fDeltaTime)
 		else if (m_fAttackTime > 0.4f && m_bRHandDown)
 		{
 
-			if (FAILED(Create_Snow(L"Layer_Snow")))
+			if (FAILED(Spawn_Snow(L"Layer_MonsterAtk")))
 				return E_FAIL;
 			m_fAttackTime = 0.f;
 			m_bHighestCheck = true;
@@ -438,7 +438,7 @@ HRESULT CYeti::LookAtPlayer(float _fDeltaTime)
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform0");
+	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Player", L"Com_Transform0");
 
 	if (nullptr == pPlayerTransform)
 		return E_FAIL;
@@ -479,34 +479,16 @@ HRESULT CYeti::LookAtPlayer(float _fDeltaTime)
 	if (fLimit > 0)
 	{
 		m_pTransformCom[YETI_BASE]->Turn(CTransform::AXIS_Y, -_fDeltaTime * fRad);
-		//m_pTransformCom[YETI_HEAD]->Turn(CTransform::AXIS_Y, -_fDeltaTime * fRad);
-		//m_pTransformCom[YETI_LEFT]->Turn(CTransform::AXIS_Y, -_fDeltaTime * fRad);
-		//m_pTransformCom[YETI_RIGHT]->Turn(CTransform::AXIS_Y, -_fDeltaTime * fRad);
 	}
 	else
 	{
-		/*for (int i = 0; i < YETI_END; ++i)
-		{*/
 		m_pTransformCom[YETI_BASE]->Turn(CTransform::AXIS_Y, _fDeltaTime * fRad);
-		//m_pTransformCom[YETI_HEAD]->Turn(CTransform::AXIS_Y, _fDeltaTime * fRad);
-		//m_pTransformCom[YETI_LEFT]->Turn(CTransform::AXIS_Y, _fDeltaTime * fRad);
-		//m_pTransformCom[YETI_RIGHT]->Turn(CTransform::AXIS_Y, _fDeltaTime * fRad);
-		//}
-
 	}
-	//------------------------------------------
-	// 공전 구현 순서생각하기 LateUpdate안에 월드구성하고 나서
-	//------------------------------------------
-	/*	D3DXMATRIX matTrans , matRevY , matParent;
-	D3DXMatrixTranslation(&matTrans, 2.f, 0.f, 2.f);
-	D3DXMatrixRotationY(&matRevY, D3DXToRadian(m_fAngle));
-	D3DXMatrixTranslation(&matParent, vMonPos.x, vMonPos.y, vMonPos.z);
-	m_pTransformCom->Set_WorldMatrix(matTrans * matRevY * matParent);*/
-	//------------------------------------------
+	
 	return S_OK;
 }
 
-HRESULT CYeti::Create_Snow(const wstring & LayerTag)
+HRESULT CYeti::Spawn_Snow(const wstring & LayerTag)
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
@@ -520,8 +502,8 @@ HRESULT CYeti::Create_Snow(const wstring & LayerTag)
 	tImpact.vPosition = vRightHandPos;
 
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Snow",
-		SCENE_STAGE0, LayerTag , &tImpact)))
+	if (FAILED(pManagement->Add_GameObject_InLayer(pManagement->Get_CurrentSceneID(), L"GameObject_Snow",
+		pManagement->Get_CurrentSceneID(), LayerTag , &tImpact)))
 		return E_FAIL;
 
 	return S_OK;

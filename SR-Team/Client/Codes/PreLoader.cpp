@@ -70,75 +70,11 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 		return E_FAIL;
 #pragma endregion
 
-#pragma region GameObject_Translucent_Cube
-	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Translucent_Cube", CSlime::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region GameObject_Translucent_Cube
-	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Slime", CSlime::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
-
 #pragma region GameObject_Snail
 	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Snail", CSnail::Create(m_pDevice))))
 		return E_FAIL;
 #pragma endregion
 
-#pragma region GameObject_Yeti
-	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Yeti", CYeti::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region GameObject_Item
-	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_DropItem", CDropItem::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region GameObject_Wand
-	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Wand", CWand::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region GameObject_Tree
-	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Tree", CTree::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region GameObject_Flower
-	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Flower", CFlower::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region GameObject_Golem
-	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Golem", CGolem::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region GameObject_Bomb
-	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Bomb", CBomb::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region GameObject_MonSub
-	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_MonSub", CMonSub::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region GameObject_PlanSkill
-	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_PlanSkill", CPlaneSkill::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region GameObject_EnergyBolt
-	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_EnergyBolt", CEnergyBolt::Create(m_pDevice))))
-	return E_FAIL;
-#pragma endregion
-
-#pragma region GameObject_Crack
-	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Crack", CCrack::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
 	//----------------------------------------------------------------------------------------------------
 	// Component
 	//----------------------------------------------------------------------------------------------------
@@ -166,18 +102,7 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 		return E_FAIL;
 #pragma endregion
 
-
-	// monster
-#pragma region Component_Texture_Translucent_Cube
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_Translucent_Cube", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/TranslucentCube%d.dds", 2))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region Component_Texture_MonSub
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_MonSub", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/MonSub%d.dds"))))
-		return E_FAIL;
-#pragma endregion
-
+	// snail
 #pragma region Component_Texture_SnailBody
 	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_SnailBody", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/SnailBody%d.dds"))))
 		return E_FAIL;
@@ -188,133 +113,9 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 		return E_FAIL;
 #pragma endregion
 
-#pragma region Component_Texture_YetiBody
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_YetiBody", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/YetiBody%d.dds"))))
+
+	if (FAILED(Setup_Stage_CubeTerrain(_T("Layer_CubeTerrain"))))
 		return E_FAIL;
-#pragma endregion
-
-#pragma region Component_Texture_YetiHead
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_YetiHead", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/YetiHead%d.dds"))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region Component_Texture_YetiLeft
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_YetiLeft", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/YetiPart%d.dds"))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region Component_Texture_YetiRight
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_YetiRight", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/YetiPart%d.dds"))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region Component_Texture_YetiLeftLeg
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_YetiLeftLeg", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/YetiPart%d.dds"))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region Component_Texture_YetiRightLeg
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_YetiRightLeg", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/YetiPart%d.dds"))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region Component_Texture_SemiBossBody
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_SemiBossBody", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/SemiBossBody%d.dds"))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region Component_Texture_SemiBossHead
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_SemiBossHead", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/SemiBossHead%d.dds"))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region Component_Texture_SemiBossPart
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_SemiBossPart", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/SemiBossPart%d.dds"))))
-		return E_FAIL;
-
-#pragma region Component_Texture_Bomb
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_Bomb", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/Bomb/Bomb%d.dds", 2))))
-		return E_FAIL;
-#pragma endregion
-
-
-
-	//projectile
-#pragma region GameObject_Snow
-	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Snow", CSnow::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region GameObject_Meteor
-	if (FAILED(pManagement->Add_GameObject_Prototype(m_eNextSceneID, L"GameObject_Meteor", CMeteor::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region Component_Texture_SpellJin
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_SpellJin", CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL, L"../Resources/SpellJin%d.png"))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region Component_Texture_Meteor
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_Meteor", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/Meteor%d.dds"))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region Component_Texture_EnergyBolt
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_EnergyBolt", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/EnergyBolt%d.dds"))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region Component_Texture_Crack
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_Crack", CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL, L"../Resources/Crack%d.png"))))
-		return E_FAIL;
-#pragma endregion
-	// player
-#pragma region Component_Texture_Player
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_Monster", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/Monster%d.dds"))))
-		return E_FAIL;
-
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_PlayerHead", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE,
-			L"../Resources/Player/PlayerHead%d.dds"))))
-		return E_FAIL;
-
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_PlayerHand", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE,
-			L"../Resources/Player/PlayerHand%d.dds"))))
-		return E_FAIL;
-
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_PlayerFoot", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE,
-			L"../Resources/Player/PlayerFoot%d.dds"))))
-		return E_FAIL;
-#pragma endregion
-
-
-
-	// item
-#pragma region Component_Texture_Item
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_DropDiamond", CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL, L"../Resources/item/diamond%d.png"))))
-		return E_FAIL;
-#pragma endregion
-	
-#pragma region Component_Texture_Ruby
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_DropRuby", CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL, L"../Resources/item/ruby%d.png"))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region Component_Texture_ironsword
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_Dropiron_sword", CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL, L"../Resources/item/iron_sword%d.png"))))
-		return E_FAIL;
-#pragma endregion
-
-
-	if (FAILED(pManagement->Add_Component_Prototype(m_eNextSceneID, L"Component_Texture_Snow", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE,
-		L"../Resources/Snow%d.dds"))))
-		return E_FAIL;
-
-	//타일 데이터 불러오기
-
-
-
-	Setup_Stage_CubeTerrain(_T("Layer_CubeTerrain"));
 
 
 	return S_OK;
@@ -322,9 +123,7 @@ HRESULT CPreLoader::Load_Resources_Stage0()
 
 HRESULT CPreLoader::Load_Resources_Stage1()
 {
-
-	
-
+	// TODO : 추가하시오
 	return S_OK;
 }
 

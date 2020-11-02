@@ -66,7 +66,7 @@ HRESULT CEnergyBolt::Render_NoneAlpha()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Camera");
+	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Camera");
 
 	if (nullptr == pCamera)
 		return E_FAIL;
@@ -86,7 +86,7 @@ HRESULT CEnergyBolt::Render_NoneAlpha()
 HRESULT CEnergyBolt::Add_Component()
 {
 	CTransform::TRANSFORM_DESC tTransformDesc;
-	tTransformDesc.vPosition = m_tInstant.vPosition;/*{ m_vGoalPos.x - 10.f, m_vGoalPos.y + 14.f, m_vGoalPos.z + 10.f };*/
+	tTransformDesc.vPosition = m_tInstant.vPosition;
 	tTransformDesc.fSpeedPerSecond = 10.f;
 	tTransformDesc.fRotatePerSecond = D3DXToRadian(90.f);
 
@@ -103,7 +103,7 @@ HRESULT CEnergyBolt::Add_Component()
 		return E_FAIL;
 
 	// For.Com_Texture
-	if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, L"Component_Texture_EnergyBolt", L"Com_Texture", (CComponent**)&m_pTextureCom)))
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Texture_EnergyBolt", L"Com_Texture", (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	// For.Transform

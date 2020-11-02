@@ -71,7 +71,7 @@ HRESULT CMeteor::Render_NoneAlpha()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Camera");
+	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Camera");
 	if (nullptr == pCamera)
 		return E_FAIL;
 
@@ -107,7 +107,7 @@ HRESULT CMeteor::Add_Component()
 		return E_FAIL;
 
 	// For.Com_Texture
-	if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, L"Component_Texture_Meteor", L"Com_Texture", (CComponent**)&m_pTextureCom)))
+	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Texture_Meteor", L"Com_Texture", (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 	
 	// For.Transform
@@ -181,11 +181,6 @@ HRESULT CMeteor::FallDown_Meteor(_float _fDeltaTime)
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Terrain", L"Com_VIBuffer");
-	if (nullptr == pTerrainBuffer)
-		return E_FAIL;
-
-
 	if (vPos.y < m_tInstant.vPosition.y)
 	{
 		m_bDead = true;
@@ -205,7 +200,7 @@ HRESULT CMeteor::IsOnTerrain()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Terrain", L"Com_VIBuffer");
+	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Terrain", L"Com_VIBuffer");
 	if (nullptr == pTerrainBuffer)
 		return E_FAIL;
 

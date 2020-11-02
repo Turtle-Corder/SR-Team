@@ -66,6 +66,16 @@ HRESULT CGameObject::Take_Damage(const CComponent* _pDamageComp)
 	return E_NOTIMPL;
 }
 
+void CGameObject::Set_Dead()
+{
+	m_bDead = true;
+}
+
+_bool CGameObject::IsDead()
+{
+	return m_bDead;
+}
+
 CComponent * CGameObject::Get_Component(const wstring & _strComponentTag)
 {
 	auto iter_find = m_Components.find(_strComponentTag);

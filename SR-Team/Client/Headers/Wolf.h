@@ -1,31 +1,36 @@
 #pragma once
-#ifndef __STUMP_H__
-#define __STUMP_H__
+#ifndef __WOLF_H__
+#define __WOLF_H__
 
 #include "GameObject.h"
 
 USING(Engine)
 BEGIN(Client)
 
-class CStump final : public CGameObject
+class CWolf final : public CGameObject
 {
-	enum STUMP
+	enum WOLF
 	{
-		STUMP_BASE,
-		STUMP_BODY,
-		STUMP_LH,
-		STUMP_RH,
-		STUMP_LEG1,
-		STUMP_LEG2,
-		STUMP_LEG3,
-		STUMP_LEG4,
-		STUMP_END
+		WOLF_BASE,
+		WOLF_BODY,
+		WOLF_NECK,
+		WOLF_HEAD,
+		WOLF_MOUTH,
+		WOLF_EAR1,
+		WOLF_EAR2,
+		WOLF_LEG1,
+		WOLF_LEG2,
+		WOLF_LEG3,
+		WOLF_LEG4,
+		WOLF_END
 	};
 	enum STATE { IDLE, MOVE, ATTACK, STATE_DEAD };
+	enum CHANGE { CHANGE_LEFT, CHANGE_RIGHT, CHANGE_END };
+	enum SHAKE { SHAKE_LHEAD, SHAKE_RHEAD, SHAKE_END };
 private:
-	explicit CStump(LPDIRECT3DDEVICE9 _pDevice);
-	explicit CStump(const CStump& _rOther);
-	virtual ~CStump() = default;
+	explicit CWolf(LPDIRECT3DDEVICE9 _pDevice);
+	explicit CWolf(const CWolf& _rOther);
+	virtual ~CWolf() = default;
 public:
 	virtual HRESULT Setup_GameObject_Prototype() override;
 	virtual HRESULT Setup_GameObject(void * _pArg) override;
@@ -35,7 +40,7 @@ public:
 	virtual HRESULT Render_NoneAlpha() override;
 public:
 	virtual void Free() override;
-	static  CStump* Create(LPDIRECT3DDEVICE9 _pDevice);
+	static  CWolf* Create(LPDIRECT3DDEVICE9 _pDevice);
 private:
 	HRESULT Add_Component();
 	HRESULT Update_State();
@@ -45,11 +50,13 @@ private:
 	HRESULT LookAtPlayer(_float _fDeltaTime);
 	HRESULT Attack(_float _fDeltaTime);
 	HRESULT Setting_Part();
+	HRESULT MoveMotion(_float _fDeltaTime);
+	HRESULT AttackMotion(_float _fDeltaTime);
 	HRESULT Spawn_InstantImpact(const wstring& LayerTag);
 private:
-	CVIBuffer*		m_pVIBufferCom[STUMP_END] = {};
-	CTransform*		m_pTransformCom[STUMP_END] = {};
-	CTexture*		m_pTextureCom[STUMP_END] = {};
+	CVIBuffer*		m_pVIBufferCom[WOLF_END] = {};
+	CTransform*		m_pTransformCom[WOLF_END] = {};
+	CTexture*		m_pTextureCom[WOLF_END] = {};
 
 
 private:
@@ -64,8 +71,13 @@ private:
 	_bool		m_bCheck = false;
 	_bool		m_bCrash = false;
 	_vec3		m_vPrePos = {};
+
+	_float		m_fMoveTime = 0.f;
+	CHANGE		m_eMove = CHANGE_LEFT;
+	_float		m_fHeadShakeTime = 0.f;
+	SHAKE		m_eHead = SHAKE_LHEAD;
 };
 
 END
 
-#endif //__STUMP_H__
+#endif // !__WOLF_H__

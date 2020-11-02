@@ -30,7 +30,7 @@ _int CScene_Logo::Update_Scene(_float _fDeltaTime)
 	if (nullptr == pManagement)
 		return -1;
 
-	if (GetAsyncKeyState(VK_RETURN) & 0x8000 && m_pPreLoader->IsFinished())
+	if (pManagement->Key_Down(VK_RETURN) && m_pPreLoader->IsFinished())
 	{
 		if (FAILED(pManagement->Change_CurrentScene(SCENE_STAGE0, CScene_Stage0::Create(m_pDevice))))
 		{

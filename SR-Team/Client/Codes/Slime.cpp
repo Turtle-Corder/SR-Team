@@ -57,7 +57,7 @@ _int CSlime::Update_GameObject(_float _fDeltaTime)
 		//}
 		//else
 		//{
-		if (FAILED(Create_Item(L"Layer_DropItem")))
+		if (FAILED(Spawn_Item(L"Layer_DropItem")))
 			return GAMEOBJECT::WARN;
 		//}
 
@@ -66,9 +66,6 @@ _int CSlime::Update_GameObject(_float _fDeltaTime)
 
 	Update_State();
 
-	if (pManagement->Key_Down(VK_F4))
-		m_bDead = true;
-
 	if (FAILED(Movement(_fDeltaTime)))
 		return GAMEOBJECT::WARN;
 
@@ -76,10 +73,6 @@ _int CSlime::Update_GameObject(_float _fDeltaTime)
 
 	if (FAILED(Move(_fDeltaTime)))
 		return GAMEOBJECT::WARN;
-
-
-	if (pManagement->Key_Down(VK_F8))
-		m_eCurState = CSlime::STATE_MOVE;
 
 	if (FAILED(Attack(_fDeltaTime)))
 		return GAMEOBJECT::WARN;
@@ -116,7 +109,7 @@ HRESULT CSlime::Render_BlendAlpha()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Camera");
+	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Camera");
 	if (nullptr == pCamera)
 		return E_FAIL;
 
@@ -138,7 +131,7 @@ HRESULT CSlime::Render_NoneAlpha()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Camera");
+	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Camera");
 	if (nullptr == pCamera)
 		return E_FAIL;
 
@@ -191,7 +184,11 @@ HRESULT CSlime::Add_Component()
 	//--------------------------------------------------
 	// Texture Component
 	//--------------------------------------------------
-	if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, L"Component_Texture_Translucent_Cube", L"Com_Texture", (CComponent**)&m_pTextureCom)))
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
+	if (FAILED(CGameObject::Add_Component(pManagement->Get_CurrentSceneID(), L"Component_Texture_Translucent_Cube", L"Com_Texture", (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	m_ePreState = CSlime::STATE_IDLE;
@@ -217,7 +214,7 @@ HRESULT CSlime::IsOnTerrain()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Terrain", L"Com_VIBuffer");
+	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Terrain", L"Com_VIBuffer");
 	if (nullptr == pTerrainBuffer)
 		return E_FAIL;
 
@@ -263,7 +260,7 @@ HRESULT CSlime::LookAtPlayer(float _fDeltaTime)
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform0");
+	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Player", L"Com_Transform0");
 
 	if (nullptr == pPlayerTransform)
 		return E_FAIL;
@@ -328,7 +325,7 @@ HRESULT CSlime::Divide_Cube(const wstring & LayerTag)
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Translucent_Cube", SCENE_STAGE0, LayerTag, &m_iCurCount)))
+	if (FAILED(pManagement->Add_GameObject_InLayer(pManagement->Get_CurrentSceneID(), L"GameObject_Translucent_Cube", pManagement->Get_CurrentSceneID(), LayerTag, &m_iCurCount)))
 		return E_FAIL;
 
 	return S_OK;
@@ -376,7 +373,7 @@ void CSlime::Free()
 	CGameObject::Free();
 }
 
-HRESULT CSlime::Create_Item(const wstring & LayerTag)
+HRESULT CSlime::Spawn_Item(const wstring & LayerTag)
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
@@ -384,13 +381,13 @@ HRESULT CSlime::Create_Item(const wstring & LayerTag)
 
 	_vec3 vPos = m_pTransformCom[SLIME_BASE]->Get_Desc().vPosition;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_DropItem", SCENE_STAGE0, LayerTag, &vPos)))
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_DropItem", pManagement->Get_CurrentSceneID(), LayerTag, &vPos)))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CSlime::Create_Crack(const wstring & LayerTag)
+HRESULT CSlime::Spawn_Crack(const wstring & LayerTag)
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
@@ -398,7 +395,7 @@ HRESULT CSlime::Create_Crack(const wstring & LayerTag)
 
 	_vec3 vPos = m_pTransformCom[SLIME_BASE]->Get_Desc().vPosition;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Crack", SCENE_STAGE0, LayerTag, &vPos)))
+	if (FAILED(pManagement->Add_GameObject_InLayer(pManagement->Get_CurrentSceneID(), L"GameObject_Crack", pManagement->Get_CurrentSceneID(), LayerTag, &vPos)))
 		return E_FAIL;
 
 	return S_OK;
@@ -431,7 +428,7 @@ HRESULT CSlime::Move(_float _fDeltaTime)
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform0");
+	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Player", L"Com_Transform0");
 
 	if (nullptr == pPlayerTransform)
 		return E_FAIL;
@@ -507,7 +504,7 @@ HRESULT CSlime::Attack(_float _fDeltaTime)
 					m_fJumpTime = 0.f;
 					m_fStartTime = 0.f;
 
-					if (FAILED(Create_Crack(L"Layer_Crack")))
+					if (FAILED(Spawn_Crack(L"Layer_Effect")))
 						return E_FAIL;
 
 					m_eCurState = CSlime::STATE_MOVE;

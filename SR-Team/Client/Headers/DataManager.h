@@ -2,18 +2,27 @@
 #ifndef __ITEM_H__
 #define __ITEM_H__
 
-#include "GameObject.h"
+#include "Base.h"
 
 USING(Engine)
 BEGIN(Client)
 
 class CStatus;
-class CItem : public CGameObject
+class CDataManager final : public CBase
 {
+	DECLARE_SINGLETON(CDataManager)
+
 private:
-	explicit CItem(LPDIRECT3DDEVICE9 _pDevice);
-	explicit CItem(const CItem& _rOther);
-	virtual ~CItem() = default;
+	CDataManager();
+	virtual ~CDataManager() = default;
+
+public:
+	// CGameObject을(를) 통해 상속됨
+	HRESULT Setup_DataManager();
+
+private:
+	HRESULT Setup_Component_Item();
+	HRESULT Setup_Component_SkillIcon();
 
 public:
 	// ------------------------------------------------------------------
@@ -35,6 +44,8 @@ public:
 	// ------------------------------------------------------------------
 	CStatus* Get_ItemStat(const wstring& strItemTag);
 
+	virtual void Free() override;
+
 
 public:
 	// ------------------------------------------------------------------
@@ -44,28 +55,6 @@ public:
 	INVEN_ITEM* Get_ActiveSkillIcon(_int iSkillID);
 
 
-public:
-	// CGameObject을(를) 통해 상속됨
-	virtual HRESULT Setup_GameObject_Prototype() override;
-	virtual HRESULT Setup_GameObject(void * pArg) override;
-	virtual int Update_GameObject(float DeltaTime) override;
-	virtual int LateUpdate_GameObject(float DeltaTime) override;
-	virtual HRESULT Render_UI() override;
-
-
-private:
-	HRESULT Add_Component();
-	HRESULT Add_Component_Item();
-	HRESULT Add_Component_SkillIcon();
-
-public:
-	static CItem* Create(LPDIRECT3DDEVICE9 pDevice);
-	virtual CGameObject * Clone_GameObject(void * pArg) override;
-	virtual void Free() override;
-
-private:
-	bool			m_bRenderShopItem = false;
-	bool			m_bRenderInvenItem = false;
 
 // 아이템
 private:

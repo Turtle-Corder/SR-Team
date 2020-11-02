@@ -8,20 +8,20 @@ BEGIN(Client)
 USING(Engine)
 class CPlayerSkill;
 
-class CSkillManager 
+class CSkillSlotManager 
 {
 private:
-	CSkillManager();
-	virtual ~CSkillManager() = default;
+	CSkillSlotManager();
+	virtual ~CSkillSlotManager() = default;
 
 public:
-	CPlayerSkill* Get_PlayerSkill(eActiveSkill_ID eSkillID);
+	CSkillSlotManager* Get_PlayerSkill(eActiveSkill_ID eSkillID);
 
 public:
-	static CSkillManager* Get_Instance()
+	static CSkillSlotManager* Get_Instance()
 	{
 		if (!m_pInstance)
-			m_pInstance = new CSkillManager;
+			m_pInstance = new CSkillSlotManager;
 		return m_pInstance;
 	}
 	static void Destroy_Instance()
@@ -31,7 +31,7 @@ public:
 	}
 
 private:
-	static CSkillManager*	m_pInstance;
+	static CSkillSlotManager*	m_pInstance;
 
 	CPlayerSkill*			m_pLaserSkill = nullptr;
 	CPlayerSkill*			m_pMeteoSkill = nullptr;

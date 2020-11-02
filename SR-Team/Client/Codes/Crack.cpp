@@ -67,7 +67,7 @@ HRESULT CCrack::Render_OnlyAlpha()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Camera");
+	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Camera");
 	if (nullptr == pCamera)
 		return E_FAIL;
 
@@ -85,16 +85,17 @@ HRESULT CCrack::Render_OnlyAlpha()
 
 HRESULT CCrack::Add_Component()
 {
+
+	CManagement* pManagement = CManagement::Get_Instance();
+	if (nullptr == pManagement)
+		return E_FAIL;
+
 	// For.Com_VIBuffer
 	if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_VIBuffer_RectTexture", L"Com_VIBuffer", (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
 
 	// For.Com_Texture
-	if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, L"Component_Texture_Crack", L"Com_Texture", (CComponent**)&m_pTextureCom)))
-		return E_FAIL;
-
-	CManagement* pManagement = CManagement::Get_Instance();
-	if (nullptr == pManagement)
+	if (FAILED(CGameObject::Add_Component(pManagement->Get_CurrentSceneID(), L"Component_Texture_Crack", L"Com_Texture", (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	CTransform::TRANSFORM_DESC tTransformDesc;
@@ -129,7 +130,7 @@ HRESULT CCrack::IsOnTerrain()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Terrain", L"Com_VIBuffer");
+	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Terrain", L"Com_VIBuffer");
 	if (nullptr == pTerrainBuffer)
 		return E_FAIL;
 

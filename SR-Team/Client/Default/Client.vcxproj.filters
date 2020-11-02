@@ -97,20 +97,8 @@
     <Filter Include="02.GameObject\07.UI\02.Shop">
       <UniqueIdentifier>{afbe2cc3-79fc-4204-9037-527a26e9c9a1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\08.Item">
-      <UniqueIdentifier>{285b4fc2-e219-440b-b43d-6d5f4941fd6b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\06.Projectile">
       <UniqueIdentifier>{c9a2f922-6c40-4e2c-aecc-1dc36f3980c7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\06.Projectile\00.Snow">
-      <UniqueIdentifier>{f62a80ab-2cc2-46bc-b22f-fa974e98bf11}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\06.Projectile\01.Meteor">
-      <UniqueIdentifier>{075b6e39-11be-4393-96f1-bb64bc362d67}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\06.Projectile\02.Lazer">
-      <UniqueIdentifier>{3ee09ed5-be29-4894-9e21-61ef9485ae8f}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\09.DropItem">
       <UniqueIdentifier>{a6069dc8-8a02-4b8c-bcb7-0171dc2e9d7b}</UniqueIdentifier>
@@ -157,17 +145,8 @@
     <Filter Include="02.GameObject\05.Monster\03.Semi_Boss%28Golem%29\01.MonSub">
       <UniqueIdentifier>{e9e2c834-d279-4828-8b70-9fb9898e3ed6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\05.Monster\04.PinkBean%28Boss%29">
-      <UniqueIdentifier>{1a31d838-1bb9-4d79-9d0e-a6a05db64783}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\05.Monster\04.PinkBean%28Boss%29\00.Fire">
-      <UniqueIdentifier>{3d212d16-de59-472b-834c-584aea8c77ec}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.Component\00.VIBuffer\03.Pyramid">
       <UniqueIdentifier>{bb22c851-55c5-41c8-94b4-8494f5c5b615}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\06.Projectile\03.Plane">
-      <UniqueIdentifier>{f411ec74-1aa1-49db-aadd-6167aa9d7ef6}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\00.Terrain\99.TerrainBundle">
       <UniqueIdentifier>{1c343f57-81c6-4993-9853-91c5861cc28c}</UniqueIdentifier>
@@ -202,9 +181,6 @@
     <Filter Include="02.GameObject\15. ItemInventory">
       <UniqueIdentifier>{b7f6ed01-4dc7-4de3-8ad3-9f5a43effd44}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\06.Projectile\04.EnergyBolt">
-      <UniqueIdentifier>{974fd06f-931e-4781-917e-200b1ba94ca7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\11.Instant_Impact">
       <UniqueIdentifier>{b3ed9e18-8920-43db-b876-047dc6c8b215}</UniqueIdentifier>
     </Filter>
@@ -219,12 +195,6 @@
     </Filter>
     <Filter Include="02.GameObject\11.Instant_Impact\02.Snail_Impact">
       <UniqueIdentifier>{8f8feba1-5b6e-4b40-8795-83ca4fa74a36}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\08.Item\00.Wand">
-      <UniqueIdentifier>{149baf85-c5c6-4663-82ea-218486cb2f67}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\06.Projectile\05.Crack">
-      <UniqueIdentifier>{6c0b2378-27a4-4201-a52e-4372862b8bb7}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\15.ActiveObject">
       <UniqueIdentifier>{c5c8283b-71e9-4826-b340-f4397d7a75ac}</UniqueIdentifier>
@@ -255,6 +225,33 @@
     </Filter>
     <Filter Include="02.GameObject\13. PlayerSkill\05.IceStrike">
       <UniqueIdentifier>{8e088724-e126-45d3-881b-75a961e9f7f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.Monster\06.Wolf">
+      <UniqueIdentifier>{08c6e807-e236-4013-99b1-0401255fa85f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\06.Projectile\00.Player">
+      <UniqueIdentifier>{ef43c7f5-3e95-491f-8e2d-2a8861789dc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\06.Projectile\00.Player\00.EnergyBolt">
+      <UniqueIdentifier>{974fd06f-931e-4781-917e-200b1ba94ca7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\06.Projectile\00.Player\01.Meteor">
+      <UniqueIdentifier>{075b6e39-11be-4393-96f1-bb64bc362d67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\06.Projectile\01.Monster">
+      <UniqueIdentifier>{e434fadd-c399-44a2-aaed-268db4381a03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\06.Projectile\01.Monster\05.Crack">
+      <UniqueIdentifier>{6c0b2378-27a4-4201-a52e-4372862b8bb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\06.Projectile\01.Monster\00.Snow">
+      <UniqueIdentifier>{f62a80ab-2cc2-46bc-b22f-fa974e98bf11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\08.Data">
+      <UniqueIdentifier>{285b4fc2-e219-440b-b43d-6d5f4941fd6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\04.Player\00.Wand">
+      <UniqueIdentifier>{149baf85-c5c6-4663-82ea-218486cb2f67}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -309,9 +306,6 @@
     <ClInclude Include="..\Headers\UICamera.h">
       <Filter>02.GameObject\01.Camera\01.UICamera</Filter>
     </ClInclude>
-    <ClInclude Include="..\Headers\Item.h">
-      <Filter>02.GameObject\08.Item</Filter>
-    </ClInclude>
     <ClInclude Include="..\Headers\MainUI.h">
       <Filter>02.GameObject\07.UI\00.MainUI</Filter>
     </ClInclude>
@@ -322,10 +316,10 @@
       <Filter>02.GameObject\05.Monster\00.Snail</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\Snow.h">
-      <Filter>02.GameObject\06.Projectile\00.Snow</Filter>
+      <Filter>02.GameObject\06.Projectile\01.Monster\00.Snow</Filter>
     </ClInclude>
     <ClInclude Include="..\headers\Meteor.h">
-      <Filter>02.GameObject\06.Projectile\01.Meteor</Filter>
+      <Filter>02.GameObject\06.Projectile\00.Player\01.Meteor</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\DropItem.h">
       <Filter>02.GameObject\09.DropItem</Filter>
@@ -360,17 +354,11 @@
     <ClInclude Include="..\Headers\MonSub.h">
       <Filter>02.GameObject\05.Monster\03.Semi_Boss%28Golem%29\01.MonSub</Filter>
     </ClInclude>
-    <ClInclude Include="..\Headers\PinkBean.h">
-      <Filter>02.GameObject\05.Monster\04.PinkBean%28Boss%29</Filter>
-    </ClInclude>
     <ClInclude Include="..\Headers\Equip.h">
       <Filter>02.GameObject\07.UI\03. Equip</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\VIBuffer_Pyramid.h">
       <Filter>03.Component\00.VIBuffer\03.Pyramid</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Headers\PlaneSkill.h">
-      <Filter>02.GameObject\06.Projectile\03.Plane</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\TerrainBundle.h">
       <Filter>02.GameObject\00.Terrain\99.TerrainBundle</Filter>
@@ -390,9 +378,6 @@
     <ClInclude Include="..\Headers\Slime.h">
       <Filter>02.GameObject\05.Monster\01.Slime</Filter>
     </ClInclude>
-    <ClInclude Include="..\Headers\SkillManager.h">
-      <Filter>04.Manager\02. SkillManager</Filter>
-    </ClInclude>
     <ClInclude Include="..\Headers\SkillInven.h">
       <Filter>02.GameObject\12. SkillInventory</Filter>
     </ClInclude>
@@ -405,9 +390,6 @@
     <ClInclude Include="..\Headers\PlayerItem.h">
       <Filter>02.GameObject\14. PlayerItem</Filter>
     </ClInclude>
-    <ClInclude Include="..\Headers\ItemManager.h">
-      <Filter>04.Manager\01.ItemManager</Filter>
-    </ClInclude>
     <ClInclude Include="..\Headers\RedPotion.h">
       <Filter>02.GameObject\14. PlayerItem\00. RedPotion</Filter>
     </ClInclude>
@@ -418,7 +400,7 @@
       <Filter>02.GameObject\15. ItemInventory</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\EnergyBolt.h">
-      <Filter>02.GameObject\06.Projectile\04.EnergyBolt</Filter>
+      <Filter>02.GameObject\06.Projectile\00.Player\00.EnergyBolt</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\Golem_Impact.h">
       <Filter>02.GameObject\11.Instant_Impact\00.Golem_Impact</Filter>
@@ -433,10 +415,10 @@
       <Filter>02.GameObject\11.Instant_Impact\02.Snail_Impact</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\Wand.h">
-      <Filter>02.GameObject\08.Item\00.Wand</Filter>
+      <Filter>02.GameObject\04.Player\00.Wand</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\Crack.h">
-      <Filter>02.GameObject\06.Projectile\05.Crack</Filter>
+      <Filter>02.GameObject\06.Projectile\01.Monster\05.Crack</Filter>
     </ClInclude>
     <ClInclude Include="..\Headers\EventTrigger.h">
       <Filter>02.GameObject\15.ActiveObject\00.EventTrigger</Filter>
@@ -454,9 +436,23 @@
     <ClInclude Include="..\Headers\EnergyExploitationSkill.h">
       <Filter>02.GameObject\13. PlayerSkill\04. EnergyExploitation</Filter>
     </ClInclude>
-    <ClInclude Include="..\Headers\Stump.h" />
     <ClInclude Include="..\Headers\IceStrikeSkill.h">
       <Filter>02.GameObject\13. PlayerSkill\05.IceStrike</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Stump.h">
+      <Filter>02.GameObject\05.Monster\05.Stump</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Wolf.h">
+      <Filter>02.GameObject\05.Monster\06.Wolf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\ItemSlotManager.h">
+      <Filter>04.Manager\01.ItemManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\SkillSlotManager.h">
+      <Filter>04.Manager\02. SkillManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\DataManager.h">
+      <Filter>02.GameObject\08.Data</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -496,9 +492,6 @@
     <ClCompile Include="..\Codes\UICamera.cpp">
       <Filter>02.GameObject\01.Camera\01.UICamera</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\Item.cpp">
-      <Filter>02.GameObject\08.Item</Filter>
-    </ClCompile>
     <ClCompile Include="..\Codes\MainUI.cpp">
       <Filter>02.GameObject\07.UI\00.MainUI</Filter>
     </ClCompile>
@@ -512,10 +505,10 @@
       <Filter>02.GameObject\05.Monster\00.Snail</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Snow.cpp">
-      <Filter>02.GameObject\06.Projectile\00.Snow</Filter>
+      <Filter>02.GameObject\06.Projectile\01.Monster\00.Snow</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Meteor.cpp">
-      <Filter>02.GameObject\06.Projectile\01.Meteor</Filter>
+      <Filter>02.GameObject\06.Projectile\00.Player\01.Meteor</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\DropItem.cpp">
       <Filter>02.GameObject\09.DropItem</Filter>
@@ -550,17 +543,11 @@
     <ClCompile Include="..\Codes\MonSub.cpp">
       <Filter>02.GameObject\05.Monster\03.Semi_Boss%28Golem%29\01.MonSub</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\PinkBean.cpp">
-      <Filter>02.GameObject\05.Monster\04.PinkBean%28Boss%29</Filter>
-    </ClCompile>
     <ClCompile Include="..\Codes\Equip.cpp">
       <Filter>02.GameObject\07.UI\03. Equip</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\VIBuffer_Pyramid.cpp">
       <Filter>03.Component\00.VIBuffer\03.Pyramid</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Codes\PlaneSkill.cpp">
-      <Filter>02.GameObject\06.Projectile\03.Plane</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\TerrainBundle.cpp">
       <Filter>02.GameObject\00.Terrain\99.TerrainBundle</Filter>
@@ -577,9 +564,6 @@
     <ClCompile Include="..\Codes\Yeti.cpp">
       <Filter>02.GameObject\05.Monster\02.Yeti</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\SkillManager.cpp">
-      <Filter>04.Manager\02. SkillManager</Filter>
-    </ClCompile>
     <ClCompile Include="..\Codes\SkillInven.cpp">
       <Filter>02.GameObject\12. SkillInventory</Filter>
     </ClCompile>
@@ -592,9 +576,6 @@
     <ClCompile Include="..\Codes\PlayerItem.cpp">
       <Filter>02.GameObject\14. PlayerItem</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\ItemManager.cpp">
-      <Filter>04.Manager\01.ItemManager</Filter>
-    </ClCompile>
     <ClCompile Include="..\Codes\RedPotion.cpp">
       <Filter>02.GameObject\14. PlayerItem\00. RedPotion</Filter>
     </ClCompile>
@@ -605,7 +586,7 @@
       <Filter>02.GameObject\15. ItemInventory</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\EnergyBolt.cpp">
-      <Filter>02.GameObject\06.Projectile\04.EnergyBolt</Filter>
+      <Filter>02.GameObject\06.Projectile\00.Player\00.EnergyBolt</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Golem_Impact.cpp">
       <Filter>02.GameObject\11.Instant_Impact\00.Golem_Impact</Filter>
@@ -620,10 +601,10 @@
       <Filter>02.GameObject\11.Instant_Impact\02.Snail_Impact</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Wand.cpp">
-      <Filter>02.GameObject\08.Item\00.Wand</Filter>
+      <Filter>02.GameObject\04.Player\00.Wand</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\Crack.cpp">
-      <Filter>02.GameObject\06.Projectile\05.Crack</Filter>
+      <Filter>02.GameObject\06.Projectile\01.Monster\05.Crack</Filter>
     </ClCompile>
     <ClCompile Include="..\Codes\EventTrigger.cpp">
       <Filter>02.GameObject\15.ActiveObject\00.EventTrigger</Filter>
@@ -641,9 +622,23 @@
     <ClCompile Include="..\Codes\EnergyExploitationSkill.cpp">
       <Filter>02.GameObject\13. PlayerSkill\04. EnergyExploitation</Filter>
     </ClCompile>
-    <ClCompile Include="..\Codes\Stump.cpp" />
     <ClCompile Include="..\Codes\IceStrikeSkill.cpp">
       <Filter>02.GameObject\13. PlayerSkill\05.IceStrike</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Stump.cpp">
+      <Filter>02.GameObject\05.Monster\05.Stump</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\Wolf.cpp">
+      <Filter>02.GameObject\05.Monster\06.Wolf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\ItemSlotManager.cpp">
+      <Filter>04.Manager\01.ItemManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\SkillSlotManager.cpp">
+      <Filter>04.Manager\02. SkillManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\DataManager.cpp">
+      <Filter>02.GameObject\08.Data</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

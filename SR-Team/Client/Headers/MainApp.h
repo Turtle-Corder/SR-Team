@@ -28,6 +28,11 @@ private:
 	HRESULT Setup_StaticResources();
 	HRESULT Setup_UIResources();
 
+	HRESULT Setup_HK();
+	HRESULT Setup_YJ();
+	HRESULT Setup_EB();
+	HRESULT Setup_DS();
+
 public:
 	static CMainApp* Create();
 	virtual void Free() override;

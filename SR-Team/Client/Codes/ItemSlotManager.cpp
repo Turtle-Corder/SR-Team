@@ -1,11 +1,11 @@
 #include "stdafx.h"
-#include "..\Headers\ItemManager.h"
+#include "..\Headers\ItemSlotManager.h"
 
 
 USING(Client)
-CItemManager* CItemManager::m_pInstance = nullptr;
+CItemSlotManager* CItemSlotManager::m_pInstance = nullptr;
 
-CItemManager::CItemManager()
+CItemSlotManager::CItemSlotManager()
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 
@@ -15,7 +15,7 @@ CItemManager::CItemManager()
 	m_pBlueElixir = (CPlayerItem*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_PlayerItem", 3);
 }
 
-CPlayerItem * CItemManager::Get_PlayerItem(ePotion_ID ePotionID)
+CPlayerItem * CItemSlotManager::Get_PlayerItem(ePotion_ID ePotionID)
 {
 	switch (ePotionID)
 	{

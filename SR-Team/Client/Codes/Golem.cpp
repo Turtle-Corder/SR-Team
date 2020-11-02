@@ -67,7 +67,7 @@ HRESULT CGolem::Render_NoneAlpha()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Camera");
+	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Camera");
 	if (nullptr == pCamera)
 		return E_FAIL;
 
@@ -177,44 +177,44 @@ HRESULT CGolem::Add_Component()
 		StringCchPrintf(szName, sizeof(TCHAR) * MAX_PATH, L"Com_VIBuffer%d", iCnt);
 
 		if (iCnt == GOLEM_BASE)
-			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_CubeTexture");
+			StringCchPrintf(szVIBuffer, _countof(szName), L"Component_VIBuffer_CubeTexture");
 		else if (iCnt == GOLEM_CENTER)
-			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_CubeTexture");
+			StringCchPrintf(szVIBuffer, _countof(szName), L"Component_VIBuffer_CubeTexture");
 		else if (iCnt == GOLEM_BODY)
-			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_CubeTexture");
+			StringCchPrintf(szVIBuffer, _countof(szName), L"Component_VIBuffer_CubeTexture");
 		else if (iCnt == GOLEM_HEAD)
-			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_CubeTexture");
+			StringCchPrintf(szVIBuffer, _countof(szName), L"Component_VIBuffer_CubeTexture");
 		else if (iCnt == GOLEM_LEFT_ARM)
-			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_CubeTexture");
+			StringCchPrintf(szVIBuffer, _countof(szName), L"Component_VIBuffer_CubeTexture");
 		else if (iCnt == GOLEM_RIGHT_ARM)
-			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_CubeTexture");
+			StringCchPrintf(szVIBuffer, _countof(szName), L"Component_VIBuffer_CubeTexture");
 		else if (iCnt == GOLEM_LEFT_LEG)
-			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_CubeTexture");
+			StringCchPrintf(szVIBuffer, _countof(szName), L"Component_VIBuffer_CubeTexture");
 		else if (iCnt == GOLEM_RIGHT_LEG)
-			StringCchPrintf(szVIBuffer, sizeof(TCHAR) * MAX_PATH, L"Component_VIBuffer_CubeTexture");
+			StringCchPrintf(szVIBuffer, _countof(szName), L"Component_VIBuffer_CubeTexture");
 
 		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, szVIBuffer , szName, (CComponent**)&m_pVIBufferCom[iCnt]))) //생성 갯수
 			return E_FAIL;
 
 		//경우마다 그거에 맞게 복사해서 최종적으로 문자열 들어가게만들기
 		if (iCnt == GOLEM_BASE)
-			StringCchPrintf(szPartName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_SemiBossBody");
+			StringCchPrintf(szPartName, _countof(szName), L"Component_Texture_SemiBossBody");
 		else if (iCnt == GOLEM_CENTER) 
-			StringCchPrintf(szPartName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_SemiBossBody");
+			StringCchPrintf(szPartName, _countof(szName), L"Component_Texture_SemiBossBody");
 		else if (iCnt == GOLEM_BODY)
-			StringCchPrintf(szPartName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_SemiBossBody");
+			StringCchPrintf(szPartName, _countof(szName), L"Component_Texture_SemiBossBody");
 		else if (iCnt == GOLEM_HEAD)
-			StringCchPrintf(szPartName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_SemiBossHead");
+			StringCchPrintf(szPartName, _countof(szName), L"Component_Texture_SemiBossHead");
 		else if (iCnt == GOLEM_LEFT_ARM)
-			StringCchPrintf(szPartName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_SemiBossPart");
+			StringCchPrintf(szPartName, _countof(szName), L"Component_Texture_SemiBossPart");
 		else if (iCnt == GOLEM_RIGHT_ARM)
-			StringCchPrintf(szPartName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_SemiBossPart");
+			StringCchPrintf(szPartName, _countof(szName), L"Component_Texture_SemiBossPart");
 		else if (iCnt == GOLEM_LEFT_LEG)
-			StringCchPrintf(szPartName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_SemiBossPart");
+			StringCchPrintf(szPartName, _countof(szName), L"Component_Texture_SemiBossPart");
 		else if (iCnt == GOLEM_RIGHT_LEG)
-			StringCchPrintf(szPartName, sizeof(TCHAR) * MAX_PATH, L"Component_Texture_SemiBossPart");
+			StringCchPrintf(szPartName, _countof(szName), L"Component_Texture_SemiBossPart");
 
-		StringCchPrintf(szName, sizeof(TCHAR) * MAX_PATH, L"Com_Texture%d", iCnt);
+		StringCchPrintf(szName, _countof(szName), L"Com_Texture%d", iCnt);
 
 		if (FAILED(CGameObject::Add_Component(SCENE_STAGE0, szPartName, szName, (CComponent**)&m_pTextureCom[iCnt]))) ////생성 갯수
 			return E_FAIL;
@@ -280,7 +280,7 @@ HRESULT CGolem::Add_Component()
 			tTransformDesc[GOLEM_RIGHT_LEG].vScale = { 1.5f , 2.0f , 1.f };
 		}
 
-		StringCchPrintf(szName, sizeof(TCHAR) * MAX_PATH, L"Com_Transform%d", iCnt);
+		StringCchPrintf(szName, _countof(szName), L"Com_Transform%d", iCnt);
 
 		if (FAILED(CGameObject::Add_Component(SCENE_STATIC, L"Component_Transform", szName, (CComponent**)&m_pTransformCom[iCnt], &tTransformDesc[iCnt]))) ////생성 갯수
 			return E_FAIL;
@@ -382,7 +382,7 @@ HRESULT CGolem::IsOnTerrain()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Terrain", L"Com_VIBuffer");
+	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Terrain", L"Com_VIBuffer");
 	if (nullptr == pTerrainBuffer)
 		return E_FAIL;
 
@@ -435,7 +435,7 @@ HRESULT CGolem::Create_Bomb(_float _fDeltaTime)
 
 			m_vTemp = { vPos.x + m_vBombRand[m_iCreateCnt].x , vPos.y , vPos.z + m_vBombRand[m_iCreateCnt].z };
 
-			if (FAILED(Setup_LayerBomb(L"Layer_Bomb", m_vTemp)))
+			if (FAILED(Spawn_LayerBomb(L"Layer_Bomb", m_vTemp)))
 				return E_FAIL;
 
 			m_iCreateCnt += 1;
@@ -467,33 +467,32 @@ HRESULT CGolem::Create_MonSub(_float _fDeltaTime)
 
 			_vec3 m_vTemp = { vPos.x + m_vMonSubRand[m_iMonSubCreateCnt].x , vPos.y , vPos.z + m_vMonSubRand[m_iMonSubCreateCnt].z };
 
-			if (FAILED(Setup_Layer_MonSub(L"Layer_MonSub", m_vTemp)))
+			if (FAILED(Spawn_Layer_MonSub(L"Layer_MonSub", m_vTemp)))
 				return E_FAIL;
 		}
 	}
 	return S_OK;
 }
 
-HRESULT CGolem::Setup_LayerBomb(const wstring& LayerTag, _vec3 _vPos)
+HRESULT CGolem::Spawn_LayerBomb(const wstring& LayerTag, _vec3 _vPos)
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Bomb",
-		SCENE_STAGE0, LayerTag, &_vPos)))
+	if (FAILED(pManagement->Add_GameObject_InLayer(pManagement->Get_CurrentSceneID(), L"GameObject_Bomb", pManagement->Get_CurrentSceneID(), LayerTag, &_vPos)))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CGolem::Setup_Layer_MonSub(const wstring & LayerTag, _vec3 _vPos)
+HRESULT CGolem::Spawn_Layer_MonSub(const wstring & LayerTag, _vec3 _vPos)
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_MonSub", SCENE_STAGE0, LayerTag, &_vPos)))
+	if (FAILED(pManagement->Add_GameObject_InLayer(pManagement->Get_CurrentSceneID(), L"GameObject_MonSub", pManagement->Get_CurrentSceneID(), LayerTag, &_vPos)))
 		return E_FAIL;
 
 	return S_OK;
@@ -506,7 +505,7 @@ HRESULT CGolem::Move(_float _fDeltaTIme)
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform0");
+	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Player", L"Com_Transform0");
 
 	if (nullptr == pPlayerTransform)
 		return E_FAIL;
@@ -545,7 +544,7 @@ HRESULT CGolem::LookAtPlayer(_float _fDeltaTime)
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform0");
+	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Player", L"Com_Transform0");
 	if (nullptr == pPlayerTransform)
 		return E_FAIL;
 	//--------------------------------------------------

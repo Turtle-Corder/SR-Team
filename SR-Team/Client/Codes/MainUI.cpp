@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "UICamera.h"
-#include "Item.h"
+#include "ItemManager.h"
 #include "Inventory.h"
 #include "SkillInven.h"
 #include "ItemInventory.h"
@@ -45,7 +45,8 @@ HRESULT CMainUI::Get_QuickSlotItem(INVEN_ITEM * pItem)
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (pManagement == nullptr)
 		return E_FAIL;
-	CItem* pItems = (CItem*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Item");
+
+	CItemManager* pItems = (CItemManager*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Item");
 
 	m_pMovingItem = pItem;
 

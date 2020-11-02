@@ -64,7 +64,7 @@ HRESULT CMonSub::Render_NoneAlpha()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Camera");
+	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Camera");
 	if (nullptr == pCamera)
 		return E_FAIL;
 
@@ -170,7 +170,7 @@ HRESULT CMonSub::IsOnTerrain(_float _fDeltaTime)
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Terrain", L"Com_VIBuffer");
+	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Terrain", L"Com_VIBuffer");
 	if (nullptr == pTerrainBuffer)
 		return E_FAIL;
 
@@ -194,7 +194,7 @@ HRESULT CMonSub::Move(_float _fDeltaTime)
 		if (nullptr == pManagement)
 			return E_FAIL;
 
-		CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform0");
+		CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Player", L"Com_Transform0");
 
 		if (nullptr == pPlayerTransform)
 			return E_FAIL;
@@ -273,7 +273,7 @@ HRESULT CMonSub::Setting_Dir()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform0");
+	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Player", L"Com_Transform0");
 
 	if (nullptr == pPlayerTransform)
 		return E_FAIL;
@@ -295,7 +295,7 @@ HRESULT CMonSub::LookAtPlayer(_float _fDeltaTime)
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform0");
+	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Player", L"Com_Transform0");
 	if (nullptr == pPlayerTransform)
 		return E_FAIL;
 	//--------------------------------------------------

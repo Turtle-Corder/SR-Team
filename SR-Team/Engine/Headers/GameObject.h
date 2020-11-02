@@ -33,6 +33,8 @@ public:
 	virtual HRESULT Render_UI();
 
 	virtual HRESULT Take_Damage(const CComponent* _pDamageComp);
+	void	Set_Dead();
+	_bool	IsDead();
 
 public:
 	virtual CGameObject* Clone_GameObject(void* _pArg) = 0;
@@ -46,6 +48,8 @@ protected:
 
 	LPDIRECT3DDEVICE9	m_pDevice;
 
+
+	_bool				m_bDead = false;
 };
 
 END

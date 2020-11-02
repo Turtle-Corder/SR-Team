@@ -7,20 +7,20 @@ BEGIN(Client)
 USING(Engine)
 class CPlayerItem;
 
-class CItemManager
+class CItemSlotManager
 {
 private:
-	CItemManager();
-	virtual ~CItemManager() = default;
+	CItemSlotManager();
+	virtual ~CItemSlotManager() = default;
 
 public:
 	CPlayerItem* Get_PlayerItem(ePotion_ID ePotionID);
 
 public:
-	static CItemManager* Get_Instance()
+	static CItemSlotManager* Get_Instance()
 	{
 		if (!m_pInstance)
-			m_pInstance = new CItemManager;
+			m_pInstance = new CItemSlotManager;
 		return m_pInstance;
 	}
 	static void Destroy_Instance()
@@ -30,7 +30,7 @@ public:
 	}
 
 private:
-	static CItemManager*	m_pInstance;
+	static CItemSlotManager*	m_pInstance;
 
 	CPlayerItem*			m_pRedPotion = nullptr;
 	CPlayerItem*			m_pBluePotion = nullptr;

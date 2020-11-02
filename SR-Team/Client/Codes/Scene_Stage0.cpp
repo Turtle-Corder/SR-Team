@@ -14,10 +14,26 @@ HRESULT CScene_Stage0::Setup_Scene()
 {
 	SetWindowText(g_hWnd, L"CScene_Stage0");
 
+	//--------------------------------------------------
+	// 환경
+	//--------------------------------------------------
 	//if (FAILED(Setup_Layer_Skybox(L"Layer_Skybox")))
 	//	return E_FAIL;
 
 	if (FAILED(Setup_Layer_Terrain(L"Layer_Terrain")))
+		return E_FAIL;
+
+	/*if (FAILED(Setup_Layer_CubeTerrain(L"Layer_CubeTerrain")))
+	return E_FAIL;*/
+
+	if (FAILED(Setup_Layer_Environment(L"Layer_Environment")))
+		return E_FAIL;
+
+
+	//--------------------------------------------------
+	// 필수 오브젝트
+	//--------------------------------------------------
+	if (FAILED(Setup_Layer_Mouse(L"Layer_Mouse")))
 		return E_FAIL;
 
 	if (FAILED(Setup_Layer_Camera(L"Layer_Camera")))
@@ -26,15 +42,23 @@ HRESULT CScene_Stage0::Setup_Scene()
 	if (FAILED(Setup_Layer_Player(L"Layer_Player")))
 		return E_FAIL;
 
+
+	//--------------------------------------------------
+	// 몬스터 & 공격
+	//--------------------------------------------------
 	if (FAILED(Setup_Layer_Monster(L"Layer_Monster")))
 		return E_FAIL;
 
-	/*if (FAILED(Setup_Layer_CubeTerrain(L"Layer_CubeTerrain")))
-		return E_FAIL;*/
-
-	if (FAILED(Setup_Layer_Mouse(L"Layer_Mouse")))
+	if (FAILED(Setup_Layer_Monster_Attack(L"Layer_MonsterAtk")))
 		return E_FAIL;
 
+	if (FAILED(Setup_Layer_Player_Attack(L"Layer_PlayerAtk")))
+		return E_FAIL;
+
+
+	//--------------------------------------------------
+	// UI
+	//--------------------------------------------------
 	if (FAILED(Setup_Layer_UI(L"Layer_MainUI")))
 		return E_FAIL;
 
@@ -47,35 +71,16 @@ HRESULT CScene_Stage0::Setup_Scene()
 	if (FAILED(SetUp_Layer_Shop(L"Layer_Shop")))
 		return E_FAIL;
 
-	if (FAILED(Setup_Layer_Golem(L"Layer_Golem")))
-		return E_FAIL;
-
-	if (FAILED(Setup_Layer_Snow(L"Layer_Snow")))
-		return E_FAIL;
-	if (FAILED(Setup_Layer_Meteor(L"Layer_Meteor")))
-		return E_FAIL;
-
-	if (FAILED(Setup_Layer_Environment(L"Layer_Environment")))
-		return E_FAIL;
-
-	if (FAILED(SetUp_Layer_PlayerSkill(L"Layer_PlayerSkill")))
-		return E_FAIL;
-
-	if (FAILED(Setup_Layer_PlayerItem(L"Layer_PlayerItem")))
-		return E_FAIL;
-
-	//m_pPreLoader = CPreLoader::Create(m_pDevice, SCENE_STAGE1);
-	//if (nullptr == m_pPreLoader)
-	//{
-	//	PRINT_LOG(L"Failed To PreLoader Create in CScene_Stage0", LOG::CLIENT);
-	//	return E_FAIL;
-	//}
 
 	return S_OK;
 }
 
 _int CScene_Stage0::Update_Scene(_float _fDeltaTime)
 {
+	//--------------------------------------------------
+	// TODO : 스테이지 클리어 조건
+	//--------------------------------------------------
+
 	return 0;
 }
 
@@ -86,16 +91,10 @@ _int CScene_Stage0::LateUpdate_Scene(_float _fDeltaTime)
 		return -1;
 
 	// Src가 공격자 Dst가 피격자
-	if (FAILED(pManagement->CollisionSphere_Detection_Layers(SCENE_STAGE0, L"Layer_Player", L"Layer_Monster", L"Com_Collider", L"Com_DmgInfo")))
+	if (FAILED(pManagement->CollisionSphere_Detection_Layers_Both(SCENE_STAGE0, L"Layer_MonsterAtk", L"Layer_Player", L"Com_Collider", L"Com_DmgInfo")))
 		return -1;
 
-	if (FAILED(pManagement->CollisionSphere_Detection_Layers(SCENE_STAGE0, L"Layer_Monster", L"Layer_Player", L"Com_Collider", L"Com_DmgInfo")))
-		return -1;
-
-	if (FAILED(pManagement->CollisionSphere_Detection_Layers_Both(SCENE_STAGE0, L"Layer_Snow", L"Layer_Player", L"Com_Collider", L"Com_DmgInfo")))
-		return -1;
-
-	if (FAILED(pManagement->CollisionSphere_Detection_Layers(SCENE_STAGE0, L"Layer_Meteor" , L"Layer_Monster", L"Com_Collider", L"Com_DmgInfo")))
+	if (FAILED(pManagement->CollisionSphere_Detection_Layers(SCENE_STAGE0, L"Layer_PlayerAtk" , L"Layer_Monster", L"Com_Collider", L"Com_DmgInfo")))
 		return -1;
 
 	return 0;
@@ -252,47 +251,28 @@ HRESULT CScene_Stage0::Setup_Layer_Monster(const wstring & LayerTag)
 	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Snail", SCENE_STAGE0, LayerTag , &_vec3(10.f , 0.f , 5.f))))/*여기 StartPos*/
 		return E_FAIL;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Slime", SCENE_STAGE0, LayerTag)))
-		return E_FAIL;
-
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Yeti", SCENE_STAGE0, LayerTag , &_vec3(30.f, 0.f, 50.f))))
-		return E_FAIL;
-
 	return S_OK;
 }
 
-HRESULT CScene_Stage0::Setup_Layer_Golem(const wstring & LayerTag)
+HRESULT CScene_Stage0::Setup_Layer_Monster_Attack(const wstring & LayerTag)
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Golem", SCENE_STAGE0, LayerTag, &_vec3(10.f, 0.f, 50.f))))/*여기 StartPos*/
-		return E_FAIL;
-
-	return S_OK;
-
-}
-
-HRESULT CScene_Stage0::Setup_Layer_Snow(const wstring & LayerTag)
-{
-	CManagement* pManagement = CManagement::Get_Instance();
-	if (nullptr == pManagement)
-		return E_FAIL;
-
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Snow", SCENE_STAGE0, LayerTag, nullptr)))/*여기 StartPos*/
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Snow", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CScene_Stage0::Setup_Layer_Meteor(const wstring & LayerTag)
+HRESULT CScene_Stage0::Setup_Layer_Player_Attack(const wstring & LayerTag)
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Meteor", SCENE_STAGE0, LayerTag, nullptr)))
+	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Meteor", SCENE_STAGE0, LayerTag)))
 		return E_FAIL;
 
 	return S_OK;
@@ -354,25 +334,6 @@ HRESULT CScene_Stage0::SetUp_Layer_Item(const wstring & LayerTag)
 	return S_OK;
 }
 
-HRESULT CScene_Stage0::SetUp_Layer_PlayerSkill(const wstring & LayerTag)
-{
-	CManagement* pManagement = CManagement::Get_Instance();
-	if (nullptr == pManagement)
-		return E_FAIL;
-
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_LaserSkill", SCENE_STAGE0, LayerTag)))
-		return E_FAIL;
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_MeteoSkill", SCENE_STAGE0, LayerTag)))
-		return E_FAIL;
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_ManaDriftSkill", SCENE_STAGE0, LayerTag)))
-		return E_FAIL;
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_EnergyExploitationSkill", SCENE_STAGE0, LayerTag)))
-		return E_FAIL;
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_IceCrystalSkill", SCENE_STAGE0, LayerTag)))
-		return E_FAIL;
-
-	return S_OK;
-}
 
 HRESULT CScene_Stage0::Setup_Layer_Mouse(const wstring & LayerTag)
 {
@@ -385,25 +346,6 @@ HRESULT CScene_Stage0::Setup_Layer_Mouse(const wstring & LayerTag)
 
 	return S_OK;
 }
-
-HRESULT CScene_Stage0::Setup_Layer_PlayerItem(const wstring & LayerTag)
-{
-	CManagement* pManagement = CManagement::Get_Instance();
-	if (nullptr == pManagement)
-		return E_FAIL;
-
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_RedPotion", SCENE_STAGE0, LayerTag)))
-		return E_FAIL;
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_BluePotion", SCENE_STAGE0, LayerTag)))
-		return E_FAIL;
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_RedElixir", SCENE_STAGE0, LayerTag)))
-		return E_FAIL;
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STATIC, L"GameObject_BlueElixir", SCENE_STAGE0, LayerTag)))
-		return E_FAIL;
-
-	return S_OK;
-}
-
 
 HRESULT CScene_Stage0::Setup_Layer_Environment(const wstring & LayerTag)
 {

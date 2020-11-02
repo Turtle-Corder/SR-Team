@@ -1,10 +1,10 @@
 #include "stdafx.h"
-#include "..\Headers\SkillManager.h"
+#include "..\Headers\SkillSlotManager.h"
 
 USING(Client)
-CSkillManager* CSkillManager::m_pInstance = nullptr;
+CSkillSlotManager* CSkillSlotManager::m_pInstance = nullptr;
 
-CSkillManager::CSkillManager()
+CSkillSlotManager::CSkillSlotManager()
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 
@@ -15,7 +15,7 @@ CSkillManager::CSkillManager()
 	m_pIceCrystalSkill = (CPlayerSkill*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_PlayerSkill", 4);
 }
 
-CPlayerSkill * CSkillManager::Get_PlayerSkill(eActiveSkill_ID eSkillID)
+CSkillSlotManager * CSkillSlotManager::Get_PlayerSkill(eActiveSkill_ID eSkillID)
 {
 	switch (eSkillID)
 	{

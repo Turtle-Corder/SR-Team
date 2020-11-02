@@ -45,8 +45,8 @@ private:
 	HRESULT Setting_Center();
 	HRESULT Create_Bomb(_float _fDeltaTime);
 	HRESULT Create_MonSub(_float _fDeltaTime);
-	HRESULT Setup_LayerBomb(const wstring & LayerTag, _vec3 _vPos);
-	HRESULT Setup_Layer_MonSub(const wstring & LayerTag, _vec3 _vPos);
+	HRESULT Spawn_LayerBomb(const wstring & LayerTag, _vec3 _vPos);
+	HRESULT Spawn_Layer_MonSub(const wstring & LayerTag, _vec3 _vPos);
 	HRESULT	Move(_float _fDeltaTIme);
 	HRESULT LookAtPlayer(_float _fDeltaTime);
 	HRESULT Update_State();

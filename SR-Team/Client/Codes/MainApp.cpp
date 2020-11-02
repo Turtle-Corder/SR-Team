@@ -12,19 +12,22 @@
 
 #pragma region GameObject_Headers
 #include "Player.h"
+#include "Wand.h"
 #include "MainCamera.h"
 #include "UICamera.h"
 #include "MainUI.h"
 #include "Shop.h"
 #include "Item.h"
+#include "DropItem.h"
 #include "Inventory.h"
 #include "DamageInfo.h"
 #include "Equip.h"
 #include "Skill.h"
 #include "TerrainBundle.h"
 #include "SkillInven.h"
-#include "LaserSkill.h"
 #include "MeteoSkill.h"
+#include "EnergyBolt.h"
+#include "Meteor.h"
 #include "IceStrikeSkill.h"
 #include "ItemInventory.h"
 #include "RedPotion.h"
@@ -34,11 +37,15 @@
 #include "BlueElixir.h"
 #include "ManaDriftSkill.h"
 #include "EnergyExploitationSkill.h"
+#include "Tree.h"
+#include "Flower.h"
+//#include "Quest1.h"
 #pragma endregion
 
 #pragma region Component_Headers
 #include "Status.h"
 #include "VIBuffer_TreeHead.h"
+
 #include "VIBuffer_Flower.h"
 #include "VIBuffer_Pyramid.h"
 #pragma endregion
@@ -188,12 +195,77 @@ HRESULT CMainApp::Setup_DefaultSetting()
 HRESULT CMainApp::Setup_StaticResources()
 {
 	//----------------------------------------------------------------------------------------------------
-	// GameObject
+	// Sound
 	//----------------------------------------------------------------------------------------------------
-#pragma region GameObject_Player
-	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_Player", CPlayer::Create(m_pDevice))))
+#pragma region Sound_
+#pragma endregion
+
+	if (FAILED(Setup_HK()))
+	{
+		PRINT_LOG(L"Failed To Setup HK", LOG::CLIENT);
+		return E_FAIL;
+	}
+
+	if (FAILED(Setup_EB()))
+	{
+		PRINT_LOG(L"Failed To Setup EB", LOG::CLIENT);
+		return E_FAIL;
+	}
+
+	if (FAILED(Setup_YJ()))
+	{
+		PRINT_LOG(L"Failed To Setup YJ", LOG::CLIENT);
+		return E_FAIL;
+	}
+
+	if (FAILED(Setup_DS()))
+	{
+		PRINT_LOG(L"Failed To Setup DS", LOG::CLIENT);
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CMainApp::Setup_HK()
+{
+#pragma region GameObject_Mouse
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_Mouse", CMouse::Create(m_pDevice, m_pSprite, m_pFont))))
 		return E_FAIL;
 #pragma endregion
+
+#pragma region Component_Textures_Mouse
+
+	// idle
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Mouse_Idle", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Mouse/idle/idle%d.png"))))
+		return E_FAIL;
+
+	// grab
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Mouse_Grab", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Mouse/grab/grab%d.png"))))
+		return E_FAIL;
+
+	// help
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Mouse_Help", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Mouse/help/help%d.png"))))
+		return E_FAIL;
+
+	// click
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Mouse_Click", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Mouse/click/click%d.png", 2))))
+		return E_FAIL;
+
+	// work
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Mouse_Work", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/2DResource/Mouse/work/work%d.png", 4))))
+		return E_FAIL;
+
+#pragma endregion
+
+	//----------------------------------------------------------------------------------------------------
+	// GameObject
+	//----------------------------------------------------------------------------------------------------
 
 #pragma region GameObject_MainCamera
 	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_MainCamera", CMainCamera::Create(m_pDevice))))
@@ -202,6 +274,123 @@ HRESULT CMainApp::Setup_StaticResources()
 
 #pragma region GameObject_UICamera
 	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_UICamera", CUICamera::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+
+	//----------------------------------------------------------------------------------------------------
+	// Component
+	//----------------------------------------------------------------------------------------------------
+#pragma region Component_VIBuffer_RectTextrue
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_VIBuffer_RectTexture", CVIBuffer_RectTexture::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_VIBuffer_CubeTextrue
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", CVIBuffer_CubeTexture::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Transform
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Transform", CTransform::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Raycast
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Raycast", CRaycast::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Collider_Sphere
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Collider_Sphere", CSphereCollider::Create(m_pDevice))))
+		return E_FAIL;
+#pragma  endregion
+
+#pragma region Component_Collider_Box
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Collider_Box", CBoxCollider::Create(m_pDevice))))
+		return E_FAIL;
+#pragma  endregion
+
+#pragma region Component_Status
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Status", CStatus::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_DamageInfo
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_DamageInfo", CDamageInfo::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+}
+
+HRESULT CMainApp::Setup_YJ()
+{
+#pragma region Staic
+
+#pragma region GameObject_EnergyBolt
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_EnergyBolt", CEnergyBolt::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region GameObject_Meteor
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_Meteor", CMeteor::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Texture_Meteor
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Meteor", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/Meteor%d.dds"))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Texture_EnergyBolt
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_EnergyBolt", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE, L"../Resources/EnergyBolt%d.dds"))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma endregion
+
+#pragma region Component_Texture_Item
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_DropDiamond", CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL, L"../Resources/item/diamond%d.png"))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Texture_Ruby
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_DropRuby", CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL, L"../Resources/item/ruby%d.png"))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Texture_ironsword
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Dropiron_sword", CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL, L"../Resources/item/iron_sword%d.png"))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region GameObject_Item
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_DropItem", CDropItem::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region GameObject_Wand
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_Wand", CWand::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Texture_Item
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_DropDiamond", CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL, L"../Resources/item/diamond%d.png"))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_Texture_Ruby
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_DropRuby", CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL, L"../Resources/item/ruby%d.png"))))
+		return E_FAIL;
+#pragma endregion
+
+	return S_OK;
+}
+
+HRESULT CMainApp::Setup_EB()
+{
+#pragma region GameObject_Player
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_Player", CPlayer::Create(m_pDevice))))
 		return E_FAIL;
 #pragma endregion
 
@@ -245,139 +434,44 @@ HRESULT CMainApp::Setup_StaticResources()
 		return E_FAIL;
 #pragma endregion
 
-// 플레이어 스킬 객체
-#pragma region GameObject_PlayerSkill
-	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_LaserSkill", CLaserSkill::Create(m_pDevice, m_pSprite, m_pFont))))
-		return E_FAIL;
-	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_MeteoSkill", CMeteoSkill::Create(m_pDevice, m_pSprite, m_pFont))))
-		return E_FAIL;
-	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_ManaDriftSkill", CManaDriftSkill::Create(m_pDevice, m_pSprite, m_pFont))))
-		return E_FAIL;
-	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_EnergyExploitationSkill", CEnergyExploitationSkill::Create(m_pDevice, m_pSprite, m_pFont))))
-		return E_FAIL;
-	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_IceCrystalSkill", CIceStrikeSkill::Create(m_pDevice, m_pSprite, m_pFont))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region GameObject_TerrainBundle
-	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_TerrainBundle", CTerrainBundle::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
-
-// 플레이어 아이템 객체
-#pragma region GameObject_PlayerItem
-	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_RedPotion", CRedPotion::Create(m_pDevice, m_pSprite, m_pFont))))
-		return E_FAIL;
-	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_BluePotion", CBluePotion::Create(m_pDevice, m_pSprite, m_pFont))))
-		return E_FAIL;
-	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_RedElixir", CRedElixir::Create(m_pDevice, m_pSprite, m_pFont))))
-		return E_FAIL;
-	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_BlueElixir", CBlueElixir::Create(m_pDevice, m_pSprite, m_pFont))))
-		return E_FAIL;
-#pragma endregion
-
-
-	//----------------------------------------------------------------------------------------------------
-	// Component
-	//----------------------------------------------------------------------------------------------------
-#pragma region Component_VIBuffer_RectTextrue
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_VIBuffer_RectTexture", CVIBuffer_RectTexture::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region Component_VIBuffer_CubeTextrue
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_VIBuffer_CubeTexture", CVIBuffer_CubeTexture::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region Component_VIBuffer_TreeHead
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_VIBuffer_TreeHead", CVIBuffer_TreeHead::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region Component_VIBuffer_Flower
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_VIBuffer_Flower", CVIBuffer_Flower::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region Component_VIBuffer_Pyramid
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_VIBuffer_Pyramid", CVIBuffer_Pyramid::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region Component_Transform
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Transform", CTransform::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region Component_Raycast
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Raycast", CRaycast::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region Component_Collider_Sphere
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Collider_Sphere", CSphereCollider::Create(m_pDevice))))
-		return E_FAIL;
-#pragma  endregion
-
-#pragma region Component_Collider_Box
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Collider_Box", CBoxCollider::Create(m_pDevice))))
-		return E_FAIL;
-#pragma  endregion
-	
-#pragma region Component_Status
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Status", CStatus::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region Component_ItemManager
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_DamageInfo", CDamageInfo::Create(m_pDevice))))
-		return E_FAIL;
-#pragma endregion
-
-	//----------------------------------------------------------------------------------------------------
-	// Textures
-	//----------------------------------------------------------------------------------------------------
-#pragma region Component_Texture_Player
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Player", CTexture::Create(m_pDevice, CTexture::TEXTURE_NORMAL, 
-		L"../Resources/한겨미%d.png"))))
-		return E_FAIL;
-#pragma endregion
-
+// UNDONE : Quest Prototype
+//#pragma region GameObject_Quest1
+//	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_Quest1", CQuest1::Create(m_pDevice, m_pSprite, m_pFont))))
+//		return E_FAIL;
+//#pragma endregion
 
 #pragma region Component_Textures_MainUI
 
 	// frame
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_MainUI_Main", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/Sprite/Layer_MainUI/MainUI임%d.png"))))
+		L"../Resources/Sprite/Layer_MainUI/MainUI임%d.png"))))
 		return E_FAIL;
 
 	// hp
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_MainUI_Hp", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/Sprite/Layer_MainUI/HPbar%d.png"))))
+		L"../Resources/Sprite/Layer_MainUI/HPbar%d.png"))))
 		return E_FAIL;
 
 	// mp
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_MainUI_Mp", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/Sprite/Layer_MainUI/MpBar%d.png"))))
+		L"../Resources/Sprite/Layer_MainUI/MpBar%d.png"))))
 		return E_FAIL;
 
 	// slot_left
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_MainUI_QuickSlot_Left", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/Sprite/Layer_MainUI/QuickSlot_Right%d.png"))))
+		L"../Resources/Sprite/Layer_MainUI/QuickSlot_Right%d.png"))))
 		return E_FAIL;
 
 	// slot_left
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_MainUI_QuickSlot_Right", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/Sprite/Layer_MainUI/QuickSlot_Right%d.png"))))
+		L"../Resources/Sprite/Layer_MainUI/QuickSlot_Right%d.png"))))
 		return E_FAIL;
 
 #pragma endregion
 
-
 #pragma region Component_Textures_Shop
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Shop_ShopWnd", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/Sprite/Layer_Shop/ShopWnd%d.png"))))
+		L"../Resources/Sprite/Layer_Shop/ShopWnd%d.png"))))
 		return E_FAIL;
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Shop_ShopScrollBar", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
 		L"../Resources/Sprite/Layer_Shop/ScrollBar%d.png"))))
@@ -387,17 +481,17 @@ HRESULT CMainApp::Setup_StaticResources()
 
 #pragma region Component_Textures_Inventory
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Inven_InvenWnd", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/Sprite/Layer_Inventory/Inven%d.png"))))
+		L"../Resources/Sprite/Layer_Inventory/Inven%d.png"))))
 		return E_FAIL;
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Inven_SellButton",CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/Sprite/Layer_Inventory/SellButton%d.png"))))
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Inven_SellButton", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/Sprite/Layer_Inventory/SellButton%d.png"))))
 		return E_FAIL;
 
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_Empty",CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/Sprite/Layer_Inventory/empty%d.png"))))
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_Empty", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/Sprite/Layer_Inventory/empty%d.png"))))
 		return E_FAIL;
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Select_SellItem",CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/Sprite/Layer_Item/select_sellitem%d.png"))))
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Select_SellItem", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/Sprite/Layer_Item/select_sellitem%d.png"))))
 		return E_FAIL;
 #pragma endregion
 
@@ -428,69 +522,92 @@ HRESULT CMainApp::Setup_StaticResources()
 
 
 #pragma region Component_Textures_SkillIcon
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
 		L"Component_Texture_SkillIcon_ElementalMaster", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/2DResource/Skill_Icon/elemental_master%d.png"))))
+			L"../Resources/2DResource/Skill_Icon/elemental_master%d.png"))))
 		return E_FAIL;
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
 		L"Component_Texture_SkillIcon_EnergyExplotiation", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/2DResource/Skill_Icon/energy_exploitation%d.png"))))
+			L"../Resources/2DResource/Skill_Icon/energy_exploitation%d.png"))))
 		return E_FAIL;
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
 		L"Component_Texture_SkillIcon_FlameWave", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/2DResource/Skill_Icon/flame_wave%d.png"))))
+			L"../Resources/2DResource/Skill_Icon/flame_wave%d.png"))))
 		return E_FAIL;
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
 		L"Component_Texture_SkillIcon_IceSpear", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/2DResource/Skill_Icon/ice_spear%d.png"))))
+			L"../Resources/2DResource/Skill_Icon/ice_spear%d.png"))))
 		return E_FAIL;
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
 		L"Component_Texture_SkillIcon_IceStrike", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/2DResource/Skill_Icon/ice_strike%d.png"))))
+			L"../Resources/2DResource/Skill_Icon/ice_strike%d.png"))))
 		return E_FAIL;
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
 		L"Component_Texture_SkillIcon_LordOfCold", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/2DResource/Skill_Icon/lord_of_cold%d.png"))))
+			L"../Resources/2DResource/Skill_Icon/lord_of_cold%d.png"))))
 		return E_FAIL;
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
 		L"Component_Texture_SkillIcon_LordOfFlames", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/2DResource/Skill_Icon/lord_of_flames%d.png"))))
+			L"../Resources/2DResource/Skill_Icon/lord_of_flames%d.png"))))
 		return E_FAIL;
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
 		L"Component_Texture_SkillIcon_MagicArmor", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/2DResource/Skill_Icon/magic_armor%d.png"))))
+			L"../Resources/2DResource/Skill_Icon/magic_armor%d.png"))))
 		return E_FAIL;
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
 		L"Component_Texture_SkillIcon_ManaDrift", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/2DResource/Skill_Icon/mana_drift%d.png"))))
+			L"../Resources/2DResource/Skill_Icon/mana_drift%d.png"))))
 		return E_FAIL;
 #pragma endregion
 
+#pragma region Component_Texture_SkillInfo
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
+		L"Component_Texture_SkillInfo_EnergyExploitiation", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+			L"../Resources/Sprite/Layer_MainUI/energy_exploitiation%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
+		L"Component_Texture_SkillInfo_FlameWave", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+			L"../Resources/Sprite/Layer_MainUI/flame_wave%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
+		L"Component_Texture_SkillInfo_IceSpear", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+			L"../Resources/Sprite/Layer_MainUI/ice_spear%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
+		L"Component_Texture_SkillInfo_IceStrike", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+			L"../Resources/Sprite/Layer_MainUI/ice_strike%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
+		L"Component_Texture_SkillInfo_MagicArmor", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+			L"../Resources/Sprite/Layer_MainUI/magic_armor%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
+		L"Component_Texture_SkillInfo_ManaDrift", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+			L"../Resources/Sprite/Layer_MainUI/mana_drift%d.png"))))
+		return E_FAIL;
+#pragma endregion
 
 #pragma region Component_Textures_Item
 
 #pragma region Shoes
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
-		L"Component_Texture_Item_ScholarShoes", 
-		CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/Sprite/Layer_Item/Scholar_Shoes%d.png"))))
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_ScholarShoes",
+		CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE, L"../Resources/Sprite/Layer_Item/Scholar_Shoes%d.png"))))
 		return E_FAIL;
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
-		L"Component_Texture_Item_ArcaneShoes", 
-		CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/Sprite/Layer_Item/Moonlight_Traveler's_Shoes%d.png"))))
+
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_ArcaneShoes",
+		CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE, L"../Resources/Sprite/Layer_Item/Moonlight_Traveler's_Shoes%d.png"))))
 		return E_FAIL;
 #pragma endregion
 
 #pragma region Staff
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_GoldenSword", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/Sprite/Layer_Item/golden_sword%d.png"))))
+		L"../Resources/Sprite/Layer_Item/golden_sword%d.png"))))
 		return E_FAIL;
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_IronSword", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/Sprite/Layer_Item/iron_sword%d.png"))))
+		L"../Resources/Sprite/Layer_Item/iron_sword%d.png"))))
 		return E_FAIL;
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_DiaSword", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/Sprite/Layer_Item/diamond_sword%d.png"))))
+		L"../Resources/Sprite/Layer_Item/diamond_sword%d.png"))))
 		return E_FAIL;
 #pragma endregion
 
@@ -523,80 +640,107 @@ HRESULT CMainApp::Setup_StaticResources()
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_OrangePotion", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
 		L"../Resources/Sprite/Layer_Item/orange_potion%d.png"))))
 		return E_FAIL;
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
 		L"Component_Texture_Item_BluePotion", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/Sprite/Layer_Item/blue_potion%d.png"))))
+			L"../Resources/Sprite/Layer_Item/blue_potion%d.png"))))
 		return E_FAIL;
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
 		L"Component_Texture_Item_RedElixir", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/Sprite/Layer_Item/red_elixir%d.png"))))
+			L"../Resources/Sprite/Layer_Item/red_elixir%d.png"))))
 		return E_FAIL;
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, 
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC,
 		L"Component_Texture_Item_BlueElixir", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/Sprite/Layer_Item/blue_elixir%d.png"))))
+			L"../Resources/Sprite/Layer_Item/blue_elixir%d.png"))))
 		return E_FAIL;
 #pragma endregion
 
 #pragma region Suit
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_BlackDress", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/Sprite/Layer_Item/black_dress%d.png"))))
+		L"../Resources/Sprite/Layer_Item/black_dress%d.png"))))
 		return E_FAIL;
 	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Item_PupleDress", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-			L"../Resources/Sprite/Layer_Item/puple_dress%d.png"))))
+		L"../Resources/Sprite/Layer_Item/puple_dress%d.png"))))
 		return E_FAIL;
 #pragma endregion
 
-
+#pragma region Component_Texture_Quest1
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Quest1_One", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/Sprite/Layer_Quest1/one%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Quest1_Two", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/Sprite/Layer_Quest1/two%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Quest1_ThreeNo", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/Sprite/Layer_Quest1/three_no%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Quest1_ThreeOk", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/Sprite/Layer_Quest1/three_ok%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Quest1_FourClear", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/Sprite/Layer_Quest1/four_clear%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Quest1_FourNoClear", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/Sprite/Layer_Quest1/four_noclear%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Quest1_Goguma", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/Sprite/Layer_Quest1/goguma%d.png"))))
+		return E_FAIL;
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Quest1_Final", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
+		L"../Resources/Sprite/Layer_Quest1/final%d.png"))))
+		return E_FAIL;
 #pragma endregion
 
-#pragma region 
+#pragma region Component_Texture_Player
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Player", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE,
+		L"../Resources/3D/Layer_Player/player_head%d.dds"))))
+		return E_FAIL;
 
-	//----------------------------------------------------------------------------------------------------
-	// Sound
-	//----------------------------------------------------------------------------------------------------
-#pragma region Sound_
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_PlayerHead", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE,
+		L"../Resources/3D/Layer_Player/player_body%d.dds"))))
+		return E_FAIL;
+
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_PlayerHand", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE,
+		L"../Resources/3D/Layer_Player/player_hand%d.dds"))))
+		return E_FAIL;
+
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_PlayerFoot", CTexture::Create(m_pDevice, CTexture::TEXTURE_CUBE,
+		L"../Resources/3D/Layer_Player/player_foot%d.dds"))))
+		return E_FAIL;
 #pragma endregion
-
-	return S_OK;
 }
 
-HRESULT CMainApp::Setup_UIResources()
+HRESULT CMainApp::Setup_DS()
 {
-#pragma region GameObject_Mouse
-	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_Mouse", CMouse::Create(m_pDevice, m_pSprite, m_pFont))))
+#pragma region Component_VIBuffer_TreeHead
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_VIBuffer_TreeHead", CVIBuffer_TreeHead::Create(m_pDevice))))
 		return E_FAIL;
 #pragma endregion
 
-#pragma region Component_Textures_Mouse
-	
-	// idle
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Mouse_Idle", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/2DResource/Mouse/idle/idle%d.png"))))
+#pragma region GameObject_Tree
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_Tree", CTree::Create(m_pDevice))))
 		return E_FAIL;
-
-	// grab
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Mouse_Grab", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/2DResource/Mouse/grab/grab%d.png"))))
-		return E_FAIL;
-
-	// help
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Mouse_Help", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/2DResource/Mouse/help/help%d.png"))))
-		return E_FAIL;
-
-	// click
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Mouse_Click", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/2DResource/Mouse/click/click%d.png", 2))))
-		return E_FAIL;
-
-	// work
-	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_Texture_Mouse_Work", CTexture::Create(m_pDevice, CTexture::TEXTURE_SPRITE,
-		L"../Resources/2DResource/Mouse/work/work%d.png", 4))))
-		return E_FAIL;
-
 #pragma endregion
 
-	return S_OK;
+#pragma region Component_VIBuffer_Flower
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_VIBuffer_Flower", CVIBuffer_Flower::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region GameObject_Flower
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_Flower", CFlower::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Component_VIBuffer_Pyramid
+	if (FAILED(m_pManagement->Add_Component_Prototype(SCENE_STATIC, L"Component_VIBuffer_Pyramid", CVIBuffer_Pyramid::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region GameObject_TerrainBundle
+	if (FAILED(m_pManagement->Add_GameObject_Prototype(SCENE_STATIC, L"GameObject_TerrainBundle", CTerrainBundle::Create(m_pDevice))))
+		return E_FAIL;
+#pragma endregion
+
 }
 
 HRESULT CMainApp::Setup_ProtoTypeData()

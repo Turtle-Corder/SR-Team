@@ -45,8 +45,8 @@ public:
 	static CSlime* Create(LPDIRECT3DDEVICE9 pDevice);
 	virtual CGameObject* Clone_GameObject(void * pArg) override;
 	virtual void Free() override;
-	HRESULT Create_Item(const wstring& LayerTag);
-	HRESULT Create_Crack(const wstring& LayerTag);
+	HRESULT Spawn_Item(const wstring& LayerTag);
+	HRESULT Spawn_Crack(const wstring& LayerTag);
 	HRESULT Setting_SlimeBody();
 	HRESULT Setting_SlimeJelly();
 	//----------------------------------

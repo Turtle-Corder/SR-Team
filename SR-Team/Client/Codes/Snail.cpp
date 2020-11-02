@@ -31,12 +31,6 @@ HRESULT CSnail::Setup_GameObject(void* pArg)
 	if (pArg)
 		m_vStartPos = *(_vec3*)pArg;
 
-	//----------------------------------
-	// 달팽이의 첫 상태는 IDLE
-	m_ePreState = STATE::IDLE;
-	m_eCurState = STATE::IDLE;
-	//----------------------------------
-
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
@@ -45,12 +39,8 @@ HRESULT CSnail::Setup_GameObject(void* pArg)
 
 int CSnail::Update_GameObject(_float _fDeltaTime)
 {
-
 	if(FAILED(Update_State()))
 		return GAMEOBJECT::ERR;
-
-	if (GetAsyncKeyState(VK_NUMPAD4) & 0x8000)
-		m_eCurState = CSnail::MOVE;
 
 	if (FAILED(Movement(_fDeltaTime)))
 		return GAMEOBJECT::WARN;
@@ -93,7 +83,7 @@ HRESULT CSnail::Render_NoneAlpha()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(SCENE_STAGE0, L"Layer_Camera");
+	CCamera* pCamera = (CCamera*)pManagement->Get_GameObject(pManagement->Get_CurrentSceneID(), L"Layer_Camera");
 	if (nullptr == pCamera)
 		return E_FAIL;
 
@@ -238,7 +228,7 @@ HRESULT CSnail::IsOnTerrain()
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Terrain", L"Com_VIBuffer");
+	CVIBuffer_TerrainTexture* pTerrainBuffer = (CVIBuffer_TerrainTexture*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Terrain", L"Com_VIBuffer");
 	if (nullptr == pTerrainBuffer)
 		return E_FAIL;
 
@@ -261,7 +251,7 @@ HRESULT CSnail::Move(_float _fDeltaTime)
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform0");
+	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Player", L"Com_Transform0");
 
 	if (nullptr == pPlayerTransform)
 		return E_FAIL;
@@ -290,7 +280,7 @@ HRESULT CSnail::LookAtPlayer(_float _fDeltaTime)
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform0");
+	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Player", L"Com_Transform0");
 
 	if (nullptr == pPlayerTransform)
 		return E_FAIL;
@@ -349,7 +339,7 @@ HRESULT CSnail::Attack(_float _fDeltaTime)
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(SCENE_STAGE0, L"Layer_Player", L"Com_Transform0");
+	CTransform* pPlayerTransform = (CTransform*)pManagement->Get_Component(pManagement->Get_CurrentSceneID(), L"Layer_Player", L"Com_Transform0");
 
 	if (nullptr == pPlayerTransform)
 		return E_FAIL;
@@ -364,9 +354,18 @@ HRESULT CSnail::Attack(_float _fDeltaTime)
 	{
 		m_vPos += m_vDir * (_fDeltaTime * 8.f);
 		m_pTransformCom[SNAIL_BODY]->Set_Position(m_vPos);
+		m_bInstanceCreate = false;
 	}
 	else if (m_bCrash)
 	{
+		if (!m_bInstanceCreate)
+		{
+			if (FAILED(Spawn_InstantImpact(L"Layer_Snail_Impact")))
+				return E_FAIL;
+
+			m_bInstanceCreate = true;
+		}
+
 		if (m_fLength <= 3.f)
 		{
 			m_vDir = m_vPos - vPlayerPos;
@@ -374,10 +373,6 @@ HRESULT CSnail::Attack(_float _fDeltaTime)
 			D3DXVec3Normalize(&m_vDir, &m_vDir);
 			m_vPos += m_vDir * _fDeltaTime * 2.f;
 			m_pTransformCom[SNAIL_BODY]->Set_Position(m_vPos);
-			//_vec3 vDir = m_vPrePos - m_pTransformCom[SNAIL_BODY]->Get_Desc().vPosition;
-			//D3DXVec3Normalize(&vDir, &vDir);
-			//m_vPos += m_vDir * _fDeltaTime;
-			//m_pTransformCom[SNAIL_BODY]->Set_Position(m_vPos);
 		}
 		else
 		{
@@ -403,17 +398,20 @@ HRESULT CSnail::Setting_Part()
 	return S_OK;
 }
 
-HRESULT CSnail::SetUp_Layer_InstantImpact(const wstring & LayerTag)
+HRESULT CSnail::Spawn_InstantImpact(const wstring & LayerTag)
 {
 	CManagement* pManagement = CManagement::Get_Instance();
 	if (nullptr == pManagement)
 		return E_FAIL;
 
-	m_pInstantImpact->vPosition = m_pTransformCom[SNAIL_BODY]->Get_Desc().vPosition;
-	m_pInstantImpact->pAttacker = this;
-	//m_pInstantImpact->iAttack = m_pStatusCom->Get_Status().iMaxAtt;
+	INSTANTIMPACT tImpact;
+	tImpact.pAttacker = this;
+	tImpact.pStatusComp = m_pStatusCom;
+	_vec3 BodyPos = {};
+	memcpy_s(&BodyPos, sizeof(_vec3), &m_pTransformCom[SNAIL_BODY]->Get_Desc().matWorld._41, sizeof(_vec3));
+	tImpact.vPosition = BodyPos;
 
-	if (FAILED(pManagement->Add_GameObject_InLayer(SCENE_STAGE0, L"GameObject_Instant_Impact", SCENE_STAGE0, LayerTag , m_pInstantImpact)))/*여기 StartPos*/
+	if (FAILED(pManagement->Add_GameObject_InLayer(pManagement->Get_CurrentSceneID(), L"GameObject_Instant_Impact", pManagement->Get_CurrentSceneID(), LayerTag , m_pInstantImpact)))
 		return E_FAIL;
 
 	return S_OK;

@@ -36,12 +36,14 @@ private:
 	HRESULT LookAtPlayer(_float _fDeltaTime);
 	HRESULT Attack(_float _fDeltaTime);
 	HRESULT Setting_Part();
-	HRESULT SetUp_Layer_InstantImpact(const wstring& LayerTag);
+	HRESULT Spawn_InstantImpact(const wstring& LayerTag);
+
 public:
 	static CSnail* Create(LPDIRECT3DDEVICE9 _pDevice);
 	virtual CGameObject * Clone_GameObject(void * pArg) override;
 	virtual void Free() override;
 	virtual HRESULT Take_Damage(const CComponent* _pDamageComp) override;
+
 private:
 	CVIBuffer*			m_pVIBufferCom[SNAIL_END] = {};
 	CTransform*			m_pTransformCom[SNAIL_END] = {};
@@ -49,18 +51,21 @@ private:
 	CSphereCollider*	m_pColliderCom = nullptr;
 	CStatus*			m_pStatusCom = nullptr;
 	CDamageInfo*		m_pDmgInfoCom = nullptr;
+
 private:
 	_vec3		m_vStartPos = {};
 	_bool		m_bAttack = false;
 	_vec3		m_vDir = {};
 	INSTANTIMPACT*	m_pInstantImpact = nullptr;
-	STATE		m_ePreState;
-	STATE		m_eCurState;
+	STATE		m_ePreState = IDLE;
+	STATE		m_eCurState = IDEL;
 	_bool		m_bHit = false;
 	_vec3		m_vLook = {};
 	_bool		m_bCheck = false;
 	_bool		m_bCrash = false;
 	_vec3		m_vPrePos = {};
+
+	_bool		m_bInstanceCreate = false;
 };
 
 END
